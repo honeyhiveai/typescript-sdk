@@ -31,8 +31,6 @@ typescript:
       shared: models/components
       webhooks: models/webhooks
   inputModelSuffix: input
-  installationURL: https://github.com/honeyhiveai/typescript-sdk
   maxMethodParams: 4
   outputModelSuffix: output
   packageName: HoneyHive
-  repoSubDirectory: .
