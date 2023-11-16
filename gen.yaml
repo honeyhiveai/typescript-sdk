@@ -1,0 +1,24 @@
+configVersion: 1.0.0
+generation:
+  comments: {}
+  sdkClassName: HoneyHive
+  maintainOpenAPIOrder: true
+  usageSnippets:
+    optionalPropertyRendering: withExample
+typescript:
+  version: 0.0.1
+  author: HoneyHive
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  imports:
+    option: openapi
+    paths:
+      callbacks: models/callbacks
+      errors: models/errors
+      operations: models/operations
+      shared: models/components
+      webhooks: models/webhooks
+  inputModelSuffix: input
+  maxMethodParams: 4
+  outputModelSuffix: output
+  packageName: HoneyHive
