@@ -6,13 +6,13 @@
 ### NPM
 
 ```bash
-npm add honeyhive
+npm add https://github.com/honeyhiveai/typescript-sdk
 ```
 
 ### Yarn
 
 ```bash
-yarn add honeyhive
+yarn add https://github.com/honeyhiveai/typescript-sdk
 ```
 <!-- End SDK Installation -->
 
@@ -201,7 +201,6 @@ const sdk = new HoneyHive({defaultClient: httpClient});
 <!-- End Custom HTTP Client -->
 
 <!-- Start Authentication -->
-
 ## Authentication
 
 ### Per-Client Security Schemes

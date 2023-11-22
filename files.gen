@@ -1,8 +1,6 @@
 src/sdk/sdk.ts
 .eslintrc.yml
 jest.config.js
-package-lock.json
-package.json
 src/index.ts
 src/internal/utils/contenttype.ts
 src/internal/utils/headers.ts
@@ -13,7 +11,6 @@ src/internal/utils/requestbody.ts
 src/internal/utils/retries.ts
 src/internal/utils/security.ts
 src/internal/utils/utils.ts
-src/sdk/index.ts
 src/models/errors/sdkerror.ts
 src/types/index.ts
 src/types/rfcdate.ts
