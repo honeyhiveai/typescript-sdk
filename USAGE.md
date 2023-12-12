@@ -1,20 +1,22 @@
-<!-- Start SDK Example Usage -->
+<!-- Start SDK Example Usage [usage] -->
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { DeleteTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetTasksRequest } from "HoneyHive/dist/models/operations";
 
-(async () => {
+async function run() {
     const sdk = new HoneyHive({
-        bearerAuth: "",
+        bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
     const name: string = "string";
 
-    const res = await sdk.deleteTasks(name);
+    const res = await sdk.getTasks(name);
 
     if (res.statusCode == 200) {
         // handle response
     }
-})();
+}
+
+run();
 
 ```
-<!-- End SDK Example Usage -->
+<!-- End SDK Example Usage [usage] -->

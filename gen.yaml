@@ -2,8 +2,8 @@ configVersion: 1.0.0
 management:
   docChecksum: 88c6579cda1b6e637d284af70c9ca80b
   docVersion: 1.0.1
-  speakeasyVersion: 1.121.3
-  generationVersion: 2.195.2
+  speakeasyVersion: 1.126.0
+  generationVersion: 2.213.3
 generation:
   comments: {}
   sdkClassName: HoneyHive
@@ -13,12 +13,12 @@ generation:
     optionalPropertyRendering: withExample
 features:
   typescript:
-    core: 3.1.4
+    core: 3.3.0
     flattening: 2.81.1
-    globalSecurity: 2.82.0
+    globalSecurity: 2.82.1
     globalServerURLs: 2.82.1
 typescript:
-  version: 0.1.1
+  version: 0.2.0
   author: HoneyHive
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
@@ -36,3 +36,4 @@ typescript:
   outputModelSuffix: output
   packageName: HoneyHive
   repoSubDirectory: .
+  templateVersion: v1

@@ -5,89 +5,48 @@
 
 ### Available Operations
 
-* [deleteTasks](#deletetasks) - Delete a task
 * [getTasks](#gettasks) - Get all tasks
 * [postTasks](#posttasks) - Create a task
+* [deleteTasks](#deletetasks) - Delete a task
 * [putTasks](#puttasks) - Update a task
 * [getGenerations](#getgenerations) - Get all generations
 * [postGenerations](#postgenerations) - Generate a text
 * [getPrompts](#getprompts) - Get all prompts or filter by task and name
 * [postPrompts](#postprompts) - Create a prompt
-* [deletePromptsId](#deletepromptsid) - Delete a prompt by name
 * [putPromptsId](#putpromptsid) - Update a prompt
+* [deletePromptsId](#deletepromptsid) - Delete a prompt by name
 * [getFineTunedModels](#getfinetunedmodels) - Get all fine-tuned models
 * [postFineTunedModels](#postfinetunedmodels) - Create a new fine-tuned model
-* [deleteFineTunedModelsId](#deletefinetunedmodelsid) - Delete a fine-tuned model
 * [getFineTunedModelsId](#getfinetunedmodelsid) - Get a fine-tuned model
-* [deleteDatasets](#deletedatasets) - Delete all datasets
+* [deleteFineTunedModelsId](#deletefinetunedmodelsid) - Delete a fine-tuned model
 * [getDatasets](#getdatasets) - Get datasets
 * [postDatasets](#postdatasets) - Create a dataset
 * [putDatasets](#putdatasets) - Update a dataset
+* [deleteDatasets](#deletedatasets) - Delete all datasets
 * [deleteDatasetsName](#deletedatasetsname) - Delete a dataset
-* [deleteMetrics](#deletemetrics) - Delete a metric
 * [getMetrics](#getmetrics) - Get all metrics
 * [postMetrics](#postmetrics) - Create a metric
+* [deleteMetrics](#deletemetrics) - Delete a metric
 * [putMetrics](#putmetrics) - Update a metric
 * [postMetricsCompute](#postmetricscompute) - Compute metric
 * [postChat](#postchat) - Create a chat completion
 * [postGenerationsLog](#postgenerationslog) - Log a generation
 * [postFeedback](#postfeedback) - Send feedback
-* [getEvaluations](#getevaluations) - Get all evaluations
 * [postEvaluations](#postevaluations) - Log an evaluation
-* [deleteEvaluationsId](#deleteevaluationsid) - Delete an evaluation
+* [getEvaluations](#getevaluations) - Get all evaluations
 * [getEvaluationsId](#getevaluationsid) - Get an evaluation
+* [deleteEvaluationsId](#deleteevaluationsid) - Delete an evaluation
 * [putEvaluationsId](#putevaluationsid) - Update an evaluation
 * [postSessionStart](#postsessionstart) - Start a session
 * [postSessionSessionIdEnd](#postsessionsessionidend) - End a session
 * [postSessionSessionIdEvent](#postsessionsessionidevent) - Log an event
 * [postSessionSessionIdFeedback](#postsessionsessionidfeedback) - Log session feedback
-* [deleteSessionSessionId](#deletesessionsessionid) - Delete a session
 * [getSessionSessionId](#getsessionsessionid) - Get a session
 * [putSessionSessionId](#putsessionsessionid) - Update a session event
+* [deleteSessionSessionId](#deletesessionsessionid) - Delete a session
 * [getSessionSessionIdExport](#getsessionsessionidexport) - Get a session in Trace Event format
 * [getSession](#getsession) - Get all sessions
 * [postSessionSessionIdTraces](#postsessionsessionidtraces) - Log a trace
-
-## deleteTasks
-
-Delete a task
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteTasksRequest } from "HoneyHive/dist/models/operations";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-const name: string = "string";
-
-  const res = await sdk.deleteTasks(name);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `name`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteTasksResponse](../../models/operations/deletetasksresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
 
 ## getTasks
 
@@ -99,9 +58,9 @@ Get all tasks
 import { HoneyHive } from "HoneyHive";
 import { GetTasksRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const name: string = "string";
 
@@ -110,7 +69,9 @@ const name: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -139,9 +100,9 @@ Create a task
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postTasks({
@@ -184,7 +145,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -204,6 +167,49 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deleteTasks
+
+Delete a task
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { DeleteTasksRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const name: string = "string";
+
+  const res = await sdk.deleteTasks(name);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `name`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteTasksResponse](../../models/operations/deletetasksresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## putTasks
 
 Update a task
@@ -213,9 +219,9 @@ Update a task
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.putTasks({
@@ -258,7 +264,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -288,9 +296,9 @@ Get all generations
 import { HoneyHive } from "HoneyHive";
 import { GetGenerationsRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const task: string = "string";
 const prompt: string = "string";
@@ -301,7 +309,9 @@ const modelId: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -332,9 +342,9 @@ Generate a text
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postGenerations({
@@ -355,7 +365,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -385,9 +397,9 @@ Get all prompts or filter by task and name
 import { HoneyHive } from "HoneyHive";
 import { GetPromptsRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const task: string = "string";
 const name: string = "string";
@@ -397,7 +409,9 @@ const name: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -427,9 +441,9 @@ Create a prompt
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postPrompts({
@@ -446,7 +460,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -466,47 +482,6 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deletePromptsId
-
-Delete a prompt by name
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeletePromptsIdRequest } from "HoneyHive/dist/models/operations";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-const id: string = "string";
-
-  const res = await sdk.deletePromptsId(id);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeletePromptsIdResponse](../../models/operations/deletepromptsidresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
-
 ## putPromptsId
 
 Update a prompt
@@ -518,9 +493,9 @@ import { HoneyHive } from "HoneyHive";
 import { PromptUpdateQuery } from "HoneyHive/dist/models/components";
 import { PutPromptsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const id: string = "string";
 const promptUpdateQuery: PromptUpdateQuery = {
@@ -542,7 +517,9 @@ const promptUpdateQuery: PromptUpdateQuery = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -563,6 +540,49 @@ const promptUpdateQuery: PromptUpdateQuery = {
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deletePromptsId
+
+Delete a prompt by name
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { DeletePromptsIdRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const id: string = "string";
+
+  const res = await sdk.deletePromptsId(id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeletePromptsIdResponse](../../models/operations/deletepromptsidresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## getFineTunedModels
 
 Get all fine-tuned models
@@ -573,9 +593,9 @@ Get all fine-tuned models
 import { HoneyHive } from "HoneyHive";
 import { GetFineTunedModelsRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const task: string = "string";
 const modelId: string = "string";
@@ -585,7 +605,9 @@ const modelId: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -615,9 +637,9 @@ Create a new fine-tuned model
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postFineTunedModels({});
@@ -625,7 +647,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -645,47 +669,6 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deleteFineTunedModelsId
-
-Delete a fine-tuned model
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteFineTunedModelsIdRequest } from "HoneyHive/dist/models/operations";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-const id: string = "string";
-
-  const res = await sdk.deleteFineTunedModelsId(id);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteFineTunedModelsIdResponse](../../models/operations/deletefinetunedmodelsidresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
-
 ## getFineTunedModelsId
 
 Get a fine-tuned model
@@ -696,9 +679,9 @@ Get a fine-tuned model
 import { HoneyHive } from "HoneyHive";
 import { GetFineTunedModelsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const id: string = "string";
 
@@ -707,7 +690,9 @@ const id: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -727,38 +712,43 @@ const id: string = "string";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deleteDatasets
+## deleteFineTunedModelsId
 
-Delete all datasets
+Delete a fine-tuned model
 
 ### Example Usage
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
+import { DeleteFineTunedModelsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
+const id: string = "string";
 
-  const res = await sdk.deleteDatasets();
+  const res = await sdk.deleteFineTunedModelsId(id);
 
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
 
-**Promise<[operations.DeleteDatasetsResponse](../../models/operations/deletedatasetsresponse.md)>**
+**Promise<[operations.DeleteFineTunedModelsIdResponse](../../models/operations/deletefinetunedmodelsidresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
@@ -775,9 +765,9 @@ Get datasets
 import { HoneyHive } from "HoneyHive";
 import { GetDatasetsRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const task: string = "string";
 const prompt: string = "string";
@@ -789,7 +779,9 @@ const purpose: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -821,9 +813,9 @@ Create a dataset
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postDatasets({
@@ -837,7 +829,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -866,9 +860,9 @@ Update a dataset
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.putDatasets({
@@ -882,7 +876,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -902,6 +898,46 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deleteDatasets
+
+Delete all datasets
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+
+  const res = await sdk.deleteDatasets();
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteDatasetsResponse](../../models/operations/deletedatasetsresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## deleteDatasetsName
 
 Delete a dataset
@@ -912,9 +948,9 @@ Delete a dataset
 import { HoneyHive } from "HoneyHive";
 import { DeleteDatasetsNameRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const name: string = "string";
 
@@ -923,7 +959,9 @@ const name: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -943,47 +981,6 @@ const name: string = "string";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deleteMetrics
-
-Delete a metric
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteMetricsRequest } from "HoneyHive/dist/models/operations";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-const metricId: string = "string";
-
-  const res = await sdk.deleteMetrics(metricId);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `metricId`                                                   | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteMetricsResponse](../../models/operations/deletemetricsresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
-
 ## getMetrics
 
 Get all metrics
@@ -994,9 +991,9 @@ Get all metrics
 import { HoneyHive } from "HoneyHive";
 import { GetMetricsRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const task: string = "string";
 
@@ -1005,7 +1002,9 @@ const task: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1034,9 +1033,9 @@ Create a metric
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postMetrics({
@@ -1046,7 +1045,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1066,6 +1067,49 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deleteMetrics
+
+Delete a metric
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { DeleteMetricsRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const metricId: string = "string";
+
+  const res = await sdk.deleteMetrics(metricId);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `metricId`                                                   | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteMetricsResponse](../../models/operations/deletemetricsresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## putMetrics
 
 Update a metric
@@ -1075,9 +1119,9 @@ Update a metric
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.putMetrics({
@@ -1087,7 +1131,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1116,9 +1162,9 @@ Compute metric
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postMetricsCompute({
@@ -1128,7 +1174,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1157,9 +1205,9 @@ Create a chat completion
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postChat({
@@ -1183,7 +1231,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1212,9 +1262,9 @@ Log a generation
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postGenerationsLog({
@@ -1239,7 +1289,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1268,9 +1320,9 @@ Send feedback
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postFeedback({
@@ -1284,7 +1336,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1304,44 +1358,6 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## getEvaluations
-
-Get all evaluations
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-
-  const res = await sdk.getEvaluations();
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.GetEvaluationsResponse](../../models/operations/getevaluationsresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
-
 ## postEvaluations
 
 Log an evaluation
@@ -1351,9 +1367,9 @@ Log an evaluation
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postEvaluations({
@@ -1402,7 +1418,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1422,41 +1440,40 @@ import { HoneyHive } from "HoneyHive";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deleteEvaluationsId
+## getEvaluations
 
-Delete an evaluation
+Get all evaluations
 
 ### Example Usage
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { DeleteEvaluationsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
 
-  const res = await sdk.deleteEvaluationsId(id);
+  const res = await sdk.getEvaluations();
 
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
 
-**Promise<[operations.DeleteEvaluationsIdResponse](../../models/operations/deleteevaluationsidresponse.md)>**
+**Promise<[operations.GetEvaluationsResponse](../../models/operations/getevaluationsresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
@@ -1473,9 +1490,9 @@ Get an evaluation
 import { HoneyHive } from "HoneyHive";
 import { GetEvaluationsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const id: string = "string";
 
@@ -1484,7 +1501,9 @@ const id: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1504,6 +1523,49 @@ const id: string = "string";
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deleteEvaluationsId
+
+Delete an evaluation
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { DeleteEvaluationsIdRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const id: string = "string";
+
+  const res = await sdk.deleteEvaluationsId(id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteEvaluationsIdResponse](../../models/operations/deleteevaluationsidresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## putEvaluationsId
 
 Update an evaluation
@@ -1515,9 +1577,9 @@ import { HoneyHive } from "HoneyHive";
 import { EvaluationUpdateRequest } from "HoneyHive/dist/models/components";
 import { PutEvaluationsIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const id: string = "string";
 const evaluationUpdateRequest: EvaluationUpdateRequest = {
@@ -1568,7 +1630,9 @@ const evaluationUpdateRequest: EvaluationUpdateRequest = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1598,9 +1662,9 @@ Start a session
 ```typescript
 import { HoneyHive } from "HoneyHive";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
   const res = await sdk.postSessionStart({
@@ -1612,7 +1676,9 @@ import { HoneyHive } from "HoneyHive";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1642,9 +1708,9 @@ End a session
 import { HoneyHive } from "HoneyHive";
 import { PostSessionSessionIdEndRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 
@@ -1653,7 +1719,9 @@ const sessionId: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1684,9 +1752,9 @@ import { HoneyHive } from "HoneyHive";
 import { SessionEventQuery } from "HoneyHive/dist/models/components";
 import { PostSessionSessionIdEventRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 const sessionEventQuery: SessionEventQuery = {
@@ -1723,7 +1791,9 @@ const sessionEventQuery: SessionEventQuery = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1755,9 +1825,9 @@ import { HoneyHive } from "HoneyHive";
 import { SessionFeedback } from "HoneyHive/dist/models/components";
 import { PostSessionSessionIdFeedbackRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 const sessionFeedback: SessionFeedback = {
@@ -1771,7 +1841,9 @@ const sessionFeedback: SessionFeedback = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1792,47 +1864,6 @@ const sessionFeedback: SessionFeedback = {
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
-## deleteSessionSessionId
-
-Delete a session
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteSessionSessionIdRequest } from "HoneyHive/dist/models/operations";
-
-(async() => {
-  const sdk = new HoneyHive({
-    bearerAuth: "",
-  });
-const sessionId: string = "string";
-
-  const res = await sdk.deleteSessionSessionId(sessionId);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-})();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `sessionId`                                                  | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteSessionSessionIdResponse](../../models/operations/deletesessionsessionidresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 400-600         | */*             |
-
 ## getSessionSessionId
 
 Get a session
@@ -1843,9 +1874,9 @@ Get a session
 import { HoneyHive } from "HoneyHive";
 import { GetSessionSessionIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 
@@ -1854,7 +1885,9 @@ const sessionId: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1892,9 +1925,9 @@ import {
 } from "HoneyHive/dist/models/components";
 import { PutSessionSessionIdRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 const sessionEventUpdate: SessionEventUpdate = {
@@ -1911,7 +1944,9 @@ const sessionEventUpdate: SessionEventUpdate = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1932,6 +1967,49 @@ const sessionEventUpdate: SessionEventUpdate = {
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 400-600         | */*             |
 
+## deleteSessionSessionId
+
+Delete a session
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { DeleteSessionSessionIdRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const sessionId: string = "string";
+
+  const res = await sdk.deleteSessionSessionId(sessionId);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `sessionId`                                                  | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteSessionSessionIdResponse](../../models/operations/deletesessionsessionidresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 400-600         | */*             |
+
 ## getSessionSessionIdExport
 
 Get a session in Trace Event format
@@ -1942,9 +2020,9 @@ Get a session in Trace Event format
 import { HoneyHive } from "HoneyHive";
 import { GetSessionSessionIdExportRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 
@@ -1953,7 +2031,9 @@ const sessionId: string = "string";
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -1983,9 +2063,9 @@ Get all sessions
 import { HoneyHive } from "HoneyHive";
 import { GetSessionRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const project: string = "string";
 const query: Record<string, any> = {
@@ -1998,7 +2078,9 @@ const limit: number = 355376;
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
@@ -2031,9 +2113,9 @@ import { HoneyHive } from "HoneyHive";
 import { SessionEventQuery, SessionTrace } from "HoneyHive/dist/models/components";
 import { PostSessionSessionIdTracesRequest } from "HoneyHive/dist/models/operations";
 
-(async() => {
+async function run() {
   const sdk = new HoneyHive({
-    bearerAuth: "",
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const sessionId: string = "string";
 const sessionTrace: SessionTrace = {
@@ -2074,7 +2156,9 @@ const sessionTrace: SessionTrace = {
   if (res.statusCode == 200) {
     // handle response
   }
-})();
+}
+
+run();
 ```
 
 ### Parameters
