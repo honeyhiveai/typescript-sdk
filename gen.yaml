@@ -1,24 +1,11 @@
-configVersion: 1.0.0
-management:
-  docChecksum: 88c6579cda1b6e637d284af70c9ca80b
-  docVersion: 1.0.1
-  speakeasyVersion: 1.127.0
-  generationVersion: 2.220.0
+configVersion: 2.0.0
 generation:
-  comments: {}
   sdkClassName: HoneyHive
-  repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   maintainOpenAPIOrder: true
   usageSnippets:
     optionalPropertyRendering: withExample
   fixes:
     nameResolutionDec2023: false
-features:
-  typescript:
-    core: 3.3.9
-    flattening: 2.81.1
-    globalSecurity: 2.82.2
-    globalServerURLs: 2.82.1
 typescript:
   version: 0.2.1
   author: HoneyHive
@@ -33,9 +20,7 @@ typescript:
       shared: models/components
       webhooks: models/webhooks
   inputModelSuffix: input
-  installationURL: https://github.com/honeyhiveai/typescript-sdk
   maxMethodParams: 4
   outputModelSuffix: output
   packageName: HoneyHive
-  repoSubDirectory: .
   templateVersion: v1
