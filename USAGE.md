@@ -7,7 +7,7 @@ async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     const res = await sdk.getTasks(name);
 

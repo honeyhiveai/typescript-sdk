@@ -62,7 +62,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const name: string = "string";
+const name: string = "<value>";
 
   const res = await sdk.getTasks(name);
 
@@ -112,14 +112,14 @@ async function run() {
     prompts: [
       {
         inputVariables: [
-          "string",
+          "<value>",
         ],
         hyperparameters: {
-          "key": "string",
+          "key": "<value>",
         },
         fewShotExamples: [
           {
-            "key": "string",
+            "key": "<value>",
           },
         ],
       },
@@ -128,7 +128,7 @@ async function run() {
       {
         file: [
           {
-            "key": "string",
+            "key": "<value>",
           },
         ],
       },
@@ -136,7 +136,7 @@ async function run() {
     metrics: [
       {
         threshold: {
-          "key": "string",
+          "key": "<value>",
         },
       },
     ],
@@ -181,7 +181,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const name: string = "string";
+const name: string = "<value>";
 
   const res = await sdk.deleteTasks(name);
 
@@ -231,14 +231,14 @@ async function run() {
     prompts: [
       {
         inputVariables: [
-          "string",
+          "<value>",
         ],
         hyperparameters: {
-          "key": "string",
+          "key": "<value>",
         },
         fewShotExamples: [
           {
-            "key": "string",
+            "key": "<value>",
           },
         ],
       },
@@ -247,7 +247,7 @@ async function run() {
       {
         file: [
           {
-            "key": "string",
+            "key": "<value>",
           },
         ],
       },
@@ -255,7 +255,7 @@ async function run() {
     metrics: [
       {
         threshold: {
-          "key": "string",
+          "key": "<value>",
         },
       },
     ],
@@ -300,9 +300,9 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "string";
-const prompt: string = "string";
-const modelId: string = "string";
+const task: string = "<value>";
+const prompt: string = "<value>";
+const modelId: string = "<value>";
 
   const res = await sdk.getGenerations(task, prompt, modelId);
 
@@ -349,16 +349,16 @@ async function run() {
 
   const res = await sdk.postGenerations({
     input: {
-      "key": "string",
+      "key": "<value>",
     },
     prompts: [
-      "string",
+      "<value>",
     ],
     metadata: {
-      "key": "string",
+      "key": "<value>",
     },
     userProperties: {
-      "key": "string",
+      "key": "<value>",
     },
   });
 
@@ -401,8 +401,8 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "string";
-const name: string = "string";
+const task: string = "<value>";
+const name: string = "<value>";
 
   const res = await sdk.getPrompts(task, name);
 
@@ -448,11 +448,11 @@ async function run() {
 
   const res = await sdk.postPrompts({
     hyperparameters: {
-      "key": "string",
+      "key": "<value>",
     },
     fewShotExamples: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   });
@@ -497,17 +497,17 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 const promptUpdateQuery: PromptUpdateQuery = {
   inputVariables: [
-    "string",
+    "<value>",
   ],
   hyperparameters: {
-    "key": "string",
+    "key": "<value>",
   },
   fewShotExamples: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
 };
@@ -554,7 +554,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 
   const res = await sdk.deletePromptsId(id);
 
@@ -597,8 +597,8 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "string";
-const modelId: string = "string";
+const task: string = "<value>";
+const modelId: string = "<value>";
 
   const res = await sdk.getFineTunedModels(task, modelId);
 
@@ -683,7 +683,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 
   const res = await sdk.getFineTunedModelsId(id);
 
@@ -726,7 +726,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 
   const res = await sdk.deleteFineTunedModelsId(id);
 
@@ -769,10 +769,10 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "string";
-const prompt: string = "string";
-const datasetId: string = "string";
-const purpose: string = "string";
+const task: string = "<value>";
+const prompt: string = "<value>";
+const datasetId: string = "<value>";
+const purpose: string = "<value>";
 
   const res = await sdk.getDatasets(task, prompt, datasetId, purpose);
 
@@ -821,7 +821,7 @@ async function run() {
   const res = await sdk.postDatasets({
     file: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   });
@@ -868,7 +868,7 @@ async function run() {
   const res = await sdk.putDatasets({
     file: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   });
@@ -952,7 +952,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const name: string = "string";
+const name: string = "<value>";
 
   const res = await sdk.deleteDatasetsName(name);
 
@@ -995,7 +995,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "string";
+const task: string = "<value>";
 
   const res = await sdk.getMetrics(task);
 
@@ -1081,7 +1081,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const metricId: string = "string";
+const metricId: string = "<value>";
 
   const res = await sdk.deleteMetrics(metricId);
 
@@ -1211,19 +1211,19 @@ async function run() {
   });
 
   const res = await sdk.postChat({
-    project: "string",
+    project: "<value>",
     messages: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     model: "Golf",
     hyperparameters: {
-      "key": "string",
+      "key": "<value>",
     },
     functions: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   });
@@ -1269,20 +1269,20 @@ async function run() {
 
   const res = await sdk.postGenerationsLog({
     inputs: {
-      "key": "string",
+      "key": "<value>",
     },
     hyperparameters: {
-      "key": "string",
+      "key": "<value>",
     },
     usage: {
-      "key": "string",
+      "key": "<value>",
     },
     userProperties: {
-      "key": "string",
+      "key": "<value>",
     },
     metadata: {},
     feedback: {
-      "key": "string",
+      "key": "<value>",
     },
   });
 
@@ -1326,10 +1326,10 @@ async function run() {
   });
 
   const res = await sdk.postFeedback({
-    task: "string",
-    generationId: "string",
+    task: "<value>",
+    generationId: "<value>",
     feedbackJson: {
-      "key": "string",
+      "key": "<value>",
     },
   });
 
@@ -1375,42 +1375,42 @@ async function run() {
   const res = await sdk.postEvaluations({
     prompts: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     dataset: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     metrics: [
       [
         {
-          "key": "string",
+          "key": "<value>",
         },
       ],
     ],
     metricsToCompute: [
-      "string",
+      "<value>",
     ],
     results: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     summary: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     comments: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
     generations: [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   });
@@ -1494,7 +1494,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 
   const res = await sdk.getEvaluationsId(id);
 
@@ -1537,7 +1537,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 
   const res = await sdk.deleteEvaluationsId(id);
 
@@ -1581,38 +1581,38 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "string";
+const id: string = "<value>";
 const evaluationUpdateRequest: EvaluationUpdateRequest = {
   prompts: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   dataset: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   metrics: [
     [
       {
-        "key": "string",
+        "key": "<value>",
       },
     ],
   ],
   summary: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   generations: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   results: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   accepted: [
@@ -1620,7 +1620,7 @@ const evaluationUpdateRequest: EvaluationUpdateRequest = {
   ],
   comments: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
 };
@@ -1669,7 +1669,7 @@ async function run() {
 
   const res = await sdk.postSessionStart({
     userProperties: {
-      "key": "string",
+      "key": "<value>",
     },
   });
 
@@ -1712,7 +1712,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 
   const res = await sdk.postSessionSessionIdEnd(sessionId);
 
@@ -1756,33 +1756,33 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 const sessionEventQuery: SessionEventQuery = {
   config: {
-    "key": "string",
+    "key": "<value>",
   },
   children: [
     {
-      "key": "string",
+      "key": "<value>",
     },
   ],
   inputs: {
-    "key": "string",
+    "key": "<value>",
   },
   outputs: {
-    "key": "string",
+    "key": "<value>",
   },
   userProperties: {
-    "key": "string",
+    "key": "<value>",
   },
   metadata: {
-    "key": "string",
+    "key": "<value>",
   },
   metrics: {
-    "key": "string",
+    "key": "<value>",
   },
   feedback: {
-    "key": "string",
+    "key": "<value>",
   },
 };
 
@@ -1829,10 +1829,10 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 const sessionFeedback: SessionFeedback = {
   feedback: {
-    "key": "string",
+    "key": "<value>",
   },
 };
 
@@ -1878,7 +1878,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 
   const res = await sdk.getSessionSessionId(sessionId);
 
@@ -1929,10 +1929,10 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 const sessionEventUpdate: SessionEventUpdate = {
   output: {},
-  error: "string",
+  error: "<value>",
   inputs: {},
   userProperties: {},
   feedback: {},
@@ -1981,7 +1981,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 
   const res = await sdk.deleteSessionSessionId(sessionId);
 
@@ -2024,7 +2024,7 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 
   const res = await sdk.getSessionSessionIdExport(sessionId);
 
@@ -2067,9 +2067,9 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const project: string = "string";
+const project: string = "<value>";
 const query: Record<string, any> = {
-  "key": "string",
+  "key": "<value>",
 };
 const limit: number = 355376;
 
@@ -2117,35 +2117,35 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const sessionId: string = "string";
+const sessionId: string = "<value>";
 const sessionTrace: SessionTrace = {
   logs: [
     {
       config: {
-        "key": "string",
+        "key": "<value>",
       },
       children: [
         {
-          "key": "string",
+          "key": "<value>",
         },
       ],
       inputs: {
-        "key": "string",
+        "key": "<value>",
       },
       outputs: {
-        "key": "string",
+        "key": "<value>",
       },
       userProperties: {
-        "key": "string",
+        "key": "<value>",
       },
       metadata: {
-        "key": "string",
+        "key": "<value>",
       },
       metrics: {
-        "key": "string",
+        "key": "<value>",
       },
       feedback: {
-        "key": "string",
+        "key": "<value>",
       },
     },
   ],

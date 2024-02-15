@@ -29,7 +29,7 @@ async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     const res = await sdk.getTasks(name);
 
@@ -111,7 +111,7 @@ async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     let res;
     try {
@@ -155,7 +155,7 @@ async function run() {
         serverIdx: 0,
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     const res = await sdk.getTasks(name);
 
@@ -181,7 +181,7 @@ async function run() {
         serverURL: "https://api.honeyhive.ai",
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     const res = await sdk.getTasks(name);
 
@@ -234,7 +234,7 @@ async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "string";
+    const name: string = "<value>";
 
     const res = await sdk.getTasks(name);
 

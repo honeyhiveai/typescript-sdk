@@ -4,15 +4,15 @@ management:
   docChecksum: 88c6579cda1b6e637d284af70c9ca80b
   docVersion: 1.0.1
   speakeasyVersion: internal
-  generationVersion: 2.225.2
-  releaseVersion: 0.2.1
-  configChecksum: 21c6267c128283d88dc977dfba0ebc70
+  generationVersion: 2.258.0
+  releaseVersion: 0.2.2
+  configChecksum: a8ad0ad33ffa36f615616a808c7c3d80
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
 features:
   typescript:
-    core: 3.4.1
+    core: 3.4.7
     flattening: 2.81.1
     globalSecurity: 2.82.2
     globalServerURLs: 2.82.1
