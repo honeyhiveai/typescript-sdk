@@ -7,23 +7,8 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class GetSessionRequest extends SpeakeasyBase {
-    /**
-     * The project to query sessions for
-     */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
-    project?: string;
-
-    /**
-     * The query for finding sessions
-     */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=query" })
-    query?: Record<string, any>;
-
-    /**
-     * The maximum number of sessions to return
-     */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=limit" })
-    limit?: number;
+    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=session_id" })
+    sessionId: string;
 }
 
 export class GetSessionResponse extends SpeakeasyBase {
@@ -46,8 +31,8 @@ export class GetSessionResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * Session details
      */
-    @SpeakeasyMetadata({ elemType: components.SessionEventQuery })
-    classes?: components.SessionEventQuery[];
+    @SpeakeasyMetadata()
+    event?: components.Event;
 }

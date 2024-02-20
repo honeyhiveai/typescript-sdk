@@ -26,8 +26,8 @@ export class PostPromptsResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * Successfully created a new prompt.
      */
     @SpeakeasyMetadata()
-    promptResponse?: components.PromptResponse;
+    prompt?: components.Prompt;
 }

@@ -6,11 +6,6 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
-export class GetMetricsRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=task" })
-    task?: string;
-}
-
 export class GetMetricsResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
@@ -31,8 +26,8 @@ export class GetMetricsResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * A list of metrics
      */
     @SpeakeasyMetadata({ elemType: components.Metric })
-    classes?: components.Metric[];
+    metrics?: components.Metric[];
 }

@@ -1,7 +1,5 @@
 # Inputs
 
-Updated inputs for the event
-
 
 ## Fields
 

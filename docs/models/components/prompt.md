@@ -1,0 +1,15 @@
+# Prompt
+
+
+## Fields
+
+| Field                                                                    | Type                                                                     | Required                                                                 | Description                                                              |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `id`                                                                     | *string*                                                                 | :heavy_check_mark:                                                       | Unique identifier for the prompt.                                        |
+| `task`                                                                   | *string*                                                                 | :heavy_check_mark:                                                       | N/A                                                                      |
+| `version`                                                                | *string*                                                                 | :heavy_check_mark:                                                       | N/A                                                                      |
+| `model`                                                                  | *string*                                                                 | :heavy_check_mark:                                                       | N/A                                                                      |
+| `provider`                                                               | *string*                                                                 | :heavy_check_mark:                                                       | N/A                                                                      |
+| `hyperparameters`                                                        | [components.Hyperparameters](../../models/components/hyperparameters.md) | :heavy_minus_sign:                                                       | N/A                                                                      |
+| `text`                                                                   | *string*                                                                 | :heavy_check_mark:                                                       | N/A                                                                      |
+| `name`                                                                   | *string*                                                                 | :heavy_minus_sign:                                                       | N/A                                                                      |

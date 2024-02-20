@@ -3,7 +3,6 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class DeleteMetricsRequest extends SpeakeasyBase {
@@ -29,10 +28,4 @@ export class DeleteMetricsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * OK
-     */
-    @SpeakeasyMetadata()
-    metricDeleteResponse?: components.MetricDeleteResponse;
 }

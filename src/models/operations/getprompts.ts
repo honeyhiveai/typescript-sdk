@@ -7,9 +7,15 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class GetPromptsRequest extends SpeakeasyBase {
+    /**
+     * Task associated with the prompts.
+     */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=task" })
-    task?: string;
+    task: string;
 
+    /**
+     * Optional name to filter prompts.
+     */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=name" })
     name?: string;
 }
@@ -34,8 +40,8 @@ export class GetPromptsResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * Successfully retrieved list of prompts.
      */
-    @SpeakeasyMetadata({ elemType: components.PromptResponse })
-    classes?: components.PromptResponse[];
+    @SpeakeasyMetadata({ elemType: components.Prompt })
+    prompts?: components.Prompt[];
 }

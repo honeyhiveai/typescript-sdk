@@ -1,7 +1,5 @@
 # UserProperties
 
-Updated user properties for the event
-
 
 ## Fields
 

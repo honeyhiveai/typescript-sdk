@@ -8,16 +8,10 @@ import { AxiosResponse } from "axios";
 
 export class GetDatasetsRequest extends SpeakeasyBase {
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=task" })
-    task?: string;
-
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=prompt" })
-    prompt?: string;
+    task: string;
 
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_id" })
     datasetId?: string;
-
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=purpose" })
-    purpose?: string;
 }
 
 export class GetDatasetsResponse extends SpeakeasyBase {
@@ -40,8 +34,8 @@ export class GetDatasetsResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * A list of datasets
      */
-    @SpeakeasyMetadata({ elemType: components.DatasetResponse })
-    classes?: components.DatasetResponse[];
+    @SpeakeasyMetadata({ elemType: components.Dataset })
+    datasets?: components.Dataset[];
 }

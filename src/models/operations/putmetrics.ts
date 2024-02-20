@@ -3,7 +3,6 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class PutMetricsResponse extends SpeakeasyBase {
@@ -24,10 +23,4 @@ export class PutMetricsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * OK
-     */
-    @SpeakeasyMetadata()
-    metricUpdateResponse?: components.MetricUpdateResponse;
 }
