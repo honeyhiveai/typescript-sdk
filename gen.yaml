@@ -10,7 +10,7 @@ generation:
     parameterOrderingFeb2024: false
     requestResponseComponentNamesFeb2024: false
 typescript:
-  version: 0.2.3
+  version: 0.2.4
   author: HoneyHive
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
