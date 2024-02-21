@@ -7,11 +7,14 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class PutPromptsIdRequest extends SpeakeasyBase {
+    /**
+     * ID of the prompt to update.
+     */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;
 
     @SpeakeasyMetadata({ data: "request, media_type=application/json" })
-    promptUpdateQuery: components.PromptUpdateQuery;
+    prompt: components.Prompt;
 }
 
 export class PutPromptsIdResponse extends SpeakeasyBase {
@@ -32,10 +35,4 @@ export class PutPromptsIdResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * OK
-     */
-    @SpeakeasyMetadata()
-    promptResponse?: components.PromptResponse;
 }

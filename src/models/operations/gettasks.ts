@@ -31,8 +31,8 @@ export class GetTasksResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * OK
+     * A list of tasks
      */
-    @SpeakeasyMetadata({ elemType: components.TaskResponse })
-    classes?: components.TaskResponse[];
+    @SpeakeasyMetadata({ elemType: components.Task })
+    tasks?: components.Task[];
 }

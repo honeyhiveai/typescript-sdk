@@ -3,7 +3,17 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+
+export class Threshold extends SpeakeasyBase {
+    @SpeakeasyMetadata()
+    @Expose({ name: "min" })
+    min?: number;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "max" })
+    max?: number;
+}
 
 export class Metric extends SpeakeasyBase {
     @SpeakeasyMetadata()
@@ -17,4 +27,45 @@ export class Metric extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "task" })
     task?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "description" })
+    description?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "enabled_in_prod" })
+    enabledInProd?: boolean;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "needs_ground_truth" })
+    needsGroundTruth?: boolean;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "return_type" })
+    returnType?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "threshold" })
+    @Type(() => Threshold)
+    threshold?: Threshold;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "pass_when" })
+    passWhen?: boolean;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "_id" })
+    id?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_name" })
+    eventName?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_type" })
+    eventType?: string;
 }

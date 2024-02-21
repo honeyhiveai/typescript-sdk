@@ -23,15 +23,16 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "<value>";
+    const project: string = "<value>";
+    const type: string = "<value>";
 
-    const res = await sdk.getTasks(name);
+    const res = await sdk.configurations.getConfigurations(project, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -46,50 +47,77 @@ run();
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
-### [HoneyHive SDK](docs/sdks/honeyhive/README.md)
+### [configurations](docs/sdks/configurations/README.md)
 
-* [getTasks](docs/sdks/honeyhive/README.md#gettasks) - Get all tasks
-* [postTasks](docs/sdks/honeyhive/README.md#posttasks) - Create a task
-* [deleteTasks](docs/sdks/honeyhive/README.md#deletetasks) - Delete a task
-* [putTasks](docs/sdks/honeyhive/README.md#puttasks) - Update a task
-* [getGenerations](docs/sdks/honeyhive/README.md#getgenerations) - Get all generations
-* [postGenerations](docs/sdks/honeyhive/README.md#postgenerations) - Generate a text
-* [getPrompts](docs/sdks/honeyhive/README.md#getprompts) - Get all prompts or filter by task and name
-* [postPrompts](docs/sdks/honeyhive/README.md#postprompts) - Create a prompt
-* [putPromptsId](docs/sdks/honeyhive/README.md#putpromptsid) - Update a prompt
-* [deletePromptsId](docs/sdks/honeyhive/README.md#deletepromptsid) - Delete a prompt by name
-* [getFineTunedModels](docs/sdks/honeyhive/README.md#getfinetunedmodels) - Get all fine-tuned models
-* [postFineTunedModels](docs/sdks/honeyhive/README.md#postfinetunedmodels) - Create a new fine-tuned model
-* [getFineTunedModelsId](docs/sdks/honeyhive/README.md#getfinetunedmodelsid) - Get a fine-tuned model
-* [deleteFineTunedModelsId](docs/sdks/honeyhive/README.md#deletefinetunedmodelsid) - Delete a fine-tuned model
-* [getDatasets](docs/sdks/honeyhive/README.md#getdatasets) - Get datasets
-* [postDatasets](docs/sdks/honeyhive/README.md#postdatasets) - Create a dataset
-* [putDatasets](docs/sdks/honeyhive/README.md#putdatasets) - Update a dataset
-* [deleteDatasets](docs/sdks/honeyhive/README.md#deletedatasets) - Delete all datasets
-* [deleteDatasetsName](docs/sdks/honeyhive/README.md#deletedatasetsname) - Delete a dataset
-* [getMetrics](docs/sdks/honeyhive/README.md#getmetrics) - Get all metrics
-* [postMetrics](docs/sdks/honeyhive/README.md#postmetrics) - Create a metric
-* [deleteMetrics](docs/sdks/honeyhive/README.md#deletemetrics) - Delete a metric
-* [putMetrics](docs/sdks/honeyhive/README.md#putmetrics) - Update a metric
-* [postMetricsCompute](docs/sdks/honeyhive/README.md#postmetricscompute) - Compute metric
-* [postChat](docs/sdks/honeyhive/README.md#postchat) - Create a chat completion
-* [postGenerationsLog](docs/sdks/honeyhive/README.md#postgenerationslog) - Log a generation
-* [postFeedback](docs/sdks/honeyhive/README.md#postfeedback) - Send feedback
-* [postEvaluations](docs/sdks/honeyhive/README.md#postevaluations) - Log an evaluation
-* [getEvaluations](docs/sdks/honeyhive/README.md#getevaluations) - Get all evaluations
-* [getEvaluationsId](docs/sdks/honeyhive/README.md#getevaluationsid) - Get an evaluation
-* [deleteEvaluationsId](docs/sdks/honeyhive/README.md#deleteevaluationsid) - Delete an evaluation
-* [putEvaluationsId](docs/sdks/honeyhive/README.md#putevaluationsid) - Update an evaluation
-* [postSessionStart](docs/sdks/honeyhive/README.md#postsessionstart) - Start a session
-* [postSessionSessionIdEnd](docs/sdks/honeyhive/README.md#postsessionsessionidend) - End a session
-* [postSessionSessionIdEvent](docs/sdks/honeyhive/README.md#postsessionsessionidevent) - Log an event
-* [postSessionSessionIdFeedback](docs/sdks/honeyhive/README.md#postsessionsessionidfeedback) - Log session feedback
-* [getSessionSessionId](docs/sdks/honeyhive/README.md#getsessionsessionid) - Get a session
-* [putSessionSessionId](docs/sdks/honeyhive/README.md#putsessionsessionid) - Update a session event
-* [deleteSessionSessionId](docs/sdks/honeyhive/README.md#deletesessionsessionid) - Delete a session
-* [getSessionSessionIdExport](docs/sdks/honeyhive/README.md#getsessionsessionidexport) - Get a session in Trace Event format
-* [getSession](docs/sdks/honeyhive/README.md#getsession) - Get all sessions
-* [postSessionSessionIdTraces](docs/sdks/honeyhive/README.md#postsessionsessionidtraces) - Log a trace
+* [getConfigurations](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
+* [createConfiguration](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
+* [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
+* [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
+
+### [datapoint](docs/sdks/datapoint/README.md)
+
+* [getDatapoints](docs/sdks/datapoint/README.md#getdatapoints) - Retrieve a list of datapoints
+* [updateDatapoint](docs/sdks/datapoint/README.md#updatedatapoint) - Update a specific datapoint
+* [createDatapoint](docs/sdks/datapoint/README.md#createdatapoint) - Create a new datapoint
+* [deleteDatapoint](docs/sdks/datapoint/README.md#deletedatapoint) - Delete a specific datapoint
+* [getDatapoint](docs/sdks/datapoint/README.md#getdatapoint) - Retrieve a specific datapoint
+
+### [datasets](docs/sdks/datasets/README.md)
+
+* [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Retrieve a list of datasets
+* [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a new dataset
+* [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
+* [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
+
+### [events](docs/sdks/events/README.md)
+
+* [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
+* [postEvents](docs/sdks/events/README.md#postevents) - Create a new event
+* [putEvents](docs/sdks/events/README.md#putevents) - Update an event
+* [getEventsChart](docs/sdks/events/README.md#geteventschart) - Retrieve a chart of events
+* [deleteEventsEventId](docs/sdks/events/README.md#deleteeventseventid) - Delete an event
+
+### [metrics](docs/sdks/metrics/README.md)
+
+* [deleteMetrics](docs/sdks/metrics/README.md#deletemetrics) - Delete a metric
+* [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
+* [postMetrics](docs/sdks/metrics/README.md#postmetrics) - Create a new metric
+* [putMetrics](docs/sdks/metrics/README.md#putmetrics) - Update an existing metric
+* [postMetricsCompute](docs/sdks/metrics/README.md#postmetricscompute) - Compute metric
+
+### [prompts](docs/sdks/prompts/README.md)
+
+* [getPrompts](docs/sdks/prompts/README.md#getprompts) - Retrieve a list of prompts based on query parameters.
+* [postPrompts](docs/sdks/prompts/README.md#postprompts) - Create a new prompt.
+* [deletePromptsId](docs/sdks/prompts/README.md#deletepromptsid) - Delete an existing prompt.
+* [putPromptsId](docs/sdks/prompts/README.md#putpromptsid) - Update an existing prompt.
+
+### [session](docs/sdks/session/README.md)
+
+* [startSession](docs/sdks/session/README.md#startsession) - Start a new session
+* [deleteSession](docs/sdks/session/README.md#deletesession) - Delete a session
+* [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
+* [processEventTrace](docs/sdks/session/README.md#processeventtrace) - Process an event trace for a given session
+
+### [tasks](docs/sdks/tasks/README.md)
+
+* [deleteTask](docs/sdks/tasks/README.md#deletetask) - Delete a task
+* [getTasks](docs/sdks/tasks/README.md#gettasks) - Get a list of tasks
+* [createTask](docs/sdks/tasks/README.md#createtask) - Create a new task
+* [updateTask](docs/sdks/tasks/README.md#updatetask) - Update a task
+
+### [testcases](docs/sdks/testcases/README.md)
+
+* [getTestcases](docs/sdks/testcases/README.md#gettestcases) - Get testcases
+* [postTestcases](docs/sdks/testcases/README.md#posttestcases) - Create a testcase
+* [putTestcases](docs/sdks/testcases/README.md#puttestcases) - Update a testcase
+
+### [tools](docs/sdks/tools/README.md)
+
+* [deleteTool](docs/sdks/tools/README.md#deletetool) - Delete a tool
+* [getTools](docs/sdks/tools/README.md#gettools) - Retrieve a list of tools
+* [createTool](docs/sdks/tools/README.md#createtool) - Create a new tool
+* [updateTool](docs/sdks/tools/README.md#updatetool) - Update an existing tool
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- Start Error Handling [errors] -->
@@ -105,17 +133,18 @@ Example
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "<value>";
+    const project: string = "<value>";
+    const type: string = "<value>";
 
     let res;
     try {
-        res = await sdk.getTasks(name);
+        res = await sdk.configurations.getConfigurations(project, type);
     } catch (err) {
         if (err instanceof errors.SDKError) {
             console.error(err); // handle exception
@@ -148,16 +177,17 @@ You can override the default server globally by passing a server index to the `s
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverIdx: 0,
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "<value>";
+    const project: string = "<value>";
+    const type: string = "<value>";
 
-    const res = await sdk.getTasks(name);
+    const res = await sdk.configurations.getConfigurations(project, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -174,16 +204,17 @@ run();
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverURL: "https://api.honeyhive.ai",
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "<value>";
+    const project: string = "<value>";
+    const type: string = "<value>";
 
-    const res = await sdk.getTasks(name);
+    const res = await sdk.configurations.getConfigurations(project, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -228,15 +259,16 @@ This SDK supports the following security scheme globally:
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetTasksRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const name: string = "<value>";
+    const project: string = "<value>";
+    const type: string = "<value>";
 
-    const res = await sdk.getTasks(name);
+    const res = await sdk.configurations.getConfigurations(project, type);
 
     if (res.statusCode == 200) {
         // handle response

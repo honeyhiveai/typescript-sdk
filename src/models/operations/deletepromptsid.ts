@@ -3,10 +3,12 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 export class DeletePromptsIdRequest extends SpeakeasyBase {
+    /**
+     * ID of the prompt to delete.
+     */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;
 }
@@ -29,10 +31,4 @@ export class DeletePromptsIdResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * OK
-     */
-    @SpeakeasyMetadata()
-    deleteResponse?: components.DeleteResponse;
 }

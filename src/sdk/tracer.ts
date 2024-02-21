@@ -57,19 +57,19 @@ export interface ChatMessage {
 
 export interface ParentLog {
     project?: string;
-    eventId?: string;
-    sessionId?: string;
-    eventType?: EventType;
-    eventName?: string;
+    event_id?: string;
+    session_id?: string;
+    event_type?: EventType;
+    event_name?: string;
     config?: Config | ModelConfig | ToolConfig | AgentConfig;
     inputs?: { [key: string]: any };
     outputs?: { [key: string]: any };
     children?: ChildLog[];
-    userProperties?: { [key: string]: any };
+    user_properties?: { [key: string]: any };
     metadata?: { [key: string]: any };
     source?: string;
-    startTime?: number;
-    endTime?: number;
+    start_time?: number;
+    end_time?: number;
     duration?: number;
     error?: string;
     metrics?: { [key: string]: number };
@@ -78,7 +78,7 @@ export interface ParentLog {
 
 export interface ChildLog {
     project?: string;
-    event_id: string;
+    event_id?: string;
     session_id?: string;
     parent_id?: string;
     event_type: EventType;
@@ -115,30 +115,38 @@ export class SessionTracer {
 
     async startSession(inputs?: { [key: string]: any }): Promise<void> {
         try {
-            const event_id = uuidv4();
-            this.parentEvent = {
+            const session = {
                 project: this.project,
-                eventId: event_id,
                 eventType: "chain",
                 eventName: this.session_name,
                 config: { type: "chain" },
                 inputs: inputs || {},
-                startTime: Date.now(),
+                startTime: 1000 * Date.now(),
                 userProperties: this.user_properties,
+                metadata: {},
+                source: this.source,
+                children_ids: [],
+                metrics: {},
+                feedback: {},
+            };
+            this.parentEvent = {
+                project: this.project,
+                event_type: "chain",
+                event_name: this.session_name,
+                config: { type: "chain" },
+                inputs: inputs || {},
+                start_time: 1000 * Date.now(),
+                user_properties: this.user_properties,
                 metadata: {},
                 source: this.source,
                 children: [],
                 metrics: {},
                 feedback: {},
             };
-            const res = await this.sdk.postSessionStart({
-                userProperties: this.user_properties,
-                sessionId: event_id,
-                sessionName: this.session_name,
-                source: this.source,
-                project: this.project,
+            const res = await this.sdk.session.startSession({
+                session: session,
             });
-            const session_id = res.sessionStartResponse?.sessionId;
+            const session_id = res.object?.sessionId;
             if (session_id) {
                 this.session_id = session_id;
             } else {
@@ -152,13 +160,15 @@ export class SessionTracer {
     startEvent(event_type: EventType, event_name: string, config: Config | ModelConfig | ToolConfig | AgentConfig, inputs: { [key: string]: any }): void {
         try {
             const newEvent: ChildLog = {
+                session_id: this.session_id,
                 event_id: uuidv4(),
-                parent_id: this.eventStack.length > 0 ? this.eventStack[this.eventStack.length - 1].event_id : this.parentEvent.eventId,
+                project: this.project,
+                parent_id: this.eventStack.length > 0 ? this.eventStack[this.eventStack.length - 1].event_id : this.parentEvent.event_id,
                 event_type,
                 event_name,
                 config,
                 inputs,
-                start_time: Date.now(),
+                start_time: 1000 * Date.now(),
                 user_properties: this.user_properties,
                 metadata: {},
                 source: this.source,
@@ -180,7 +190,7 @@ export class SessionTracer {
             }
             const currentEvent = this.eventStack.pop();
             if (currentEvent) {
-                currentEvent.end_time = Date.now();
+                currentEvent.end_time = 1000 * Date.now();
                 currentEvent.duration = currentEvent.end_time - (currentEvent.start_time || currentEvent.end_time);
                 currentEvent.outputs = outputs;
                 if (error) {
@@ -203,17 +213,14 @@ export class SessionTracer {
                 this.endEvent();
             }
             const session_trace = this.parentEvent;
-            if (session_trace) {
-                session_trace.sessionId = uuidv4();
-            }
-            session_trace.endTime = Date.now();
-            session_trace.duration = session_trace.endTime - (session_trace.startTime || session_trace.endTime);
+            session_trace.end_time = 1000 * Date.now();
+            session_trace.duration = session_trace.end_time - (session_trace.start_time || session_trace.end_time);
             session_trace.outputs = outputs;
             if (error) {
                 session_trace.error = error;
             }
             if (session_trace) {
-                const res = await this.sdk.postSessionSessionIdTraces(this.session_id, { logs: [session_trace] });
+                const res = await this.sdk.session.processEventTrace(this.session_id, { logs: [session_trace] });
 
                 if (res.statusCode == 200) {
                     // handle response

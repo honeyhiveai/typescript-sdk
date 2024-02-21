@@ -1,0 +1,14 @@
+# Configuration
+
+
+## Fields
+
+| Field                                                                  | Type                                                                   | Required                                                               | Description                                                            |
+| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `id`                                                                   | *string*                                                               | :heavy_minus_sign:                                                     | N/A                                                                    |
+| `project`                                                              | *string*                                                               | :heavy_check_mark:                                                     | N/A                                                                    |
+| `type`                                                                 | *string*                                                               | :heavy_check_mark:                                                     | N/A                                                                    |
+| `name`                                                                 | *string*                                                               | :heavy_check_mark:                                                     | N/A                                                                    |
+| `provider`                                                             | *string*                                                               | :heavy_check_mark:                                                     | N/A                                                                    |
+| `parameters`                                                           | [components.ParametersT](../../models/components/parameterst.md)       | :heavy_minus_sign:                                                     | N/A                                                                    |
+| `userProperties`                                                       | [components.UserProperties](../../models/components/userproperties.md) | :heavy_minus_sign:                                                     | N/A                                                                    |
