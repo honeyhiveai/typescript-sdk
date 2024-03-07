@@ -7,12 +7,32 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 import { Expose, Type } from "class-transformer";
 
+/**
+ * Type of data - "evaluation" or "event"
+ */
+export enum QueryParamType {
+    Evaluation = "evaluation",
+    Event = "event",
+}
+
 export class GetDatapointsRequest extends SpeakeasyBase {
     /**
      * Project ID to filter datapoints
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
     project: string;
+
+    /**
+     * Type of data - "evaluation" or "event"
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
+    type?: QueryParamType;
+
+    /**
+     * List of datapoint ids to fetch
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=datapoint_ids" })
+    datapointIds?: string[];
 }
 
 /**

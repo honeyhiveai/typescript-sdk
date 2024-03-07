@@ -3,29 +3,28 @@
 
 ### Available Operations
 
-* [getDatasets](#getdatasets) - Retrieve a list of datasets
-* [createDataset](#createdataset) - Create a new dataset
-* [deleteDataset](#deletedataset) - Delete a dataset
-* [updateDataset](#updatedataset) - Update a dataset
+* [deleteDatasets](#deletedatasets) - Delete a dataset
+* [getDatasets](#getdatasets) - Get datasets
+* [postDatasets](#postdatasets) - Create a dataset
+* [putDatasets](#putdatasets) - Update a dataset
 
-## getDatasets
+## deleteDatasets
 
-Retrieve a list of datasets
+Delete a dataset
 
 ### Example Usage
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetDatasetsRequest } from "HoneyHive/dist/models/operations";
+import { DeleteDatasetsRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const task: string = "<value>";
 const datasetId: string = "<value>";
 
-  const res = await sdk.datasets.getDatasets(task, datasetId);
+  const res = await sdk.datasets.deleteDatasets(datasetId);
 
   if (res.statusCode == 200) {
     // handle response
@@ -39,9 +38,55 @@ run();
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `task`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `datasetId`                                                  | *string*                                                     | :heavy_minus_sign:                                           | N/A                                                          |
+| `datasetId`                                                  | *string*                                                     | :heavy_check_mark:                                           | The unique identifier of the dataset to be deleted           |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteDatasetsResponse](../../models/operations/deletedatasetsresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4xx-5xx         | */*             |
+
+## getDatasets
+
+Get datasets
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { GetDatasetsQueryParamType, GetDatasetsRequest } from "HoneyHive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const project: string = "<value>";
+const type: GetDatasetsQueryParamType = GetDatasetsQueryParamType.Evaluation;
+const datasetId: string = "<value>";
+
+  const res = await sdk.datasets.getDatasets(project, type, datasetId);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                    | Type                                                                                         | Required                                                                                     | Description                                                                                  |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `project`                                                                                    | *string*                                                                                     | :heavy_check_mark:                                                                           | Project ID associated with the datasets                                                      |
+| `type`                                                                                       | [operations.GetDatasetsQueryParamType](../../models/operations/getdatasetsqueryparamtype.md) | :heavy_minus_sign:                                                                           | Type of the dataset - "evaluation" or "fine-tuning"                                          |
+| `datasetId`                                                                                  | *string*                                                                                     | :heavy_minus_sign:                                                                           | Unique dataset ID for filtering specific dataset                                             |
+| `config`                                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                 | :heavy_minus_sign:                                                                           | Available config options for making requests.                                                |
 
 
 ### Response
@@ -53,30 +98,31 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## createDataset
+## postDatasets
 
-Create a new dataset
+Create a dataset
 
 ### Example Usage
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
+import { CreateDatasetRequestType, PipelineType } from "HoneyHive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.datasets.createDataset({
-    name: "<value>",
-    purpose: "<value>",
-    file: [
-      {},
+  const res = await sdk.datasets.postDatasets({
+    datapoints: [
+      "<value>",
     ],
-    bytes: 855366,
-    description: "Programmable scalable hardware",
-    task: "<value>",
-    prompt: "<value>",
+    linkedEvals: [
+      "<value>",
+    ],
+    metadata: {},
+    name: "<value>",
+    project: "<value>",
   });
 
   if (res.statusCode == 200) {
@@ -89,65 +135,22 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `request`                                                    | [components.Dataset](../../models/components/dataset.md)     | :heavy_check_mark:                                           | The request object to use for the request.                   |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `request`                                                                          | [components.CreateDatasetRequest](../../models/components/createdatasetrequest.md) | :heavy_check_mark:                                                                 | The request object to use for the request.                                         |
+| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
 
 
 ### Response
 
-**Promise<[operations.CreateDatasetResponse](../../models/operations/createdatasetresponse.md)>**
+**Promise<[operations.PostDatasetsResponse](../../models/operations/postdatasetsresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## deleteDataset
-
-Delete a dataset
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteDatasetRequest } from "HoneyHive/dist/models/operations";
-
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const id: string = "<value>";
-
-  const res = await sdk.datasets.deleteDataset(id);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteDatasetResponse](../../models/operations/deletedatasetresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
-## updateDataset
+## putDatasets
 
 Update a dataset
 
@@ -155,27 +158,22 @@ Update a dataset
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { Dataset, File } from "HoneyHive/dist/models/components";
-import { UpdateDatasetRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const id: string = "<value>";
-const dataset: Dataset = {
-  name: "<value>",
-  purpose: "<value>",
-  file: [
-    {},
-  ],
-  bytes: 897277,
-  description: "Compatible discrete implementation",
-  task: "<value>",
-  prompt: "<value>",
-};
 
-  const res = await sdk.datasets.updateDataset(id, dataset);
+  const res = await sdk.datasets.putDatasets({
+    datapoints: [
+      "<value>",
+    ],
+    datasetId: "<value>",
+    linkedEvals: [
+      "<value>",
+    ],
+    metadata: {},
+  });
 
   if (res.statusCode == 200) {
     // handle response
@@ -187,16 +185,15 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `dataset`                                                    | [components.Dataset](../../models/components/dataset.md)     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+| Parameter                                                            | Type                                                                 | Required                                                             | Description                                                          |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `request`                                                            | [components.DatasetUpdate](../../models/components/datasetupdate.md) | :heavy_check_mark:                                                   | The request object to use for the request.                           |
+| `config`                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)         | :heavy_minus_sign:                                                   | Available config options for making requests.                        |
 
 
 ### Response
 
-**Promise<[operations.UpdateDatasetResponse](../../models/operations/updatedatasetresponse.md)>**
+**Promise<[operations.PutDatasetsResponse](../../models/operations/putdatasetsresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

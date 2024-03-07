@@ -17,7 +17,7 @@ export class Outputs extends SpeakeasyBase {}
 export class PutEventsRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "event_id" })
-    eventId?: string;
+    eventId: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "feedback" })

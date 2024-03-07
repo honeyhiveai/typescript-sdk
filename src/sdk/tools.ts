@@ -85,21 +85,20 @@ export class Tools {
     /**
      * Retrieve a list of tools
      */
-    async getTools(config?: AxiosRequestConfig): Promise<operations.GetToolsResponse> {
+    async getTools(
+        security: operations.GetToolsSecurity,
+        config?: AxiosRequestConfig
+    ): Promise<operations.GetToolsResponse> {
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
         const operationUrl: string = baseURL.replace(/\/$/, "") + "/tools";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
+        if (!(security instanceof utils.SpeakeasyBase)) {
+            security = new operations.GetToolsSecurity(security);
         }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
+        const properties = utils.parseSecurityProperties(security);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
         headers["Accept"] = "application/json";
 
@@ -163,6 +162,7 @@ export class Tools {
      */
     async createTool(
         req: components.Tool,
+        security: operations.CreateToolSecurity,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
@@ -185,14 +185,10 @@ export class Tools {
             }
         }
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
+        if (!(security instanceof utils.SpeakeasyBase)) {
+            security = new operations.CreateToolSecurity(security);
         }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
+        const properties = utils.parseSecurityProperties(security);
         const headers: RawAxiosRequestHeaders = {
             ...reqBodyHeaders,
             ...config?.headers,
@@ -245,6 +241,7 @@ export class Tools {
      */
     async updateTool(
         req: components.ToolUpdate,
+        security: operations.UpdateToolSecurity,
         config?: AxiosRequestConfig
     ): Promise<operations.UpdateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
@@ -267,14 +264,10 @@ export class Tools {
             }
         }
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
+        if (!(security instanceof utils.SpeakeasyBase)) {
+            security = new operations.UpdateToolSecurity(security);
         }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
+        const properties = utils.parseSecurityProperties(security);
         const headers: RawAxiosRequestHeaders = {
             ...reqBodyHeaders,
             ...config?.headers,

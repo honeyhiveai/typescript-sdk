@@ -5,14 +5,12 @@
 import * as utils from "../internal/utils";
 import * as components from "../models/components";
 import { Configurations } from "./configurations";
-import { Datapoint } from "./datapoint";
+import { Datapoints } from "./datapoints";
 import { Datasets } from "./datasets";
 import { Events } from "./events";
 import { Metrics } from "./metrics";
-import { Prompts } from "./prompts";
+import { Projects } from "./projects";
 import { Session } from "./session";
-import { Tasks } from "./tasks";
-import { Testcases } from "./testcases";
 import { Tools } from "./tools";
 import axios from "axios";
 import { AxiosInstance } from "axios";
@@ -55,9 +53,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "1.0.1";
-    sdkVersion = "0.2.4";
-    genVersion = "2.263.3";
-    userAgent = "speakeasy-sdk/typescript 0.2.4 2.263.3 1.0.1 HoneyHive";
+    sdkVersion = "0.3.0";
+    genVersion = "2.279.1";
+    userAgent = "speakeasy-sdk/typescript 0.3.0 2.279.1 1.0.1 HoneyHive";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -66,14 +64,12 @@ export class SDKConfiguration {
 
 export class HoneyHive {
     public configurations: Configurations;
-    public datapoint: Datapoint;
+    public datapoints: Datapoints;
     public datasets: Datasets;
     public events: Events;
     public metrics: Metrics;
-    public prompts: Prompts;
+    public projects: Projects;
     public session: Session;
-    public tasks: Tasks;
-    public testcases: Testcases;
     public tools: Tools;
 
     private sdkConfiguration: SDKConfiguration;
@@ -96,14 +92,12 @@ export class HoneyHive {
         });
 
         this.configurations = new Configurations(this.sdkConfiguration);
-        this.datapoint = new Datapoint(this.sdkConfiguration);
+        this.datapoints = new Datapoints(this.sdkConfiguration);
         this.datasets = new Datasets(this.sdkConfiguration);
         this.events = new Events(this.sdkConfiguration);
         this.metrics = new Metrics(this.sdkConfiguration);
-        this.prompts = new Prompts(this.sdkConfiguration);
+        this.projects = new Projects(this.sdkConfiguration);
         this.session = new Session(this.sdkConfiguration);
-        this.tasks = new Tasks(this.sdkConfiguration);
-        this.testcases = new Testcases(this.sdkConfiguration);
         this.tools = new Tools(this.sdkConfiguration);
     }
 }

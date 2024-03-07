@@ -3,7 +3,8 @@
 
 ## Fields
 
-| Field              | Type               | Required           | Description        |
-| ------------------ | ------------------ | ------------------ | ------------------ |
-| `task`             | *string*           | :heavy_check_mark: | N/A                |
-| `datasetId`        | *string*           | :heavy_minus_sign: | N/A                |
+| Field                                                                                        | Type                                                                                         | Required                                                                                     | Description                                                                                  |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `project`                                                                                    | *string*                                                                                     | :heavy_check_mark:                                                                           | Project ID associated with the datasets                                                      |
+| `type`                                                                                       | [operations.GetDatasetsQueryParamType](../../models/operations/getdatasetsqueryparamtype.md) | :heavy_minus_sign:                                                                           | Type of the dataset - "evaluation" or "fine-tuning"                                          |
+| `datasetId`                                                                                  | *string*                                                                                     | :heavy_minus_sign:                                                                           | Unique dataset ID for filtering specific dataset                                             |

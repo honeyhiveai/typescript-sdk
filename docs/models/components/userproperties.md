@@ -1,5 +1,7 @@
 # UserProperties
 
+Details of user who created the configuration
+
 
 ## Fields
 

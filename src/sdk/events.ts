@@ -17,75 +17,10 @@ export class Events {
     }
 
     /**
-     * Retrieve events based on filters
-     */
-    async getEvents(
-        project: string,
-        filters: string,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetEventsResponse> {
-        const req = new operations.GetEventsRequest({
-            project: project,
-            filters: filters,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events";
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetEventsResponse = new operations.GetEventsResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
      * Create a new event
+     *
+     * @remarks
+     * Please refer to our instrumentation guide for detailed information
      */
     async postEvents(
         req: operations.PostEventsRequestBody,
@@ -251,76 +186,6 @@ export class Events {
                 break;
             case httpRes?.status == 400 ||
                 (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Retrieve a chart of events
-     */
-    async getEventsChart(
-        project: string,
-        page?: number,
-        limit?: number,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetEventsChartResponse> {
-        const req = new operations.GetEventsChartRequest({
-            project: project,
-            page: page,
-            limit: limit,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/chart";
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetEventsChartResponse = new operations.GetEventsChartResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",

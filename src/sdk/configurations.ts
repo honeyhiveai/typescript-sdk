@@ -20,12 +20,12 @@ export class Configurations {
      * Retrieve a list of configurations
      */
     async getConfigurations(
-        project: string,
-        type: string,
+        projectName: string,
+        type: operations.TypeT,
         config?: AxiosRequestConfig
     ): Promise<operations.GetConfigurationsResponse> {
         const req = new operations.GetConfigurationsRequest({
-            project: project,
+            projectName: projectName,
             type: type,
         });
         const baseURL: string = utils.templateUrl(

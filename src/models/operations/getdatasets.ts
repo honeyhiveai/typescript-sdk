@@ -5,13 +5,44 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
+import { Expose, Type } from "class-transformer";
+
+/**
+ * Type of the dataset - "evaluation" or "fine-tuning"
+ */
+export enum GetDatasetsQueryParamType {
+    Evaluation = "evaluation",
+    FineTuning = "fine-tuning",
+}
 
 export class GetDatasetsRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=task" })
-    task: string;
+    /**
+     * Project ID associated with the datasets
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
+    project: string;
 
+    /**
+     * Type of the dataset - "evaluation" or "fine-tuning"
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
+    type?: GetDatasetsQueryParamType;
+
+    /**
+     * Unique dataset ID for filtering specific dataset
+     */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_id" })
     datasetId?: string;
+}
+
+/**
+ * Successful response
+ */
+export class GetDatasetsResponseBody extends SpeakeasyBase {
+    @SpeakeasyMetadata({ elemType: components.Dataset })
+    @Expose({ name: "datasets" })
+    @Type(() => components.Dataset)
+    datasets?: components.Dataset[];
 }
 
 export class GetDatasetsResponse extends SpeakeasyBase {
@@ -34,8 +65,8 @@ export class GetDatasetsResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * A list of datasets
+     * Successful response
      */
-    @SpeakeasyMetadata({ elemType: components.Dataset })
-    datasets?: components.Dataset[];
+    @SpeakeasyMetadata()
+    object?: GetDatasetsResponseBody;
 }

@@ -6,6 +6,14 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
+export class GetMetricsRequest extends SpeakeasyBase {
+    /**
+     * Project name associated with metrics
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project_name" })
+    projectName: string;
+}
+
 export class GetMetricsResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation

@@ -3,41 +3,72 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 
-export class File extends SpeakeasyBase {}
+/**
+ * What the dataset is to be used for - "evaluation" or "fine-tuning"
+ */
+export enum DatasetType {
+    Evaluation = "evaluation",
+    FineTuning = "fine-tuning",
+}
 
 export class Dataset extends SpeakeasyBase {
     @SpeakeasyMetadata()
-    @Expose({ name: "name" })
-    name: string;
+    @Expose({ name: "created_at" })
+    @Transform(({ value }) => new Date(value), { toClassOnly: true })
+    createdAt?: Date;
 
+    /**
+     * List of unique datapoint ids to be included in this dataset
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "purpose" })
-    purpose: string;
-
-    @SpeakeasyMetadata({ elemType: File })
-    @Expose({ name: "file" })
-    @Type(() => File)
-    file: File[];
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "bytes" })
-    bytes: number;
+    @Expose({ name: "datapoints" })
+    datapoints?: string[];
 
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
-    description: string;
+    description?: string;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "task" })
-    task: string;
+    @Expose({ name: "linked_evals" })
+    linkedEvals?: string[];
 
     @SpeakeasyMetadata()
-    @Expose({ name: "prompt" })
-    prompt: string;
+    @Expose({ name: "name" })
+    name?: string;
+
+    /**
+     * Number of datapoints included in the dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "num_points" })
+    numPoints?: number;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "id" })
-    id?: string;
+    @Expose({ name: "pipeline_type" })
+    pipelineType?: string;
+
+    /**
+     * UUID of the project associated with this dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project" })
+    project?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "saved" })
+    saved?: boolean;
+
+    /**
+     * What the dataset is to be used for - "evaluation" or "fine-tuning"
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: DatasetType;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "updated_at" })
+    @Transform(({ value }) => new Date(value), { toClassOnly: true })
+    updatedAt?: Date;
 }

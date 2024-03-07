@@ -10,8 +10,8 @@ import { Expose, Type } from "class-transformer";
 export class StartSessionRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "session" })
-    @Type(() => components.Event)
-    session?: components.Event;
+    @Type(() => components.SessionStartRequest)
+    session?: components.SessionStartRequest;
 }
 
 /**
