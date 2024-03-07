@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.1
   speakeasyVersion: 1.204.1
   generationVersion: 2.279.1
-  releaseVersion: 0.3.0
-  configChecksum: 7f5b1c5cb66573e203bb858db45c94fc
+  releaseVersion: 0.3.1
+  configChecksum: 300775adac8828fb42014d159efff72d
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
