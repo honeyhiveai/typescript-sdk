@@ -1,16 +1,16 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
-    const res = await sdk.configurations.getConfigurations(project, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type);
 
     if (res.statusCode == 200) {
         // handle response

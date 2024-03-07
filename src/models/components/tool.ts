@@ -5,7 +5,15 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose, Type } from "class-transformer";
 
+/**
+ * These can be function call params or plugin call params
+ */
 export class ToolParameters extends SpeakeasyBase {}
+
+export enum ToolType {
+    Function = "function",
+    Tool = "tool",
+}
 
 export class Tool extends SpeakeasyBase {
     @SpeakeasyMetadata()
@@ -13,23 +21,29 @@ export class Tool extends SpeakeasyBase {
     id?: string;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "task" })
-    task: string;
+    @Expose({ name: "description" })
+    description?: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
     name: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "description" })
-    description: string;
-
+    /**
+     * These can be function call params or plugin call params
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "parameters" })
     @Type(() => ToolParameters)
     parameters: ToolParameters;
 
+    /**
+     * Name of the project associated with this tool
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "task" })
+    task: string;
+
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
-    type: string;
+    type: ToolType;
 }

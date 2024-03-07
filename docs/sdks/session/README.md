@@ -33,6 +33,9 @@ async function run() {
       metadata: {},
       metrics: {},
       outputs: {},
+      project: "<value>",
+      sessionName: "<value>",
+      source: "<value>",
       userProperties: {},
     },
   });

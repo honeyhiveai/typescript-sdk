@@ -1,5 +1,7 @@
 # EventUserProperties
 
+Any user properties associated with the event
+
 
 ## Fields
 

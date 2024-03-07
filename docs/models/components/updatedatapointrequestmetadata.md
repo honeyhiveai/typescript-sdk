@@ -1,5 +1,7 @@
 # UpdateDatapointRequestMetadata
 
+Any additional metadata for the datapoint
+
 
 ## Fields
 

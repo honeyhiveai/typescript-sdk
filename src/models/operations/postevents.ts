@@ -10,8 +10,8 @@ import { Expose, Type } from "class-transformer";
 export class PostEventsRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "event" })
-    @Type(() => components.Event)
-    event?: components.Event;
+    @Type(() => components.CreateEventRequest)
+    event?: components.CreateEventRequest;
 }
 
 /**
@@ -21,6 +21,10 @@ export class PostEventsResponseBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "event_id" })
     eventId?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "success" })
+    success?: boolean;
 }
 
 export class PostEventsResponse extends SpeakeasyBase {

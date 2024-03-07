@@ -1,5 +1,7 @@
 # Inputs
 
+Arbitrary JSON object containing the inputs for the datapoint
+
 
 ## Fields
 

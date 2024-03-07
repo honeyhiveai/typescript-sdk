@@ -16,16 +16,16 @@ Retrieve a list of configurations
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const project: string = "<value>";
-const type: string = "<value>";
+const projectName: string = "<value>";
+const type: TypeT = TypeT.Llm;
 
-  const res = await sdk.configurations.getConfigurations(project, type);
+  const res = await sdk.configurations.getConfigurations(projectName, type);
 
   if (res.statusCode == 200) {
     // handle response
@@ -39,8 +39,8 @@ run();
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | Project identifier                                           |
-| `type`                                                       | *string*                                                     | :heavy_check_mark:                                           | Configuration type                                           |
+| `projectName`                                                | *string*                                                     | :heavy_check_mark:                                           | Project name for configuration                               |
+| `type`                                                       | [operations.TypeT](../../models/operations/typet.md)         | :heavy_check_mark:                                           | Configuration type - "LLM" or "pipeline"                     |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
@@ -61,6 +61,7 @@ Create a new configuration
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
+import { CallType, FunctionCallParams, TypeT } from "HoneyHive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -69,10 +70,23 @@ async function run() {
 
   const res = await sdk.configurations.createConfiguration({
     project: "<value>",
-    type: "<value>",
     name: "<value>",
     provider: "<value>",
-    parameters: {},
+    parameters: {
+      callType: CallType.Chat,
+      model: "Volt",
+      hyperparameters: {},
+      selectedFunctions: [
+        {
+          parameters: {
+            "key": "<value>",
+          },
+        },
+      ],
+      forceFunction: {
+        "key": "<value>",
+      },
+    },
     userProperties: {},
   });
 
@@ -152,7 +166,16 @@ Update an existing configuration
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { Configuration, ParametersT, UserProperties } from "HoneyHive/dist/models/components";
+import {
+  CallType,
+  Configuration,
+  FunctionCallParams,
+  Hyperparameters,
+  ParametersT,
+  SelectedFunctions,
+  TypeT,
+  UserProperties,
+} from "HoneyHive/dist/models/components";
 import { UpdateConfigurationRequest } from "HoneyHive/dist/models/operations";
 
 async function run() {
@@ -162,10 +185,23 @@ async function run() {
 const id: string = "<value>";
 const configuration: Configuration = {
   project: "<value>",
-  type: "<value>",
   name: "<value>",
   provider: "<value>",
-  parameters: {},
+  parameters: {
+    callType: CallType.Chat,
+    model: "Charger",
+    hyperparameters: {},
+    selectedFunctions: [
+      {
+        parameters: {
+          "key": "<value>",
+        },
+      },
+    ],
+    forceFunction: {
+      "key": "<value>",
+    },
+  },
   userProperties: {},
 };
 

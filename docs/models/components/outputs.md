@@ -1,5 +1,7 @@
 # Outputs
 
+Final output JSON of the event
+
 
 ## Fields
 

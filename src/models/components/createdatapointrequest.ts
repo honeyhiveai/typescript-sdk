@@ -3,68 +3,89 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { RFCDate } from "../../types";
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 
+/**
+ * Arbitrary JSON object containing the inputs for the datapoint
+ */
 export class CreateDatapointRequestInputs extends SpeakeasyBase {}
 
-export class CreateDatapointRequestHistory extends SpeakeasyBase {}
-
+/**
+ * Any additional metadata for the datapoint
+ */
 export class CreateDatapointRequestMetadata extends SpeakeasyBase {}
 
+/**
+ * Type of datapoint - "evaluation" or "fine-tuning"
+ */
+export enum CreateDatapointRequestType {
+    Evaluation = "evaluation",
+    FineTuning = "fine-tuning",
+}
+
 export class CreateDatapointRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "project" })
-    project?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "inputs" })
-    @Type(() => CreateDatapointRequestInputs)
-    inputs?: CreateDatapointRequestInputs;
-
-    @SpeakeasyMetadata({ elemType: CreateDatapointRequestHistory })
-    @Expose({ name: "history" })
-    @Type(() => CreateDatapointRequestHistory)
-    history?: CreateDatapointRequestHistory[];
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "created_at" })
-    @Type(() => String)
-    @Transform(({ value }) => new RFCDate(value), { toClassOnly: true })
-    createdAt?: RFCDate;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "updated_at" })
-    @Type(() => String)
-    @Transform(({ value }) => new RFCDate(value), { toClassOnly: true })
-    updatedAt?: RFCDate;
-
+    /**
+     * Expected output JSON object for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "ground_truth" })
     groundTruth?: Record<string, any>;
 
+    /**
+     * Arbitrary JSON object containing the inputs for the datapoint
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_event" })
-    linkedEvent?: string;
+    @Expose({ name: "inputs" })
+    @Type(() => CreateDatapointRequestInputs)
+    inputs: CreateDatapointRequestInputs;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "linked_evals" })
-    linkedEvals?: string[];
-
+    /**
+     * Ids of all datasets that include the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_datasets" })
     linkedDatasets?: string[];
 
+    /**
+     * Ids of evaluations where the datapoint is included
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
+    @Expose({ name: "linked_evals" })
+    linkedEvals?: string[];
 
+    /**
+     * Event id for the event from which the datapoint was created
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: string;
+    @Expose({ name: "linked_event" })
+    linkedEvent?: string;
 
+    /**
+     * Any additional metadata for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
     @Type(() => CreateDatapointRequestMetadata)
     metadata?: CreateDatapointRequestMetadata;
+
+    /**
+     * UUID for the project to which the datapoint belongs
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project" })
+    project: string;
+
+    /**
+     * Whether the datapoint is saved or detected
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "saved" })
+    saved?: boolean;
+
+    /**
+     * Type of datapoint - "evaluation" or "fine-tuning"
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type: CreateDatapointRequestType;
 }

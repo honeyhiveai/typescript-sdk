@@ -6,18 +6,26 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
+/**
+ * Configuration type - "LLM" or "pipeline"
+ */
+export enum TypeT {
+    Llm = "LLM",
+    Pipeline = "pipeline",
+}
+
 export class GetConfigurationsRequest extends SpeakeasyBase {
     /**
-     * Project identifier
+     * Project name for configuration
      */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
-    project: string;
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project_name" })
+    projectName: string;
 
     /**
-     * Configuration type
+     * Configuration type - "LLM" or "pipeline"
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type: string;
+    type: TypeT;
 }
 
 export class GetConfigurationsResponse extends SpeakeasyBase {

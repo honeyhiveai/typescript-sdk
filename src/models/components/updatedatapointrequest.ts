@@ -5,52 +5,75 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose, Type } from "class-transformer";
 
-export class UpdateDatapointRequestInputs extends SpeakeasyBase {}
-
 export class UpdateDatapointRequestHistory extends SpeakeasyBase {}
 
+/**
+ * Arbitrary JSON object containing the inputs for the datapoint
+ */
+export class UpdateDatapointRequestInputs extends SpeakeasyBase {}
+
+/**
+ * Any additional metadata for the datapoint
+ */
 export class UpdateDatapointRequestMetadata extends SpeakeasyBase {}
 
 export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
-     * The ID of the datapoint to update
+     * Expected output JSON object for the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "datapoint_id" })
-    datapointId?: string;
+    @Expose({ name: "ground_truth" })
+    groundTruth?: Record<string, any>;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "inputs" })
-    @Type(() => UpdateDatapointRequestInputs)
-    inputs?: UpdateDatapointRequestInputs;
-
+    /**
+     * Update history for the datapoint
+     */
     @SpeakeasyMetadata({ elemType: UpdateDatapointRequestHistory })
     @Expose({ name: "history" })
     @Type(() => UpdateDatapointRequestHistory)
     history?: UpdateDatapointRequestHistory[];
 
+    /**
+     * Arbitrary JSON object containing the inputs for the datapoint
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "ground_truth" })
-    groundTruth?: Record<string, any>;
+    @Expose({ name: "inputs" })
+    @Type(() => UpdateDatapointRequestInputs)
+    inputs?: UpdateDatapointRequestInputs;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "linked_evals" })
-    linkedEvals?: string[];
-
+    /**
+     * Ids of all datasets that include the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_datasets" })
     linkedDatasets?: string[];
 
+    /**
+     * Ids of evaluations where the datapoint is included
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
+    @Expose({ name: "linked_evals" })
+    linkedEvals?: string[];
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: string;
-
+    /**
+     * Any additional metadata for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
     @Type(() => UpdateDatapointRequestMetadata)
     metadata?: UpdateDatapointRequestMetadata;
+
+    /**
+     * Whether the datapoint is saved or detected
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "saved" })
+    saved?: boolean;
+
+    /**
+     * evaluation or event - specify the type of usage
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: string;
 }

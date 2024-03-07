@@ -23,16 +23,16 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
-    const res = await sdk.configurations.getConfigurations(project, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -54,27 +54,25 @@ run();
 * [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
 * [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
 
-### [datapoint](docs/sdks/datapoint/README.md)
+### [datapoints](docs/sdks/datapoints/README.md)
 
-* [getDatapoints](docs/sdks/datapoint/README.md#getdatapoints) - Retrieve a list of datapoints
-* [updateDatapoint](docs/sdks/datapoint/README.md#updatedatapoint) - Update a specific datapoint
-* [createDatapoint](docs/sdks/datapoint/README.md#createdatapoint) - Create a new datapoint
-* [deleteDatapoint](docs/sdks/datapoint/README.md#deletedatapoint) - Delete a specific datapoint
-* [getDatapoint](docs/sdks/datapoint/README.md#getdatapoint) - Retrieve a specific datapoint
+* [getDatapoints](docs/sdks/datapoints/README.md#getdatapoints) - Retrieve a list of datapoints
+* [createDatapoint](docs/sdks/datapoints/README.md#createdatapoint) - Create a new datapoint
+* [updateDatapoint](docs/sdks/datapoints/README.md#updatedatapoint) - Update a specific datapoint
+* [deleteDatapoint](docs/sdks/datapoints/README.md#deletedatapoint) - Delete a specific datapoint
+* [getDatapoint](docs/sdks/datapoints/README.md#getdatapoint) - Retrieve a specific datapoint
 
 ### [datasets](docs/sdks/datasets/README.md)
 
-* [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Retrieve a list of datasets
-* [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a new dataset
-* [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
-* [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
+* [deleteDatasets](docs/sdks/datasets/README.md#deletedatasets) - Delete a dataset
+* [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Get datasets
+* [postDatasets](docs/sdks/datasets/README.md#postdatasets) - Create a dataset
+* [putDatasets](docs/sdks/datasets/README.md#putdatasets) - Update a dataset
 
 ### [events](docs/sdks/events/README.md)
 
-* [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
 * [postEvents](docs/sdks/events/README.md#postevents) - Create a new event
 * [putEvents](docs/sdks/events/README.md#putevents) - Update an event
-* [getEventsChart](docs/sdks/events/README.md#geteventschart) - Retrieve a chart of events
 * [deleteEventsEventId](docs/sdks/events/README.md#deleteeventseventid) - Delete an event
 
 ### [metrics](docs/sdks/metrics/README.md)
@@ -83,14 +81,13 @@ run();
 * [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
 * [postMetrics](docs/sdks/metrics/README.md#postmetrics) - Create a new metric
 * [putMetrics](docs/sdks/metrics/README.md#putmetrics) - Update an existing metric
-* [postMetricsCompute](docs/sdks/metrics/README.md#postmetricscompute) - Compute metric
 
-### [prompts](docs/sdks/prompts/README.md)
+### [projects](docs/sdks/projects/README.md)
 
-* [getPrompts](docs/sdks/prompts/README.md#getprompts) - Retrieve a list of prompts based on query parameters.
-* [postPrompts](docs/sdks/prompts/README.md#postprompts) - Create a new prompt.
-* [deletePromptsId](docs/sdks/prompts/README.md#deletepromptsid) - Delete an existing prompt.
-* [putPromptsId](docs/sdks/prompts/README.md#putpromptsid) - Update an existing prompt.
+* [deleteProject](docs/sdks/projects/README.md#deleteproject) - Delete a project
+* [getProjects](docs/sdks/projects/README.md#getprojects) - Get a list of projects
+* [createProject](docs/sdks/projects/README.md#createproject) - Create a new project
+* [updateProject](docs/sdks/projects/README.md#updateproject) - Update an existing project
 
 ### [session](docs/sdks/session/README.md)
 
@@ -98,19 +95,6 @@ run();
 * [deleteSession](docs/sdks/session/README.md#deletesession) - Delete a session
 * [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
 * [processEventTrace](docs/sdks/session/README.md#processeventtrace) - Process an event trace for a given session
-
-### [tasks](docs/sdks/tasks/README.md)
-
-* [deleteTask](docs/sdks/tasks/README.md#deletetask) - Delete a task
-* [getTasks](docs/sdks/tasks/README.md#gettasks) - Get a list of tasks
-* [createTask](docs/sdks/tasks/README.md#createtask) - Create a new task
-* [updateTask](docs/sdks/tasks/README.md#updatetask) - Update a task
-
-### [testcases](docs/sdks/testcases/README.md)
-
-* [getTestcases](docs/sdks/testcases/README.md#gettestcases) - Get testcases
-* [postTestcases](docs/sdks/testcases/README.md#posttestcases) - Create a testcase
-* [putTestcases](docs/sdks/testcases/README.md#puttestcases) - Update a testcase
 
 ### [tools](docs/sdks/tools/README.md)
 
@@ -133,18 +117,18 @@ Example
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
     let res;
     try {
-        res = await sdk.configurations.getConfigurations(project, type);
+        res = await sdk.configurations.getConfigurations(projectName, type);
     } catch (err) {
         if (err instanceof errors.SDKError) {
             console.error(err); // handle exception
@@ -177,17 +161,17 @@ You can override the default server globally by passing a server index to the `s
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverIdx: 0,
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
-    const res = await sdk.configurations.getConfigurations(project, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -204,17 +188,17 @@ run();
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverURL: "https://api.honeyhive.ai",
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
-    const res = await sdk.configurations.getConfigurations(project, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type);
 
     if (res.statusCode == 200) {
         // handle response
@@ -259,16 +243,38 @@ This SDK supports the following security scheme globally:
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest } from "HoneyHive/dist/models/operations";
+import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const project: string = "<value>";
-    const type: string = "<value>";
+    const projectName: string = "<value>";
+    const type: TypeT = TypeT.Llm;
 
-    const res = await sdk.configurations.getConfigurations(project, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type);
+
+    if (res.statusCode == 200) {
+        // handle response
+    }
+}
+
+run();
+
+```
+
+### Per-Operation Security Schemes
+
+Some operations in this SDK require the security scheme to be specified at the request level. For example:
+```typescript
+import { HoneyHive } from "HoneyHive";
+import { GetToolsSecurity } from "HoneyHive/dist/models/operations";
+
+async function run() {
+    const sdk = new HoneyHive();
+    const operationSecurity: GetToolsSecurity = "<YOUR_BEARER_TOKEN_HERE>";
+
+    const res = await sdk.tools.getTools(operationSecurity);
 
     if (res.statusCode == 200) {
         // handle response
