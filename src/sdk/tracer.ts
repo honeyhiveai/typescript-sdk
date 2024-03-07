@@ -116,18 +116,17 @@ export class SessionTracer {
     async startSession(inputs?: { [key: string]: any }): Promise<void> {
         try {
             const session = {
-                project: this.project,
-                eventType: "chain",
-                eventName: this.session_name,
+                childrenIds: [],
                 config: { type: "chain" },
+                feedback: {},
                 inputs: inputs || {},
+                metadata: {},
+                metrics: {},
+                project: this.project,
+                sessionName: this.session_name,
+                source: this.source,
                 startTime: 1000 * Date.now(),
                 userProperties: this.user_properties,
-                metadata: {},
-                source: this.source,
-                children_ids: [],
-                metrics: {},
-                feedback: {},
             };
             this.parentEvent = {
                 project: this.project,
