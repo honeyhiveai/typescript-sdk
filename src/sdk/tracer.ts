@@ -116,16 +116,9 @@ export class SessionTracer {
     async startSession(inputs?: { [key: string]: any }): Promise<void> {
         try {
             const session = {
-                childrenIds: [],
-                config: { type: "chain" },
-                feedback: {},
-                inputs: inputs || {},
-                metadata: {},
-                metrics: {},
                 project: this.project,
-                sessionName: this.session_name,
                 source: this.source,
-                startTime: 1000 * Date.now(),
+                sessionName: this.session_name,
                 userProperties: this.user_properties,
             };
             this.parentEvent = {
@@ -134,13 +127,14 @@ export class SessionTracer {
                 event_name: this.session_name,
                 config: { type: "chain" },
                 inputs: inputs || {},
-                start_time: 1000 * Date.now(),
+                start_time: Date.now(),
                 user_properties: this.user_properties,
                 metadata: {},
                 source: this.source,
                 children: [],
                 metrics: {},
                 feedback: {},
+                event_id: uuidv4(),
             };
             const res = await this.sdk.session.startSession({
                 session: session,
@@ -151,6 +145,7 @@ export class SessionTracer {
             } else {
                 throw new Error("Session start failed!");
             }
+            this.parentEvent.session_id = this.session_id;
         } catch {
             // continue regardless of error
         }
@@ -167,7 +162,7 @@ export class SessionTracer {
                 event_name,
                 config,
                 inputs,
-                start_time: 1000 * Date.now(),
+                start_time: Date.now(),
                 user_properties: this.user_properties,
                 metadata: {},
                 source: this.source,
@@ -189,7 +184,7 @@ export class SessionTracer {
             }
             const currentEvent = this.eventStack.pop();
             if (currentEvent) {
-                currentEvent.end_time = 1000 * Date.now();
+                currentEvent.end_time = Date.now();
                 currentEvent.duration = currentEvent.end_time - (currentEvent.start_time || currentEvent.end_time);
                 currentEvent.outputs = outputs;
                 if (error) {
@@ -212,7 +207,7 @@ export class SessionTracer {
                 this.endEvent();
             }
             const session_trace = this.parentEvent;
-            session_trace.end_time = 1000 * Date.now();
+            session_trace.end_time = Date.now();
             session_trace.duration = session_trace.end_time - (session_trace.start_time || session_trace.end_time);
             session_trace.outputs = outputs;
             if (error) {
