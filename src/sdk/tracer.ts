@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { HoneyHive } from './sdk';
-
+import axios, { AxiosInstance } from 'axios';
 
 export type EventType = "chain" | "generic" | "tool" | "model";
 
@@ -100,14 +100,16 @@ export interface ChildLog {
 
 export class SessionTracer {
     private eventStack: ChildLog[];
-    private sdk: HoneyHive;
+    private client: AxiosInstance;
     private session_id: string;
     private parentEvent: ParentLog;
 
     constructor(private api_key: string, private project: string, private session_name: string, private user_properties: { [key: string]: any } = {}, private source: string = 'HoneyHive Typescript SDK') {
         this.eventStack = [];
-        this.sdk = new HoneyHive({
-            bearerAuth: api_key,
+        this.client = axios.create({
+          headers: {
+            Authorization: "Bearer " + api_key,
+          },
         });
         this.session_id = "";
         this.parentEvent = {};
@@ -115,11 +117,15 @@ export class SessionTracer {
 
     async startSession(inputs?: { [key: string]: any }): Promise<void> {
         try {
+            this.session_id = uuidv4();
             const session = {
                 project: this.project,
                 source: this.source,
                 sessionName: this.session_name,
                 userProperties: this.user_properties,
+                inputs: inputs || {},
+                event_id: this.session_id,
+                session_id: this.session_id,
             };
             this.parentEvent = {
                 project: this.project,
@@ -135,17 +141,14 @@ export class SessionTracer {
                 metrics: {},
                 feedback: {},
                 event_id: uuidv4(),
+                session_id: this.session_id,
             };
-            const res = await this.sdk.session.startSession({
+            const res = await this.client.post(
+              `https://api.honeyhive.ai/session/start`,
+              {
                 session: session,
-            });
-            const session_id = res.object?.sessionId;
-            if (session_id) {
-                this.session_id = session_id;
-            } else {
-                throw new Error("Session start failed!");
-            }
-            this.parentEvent.session_id = this.session_id;
+              },
+            );
         } catch {
             // continue regardless of error
         }
@@ -214,14 +217,20 @@ export class SessionTracer {
                 session_trace.error = error;
             }
             if (session_trace) {
-                const res = await this.sdk.session.processEventTrace(this.session_id, { logs: [session_trace] });
+                const res = await this.client.post(
+                  `https://api.honeyhive.ai/session/${this.session_id}/traces`,
+                  {
+                    logs: [session_trace],
+                  },
+                );
 
-                if (res.statusCode == 200) {
-                    // handle response
-                    console.log('Session trace sent successfully.');
-                } else {
-                    console.error('Failed to send session trace:', res);
-                }
+                await this.client.put(
+                  `https://api.honeyhive.ai/events`,
+                  {
+                    event_id: this.session_id,
+                    outputs: outputs,
+                  }
+                );
             }
         } catch {
             // continue regardless of error
