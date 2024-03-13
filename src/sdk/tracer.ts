@@ -121,8 +121,8 @@ export class SessionTracer {
             const session = {
                 project: this.project,
                 source: this.source,
-                sessionName: this.session_name,
-                userProperties: this.user_properties,
+                session_name: this.session_name,
+                user_properties: this.user_properties,
                 inputs: inputs || {},
                 event_id: this.session_id,
                 session_id: this.session_id,
