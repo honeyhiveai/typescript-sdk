@@ -115,6 +115,10 @@ export class SessionTracer {
         this.parentEvent = {};
     }
 
+    public getSessionId(): string {
+        return this.session_id;
+    }
+
     async startSession(inputs?: { [key: string]: any }): Promise<void> {
         try {
             this.session_id = uuidv4();
