@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { HoneyHive } from './sdk';
 import axios, { AxiosInstance } from 'axios';
 
 export type EventType = "chain" | "generic" | "tool" | "model";
@@ -143,7 +142,7 @@ export class SessionTracer {
                 event_id: uuidv4(),
                 session_id: this.session_id,
             };
-            const res = await this.client.post(
+            await this.client.post(
               `https://api.honeyhive.ai/session/start`,
               {
                 session: session,
@@ -217,7 +216,7 @@ export class SessionTracer {
                 session_trace.error = error;
             }
             if (session_trace) {
-                const res = await this.client.post(
+                await this.client.post(
                   `https://api.honeyhive.ai/session/${this.session_id}/traces`,
                   {
                     logs: [session_trace],
