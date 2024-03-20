@@ -44,6 +44,7 @@ jobs:
         run: |
           docker run -e HH_API_KEY="${{ secrets.HH_API_KEY }}" \
                      -e HH_PROJECT="${{ secrets.HH_PROJECT }}" \
+                     -e HH_DATASET="${{ secrets.HH_DATASET }}" \
                      -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
                      -e SERP_API_KEY="${{ secrets.SERP_API_KEY }}" \
                      -t my-test
