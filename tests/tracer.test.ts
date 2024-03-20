@@ -21,26 +21,7 @@ describe("TypeScript Tracer", () => {
     assert(res.statusCode === 200, "Response status code should be 200");
   });
 
-  it("should successfully trace a session and do an eval", async () => {
-    const userQuestion =
-      "What is the effect of climate change on the polar bear population?";
-    const tracer = await ReActPipeline(userQuestion, "evaluation", {
-      dataset_name: HH_DATASET,
-    });
-    const sessionId = tracer.getSessionId();
-    const evalInfo = tracer.getEvalInfo();
-    assert(typeof sessionId === "string", "Session ID should be a string");
-    expect(evalInfo).not.toBeUndefined();
-
-    const sdk = new HoneyHive({
-      bearerAuth: HH_API_KEY,
-    });
-
-    const res = await sdk.session.getSession(sessionId);
-    assert(res.statusCode === 200, "Response status code should be 200");
-  });
-
-  it("should successfully trace a session and update an eval", async () => {
+  it("should successfully trace a session, do an eval and update an eval", async () => {
     const userQuestion =
       "What is the effect of climate change on the polar bear population?";
     let tracer = await ReActPipeline(userQuestion, "evaluation", {
