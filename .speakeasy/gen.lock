@@ -3,10 +3,10 @@ id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
   docChecksum: 9bd3a9d1a7303ec42de5017c9b364625
   docVersion: 1.0.1
-  speakeasyVersion: 1.209.2
-  generationVersion: 2.281.2
-  releaseVersion: 0.3.2
-  configChecksum: 49705b68096f292504bbb579d4af993c
+  speakeasyVersion: 1.213.0
+  generationVersion: 2.283.1
+  releaseVersion: 0.4.0
+  configChecksum: e859fa74ccb69a50a99845fdea96b3bd
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -14,9 +14,8 @@ features:
   typescript:
     core: 3.4.8
     flattening: 2.81.1
-    globalSecurity: 2.82.4
+    globalSecurity: 2.82.5
     globalServerURLs: 2.82.2
-    methodSecurity: 2.82.0
 generatedFiles:
   - src/sdk/configurations.ts
   - src/sdk/datapoints.ts
@@ -162,11 +161,8 @@ generatedFiles:
   - docs/models/operations/processeventtraceresponse.md
   - docs/models/operations/deletetoolrequest.md
   - docs/models/operations/deletetoolresponse.md
-  - docs/models/operations/gettoolssecurity.md
   - docs/models/operations/gettoolsresponse.md
-  - docs/models/operations/createtoolsecurity.md
   - docs/models/operations/createtoolresponse.md
-  - docs/models/operations/updatetoolsecurity.md
   - docs/models/operations/updatetoolresponse.md
   - docs/models/components/typet.md
   - docs/models/components/calltype.md

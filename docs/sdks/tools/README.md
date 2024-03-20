@@ -59,13 +59,13 @@ Retrieve a list of tools
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { GetToolsSecurity } from "HoneyHive/dist/models/operations";
 
 async function run() {
-  const sdk = new HoneyHive();
-const operationSecurity: GetToolsSecurity = "<YOUR_BEARER_TOKEN_HERE>";
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
 
-  const res = await sdk.tools.getTools(operationSecurity);
+  const res = await sdk.tools.getTools();
 
   if (res.statusCode == 200) {
     // handle response
@@ -77,10 +77,9 @@ run();
 
 ### Parameters
 
-| Parameter                                                                  | Type                                                                       | Required                                                                   | Description                                                                |
-| -------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `security`                                                                 | [operations.GetToolsSecurity](../../models/operations/gettoolssecurity.md) | :heavy_check_mark:                                                         | The security requirements to use for the request.                          |
-| `config`                                                                   | [AxiosRequestConfig](https://axios-http.com/docs/req_config)               | :heavy_minus_sign:                                                         | Available config options for making requests.                              |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
@@ -101,18 +100,18 @@ Create a new tool
 ```typescript
 import { HoneyHive } from "HoneyHive";
 import { ToolType } from "HoneyHive/dist/models/components";
-import { CreateToolSecurity } from "HoneyHive/dist/models/operations";
 
 async function run() {
-  const sdk = new HoneyHive();
-const operationSecurity: CreateToolSecurity = "<YOUR_BEARER_TOKEN_HERE>";
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
 
   const res = await sdk.tools.createTool({
     name: "<value>",
     parameters: {},
     task: "<value>",
     type: ToolType.Tool,
-  }, operationSecurity);
+  });
 
   if (res.statusCode == 200) {
     // handle response
@@ -124,11 +123,10 @@ run();
 
 ### Parameters
 
-| Parameter                                                                      | Type                                                                           | Required                                                                       | Description                                                                    |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| `request`                                                                      | [components.Tool](../../models/components/tool.md)                             | :heavy_check_mark:                                                             | The request object to use for the request.                                     |
-| `security`                                                                     | [operations.CreateToolSecurity](../../models/operations/createtoolsecurity.md) | :heavy_check_mark:                                                             | The security requirements to use for the request.                              |
-| `config`                                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                   | :heavy_minus_sign:                                                             | Available config options for making requests.                                  |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `request`                                                    | [components.Tool](../../models/components/tool.md)           | :heavy_check_mark:                                           | The request object to use for the request.                   |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
@@ -148,16 +146,16 @@ Update an existing tool
 
 ```typescript
 import { HoneyHive } from "HoneyHive";
-import { UpdateToolSecurity } from "HoneyHive/dist/models/operations";
 
 async function run() {
-  const sdk = new HoneyHive();
-const operationSecurity: UpdateToolSecurity = "<YOUR_BEARER_TOKEN_HERE>";
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
 
   const res = await sdk.tools.updateTool({
     id: "<id>",
     parameters: {},
-  }, operationSecurity);
+  });
 
   if (res.statusCode == 200) {
     // handle response
@@ -169,11 +167,10 @@ run();
 
 ### Parameters
 
-| Parameter                                                                      | Type                                                                           | Required                                                                       | Description                                                                    |
-| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
-| `request`                                                                      | [components.ToolUpdate](../../models/components/toolupdate.md)                 | :heavy_check_mark:                                                             | The request object to use for the request.                                     |
-| `security`                                                                     | [operations.UpdateToolSecurity](../../models/operations/updatetoolsecurity.md) | :heavy_check_mark:                                                             | The security requirements to use for the request.                              |
-| `config`                                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                   | :heavy_minus_sign:                                                             | Available config options for making requests.                                  |
+| Parameter                                                      | Type                                                           | Required                                                       | Description                                                    |
+| -------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- |
+| `request`                                                      | [components.ToolUpdate](../../models/components/toolupdate.md) | :heavy_check_mark:                                             | The request object to use for the request.                     |
+| `config`                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)   | :heavy_minus_sign:                                             | Available config options for making requests.                  |
 
 
 ### Response

@@ -5,13 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { AxiosResponse } from "axios";
 
-export class UpdateToolSecurity extends SpeakeasyBase {
-    @SpeakeasyMetadata({
-        data: "security, scheme=true;type=http;subtype=bearer;name=Authorization",
-    })
-    bearerAuth: string;
-}
-
 export class UpdateToolResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation

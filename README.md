@@ -262,28 +262,6 @@ async function run() {
 run();
 
 ```
-
-### Per-Operation Security Schemes
-
-Some operations in this SDK require the security scheme to be specified at the request level. For example:
-```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetToolsSecurity } from "HoneyHive/dist/models/operations";
-
-async function run() {
-    const sdk = new HoneyHive();
-    const operationSecurity: GetToolsSecurity = "<YOUR_BEARER_TOKEN_HERE>";
-
-    const res = await sdk.tools.getTools(operationSecurity);
-
-    if (res.statusCode == 200) {
-        // handle response
-    }
-}
-
-run();
-
-```
 <!-- End Authentication [security] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
