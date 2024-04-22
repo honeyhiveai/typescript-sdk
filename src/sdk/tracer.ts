@@ -97,11 +97,20 @@ export interface ChildLog {
   feedback?: { [key: string]: any };
 }
 
+interface EvalInfo {
+  runName?: string;
+  datasetId?: string;
+  projectId?: string;
+  datapointIds?: string[];
+  runId?: string;
+}
+
 export class SessionTracer {
   private eventStack: ChildLog[];
   private client: AxiosInstance;
   private session_id: string;
   private parentEvent: ParentLog;
+  private evalInfo: EvalInfo | undefined;
   private lastEventId: string;
   private lastEventMetrics: { [key: string]: any };
   private lastEventMetadata: { [key: string]: any };
@@ -112,6 +121,7 @@ export class SessionTracer {
     private session_name: string,
     private user_properties: { [key: string]: any } = {},
     private source: string = "HoneyHive Typescript SDK",
+    private metadata: { [key: string]: any } = {},
   ) {
     this.eventStack = [];
     this.client = axios.create({
@@ -128,6 +138,10 @@ export class SessionTracer {
 
   public getSessionId(): string {
     return this.session_id;
+  }
+
+  public getEvalInfo(): EvalInfo | undefined {
+    return this.evalInfo;
   }
 
   public async setMetric(
@@ -194,6 +208,56 @@ export class SessionTracer {
       });
     } catch {
       // continue regardless of error
+    }
+
+    if (this.source === "evaluation") {
+      try {
+        if (this.metadata && "run_id" in this.metadata) {
+          this.evalInfo = { runId: this.metadata["run_id"] };
+        } else if (this.metadata && "dataset_name" in this.metadata) {
+          const projectRes = await this.client.get(
+            `https://api.honeyhive.ai/projects`,
+            {
+              params: { name: this.project },
+            },
+          );
+
+          if (projectRes.status !== 200)
+            throw new Error("Failed to fetch project");
+
+          const projectId = projectRes.data[0]._id;
+
+          const datasetRes = await this.client.get(
+            `https://api.honeyhive.ai/datasets`,
+            {
+              params: {
+                name: this.metadata["dataset_name"],
+                project: projectId,
+              },
+            },
+          );
+
+          if (datasetRes.status !== 200)
+            throw new Error("Failed to fetch dataset");
+
+          const dataset = datasetRes.data["testcases"][0];
+          const datasetId = dataset["_id"];
+          const datapointIds = dataset["datapoints"];
+          const runName =
+            "run_name" in this.metadata
+              ? this.metadata["run_name"]
+              : this.session_name;
+
+          this.evalInfo = {
+            datasetId: datasetId,
+            datapointIds: datapointIds,
+            projectId: projectId,
+            runName: runName,
+          };
+        }
+      } catch (error) {
+        // continue regardless of error
+      }
     }
   }
 
@@ -305,6 +369,51 @@ export class SessionTracer {
           event_id: this.session_id,
           outputs: outputs,
         });
+
+        if (this.evalInfo) {
+          if (this.evalInfo.runId) {
+            const getRunRes = await this.client.get(
+              `https://api.honeyhive.ai/runs/${this.evalInfo.runId}`,
+            );
+
+            if (getRunRes.status !== 200)
+              throw new Error("Failed to get run info");
+
+            var eventIds = getRunRes.data["evaluation"]["event_ids"];
+            eventIds.push(this.session_id);
+            const updateRunRes = await this.client.put(
+              `https://api.honeyhive.ai/runs/${this.evalInfo.runId}`,
+              { event_ids: eventIds },
+            );
+
+            if (updateRunRes.status !== 200)
+              throw new Error("Failed to update run info");
+          } else {
+            let body: any = {
+              event_ids: [this.session_id],
+              dataset_id: this.evalInfo.datasetId,
+              datapoint_ids: this.evalInfo.datapointIds,
+              project: this.evalInfo.projectId,
+              status: "completed",
+              name: this.evalInfo.runName,
+            };
+
+            if ("config" in session_trace) {
+              body["configuration"] = session_trace["config"];
+            }
+
+            const runRes = await this.client.post(
+              `https://api.honeyhive.ai/runs`,
+              body,
+            );
+
+            if (runRes.status !== 200)
+              throw new Error("Failed to submit eval info");
+
+            const runId = runRes.data["run_id"];
+            this.evalInfo.runId = runId;
+          }
+        }
       }
     } catch {
       // continue regardless of error

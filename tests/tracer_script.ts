@@ -105,13 +105,18 @@ async function isAnswerSatisfactory(
 }
 
 // Main pipeline function
-export async function ReActPipeline(question: string): Promise<SessionTracer> {
+export async function ReActPipeline(
+  question: string,
+  source: string,
+  metadata: { [key: string]: any },
+): Promise<SessionTracer> {
   const tracer = new SessionTracer(
     HH_API_KEY || "",
     HH_PROJECT || "",
     "My ReAct Pipeline",
     {},
-    "sdk_ts_test",
+    source,
+    metadata,
   );
   await tracer.startSession({ question: question });
   let attempts = 0;
