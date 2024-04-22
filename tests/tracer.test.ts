@@ -19,6 +19,7 @@ describe("TypeScript Tracer", () => {
 
     const res = await sdk.session.getSession(sessionId);
     assert(res.statusCode === 200, "Response status code should be 200");
+    await tracer.setMetric("cost", 42, [0, 100]);
   });
 
   it("should successfully trace a session, do an eval and update an eval", async () => {

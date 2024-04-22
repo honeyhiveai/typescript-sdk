@@ -111,6 +111,9 @@ export class SessionTracer {
   private session_id: string;
   private parentEvent: ParentLog;
   private evalInfo: EvalInfo | undefined;
+  private lastEventId: string;
+  private lastEventMetrics: { [key: string]: any };
+  private lastEventMetadata: { [key: string]: any };
 
   constructor(
     private api_key: string,
@@ -128,6 +131,9 @@ export class SessionTracer {
     });
     this.session_id = "";
     this.parentEvent = {};
+    this.lastEventId = "";
+    this.lastEventMetrics = {};
+    this.lastEventMetadata = {};
   }
 
   public getSessionId(): string {
@@ -136,6 +142,37 @@ export class SessionTracer {
 
   public getEvalInfo(): EvalInfo | undefined {
     return this.evalInfo;
+  }
+
+  public async setMetric(
+    metric_name: string,
+    metric_value: any,
+    threshold: any,
+  ): Promise<void> {
+    if (!this.lastEventId) {
+      throw new Error("No events defined on session to set metric on");
+    }
+    const metrics: Record<string, any> = { ...this.lastEventMetrics };
+    const metadata: Record<string, any> = { ...this.lastEventMetadata };
+    metrics[metric_name] = metric_value;
+    metadata[`threshold_${metric_name}`] = threshold;
+    const body = {
+      event_id: this.lastEventId,
+      metadata: metadata,
+      metrics: metrics,
+    };
+    try {
+      const res = await this.client.put(
+        `https://api.honeyhive.ai/events`,
+        body,
+      );
+      if (res.status === 200) {
+        this.lastEventMetrics = metrics;
+        this.lastEventMetadata = metadata;
+      }
+    } catch (error) {
+      // continue regardless of error
+    }
   }
 
   async startSession(inputs?: { [key: string]: any }): Promise<void> {
@@ -265,6 +302,19 @@ export class SessionTracer {
       }
       const currentEvent = this.eventStack.pop();
       if (currentEvent) {
+        if (currentEvent.event_id) {
+          this.lastEventId = currentEvent.event_id;
+          if (currentEvent.metrics) {
+            this.lastEventMetrics = currentEvent.metrics;
+          } else {
+            this.lastEventMetrics = {};
+          }
+          if (currentEvent.metadata) {
+            this.lastEventMetadata = currentEvent.metadata;
+          } else {
+            this.lastEventMetadata = {};
+          }
+        }
         currentEvent.end_time = Date.now();
         currentEvent.duration =
           currentEvent.end_time -
