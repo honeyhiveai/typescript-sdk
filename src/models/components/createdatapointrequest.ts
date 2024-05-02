@@ -3,17 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Arbitrary JSON object containing the inputs for the datapoint
- */
-export class CreateDatapointRequestInputs extends SpeakeasyBase {}
-
-/**
- * Any additional metadata for the datapoint
- */
-export class CreateDatapointRequestMetadata extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 /**
  * Type of datapoint - "evaluation" or "fine-tuning"
@@ -36,8 +26,7 @@ export class CreateDatapointRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => CreateDatapointRequestInputs)
-    inputs: CreateDatapointRequestInputs;
+    inputs: Record<string, any>;
 
     /**
      * Ids of all datasets that include the datapoint
@@ -65,8 +54,7 @@ export class CreateDatapointRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => CreateDatapointRequestMetadata)
-    metadata?: CreateDatapointRequestMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * UUID for the project to which the datapoint belongs

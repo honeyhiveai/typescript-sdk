@@ -12,8 +12,6 @@ export class History extends SpeakeasyBase {}
  */
 export class Inputs extends SpeakeasyBase {}
 
-export class Metadata extends SpeakeasyBase {}
-
 export class Datapoint extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "created_at" })
@@ -63,8 +61,7 @@ export class Datapoint extends SpeakeasyBase {
 
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => Metadata)
-    metadata?: Metadata;
+    metadata?: Record<string, any>;
 
     @SpeakeasyMetadata()
     @Expose({ name: "project_id" })

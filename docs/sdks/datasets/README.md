@@ -3,20 +3,20 @@
 
 ### Available Operations
 
-* [deleteDatasets](#deletedatasets) - Delete a dataset
+* [deleteDataset](#deletedataset) - Delete a dataset
 * [getDatasets](#getdatasets) - Get datasets
-* [postDatasets](#postdatasets) - Create a dataset
-* [putDatasets](#putdatasets) - Update a dataset
+* [createDataset](#createdataset) - Create a dataset
+* [updateDataset](#updatedataset) - Update a dataset
 
-## deleteDatasets
+## deleteDataset
 
 Delete a dataset
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteDatasetsRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteDatasetRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -24,7 +24,7 @@ async function run() {
   });
 const datasetId: string = "<value>";
 
-  const res = await sdk.datasets.deleteDatasets(datasetId);
+  const res = await sdk.datasets.deleteDataset(datasetId);
 
   if (res.statusCode == 200) {
     // handle response
@@ -44,7 +44,7 @@ run();
 
 ### Response
 
-**Promise<[operations.DeleteDatasetsResponse](../../models/operations/deletedatasetsresponse.md)>**
+**Promise<[operations.DeleteDatasetResponse](../../models/operations/deletedatasetresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
@@ -58,8 +58,8 @@ Get datasets
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetDatasetsQueryParamType, GetDatasetsRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetDatasetsQueryParamType, GetDatasetsRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -98,29 +98,31 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## postDatasets
+## createDataset
 
 Create a dataset
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { CreateDatasetRequestType, PipelineType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { CreateDatasetRequestType, PipelineType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.datasets.postDatasets({
+  const res = await sdk.datasets.createDataset({
     datapoints: [
       "<value>",
     ],
     linkedEvals: [
       "<value>",
     ],
-    metadata: {},
+    metadata: {
+      "key": "<value>",
+    },
     name: "<value>",
     project: "<value>",
   });
@@ -143,28 +145,28 @@ run();
 
 ### Response
 
-**Promise<[operations.PostDatasetsResponse](../../models/operations/postdatasetsresponse.md)>**
+**Promise<[operations.CreateDatasetResponse](../../models/operations/createdatasetresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## putDatasets
+## updateDataset
 
 Update a dataset
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.datasets.putDatasets({
+  const res = await sdk.datasets.updateDataset({
     datapoints: [
       "<value>",
     ],
@@ -172,7 +174,9 @@ async function run() {
     linkedEvals: [
       "<value>",
     ],
-    metadata: {},
+    metadata: {
+      "key": "<value>",
+    },
   });
 
   if (res.statusCode == 200) {
@@ -193,7 +197,7 @@ run();
 
 ### Response
 
-**Promise<[operations.PutDatasetsResponse](../../models/operations/putdatasetsresponse.md)>**
+**Promise<[operations.UpdateDatasetResponse](../../models/operations/updatedatasetresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

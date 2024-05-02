@@ -15,8 +15,8 @@ Delete a project
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteProjectRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteProjectRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -58,8 +58,8 @@ Get a list of projects
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetProjectsRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetProjectsRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -101,8 +101,7 @@ Create a new project
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { CreateProjectRequestType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -145,8 +144,7 @@ Update an existing project
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { ProjectType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -154,9 +152,7 @@ async function run() {
   });
 
   const res = await sdk.projects.updateProject({
-    description: "Profit-focused even-keeled encryption",
-    name: "<value>",
-    type: ProjectType.Completions,
+    projectId: "<value>",
   });
 
   if (res.statusCode == 200) {
@@ -169,10 +165,10 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `request`                                                    | [components.Project](../../models/components/project.md)     | :heavy_check_mark:                                           | The request object to use for the request.                   |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `request`                                                                          | [components.UpdateProjectRequest](../../models/components/updateprojectrequest.md) | :heavy_check_mark:                                                                 | The request object to use for the request.                                         |
+| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
 
 
 ### Response

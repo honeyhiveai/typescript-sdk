@@ -403,9 +403,9 @@ export class Datapoints {
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(responseContentType, `application/json`)) {
-                    res.datapoint = utils.objectToClass(
+                    res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        components.Datapoint
+                        operations.GetDatapointResponseBody
                     );
                 } else {
                     throw new errors.SDKError(

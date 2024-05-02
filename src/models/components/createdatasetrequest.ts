@@ -3,12 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Any helpful metadata to track for the dataset
- */
-export class CreateDatasetRequestMetadata extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 /**
  * The type of data included in the dataset - "event" or "session"
@@ -50,8 +45,7 @@ export class CreateDatasetRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => CreateDatasetRequestMetadata)
-    metadata?: CreateDatasetRequestMetadata;
+    metadata?: Record<string, any>;
 
     @SpeakeasyMetadata()
     @Expose({ name: "name" })

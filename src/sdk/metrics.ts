@@ -22,11 +22,11 @@ export class Metrics {
      * @remarks
      * Remove a metric
      */
-    async deleteMetrics(
+    async deleteMetric(
         metricId: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteMetricsResponse> {
-        const req = new operations.DeleteMetricsRequest({
+    ): Promise<operations.DeleteMetricResponse> {
+        const req = new operations.DeleteMetricRequest({
             metricId: metricId,
         });
         const baseURL: string = utils.templateUrl(
@@ -64,7 +64,7 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteMetricsResponse = new operations.DeleteMetricsResponse({
+        const res: operations.DeleteMetricResponse = new operations.DeleteMetricResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -177,10 +177,10 @@ export class Metrics {
      * @remarks
      * Add a new metric
      */
-    async postMetrics(
+    async createMetric(
         req: components.Metric,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostMetricsResponse> {
+    ): Promise<operations.CreateMetricResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.Metric(req);
         }
@@ -235,7 +235,7 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostMetricsResponse = new operations.PostMetricsResponse({
+        const res: operations.CreateMetricResponse = new operations.CreateMetricResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -262,10 +262,10 @@ export class Metrics {
      * @remarks
      * Edit a metric
      */
-    async putMetrics(
+    async updateMetric(
         req: components.MetricEdit,
         config?: AxiosRequestConfig
-    ): Promise<operations.PutMetricsResponse> {
+    ): Promise<operations.UpdateMetricResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.MetricEdit(req);
         }
@@ -320,7 +320,7 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PutMetricsResponse = new operations.PutMetricsResponse({
+        const res: operations.UpdateMetricResponse = new operations.UpdateMetricResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,

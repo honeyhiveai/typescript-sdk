@@ -5,6 +5,7 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
+import { Expose, Type } from "class-transformer";
 
 export class GetDatapointRequest extends SpeakeasyBase {
     /**
@@ -12,6 +13,16 @@ export class GetDatapointRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;
+}
+
+/**
+ * Successful response
+ */
+export class GetDatapointResponseBody extends SpeakeasyBase {
+    @SpeakeasyMetadata({ elemType: components.Datapoint })
+    @Expose({ name: "datapoint" })
+    @Type(() => components.Datapoint)
+    datapoint?: components.Datapoint[];
 }
 
 export class GetDatapointResponse extends SpeakeasyBase {
@@ -37,5 +48,5 @@ export class GetDatapointResponse extends SpeakeasyBase {
      * Successful response
      */
     @SpeakeasyMetadata()
-    datapoint?: components.Datapoint;
+    object?: GetDatapointResponseBody;
 }

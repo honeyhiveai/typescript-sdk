@@ -16,8 +16,8 @@ Retrieve a list of datapoints
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetDatapointsRequest, QueryParamType } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetDatapointsRequest, QueryParamType } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -65,8 +65,8 @@ Create a new datapoint
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { CreateDatapointRequestType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { CreateDatapointRequestType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -77,14 +77,18 @@ async function run() {
     groundTruth: {
       "key": "<value>",
     },
-    inputs: {},
+    inputs: {
+      "key": "<value>",
+    },
     linkedDatasets: [
       "<value>",
     ],
     linkedEvals: [
       "<value>",
     ],
-    metadata: {},
+    metadata: {
+      "key": "<value>",
+    },
     project: "<value>",
     type: CreateDatapointRequestType.Evaluation,
   });
@@ -121,14 +125,9 @@ Update a specific datapoint
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import {
-  UpdateDatapointRequest,
-  UpdateDatapointRequestHistory,
-  UpdateDatapointRequestInputs,
-  UpdateDatapointRequestMetadata,
-} from "HoneyHive/dist/models/components";
-import { UpdateDatapointRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { UpdateDatapointRequest, UpdateDatapointRequestHistory } from "honeyhive/dist/models/components";
+import { UpdateDatapointRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -142,14 +141,18 @@ const updateDatapointRequest: UpdateDatapointRequest = {
   history: [
     {},
   ],
-  inputs: {},
+  inputs: {
+    "key": "<value>",
+  },
   linkedDatasets: [
     "<value>",
   ],
   linkedEvals: [
     "<value>",
   ],
-  metadata: {},
+  metadata: {
+    "key": "<value>",
+  },
 };
 
   const res = await sdk.datapoints.updateDatapoint(datapointId, updateDatapointRequest);
@@ -187,8 +190,8 @@ Delete a specific datapoint
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteDatapointRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteDatapointRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -230,8 +233,8 @@ Retrieve a specific datapoint
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetDatapointRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetDatapointRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({

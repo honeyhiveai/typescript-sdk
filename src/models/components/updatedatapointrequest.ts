@@ -7,16 +7,6 @@ import { Expose, Type } from "class-transformer";
 
 export class UpdateDatapointRequestHistory extends SpeakeasyBase {}
 
-/**
- * Arbitrary JSON object containing the inputs for the datapoint
- */
-export class UpdateDatapointRequestInputs extends SpeakeasyBase {}
-
-/**
- * Any additional metadata for the datapoint
- */
-export class UpdateDatapointRequestMetadata extends SpeakeasyBase {}
-
 export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
      * Expected output JSON object for the datapoint
@@ -38,8 +28,7 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => UpdateDatapointRequestInputs)
-    inputs?: UpdateDatapointRequestInputs;
+    inputs?: Record<string, any>;
 
     /**
      * Ids of all datasets that include the datapoint
@@ -60,8 +49,7 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => UpdateDatapointRequestMetadata)
-    metadata?: UpdateDatapointRequestMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * Whether the datapoint is saved or detected

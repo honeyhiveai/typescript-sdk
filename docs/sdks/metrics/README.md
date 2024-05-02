@@ -3,20 +3,20 @@
 
 ### Available Operations
 
-* [deleteMetrics](#deletemetrics) - Delete a metric
+* [deleteMetric](#deletemetric) - Delete a metric
 * [getMetrics](#getmetrics) - Get all metrics
-* [postMetrics](#postmetrics) - Create a new metric
-* [putMetrics](#putmetrics) - Update an existing metric
+* [createMetric](#createmetric) - Create a new metric
+* [updateMetric](#updatemetric) - Update an existing metric
 
-## deleteMetrics
+## deleteMetric
 
 Remove a metric
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteMetricsRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteMetricRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -24,7 +24,7 @@ async function run() {
   });
 const metricId: string = "<value>";
 
-  const res = await sdk.metrics.deleteMetrics(metricId);
+  const res = await sdk.metrics.deleteMetric(metricId);
 
   if (res.statusCode == 200) {
     // handle response
@@ -44,7 +44,7 @@ run();
 
 ### Response
 
-**Promise<[operations.DeleteMetricsResponse](../../models/operations/deletemetricsresponse.md)>**
+**Promise<[operations.DeleteMetricResponse](../../models/operations/deletemetricresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
@@ -58,8 +58,8 @@ Retrieve a list of all metrics
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetMetricsRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetMetricsRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -94,28 +94,28 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## postMetrics
+## createMetric
 
 Add a new metric
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { MetricType, ReturnTypeT } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { MetricType, ReturnTypeT } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.metrics.postMetrics({
-    description: "Enterprise-wide reciprocal standardization",
+  const res = await sdk.metrics.createMetric({
+    description: "Mandatory eco-centric open system",
     name: "<value>",
-    returnType: ReturnTypeT.String,
+    returnType: ReturnTypeT.Float,
     task: "<value>",
     threshold: {},
-    type: MetricType.Model,
+    type: MetricType.Human,
   });
 
   if (res.statusCode == 200) {
@@ -136,29 +136,30 @@ run();
 
 ### Response
 
-**Promise<[operations.PostMetricsResponse](../../models/operations/postmetricsresponse.md)>**
+**Promise<[operations.CreateMetricResponse](../../models/operations/createmetricresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## putMetrics
+## updateMetric
 
 Edit a metric
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { MetricEditEventType, MetricEditReturnType, MetricEditType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { MetricEditEventType, MetricEditReturnType, MetricEditType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.metrics.putMetrics({
+  const res = await sdk.metrics.updateMetric({
+    metricId: "<value>",
     threshold: {},
   });
 
@@ -180,7 +181,7 @@ run();
 
 ### Response
 
-**Promise<[operations.PutMetricsResponse](../../models/operations/putmetricsresponse.md)>**
+**Promise<[operations.UpdateMetricResponse](../../models/operations/updatemetricresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
