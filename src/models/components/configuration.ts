@@ -3,7 +3,13 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
+import { Expose } from "class-transformer";
+
+export enum Env {
+    Dev = "dev",
+    Staging = "staging",
+    Prod = "prod",
+}
 
 /**
  * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
@@ -13,123 +19,20 @@ export enum TypeT {
     Pipeline = "pipeline",
 }
 
-/**
- * Type of API calling - "chat" or "completion"
- */
-export enum CallType {
-    Chat = "chat",
-    Completion = "completion",
-}
-
-/**
- * Model-specific hyperparameters
- */
-export class Hyperparameters extends SpeakeasyBase {}
-
-export class SelectedFunctions extends SpeakeasyBase {
+export class Configuration extends SpeakeasyBase {
     /**
-     * UUID of the function
+     * ID of the configuration
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "id" })
+    @Expose({ name: "_id" })
     id?: string;
 
     /**
-     * Name of the function
+     * List of environments where the configuration is active
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "name" })
-    name?: string;
-
-    /**
-     * Description of the function
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "description" })
-    description?: string;
-
-    /**
-     * Parameters for the function
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "parameters" })
-    parameters?: Record<string, any>;
-}
-
-/**
- * Function calling mode - "none", "auto" or "force"
- */
-export enum FunctionCallParams {
-    None = "none",
-    Auto = "auto",
-    Force = "force",
-}
-
-export class ParametersT extends SpeakeasyBase {
-    /**
-     * Type of API calling - "chat" or "completion"
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "call_type" })
-    callType: CallType;
-
-    /**
-     * Model unique name
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "model" })
-    model: string;
-
-    /**
-     * Model-specific hyperparameters
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "hyperparameters" })
-    @Type(() => Hyperparameters)
-    hyperparameters?: Hyperparameters;
-
-    /**
-     * List of functions to be called by the model, refer to OpenAI schema for more details
-     */
-    @SpeakeasyMetadata({ elemType: SelectedFunctions })
-    @Expose({ name: "selectedFunctions" })
-    @Type(() => SelectedFunctions)
-    selectedFunctions?: SelectedFunctions[];
-
-    /**
-     * Function calling mode - "none", "auto" or "force"
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "functionCallParams" })
-    functionCallParams?: FunctionCallParams;
-
-    /**
-     * Force function-specific parameters
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "forceFunction" })
-    forceFunction?: Record<string, any>;
-}
-
-/**
- * Details of user who created the configuration
- */
-export class UserProperties extends SpeakeasyBase {}
-
-export class Configuration extends SpeakeasyBase {
-    /**
-     * ID of the project to which this configuration belongs
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "project" })
-    project: string;
-
-    /**
-     * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: TypeT;
+    @Expose({ name: "env" })
+    env?: Env[];
 
     /**
      * Name of the configuration
@@ -138,6 +41,17 @@ export class Configuration extends SpeakeasyBase {
     @Expose({ name: "name" })
     name: string;
 
+    @SpeakeasyMetadata()
+    @Expose({ name: "parameters" })
+    parameters: Record<string, any>;
+
+    /**
+     * ID of the project to which this configuration belongs
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project" })
+    project: string;
+
     /**
      * Name of the provider - "openai", "anthropic", etc.
      */
@@ -145,16 +59,17 @@ export class Configuration extends SpeakeasyBase {
     @Expose({ name: "provider" })
     provider: string;
 
+    /**
+     * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "parameters" })
-    @Type(() => ParametersT)
-    parameters?: ParametersT;
+    @Expose({ name: "type" })
+    type: TypeT;
 
     /**
      * Details of user who created the configuration
      */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => UserProperties)
-    userProperties?: UserProperties;
+    userProperties?: Record<string, any>;
 }

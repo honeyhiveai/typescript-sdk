@@ -3,41 +3,55 @@
 
 ### Available Operations
 
-* [postEvents](#postevents) - Create a new event
-* [putEvents](#putevents) - Update an event
-* [deleteEventsEventId](#deleteeventseventid) - Delete an event
+* [createEvent](#createevent) - Create a new event
+* [updateEvent](#updateevent) - Update an event
+* [deleteEvent](#deleteevent) - Delete an event
 
-## postEvents
+## createEvent
 
 Please refer to our instrumentation guide for detailed information
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { EventType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { EventType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.events.postEvents({
+  const res = await sdk.events.createEvent({
     event: {
       childrenIds: [
         "<value>",
       ],
-      config: {},
+      config: {
+        "key": "<value>",
+      },
       eventName: "<value>",
-      eventType: EventType.Chain,
-      feedback: {},
-      inputs: {},
-      metadata: {},
-      metrics: {},
-      outputs: {},
+      eventType: EventType.Model,
+      feedback: {
+        "key": "<value>",
+      },
+      inputs: {
+        "key": "<value>",
+      },
+      metadata: {
+        "key": "<value>",
+      },
+      metrics: {
+        "key": "<value>",
+      },
+      outputs: {
+        "key": "<value>",
+      },
       project: "<value>",
       source: "<value>",
-      userProperties: {},
+      userProperties: {
+        "key": "<value>",
+      },
     },
   });
 
@@ -51,41 +65,49 @@ run();
 
 ### Parameters
 
-| Parameter                                                                            | Type                                                                                 | Required                                                                             | Description                                                                          |
-| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| `request`                                                                            | [operations.PostEventsRequestBody](../../models/operations/posteventsrequestbody.md) | :heavy_check_mark:                                                                   | The request object to use for the request.                                           |
-| `config`                                                                             | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                         | :heavy_minus_sign:                                                                   | Available config options for making requests.                                        |
+| Parameter                                                                              | Type                                                                                   | Required                                                                               | Description                                                                            |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `request`                                                                              | [operations.CreateEventRequestBody](../../models/operations/createeventrequestbody.md) | :heavy_check_mark:                                                                     | The request object to use for the request.                                             |
+| `config`                                                                               | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                           | :heavy_minus_sign:                                                                     | Available config options for making requests.                                          |
 
 
 ### Response
 
-**Promise<[operations.PostEventsResponse](../../models/operations/posteventsresponse.md)>**
+**Promise<[operations.CreateEventResponse](../../models/operations/createeventresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## putEvents
+## updateEvent
 
 Update an event
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 
-  const res = await sdk.events.putEvents({
+  const res = await sdk.events.updateEvent({
     eventId: "<value>",
-    feedback: {},
-    metadata: {},
-    metrics: {},
-    outputs: {},
+    feedback: {
+      "key": "<value>",
+    },
+    metadata: {
+      "key": "<value>",
+    },
+    metrics: {
+      "key": "<value>",
+    },
+    outputs: {
+      "key": "<value>",
+    },
   });
 
   if (res.statusCode == 200) {
@@ -98,30 +120,30 @@ run();
 
 ### Parameters
 
-| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
-| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `request`                                                                          | [operations.PutEventsRequestBody](../../models/operations/puteventsrequestbody.md) | :heavy_check_mark:                                                                 | The request object to use for the request.                                         |
-| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
+| Parameter                                                                              | Type                                                                                   | Required                                                                               | Description                                                                            |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `request`                                                                              | [operations.UpdateEventRequestBody](../../models/operations/updateeventrequestbody.md) | :heavy_check_mark:                                                                     | The request object to use for the request.                                             |
+| `config`                                                                               | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                           | :heavy_minus_sign:                                                                     | Available config options for making requests.                                          |
 
 
 ### Response
 
-**Promise<[operations.PutEventsResponse](../../models/operations/puteventsresponse.md)>**
+**Promise<[operations.UpdateEventResponse](../../models/operations/updateeventresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## deleteEventsEventId
+## deleteEvent
 
 Delete an event
 
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteEventsEventIdRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteEventRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -130,7 +152,7 @@ async function run() {
 const eventId: string = "<value>";
 const project: string = "<value>";
 
-  const res = await sdk.events.deleteEventsEventId(eventId, project);
+  const res = await sdk.events.deleteEvent(eventId, project);
 
   if (res.statusCode == 200) {
     // handle response
@@ -151,7 +173,7 @@ run();
 
 ### Response
 
-**Promise<[operations.DeleteEventsEventIdResponse](../../models/operations/deleteeventseventidresponse.md)>**
+**Promise<[operations.DeleteEventResponse](../../models/operations/deleteeventresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

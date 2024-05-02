@@ -22,12 +22,12 @@ export class Events {
      * @remarks
      * Please refer to our instrumentation guide for detailed information
      */
-    async postEvents(
-        req: operations.PostEventsRequestBody,
+    async createEvent(
+        req: operations.CreateEventRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostEventsResponse> {
+    ): Promise<operations.CreateEventResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new operations.PostEventsRequestBody(req);
+            req = new operations.CreateEventRequestBody(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -80,7 +80,7 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostEventsResponse = new operations.PostEventsResponse({
+        const res: operations.CreateEventResponse = new operations.CreateEventResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -91,7 +91,7 @@ export class Events {
                 if (utils.matchContentType(responseContentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PostEventsResponseBody
+                        operations.CreateEventResponseBody
                     );
                 } else {
                     throw new errors.SDKError(
@@ -118,12 +118,12 @@ export class Events {
     /**
      * Update an event
      */
-    async putEvents(
-        req: operations.PutEventsRequestBody,
+    async updateEvent(
+        req: operations.UpdateEventRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.PutEventsResponse> {
+    ): Promise<operations.UpdateEventResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new operations.PutEventsRequestBody(req);
+            req = new operations.UpdateEventRequestBody(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -176,7 +176,7 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PutEventsResponse = new operations.PutEventsResponse({
+        const res: operations.UpdateEventResponse = new operations.UpdateEventResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -201,12 +201,12 @@ export class Events {
     /**
      * Delete an event
      */
-    async deleteEventsEventId(
+    async deleteEvent(
         eventId: string,
         project: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteEventsEventIdResponse> {
-        const req = new operations.DeleteEventsEventIdRequest({
+    ): Promise<operations.DeleteEventResponse> {
+        const req = new operations.DeleteEventRequest({
             eventId: eventId,
             project: project,
         });
@@ -245,12 +245,11 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteEventsEventIdResponse =
-            new operations.DeleteEventsEventIdResponse({
-                statusCode: httpRes.status,
-                contentType: responseContentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.DeleteEventResponse = new operations.DeleteEventResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
         switch (true) {
             case httpRes?.status == 200:
                 break;

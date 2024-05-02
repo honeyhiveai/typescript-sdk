@@ -40,9 +40,9 @@ export class GetDatasetsRequest extends SpeakeasyBase {
  */
 export class GetDatasetsResponseBody extends SpeakeasyBase {
     @SpeakeasyMetadata({ elemType: components.Dataset })
-    @Expose({ name: "datasets" })
+    @Expose({ name: "testcases" })
     @Type(() => components.Dataset)
-    datasets?: components.Dataset[];
+    testcases?: components.Dataset[];
 }
 
 export class GetDatasetsResponse extends SpeakeasyBase {

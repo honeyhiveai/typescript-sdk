@@ -3,42 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Associated configuration for the session
- */
-export class SessionStartRequestConfig extends SpeakeasyBase {}
-
-/**
- * Any user feedback provided for the session output
- */
-export class SessionStartRequestFeedback extends SpeakeasyBase {}
-
-/**
- * Input object passed to the session - user query, text blob, etc
- */
-export class SessionStartRequestInputs extends SpeakeasyBase {}
-
-/**
- * Any system or application metadata associated with the session
- */
-export class SessionStartRequestMetadata extends SpeakeasyBase {}
-
-/**
- * Any values computed over the output of the session
- */
-export class SessionStartRequestMetrics extends SpeakeasyBase {}
-
-/**
- * Final output of the session - completion, chunks, etc
- */
-export class SessionStartRequestOutputs extends SpeakeasyBase {}
-
-/**
- * Any user properties associated with the session
- */
-export class SessionStartRequestUserProperties extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 export class SessionStartRequest extends SpeakeasyBase {
     /**
@@ -53,8 +18,7 @@ export class SessionStartRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "config" })
-    @Type(() => SessionStartRequestConfig)
-    config?: SessionStartRequestConfig;
+    config?: Record<string, any>;
 
     /**
      * How long the session took in milliseconds
@@ -82,40 +46,35 @@ export class SessionStartRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "feedback" })
-    @Type(() => SessionStartRequestFeedback)
-    feedback?: SessionStartRequestFeedback;
+    feedback?: Record<string, any>;
 
     /**
      * Input object passed to the session - user query, text blob, etc
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => SessionStartRequestInputs)
-    inputs?: SessionStartRequestInputs;
+    inputs?: Record<string, any>;
 
     /**
      * Any system or application metadata associated with the session
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => SessionStartRequestMetadata)
-    metadata?: SessionStartRequestMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * Any values computed over the output of the session
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metrics" })
-    @Type(() => SessionStartRequestMetrics)
-    metrics?: SessionStartRequestMetrics;
+    metrics?: Record<string, any>;
 
     /**
      * Final output of the session - completion, chunks, etc
      */
     @SpeakeasyMetadata()
     @Expose({ name: "outputs" })
-    @Type(() => SessionStartRequestOutputs)
-    outputs?: SessionStartRequestOutputs;
+    outputs?: Record<string, any>;
 
     /**
      * Project name associated with the session
@@ -157,6 +116,5 @@ export class SessionStartRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => SessionStartRequestUserProperties)
-    userProperties?: SessionStartRequestUserProperties;
+    userProperties?: Record<string, any>;
 }

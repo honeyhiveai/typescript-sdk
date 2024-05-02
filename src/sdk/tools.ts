@@ -162,11 +162,11 @@ export class Tools {
      * Create a new tool
      */
     async createTool(
-        req: components.Tool,
+        req: components.CreateToolRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.Tool(req);
+            req = new components.CreateToolRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -199,7 +199,7 @@ export class Tools {
             ...properties.headers,
         };
         if (reqBody == null) throw new Error("request body is required");
-        headers["Accept"] = "*/*";
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
@@ -224,15 +224,29 @@ export class Tools {
             contentType: responseContentType,
             rawResponse: httpRes,
         });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.CreateToolResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    httpRes?.data,
+                    decodedRes,
                     httpRes
                 );
         }
@@ -244,11 +258,11 @@ export class Tools {
      * Update an existing tool
      */
     async updateTool(
-        req: components.ToolUpdate,
+        req: components.UpdateToolRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.UpdateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.ToolUpdate(req);
+            req = new components.UpdateToolRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(

@@ -1,7 +1,7 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -9,8 +9,10 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
     if (res.statusCode == 200) {
         // handle response

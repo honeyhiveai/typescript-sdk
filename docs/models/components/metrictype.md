@@ -1,6 +1,6 @@
 # MetricType
 
-Type of the metric - "custom" or "model"
+Type of the metric - "custom", "model" or "human"
 
 
 ## Values
@@ -9,3 +9,4 @@ Type of the metric - "custom" or "model"
 | -------- | -------- |
 | `Custom` | custom   |
 | `Model`  | model    |
+| `Human`  | human    |

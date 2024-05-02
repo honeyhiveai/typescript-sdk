@@ -15,7 +15,7 @@ Start a new session
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -27,16 +27,30 @@ async function run() {
       childrenIds: [
         "<value>",
       ],
-      config: {},
-      feedback: {},
-      inputs: {},
-      metadata: {},
-      metrics: {},
-      outputs: {},
+      config: {
+        "key": "<value>",
+      },
+      feedback: {
+        "key": "<value>",
+      },
+      inputs: {
+        "key": "<value>",
+      },
+      metadata: {
+        "key": "<value>",
+      },
+      metrics: {
+        "key": "<value>",
+      },
+      outputs: {
+        "key": "<value>",
+      },
       project: "<value>",
       sessionName: "<value>",
       source: "<value>",
-      userProperties: {},
+      userProperties: {
+        "key": "<value>",
+      },
     },
   });
 
@@ -72,8 +86,8 @@ Delete a session
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteSessionRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteSessionRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -115,8 +129,8 @@ Retrieve a session
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetSessionRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { GetSessionRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -158,8 +172,8 @@ Process an event trace for a given session
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { ProcessEventTraceRequest, ProcessEventTraceRequestBody } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { ProcessEventTraceRequest, ProcessEventTraceRequestBody } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({

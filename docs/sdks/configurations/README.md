@@ -15,8 +15,8 @@ Retrieve a list of configurations
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -24,8 +24,10 @@ async function run() {
   });
 const projectName: string = "<value>";
 const type: TypeT = TypeT.Llm;
+const env: Env = Env.Prod;
+const name: string = "<value>";
 
-  const res = await sdk.configurations.getConfigurations(projectName, type);
+  const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
   if (res.statusCode == 200) {
     // handle response
@@ -40,7 +42,9 @@ run();
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `projectName`                                                | *string*                                                     | :heavy_check_mark:                                           | Project name for configuration                               |
-| `type`                                                       | [operations.TypeT](../../models/operations/typet.md)         | :heavy_check_mark:                                           | Configuration type - "LLM" or "pipeline"                     |
+| `type`                                                       | [operations.TypeT](../../models/operations/typet.md)         | :heavy_minus_sign:                                           | Configuration type - "LLM" or "pipeline" - default is "LLM"  |
+| `env`                                                        | [operations.Env](../../models/operations/env.md)             | :heavy_minus_sign:                                           | Environment - "dev", "staging" or "prod"                     |
+| `name`                                                       | *string*                                                     | :heavy_minus_sign:                                           | The name of the configuration                                |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
@@ -60,8 +64,8 @@ Create a new configuration
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { CallType, FunctionCallParams, TypeT } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { Env, TypeT } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -69,25 +73,19 @@ async function run() {
   });
 
   const res = await sdk.configurations.createConfiguration({
-    project: "<value>",
+    env: [
+      Env.Dev,
+    ],
     name: "<value>",
-    provider: "<value>",
     parameters: {
-      callType: CallType.Chat,
-      model: "Volt",
-      hyperparameters: {},
-      selectedFunctions: [
-        {
-          parameters: {
-            "key": "<value>",
-          },
-        },
-      ],
-      forceFunction: {
-        "key": "<value>",
-      },
+      "key": "<value>",
     },
-    userProperties: {},
+    project: "<value>",
+    provider: "<value>",
+    type: TypeT.Llm,
+    userProperties: {
+      "key": "<value>",
+    },
   });
 
   if (res.statusCode == 200) {
@@ -122,8 +120,8 @@ Delete a configuration
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteConfigurationRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteConfigurationRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -165,18 +163,9 @@ Update an existing configuration
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import {
-  CallType,
-  Configuration,
-  FunctionCallParams,
-  Hyperparameters,
-  ParametersT,
-  SelectedFunctions,
-  TypeT,
-  UserProperties,
-} from "HoneyHive/dist/models/components";
-import { UpdateConfigurationRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Configuration, Env, TypeT } from "honeyhive/dist/models/components";
+import { UpdateConfigurationRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -184,25 +173,19 @@ async function run() {
   });
 const id: string = "<value>";
 const configuration: Configuration = {
-  project: "<value>",
+  env: [
+    Env.Dev,
+  ],
   name: "<value>",
-  provider: "<value>",
   parameters: {
-    callType: CallType.Chat,
-    model: "Charger",
-    hyperparameters: {},
-    selectedFunctions: [
-      {
-        parameters: {
-          "key": "<value>",
-        },
-      },
-    ],
-    forceFunction: {
-      "key": "<value>",
-    },
+    "key": "<value>",
   },
-  userProperties: {},
+  project: "<value>",
+  provider: "<value>",
+  type: TypeT.Llm,
+  userProperties: {
+    "key": "<value>",
+  },
 };
 
   const res = await sdk.configurations.updateConfiguration(id, configuration);

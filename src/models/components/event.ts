@@ -3,12 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Associated configuration for the event - model, provider, etc
- */
-export class EventConfig extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 /**
  * Specify whether the event is of "model", "tool", "session" or "chain" type
@@ -19,36 +14,6 @@ export enum EventEventType {
     Chain = "chain",
     Session = "session",
 }
-
-/**
- * Any user feedback provided for the event output
- */
-export class EventFeedback extends SpeakeasyBase {}
-
-/**
- * Input object passed to the event - user query, text blob, etc
- */
-export class EventInputs extends SpeakeasyBase {}
-
-/**
- * Any system or application metadata associated with the event
- */
-export class EventMetadata extends SpeakeasyBase {}
-
-/**
- * Any values computed over the output of the event
- */
-export class EventMetrics extends SpeakeasyBase {}
-
-/**
- * Final output of the event - completion, chunks, etc
- */
-export class EventOutputs extends SpeakeasyBase {}
-
-/**
- * Any user properties associated with the event
- */
-export class EventUserProperties extends SpeakeasyBase {}
 
 export class Event extends SpeakeasyBase {
     /**
@@ -63,8 +28,7 @@ export class Event extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "config" })
-    @Type(() => EventConfig)
-    config?: EventConfig;
+    config?: Record<string, any>;
 
     /**
      * How long the event took in milliseconds
@@ -113,40 +77,35 @@ export class Event extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "feedback" })
-    @Type(() => EventFeedback)
-    feedback?: EventFeedback;
+    feedback?: Record<string, any>;
 
     /**
      * Input object passed to the event - user query, text blob, etc
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => EventInputs)
-    inputs?: EventInputs;
+    inputs?: Record<string, any>;
 
     /**
      * Any system or application metadata associated with the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => EventMetadata)
-    metadata?: EventMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * Any values computed over the output of the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metrics" })
-    @Type(() => EventMetrics)
-    metrics?: EventMetrics;
+    metrics?: Record<string, any>;
 
     /**
      * Final output of the event - completion, chunks, etc
      */
     @SpeakeasyMetadata()
     @Expose({ name: "outputs" })
-    @Type(() => EventOutputs)
-    outputs?: EventOutputs;
+    outputs?: Record<string, any>;
 
     /**
      * Id of the parent event if nested
@@ -188,6 +147,5 @@ export class Event extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => EventUserProperties)
-    userProperties?: EventUserProperties;
+    userProperties?: Record<string, any>;
 }

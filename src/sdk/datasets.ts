@@ -19,11 +19,11 @@ export class Datasets {
     /**
      * Delete a dataset
      */
-    async deleteDatasets(
+    async deleteDataset(
         datasetId: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteDatasetsResponse> {
-        const req = new operations.DeleteDatasetsRequest({
+    ): Promise<operations.DeleteDatasetResponse> {
+        const req = new operations.DeleteDatasetRequest({
             datasetId: datasetId,
         });
         const baseURL: string = utils.templateUrl(
@@ -61,7 +61,7 @@ export class Datasets {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteDatasetsResponse = new operations.DeleteDatasetsResponse({
+        const res: operations.DeleteDatasetResponse = new operations.DeleteDatasetResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -169,10 +169,10 @@ export class Datasets {
     /**
      * Create a dataset
      */
-    async postDatasets(
+    async createDataset(
         req: components.CreateDatasetRequest,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostDatasetsResponse> {
+    ): Promise<operations.CreateDatasetResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.CreateDatasetRequest(req);
         }
@@ -227,7 +227,7 @@ export class Datasets {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostDatasetsResponse = new operations.PostDatasetsResponse({
+        const res: operations.CreateDatasetResponse = new operations.CreateDatasetResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -238,7 +238,7 @@ export class Datasets {
                 if (utils.matchContentType(responseContentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PostDatasetsResponseBody
+                        operations.CreateDatasetResponseBody
                     );
                 } else {
                     throw new errors.SDKError(
@@ -265,10 +265,10 @@ export class Datasets {
     /**
      * Update a dataset
      */
-    async putDatasets(
+    async updateDataset(
         req: components.DatasetUpdate,
         config?: AxiosRequestConfig
-    ): Promise<operations.PutDatasetsResponse> {
+    ): Promise<operations.UpdateDatasetResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.DatasetUpdate(req);
         }
@@ -323,7 +323,7 @@ export class Datasets {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PutDatasetsResponse = new operations.PutDatasetsResponse({
+        const res: operations.UpdateDatasetResponse = new operations.UpdateDatasetResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
