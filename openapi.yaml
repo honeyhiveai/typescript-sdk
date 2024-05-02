@@ -1,0 +1,1630 @@
+components:
+  schemas:
+    Configuration:
+      properties:
+        _id:
+          description: ID of the configuration
+          type: string
+        env:
+          description: List of environments where the configuration is active
+          items:
+            enum:
+            - dev
+            - staging
+            - prod
+            type: string
+          type: array
+        name:
+          description: Name of the configuration
+          type: string
+        parameters:
+          additionalProperties: true
+          properties:
+            call_type:
+              description: Type of API calling - "chat" or "completion"
+              enum:
+              - chat
+              - completion
+              type: string
+            forceFunction:
+              additionalProperties: true
+              description: Force function-specific parameters
+              type: object
+            functionCallParams:
+              description: Function calling mode - "none", "auto" or "force"
+              enum:
+              - none
+              - auto
+              - force
+              type: string
+            hyperparameters:
+              additionalProperties: true
+              description: Model-specific hyperparameters
+              type: object
+            model:
+              description: Model unique name
+              type: string
+            responseFormat:
+              description: Response format for the model with the key "type" and value
+                "text" or "json_object"
+              type: object
+            selectedFunctions:
+              description: List of functions to be called by the model, refer to OpenAI
+                schema for more details
+              items:
+                properties:
+                  description:
+                    description: Description of the function
+                    type: string
+                  id:
+                    description: UUID of the function
+                    type: string
+                  name:
+                    description: Name of the function
+                    type: string
+                  parameters:
+                    additionalProperties: true
+                    description: Parameters for the function
+                    type: object
+                type: object
+              type: array
+          required:
+          - call_type
+          - model
+          type: object
+        project:
+          description: ID of the project to which this configuration belongs
+          type: string
+        provider:
+          description: Name of the provider - "openai", "anthropic", etc.
+          type: string
+        type:
+          description: Type of the configuration - "LLM" or "pipeline" - "LLM" by
+            default
+          enum:
+          - LLM
+          - pipeline
+          type: string
+        user_properties:
+          additionalProperties: true
+          description: Details of user who created the configuration
+          type: object
+      required:
+      - project
+      - name
+      - provider
+      - type
+      - parameters
+      type: object
+    CreateDatapointRequest:
+      properties:
+        ground_truth:
+          additionalProperties: true
+          description: Expected output JSON object for the datapoint
+          type: object
+        inputs:
+          additionalProperties: true
+          description: Arbitrary JSON object containing the inputs for the datapoint
+          type: object
+        linked_datasets:
+          description: Ids of all datasets that include the datapoint
+          items:
+            type: string
+          type: array
+        linked_evals:
+          description: Ids of evaluations where the datapoint is included
+          items:
+            type: string
+          type: array
+        linked_event:
+          description: Event id for the event from which the datapoint was created
+          type: string
+        metadata:
+          additionalProperties: true
+          description: Any additional metadata for the datapoint
+          type: object
+        project:
+          description: UUID for the project to which the datapoint belongs
+          type: string
+        saved:
+          description: Whether the datapoint is saved or detected
+          type: boolean
+        type:
+          description: Type of datapoint - "evaluation" or "fine-tuning"
+          enum:
+          - evaluation
+          - fine-tuning
+          type: string
+      required:
+      - project
+      - inputs
+      - type
+      type: object
+    CreateDatasetRequest:
+      properties:
+        datapoints:
+          description: List of unique datapoint ids to be included in this dataset
+          items:
+            type: string
+          type: array
+        description:
+          type: string
+        linked_evals:
+          description: List of unique evaluation run ids to be associated with this
+            dataset
+          items:
+            type: string
+          type: array
+        metadata:
+          additionalProperties: true
+          description: Any helpful metadata to track for the dataset
+          type: object
+        name:
+          type: string
+        pipeline_type:
+          description: The type of data included in the dataset - "event" or "session"
+          enum:
+          - event
+          - session
+          type: string
+        project:
+          description: UUID of the project associated with this dataset
+          type: string
+        saved:
+          type: boolean
+        type:
+          description: What the dataset is to be used for - "evaluation" or "fine-tuning"
+          enum:
+          - evaluation
+          - fine-tuning
+          type: string
+      required:
+      - project
+      - name
+      type: object
+    CreateEventRequest:
+      properties:
+        children_ids:
+          description: Id of events that are nested within the event
+          items:
+            type: string
+          type: array
+        config:
+          additionalProperties: true
+          description: Associated configuration JSON for the event - model name, vector
+            index name, etc
+          type: object
+        duration:
+          description: How long the event took in milliseconds
+          type: number
+        end_time:
+          description: UTC timestamp (in milliseconds) for the event end
+          type: integer
+        error:
+          description: Any error description if event failed
+          type: string
+        event_id:
+          description: Unique id of the event, if not set, it will be auto-generated
+          type: string
+        event_name:
+          description: Name of the event
+          type: string
+        event_type:
+          description: Specify whether the event is of "model", "tool" or "chain"
+            type
+          enum:
+          - model
+          - tool
+          - chain
+          type: string
+        feedback:
+          additionalProperties: true
+          description: Any user feedback provided for the event output
+          type: object
+        inputs:
+          additionalProperties: true
+          description: Input JSON given to the event - prompt, chunks, etc
+          type: object
+        metadata:
+          additionalProperties: true
+          description: Any system or application metadata associated with the event
+          type: object
+        metrics:
+          additionalProperties: true
+          description: Any values computed over the output of the event
+          type: object
+        outputs:
+          additionalProperties: true
+          description: Final output JSON of the event
+          type: object
+        parent_id:
+          description: Id of the parent event if nested
+          type: string
+        project:
+          description: Project associated with the event
+          type: string
+        session_id:
+          description: Unique id of the session associated with the event, if not
+            set, it will be auto-generated
+          type: string
+        source:
+          description: Source of the event - production, staging, etc
+          type: string
+        start_time:
+          description: UTC timestamp (in milliseconds) for the event start
+          type: number
+        user_properties:
+          additionalProperties: true
+          description: Any user properties associated with the event
+          type: object
+      required:
+      - project
+      - event_type
+      - event_name
+      - source
+      type: object
+    CreateProjectRequest:
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+      required:
+      - name
+      type: object
+    CreateToolRequest:
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        parameters:
+          additionalProperties: true
+          description: These can be function call params or plugin call params
+          type: object
+        task:
+          description: Name of the project associated with this tool
+          type: string
+        type:
+          enum:
+          - function
+          - tool
+          type: string
+      required:
+      - task
+      - name
+      - parameters
+      - type
+      type: object
+    Datapoint:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        ground_truth:
+          additionalProperties: true
+          type: object
+        history:
+          description: Update history for the datapoint
+          items:
+            type: object
+          type: array
+        inputs:
+          description: Arbitrary JSON object containing the inputs for the datapoint
+          type: object
+        linked_datasets:
+          description: Ids of all datasets that include the datapoint
+          items:
+            type: string
+          type: array
+        linked_evals:
+          description: Ids of evaluations where the datapoint is included
+          items:
+            type: string
+          type: array
+        linked_event:
+          description: Event id for the event from which the datapoint was created
+          type: string
+        metadata:
+          additionalProperties: true
+          type: object
+        project_id:
+          type: string
+        saved:
+          type: boolean
+        tenant:
+          type: string
+        type:
+          description: evaluation or event - specify the type of usage
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    Dataset:
+      properties:
+        created_at:
+          format: date-time
+          type: string
+        datapoints:
+          description: List of unique datapoint ids to be included in this dataset
+          items:
+            type: string
+          type: array
+        description:
+          type: string
+        linked_evals:
+          items:
+            type: string
+          type: array
+        name:
+          type: string
+        num_points:
+          description: Number of datapoints included in the dataset
+          type: integer
+        pipeline_type:
+          type: string
+        project:
+          description: UUID of the project associated with this dataset
+          type: string
+        saved:
+          type: boolean
+        type:
+          description: What the dataset is to be used for - "evaluation" or "fine-tuning"
+          enum:
+          - evaluation
+          - fine-tuning
+          type: string
+        updated_at:
+          format: date-time
+          type: string
+      type: object
+    DatasetUpdate:
+      properties:
+        datapoints:
+          description: Updated list of datapoint ids for the dataset
+          items:
+            type: string
+          type: array
+        dataset_id:
+          description: The unique identifier of the dataset being updated
+          type: string
+        description:
+          description: Updated description for the dataset
+          type: string
+        linked_evals:
+          description: Updated list of unique evaluation run ids to be associated
+            with this dataset
+          items:
+            type: string
+          type: array
+        metadata:
+          additionalProperties: true
+          description: Updated metadata to track for the dataset
+          type: object
+        name:
+          description: Updated name for the dataset
+          type: string
+        num_points:
+          type: integer
+        saved:
+          type: boolean
+      required:
+      - dataset_id
+      type: object
+    Event:
+      properties:
+        children_ids:
+          description: Id of events that are nested within the event
+          items:
+            type: string
+          type: array
+        config:
+          additionalProperties: true
+          description: Associated configuration for the event - model, provider, etc
+          type: object
+        duration:
+          description: How long the event took in milliseconds
+          type: number
+        end_time:
+          description: UTC timestamp (in milliseconds) for the event end
+          type: integer
+        error:
+          description: Any error description if the event failed
+          type: string
+        event_id:
+          description: Unique id of the event, if not set, it will be auto-generated
+          type: string
+        event_name:
+          description: Name of the event
+          type: string
+        event_type:
+          description: Specify whether the event is of "model", "tool", "session"
+            or "chain" type
+          enum:
+          - model
+          - tool
+          - chain
+          - session
+          type: string
+        feedback:
+          additionalProperties: true
+          description: Any user feedback provided for the event output
+          type: object
+        inputs:
+          additionalProperties: true
+          description: Input object passed to the event - user query, text blob, etc
+          type: object
+        metadata:
+          additionalProperties: true
+          description: Any system or application metadata associated with the event
+          type: object
+        metrics:
+          additionalProperties: true
+          description: Any values computed over the output of the event
+          type: object
+        outputs:
+          additionalProperties: true
+          description: Final output of the event - completion, chunks, etc
+          type: object
+        parent_id:
+          description: Id of the parent event if nested
+          type: string
+        project:
+          description: Project associated with the event
+          type: string
+        session_id:
+          description: Unique id of the session associated with the event
+          type: string
+        source:
+          description: Source of the event - production, staging, etc
+          type: string
+        start_time:
+          description: UTC timestamp (in milliseconds) for the event start
+          type: number
+        user_properties:
+          additionalProperties: true
+          description: Any user properties associated with the event
+          type: object
+      type: object
+    EventFilter:
+      properties:
+        field:
+          description: The field name that you are filtering by
+          type: string
+        operator:
+          description: The type of filter you are performing - "is", "is not", "contains",
+            "not contains"
+          enum:
+          - is
+          - is not
+          - contains
+          - not contains
+          type: string
+        type:
+          description: The data type you are using - "string", "number", "boolean",
+            "id" (for object ids)
+          enum:
+          - string
+          - number
+          - boolean
+          - id
+          type: string
+        value:
+          description: The value that you are filtering the field for
+          type: string
+      type: object
+    Metric:
+      properties:
+        _id:
+          description: Unique idenitifier
+          type: string
+        code_snippet:
+          description: Associated code block for the metric
+          type: string
+        criteria:
+          description: Criteria for human metrics
+          type: string
+        description:
+          description: Short description of what the metric does
+          type: string
+        enabled_in_prod:
+          description: Whether to compute on all production events automatically
+          type: boolean
+        event_name:
+          description: Name of event that the metric is set to be computed on
+          type: string
+        event_type:
+          description: Type of event that the metric is set to be computed on
+          type: string
+        name:
+          description: Name of the metric
+          type: string
+        needs_ground_truth:
+          description: Whether a ground truth (on metadata) is required to compute
+            it
+          type: boolean
+        pass_when:
+          description: Threshold for boolean metrics to decide passing or failing
+            in tests
+          type: boolean
+        prompt:
+          description: Evaluator prompt for the metric
+          type: string
+        return_type:
+          description: The data type of the metric value - "boolean", "float", "string"
+          enum:
+          - boolean
+          - float
+          - string
+          type: string
+        task:
+          description: Name of the project associated with metric
+          type: string
+        threshold:
+          description: Threshold for numeric metrics to decide passing or failing
+            in tests
+          properties:
+            max:
+              type: number
+            min:
+              type: number
+          type: object
+        type:
+          description: Type of the metric - "custom", "model" or "human"
+          enum:
+          - custom
+          - model
+          - human
+          type: string
+      required:
+      - name
+      - task
+      - type
+      - description
+      - return_type
+      type: object
+    MetricEdit:
+      properties:
+        code_snippet:
+          description: Updated code block for the metric
+          type: string
+        criteria:
+          description: Criteria for human metrics
+          type: string
+        description:
+          description: Short description of what the metric does
+          type: string
+        enabled_in_prod:
+          description: Whether to compute on all production events automatically
+          type: boolean
+        event_name:
+          description: Name of event that the metric is set to be computed on
+          type: string
+        event_type:
+          description: Type of event that the metric is set to be computed on
+          enum:
+          - model
+          - tool
+          - chain
+          - session
+          type: string
+        metric_id:
+          description: Unique identifier of the metric
+          type: string
+        name:
+          description: Updated name of the metric
+          type: string
+        needs_ground_truth:
+          description: Whether a ground truth (on metadata) is required to compute
+            it
+          type: boolean
+        pass_when:
+          description: Threshold for boolean metrics to decide passing or failing
+            in tests
+          type: boolean
+        prompt:
+          description: Updated Evaluator prompt for the metric
+          type: string
+        return_type:
+          description: The data type of the metric value - "boolean", "float", "string"
+          enum:
+          - boolean
+          - float
+          - string
+          type: string
+        threshold:
+          description: Threshold for numeric metrics to decide passing or failing
+            in tests
+          properties:
+            max:
+              type: number
+            min:
+              type: number
+          type: object
+        type:
+          description: Type of the metric - "custom", "model" or "human"
+          enum:
+          - custom
+          - model
+          - human
+          type: string
+      required:
+      - metric_id
+      type: object
+    Project:
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+      required:
+      - name
+      - description
+      - type
+      type: object
+    SessionStartRequest:
+      properties:
+        children_ids:
+          description: Id of events that are nested within the session
+          items:
+            type: string
+          type: array
+        config:
+          additionalProperties: true
+          description: Associated configuration for the session
+          type: object
+        duration:
+          description: How long the session took in milliseconds
+          type: number
+        end_time:
+          description: UTC timestamp (in milliseconds) for the session end
+          type: integer
+        error:
+          description: Any error description if session failed
+          type: string
+        feedback:
+          additionalProperties: true
+          description: Any user feedback provided for the session output
+          type: object
+        inputs:
+          additionalProperties: true
+          description: Input object passed to the session - user query, text blob,
+            etc
+          type: object
+        metadata:
+          additionalProperties: true
+          description: Any system or application metadata associated with the session
+          type: object
+        metrics:
+          additionalProperties: true
+          description: Any values computed over the output of the session
+          type: object
+        outputs:
+          additionalProperties: true
+          description: Final output of the session - completion, chunks, etc
+          type: object
+        project:
+          description: Project name associated with the session
+          type: string
+        session_id:
+          description: Unique id of the session, if not set, it will be auto-generated
+          type: string
+        session_name:
+          description: Name of the session
+          type: string
+        source:
+          description: Source of the session - production, staging, etc
+          type: string
+        start_time:
+          description: UTC timestamp (in milliseconds) for the session start
+          type: number
+        user_properties:
+          additionalProperties: true
+          description: Any user properties associated with the session
+          type: object
+      required:
+      - project
+      - session_name
+      - source
+      type: object
+    Tool:
+      properties:
+        _id:
+          type: string
+        description:
+          type: string
+        name:
+          type: string
+        parameters:
+          additionalProperties: true
+          description: These can be function call params or plugin call params
+          type: object
+        task:
+          description: Name of the project associated with this tool
+          type: string
+        tool_type:
+          enum:
+          - function
+          - tool
+          type: string
+      required:
+      - task
+      - name
+      - parameters
+      - tool_type
+      type: object
+    UpdateDatapointRequest:
+      properties:
+        ground_truth:
+          additionalProperties: true
+          description: Expected output JSON object for the datapoint
+          type: object
+        history:
+          description: Update history for the datapoint
+          items:
+            type: object
+          type: array
+        inputs:
+          additionalProperties: true
+          description: Arbitrary JSON object containing the inputs for the datapoint
+          type: object
+        linked_datasets:
+          description: Ids of all datasets that include the datapoint
+          items:
+            type: string
+          type: array
+        linked_evals:
+          description: Ids of evaluations where the datapoint is included
+          items:
+            type: string
+          type: array
+        metadata:
+          additionalProperties: true
+          description: Any additional metadata for the datapoint
+          type: object
+        saved:
+          description: Whether the datapoint is saved or detected
+          type: boolean
+        type:
+          description: evaluation or event - specify the type of usage
+          type: string
+      required:
+      - datapoint_id
+      type: object
+    UpdateProjectRequest:
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        project_id:
+          type: string
+      required:
+      - project_id
+      type: object
+    UpdateToolRequest:
+      properties:
+        description:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        parameters:
+          additionalProperties: true
+          type: object
+      required:
+      - id
+      - parameters
+      - name
+      type: object
+  securitySchemes:
+    BearerAuth:
+      scheme: bearer
+      type: http
+info:
+  title: HoneyHive API
+  version: 1.0.1
+openapi: 3.0.3
+paths:
+  /configurations:
+    get:
+      operationId: getConfigurations
+      parameters:
+      - description: Project name for configuration
+        in: query
+        name: project_name
+        required: true
+        schema:
+          type: string
+      - description: Configuration type - "LLM" or "pipeline" - default is "LLM"
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - LLM
+          - pipeline
+          type: string
+      - description: Environment - "dev", "staging" or "prod"
+        in: query
+        name: env
+        required: false
+        schema:
+          enum:
+          - dev
+          - staging
+          - prod
+          type: string
+      - description: The name of the configuration
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Configuration'
+                type: array
+          description: An array of configurations
+      summary: Retrieve a list of configurations
+      tags:
+      - Configurations
+    post:
+      operationId: createConfiguration
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration'
+        required: true
+      responses:
+        '200':
+          description: Configuration created successfully
+      summary: Create a new configuration
+      tags:
+      - Configurations
+  /configurations/{id}:
+    delete:
+      operationId: deleteConfiguration
+      parameters:
+      - description: Configuration ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Configuration deleted successfully
+      summary: Delete a configuration
+      tags:
+      - Configurations
+    put:
+      operationId: updateConfiguration
+      parameters:
+      - description: Configuration ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Configuration'
+        required: true
+      responses:
+        '200':
+          description: Configuration updated successfully
+      summary: Update an existing configuration
+      tags:
+      - Configurations
+  /datapoints:
+    get:
+      operationId: getDatapoints
+      parameters:
+      - description: Project ID to filter datapoints
+        in: query
+        name: project
+        required: true
+        schema:
+          type: string
+      - description: Type of data - "evaluation" or "event"
+        in: query
+        name: type
+        required: false
+        schema:
+          enum:
+          - evaluation
+          - event
+          type: string
+      - description: List of datapoint ids to fetch
+        in: query
+        name: datapoint_ids
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  datapoints:
+                    items:
+                      $ref: '#/components/schemas/Datapoint'
+                    type: array
+                type: object
+          description: Successful response
+      summary: Retrieve a list of datapoints
+      tags:
+      - Datapoints
+    post:
+      operationId: createDatapoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatapointRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  result:
+                    properties:
+                      insertedId:
+                        type: string
+                    type: object
+                type: object
+          description: Datapoint successfully created
+      summary: Create a new datapoint
+      tags:
+      - Datapoints
+    put:
+      operationId: updateDatapoint
+      parameters:
+      - description: ID of datapoint to update
+        in: query
+        name: datapoint_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDatapointRequest'
+        required: true
+      responses:
+        '200':
+          description: Datapoint successfully updated
+        '400':
+          description: Error updating datapoint
+      summary: Update a specific datapoint
+      tags:
+      - Datapoints
+  /datapoints/{id}:
+    delete:
+      operationId: deleteDatapoint
+      parameters:
+      - description: Datapoint ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Datapoint successfully deleted
+      summary: Delete a specific datapoint
+      tags:
+      - Datapoints
+    get:
+      operationId: getDatapoint
+      parameters:
+      - description: Datapoint ID
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  datapoint:
+                    items:
+                      $ref: '#/components/schemas/Datapoint'
+                    type: array
+                type: object
+          description: Successful response
+      summary: Retrieve a specific datapoint
+      tags:
+      - Datapoints
+  /datasets:
+    delete:
+      operationId: deleteDataset
+      parameters:
+      - description: The unique identifier of the dataset to be deleted
+        in: query
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful delete
+      summary: Delete a dataset
+      tags:
+      - Datasets
+    get:
+      operationId: getDatasets
+      parameters:
+      - description: Project ID associated with the datasets
+        in: query
+        name: project
+        required: true
+        schema:
+          type: string
+      - description: Type of the dataset - "evaluation" or "fine-tuning"
+        in: query
+        name: type
+        schema:
+          enum:
+          - evaluation
+          - fine-tuning
+          type: string
+      - description: Unique dataset ID for filtering specific dataset
+        in: query
+        name: dataset_id
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  testcases:
+                    items:
+                      $ref: '#/components/schemas/Dataset'
+                    type: array
+                type: object
+          description: Successful response
+      summary: Get datasets
+      tags:
+      - Datasets
+    post:
+      operationId: createDataset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatasetRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  inserted:
+                    type: boolean
+                  result:
+                    properties:
+                      insertedId:
+                        type: string
+                    type: object
+                type: object
+          description: Successful creation
+      summary: Create a dataset
+      tags:
+      - Datasets
+    put:
+      operationId: updateDataset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatasetUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful update
+      summary: Update a dataset
+      tags:
+      - Datasets
+  /events:
+    get:
+      operationId: getEvents
+      parameters:
+      - in: query
+        name: project
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: dateRange
+        required: false
+        schema:
+          properties:
+            $gte:
+              description: ISO String for start of date time filter
+              type: string
+            $lte:
+              description: ISO String for end of date time filter
+              type: string
+          type: object
+      - in: query
+        name: filters
+        required: true
+        schema:
+          items:
+            $ref: '#/components/schemas/EventFilter'
+          type: array
+      - in: query
+        name: limit
+        required: false
+        schema:
+          description: Limit number of results to speed up query (default is 1000)
+          type: number
+      - in: query
+        name: page
+        required: false
+        schema:
+          description: Page number of results (default is 1)
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  events:
+                    items:
+                      $ref: '#/components/schemas/Event'
+                    type: array
+                  totalEvents:
+                    description: Total number of events in the specified filter
+                    type: number
+                type: object
+          description: Success
+      summary: Retrieve events based on filters
+      tags:
+      - Events
+    post:
+      description: Please refer to our instrumentation guide for detailed information
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                event:
+                  $ref: '#/components/schemas/CreateEventRequest'
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  event_id:
+                    type: string
+                  success:
+                    type: boolean
+                type: object
+          description: Event created
+      summary: Create a new event
+      tags:
+      - Events
+    put:
+      operationId: updateEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                event_id:
+                  type: string
+                feedback:
+                  additionalProperties: true
+                  type: object
+                metadata:
+                  additionalProperties: true
+                  type: object
+                metrics:
+                  additionalProperties: true
+                  type: object
+                outputs:
+                  additionalProperties: true
+                  type: object
+              required:
+              - event_id
+              type: object
+        required: true
+      responses:
+        '200':
+          description: Event updated
+        '400':
+          description: Bad request
+      summary: Update an event
+      tags:
+      - Events
+  /events/chart:
+    get:
+      operationId: getChart
+      parameters:
+      - in: query
+        name: project
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: dateRange
+        required: false
+        schema:
+          properties:
+            $gte:
+              description: ISO String for start of date time filter
+              type: string
+            $lte:
+              description: ISO String for end of date time filter
+              type: string
+          type: object
+      - in: query
+        name: filters
+        required: true
+        schema:
+          items:
+            $ref: '#/components/schemas/EventFilter'
+          type: array
+      responses:
+        '200':
+          description: Success
+      summary: Retrieve a chart of events
+      tags:
+      - Events
+  /events/{event_id}:
+    delete:
+      operationId: deleteEvent
+      parameters:
+      - in: path
+        name: event_id
+        required: true
+        schema:
+          type: string
+      - in: query
+        name: project
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Event deleted
+      summary: Delete an event
+      tags:
+      - Events
+  /metrics:
+    delete:
+      description: Remove a metric
+      operationId: deleteMetric
+      parameters:
+      - in: query
+        name: metric_id
+        required: true
+        schema:
+          description: Unique identifier of the metric
+          type: string
+      responses:
+        '200':
+          description: Metric deleted successfully
+      summary: Delete a metric
+      tags:
+      - Metrics
+    get:
+      description: Retrieve a list of all metrics
+      operationId: getMetrics
+      parameters:
+      - description: Project name associated with metrics
+        in: query
+        name: project_name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Metric'
+                type: array
+          description: A list of metrics
+      summary: Get all metrics
+      tags:
+      - Metrics
+    post:
+      description: Add a new metric
+      operationId: createMetric
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Metric'
+        required: true
+      responses:
+        '200':
+          description: Metric created successfully
+      summary: Create a new metric
+      tags:
+      - Metrics
+    put:
+      description: Edit a metric
+      operationId: updateMetric
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricEdit'
+        required: true
+      responses:
+        '200':
+          description: Metric updated successfully
+      summary: Update an existing metric
+      tags:
+      - Metrics
+  /projects:
+    delete:
+      operationId: deleteProject
+      parameters:
+      - in: query
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Project deleted
+      summary: Delete a project
+      tags:
+      - Projects
+    get:
+      operationId: getProjects
+      parameters:
+      - in: query
+        name: name
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Project'
+                type: array
+          description: A list of projects
+      summary: Get a list of projects
+      tags:
+      - Projects
+    post:
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: The created project
+      summary: Create a new project
+      tags:
+      - Projects
+    put:
+      operationId: updateProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProjectRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully updated the project
+      summary: Update an existing project
+      tags:
+      - Projects
+  /session/start:
+    post:
+      operationId: startSession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                session:
+                  $ref: '#/components/schemas/SessionStartRequest'
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  session_id:
+                    type: string
+                type: object
+          description: Session successfully started
+      summary: Start a new session
+      tags:
+      - Session
+  /session/{session_id}:
+    delete:
+      operationId: deleteSession
+      parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Session successfully deleted
+      summary: Delete a session
+      tags:
+      - Session
+    get:
+      operationId: getSession
+      parameters:
+      - in: path
+        name: session_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: Session details
+      summary: Retrieve a session
+      tags:
+      - Session
+  /session/{session_id}/traces:
+    post:
+      operationId: processEventTrace
+      parameters:
+      - description: The ID of the session to which this event trace belongs
+        in: path
+        name: session_id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                logs:
+                  items:
+                    additionalProperties: true
+                    type: object
+                  type: array
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  result:
+                    type: string
+                type: object
+          description: Successfully processed the event traces
+      summary: Process an event trace for a given session
+      tags:
+      - Session
+  /tools:
+    delete:
+      operationId: deleteTool
+      parameters:
+      - in: query
+        name: function_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully deleted the tool
+      summary: Delete a tool
+      tags:
+      - Tools
+    get:
+      operationId: getTools
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Tool'
+                type: array
+          description: Successfully retrieved the list of tools
+      security:
+      - BearerAuth: []
+      summary: Retrieve a list of tools
+      tags:
+      - Tools
+    post:
+      operationId: createTool
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateToolRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  result:
+                    properties:
+                      insertedId:
+                        type: string
+                    type: object
+                type: object
+          description: Tool successfully created
+      security:
+      - BearerAuth: []
+      summary: Create a new tool
+      tags:
+      - Tools
+    put:
+      operationId: updateTool
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateToolRequest'
+        required: true
+      responses:
+        '200':
+          description: Successfully updated the tool
+      security:
+      - BearerAuth: []
+      summary: Update an existing tool
+      tags:
+      - Tools
+security:
+- BearerAuth: []
+servers:
+- url: https://api.honeyhive.ai
