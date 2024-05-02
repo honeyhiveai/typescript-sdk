@@ -4,3 +4,7 @@ sources:
     my-source:
         inputs:
             - location: openapi.yaml
+targets:
+    typescript:
+        target: typescript
+        source: my-source

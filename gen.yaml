@@ -27,5 +27,5 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   outputModelSuffix: output
-  packageName: HoneyHive
+  packageName: honeyhive
   templateVersion: v1
