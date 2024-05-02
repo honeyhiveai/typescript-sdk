@@ -379,7 +379,7 @@ export class SessionTracer {
             if (getRunRes.status !== 200)
               throw new Error("Failed to get run info");
 
-            let eventIds = getRunRes.data["evaluation"]["event_ids"];
+            const eventIds = getRunRes.data["evaluation"]["event_ids"];
             eventIds.push(this.session_id);
             const updateRunRes = await this.client.put(
               `https://api.honeyhive.ai/runs/${this.evalInfo.runId}`,
