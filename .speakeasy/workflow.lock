@@ -1,0 +1,11 @@
+speakeasyVersion: 1.277.8
+sources: {}
+targets: {}
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        my-source:
+            inputs:
+                - location: openapi.yaml
+    targets: {}
