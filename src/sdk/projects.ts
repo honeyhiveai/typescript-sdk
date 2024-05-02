@@ -262,11 +262,11 @@ export class Projects {
      * Update an existing project
      */
     async updateProject(
-        req: components.Project,
+        req: components.UpdateProjectRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.UpdateProjectResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.Project(req);
+            req = new components.UpdateProjectRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -299,7 +299,7 @@ export class Projects {
             ...properties.headers,
         };
         if (reqBody == null) throw new Error("request body is required");
-        headers["Accept"] = "application/json";
+        headers["Accept"] = "*/*";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
@@ -324,26 +324,15 @@ export class Projects {
             contentType: responseContentType,
             rawResponse: httpRes,
         });
-        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
-                if (utils.matchContentType(responseContentType, `application/json`)) {
-                    res.project = utils.objectToClass(JSON.parse(decodedRes), components.Project);
-                } else {
-                    throw new errors.SDKError(
-                        "unknown content-type received: " + responseContentType,
-                        httpRes.status,
-                        decodedRes,
-                        httpRes
-                    );
-                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    decodedRes,
+                    httpRes?.data,
                     httpRes
                 );
         }

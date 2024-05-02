@@ -15,8 +15,8 @@ Delete a tool
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { DeleteToolRequest } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { DeleteToolRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -58,7 +58,7 @@ Retrieve a list of tools
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -98,8 +98,8 @@ Create a new tool
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { ToolType } from "HoneyHive/dist/models/components";
+import { HoneyHive } from "honeyhive";
+import { CreateToolRequestType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -108,9 +108,11 @@ async function run() {
 
   const res = await sdk.tools.createTool({
     name: "<value>",
-    parameters: {},
+    parameters: {
+      "key": "<value>",
+    },
     task: "<value>",
-    type: ToolType.Tool,
+    type: CreateToolRequestType.Tool,
   });
 
   if (res.statusCode == 200) {
@@ -123,10 +125,10 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `request`                                                    | [components.Tool](../../models/components/tool.md)           | :heavy_check_mark:                                           | The request object to use for the request.                   |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+| Parameter                                                                    | Type                                                                         | Required                                                                     | Description                                                                  |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `request`                                                                    | [components.CreateToolRequest](../../models/components/createtoolrequest.md) | :heavy_check_mark:                                                           | The request object to use for the request.                                   |
+| `config`                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                 | :heavy_minus_sign:                                                           | Available config options for making requests.                                |
 
 
 ### Response
@@ -145,7 +147,7 @@ Update an existing tool
 ### Example Usage
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { HoneyHive } from "honeyhive";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -154,7 +156,10 @@ async function run() {
 
   const res = await sdk.tools.updateTool({
     id: "<id>",
-    parameters: {},
+    name: "<value>",
+    parameters: {
+      "key": "<value>",
+    },
   });
 
   if (res.statusCode == 200) {
@@ -167,10 +172,10 @@ run();
 
 ### Parameters
 
-| Parameter                                                      | Type                                                           | Required                                                       | Description                                                    |
-| -------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- |
-| `request`                                                      | [components.ToolUpdate](../../models/components/toolupdate.md) | :heavy_check_mark:                                             | The request object to use for the request.                     |
-| `config`                                                       | [AxiosRequestConfig](https://axios-http.com/docs/req_config)   | :heavy_minus_sign:                                             | Available config options for making requests.                  |
+| Parameter                                                                    | Type                                                                         | Required                                                                     | Description                                                                  |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `request`                                                                    | [components.UpdateToolRequest](../../models/components/updatetoolrequest.md) | :heavy_check_mark:                                                           | The request object to use for the request.                                   |
+| `config`                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                 | :heavy_minus_sign:                                                           | Available config options for making requests.                                |
 
 
 ### Response

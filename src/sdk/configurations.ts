@@ -21,12 +21,16 @@ export class Configurations {
      */
     async getConfigurations(
         projectName: string,
-        type: operations.TypeT,
+        type?: operations.TypeT,
+        env?: operations.Env,
+        name?: string,
         config?: AxiosRequestConfig
     ): Promise<operations.GetConfigurationsResponse> {
         const req = new operations.GetConfigurationsRequest({
             projectName: projectName,
             type: type,
+            env: env,
+            name: name,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,

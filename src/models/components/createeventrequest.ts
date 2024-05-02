@@ -3,12 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Associated configuration JSON for the event - model name, vector index name, etc
- */
-export class Config extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 /**
  * Specify whether the event is of "model", "tool" or "chain" type
@@ -18,36 +13,6 @@ export enum EventType {
     Tool = "tool",
     Chain = "chain",
 }
-
-/**
- * Any user feedback provided for the event output
- */
-export class Feedback extends SpeakeasyBase {}
-
-/**
- * Input JSON given to the event - prompt, chunks, etc
- */
-export class CreateEventRequestInputs extends SpeakeasyBase {}
-
-/**
- * Any system or application metadata associated with the event
- */
-export class CreateEventRequestMetadata extends SpeakeasyBase {}
-
-/**
- * Any values computed over the output of the event
- */
-export class Metrics extends SpeakeasyBase {}
-
-/**
- * Final output JSON of the event
- */
-export class Outputs extends SpeakeasyBase {}
-
-/**
- * Any user properties associated with the event
- */
-export class CreateEventRequestUserProperties extends SpeakeasyBase {}
 
 export class CreateEventRequest extends SpeakeasyBase {
     /**
@@ -62,8 +27,7 @@ export class CreateEventRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "config" })
-    @Type(() => Config)
-    config?: Config;
+    config?: Record<string, any>;
 
     /**
      * How long the event took in milliseconds
@@ -87,6 +51,13 @@ export class CreateEventRequest extends SpeakeasyBase {
     error?: string;
 
     /**
+     * Unique id of the event, if not set, it will be auto-generated
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_id" })
+    eventId?: string;
+
+    /**
      * Name of the event
      */
     @SpeakeasyMetadata()
@@ -105,40 +76,35 @@ export class CreateEventRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "feedback" })
-    @Type(() => Feedback)
-    feedback?: Feedback;
+    feedback?: Record<string, any>;
 
     /**
      * Input JSON given to the event - prompt, chunks, etc
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => CreateEventRequestInputs)
-    inputs?: CreateEventRequestInputs;
+    inputs?: Record<string, any>;
 
     /**
      * Any system or application metadata associated with the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => CreateEventRequestMetadata)
-    metadata?: CreateEventRequestMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * Any values computed over the output of the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metrics" })
-    @Type(() => Metrics)
-    metrics?: Metrics;
+    metrics?: Record<string, any>;
 
     /**
      * Final output JSON of the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "outputs" })
-    @Type(() => Outputs)
-    outputs?: Outputs;
+    outputs?: Record<string, any>;
 
     /**
      * Id of the parent event if nested
@@ -153,6 +119,13 @@ export class CreateEventRequest extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
     project: string;
+
+    /**
+     * Unique id of the session associated with the event, if not set, it will be auto-generated
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "session_id" })
+    sessionId?: string;
 
     /**
      * Source of the event - production, staging, etc
@@ -173,6 +146,5 @@ export class CreateEventRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => CreateEventRequestUserProperties)
-    userProperties?: CreateEventRequestUserProperties;
+    userProperties?: Record<string, any>;
 }

@@ -1,18 +1,18 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: 9bd3a9d1a7303ec42de5017c9b364625
+  docChecksum: 9d683dc5c684ad5210d4c5990f2be26d
   docVersion: 1.0.1
-  speakeasyVersion: 1.213.0
-  generationVersion: 2.283.1
-  releaseVersion: 0.4.0
-  configChecksum: e859fa74ccb69a50a99845fdea96b3bd
+  speakeasyVersion: 1.277.8
+  generationVersion: 2.319.10
+  releaseVersion: 0.4.1
+  configChecksum: d0b05c052a4b4f6ae493f5c8717a5dbc
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
 features:
   typescript:
-    core: 3.4.8
+    core: 3.4.9
     flattening: 2.81.1
     globalSecurity: 2.82.5
     globalServerURLs: 2.82.2
@@ -51,17 +51,17 @@ generatedFiles:
   - src/models/operations/updatedatapoint.ts
   - src/models/operations/deletedatapoint.ts
   - src/models/operations/getdatapoint.ts
-  - src/models/operations/deletedatasets.ts
+  - src/models/operations/deletedataset.ts
   - src/models/operations/getdatasets.ts
-  - src/models/operations/postdatasets.ts
-  - src/models/operations/putdatasets.ts
-  - src/models/operations/postevents.ts
-  - src/models/operations/putevents.ts
-  - src/models/operations/deleteeventseventid.ts
-  - src/models/operations/deletemetrics.ts
+  - src/models/operations/createdataset.ts
+  - src/models/operations/updatedataset.ts
+  - src/models/operations/createevent.ts
+  - src/models/operations/updateevent.ts
+  - src/models/operations/deleteevent.ts
+  - src/models/operations/deletemetric.ts
   - src/models/operations/getmetrics.ts
-  - src/models/operations/postmetrics.ts
-  - src/models/operations/putmetrics.ts
+  - src/models/operations/createmetric.ts
+  - src/models/operations/updatemetric.ts
   - src/models/operations/deleteproject.ts
   - src/models/operations/getprojects.ts
   - src/models/operations/createproject.ts
@@ -86,15 +86,18 @@ generatedFiles:
   - src/models/components/metricedit.ts
   - src/models/components/project.ts
   - src/models/components/createprojectrequest.ts
+  - src/models/components/updateprojectrequest.ts
   - src/models/components/sessionstartrequest.ts
   - src/models/components/event.ts
   - src/models/components/tool.ts
-  - src/models/components/toolupdate.ts
+  - src/models/components/createtoolrequest.ts
+  - src/models/components/updatetoolrequest.ts
   - src/models/components/security.ts
   - src/models/errors/index.ts
   - src/models/operations/index.ts
   - src/models/components/index.ts
   - docs/models/operations/typet.md
+  - docs/models/operations/env.md
   - docs/models/operations/getconfigurationsrequest.md
   - docs/models/operations/getconfigurationsresponse.md
   - docs/models/operations/createconfigurationresponse.md
@@ -114,34 +117,31 @@ generatedFiles:
   - docs/models/operations/deletedatapointrequest.md
   - docs/models/operations/deletedatapointresponse.md
   - docs/models/operations/getdatapointrequest.md
+  - docs/models/operations/getdatapointresponsebody.md
   - docs/models/operations/getdatapointresponse.md
-  - docs/models/operations/deletedatasetsrequest.md
-  - docs/models/operations/deletedatasetsresponse.md
+  - docs/models/operations/deletedatasetrequest.md
+  - docs/models/operations/deletedatasetresponse.md
   - docs/models/operations/getdatasetsqueryparamtype.md
   - docs/models/operations/getdatasetsrequest.md
   - docs/models/operations/getdatasetsresponsebody.md
   - docs/models/operations/getdatasetsresponse.md
-  - docs/models/operations/postdatasetsresult.md
-  - docs/models/operations/postdatasetsresponsebody.md
-  - docs/models/operations/postdatasetsresponse.md
-  - docs/models/operations/putdatasetsresponse.md
-  - docs/models/operations/posteventsrequestbody.md
-  - docs/models/operations/posteventsresponsebody.md
-  - docs/models/operations/posteventsresponse.md
-  - docs/models/operations/feedback.md
-  - docs/models/operations/metadata.md
-  - docs/models/operations/metrics.md
-  - docs/models/operations/outputs.md
-  - docs/models/operations/puteventsrequestbody.md
-  - docs/models/operations/puteventsresponse.md
-  - docs/models/operations/deleteeventseventidrequest.md
-  - docs/models/operations/deleteeventseventidresponse.md
-  - docs/models/operations/deletemetricsrequest.md
-  - docs/models/operations/deletemetricsresponse.md
+  - docs/models/operations/createdatasetresult.md
+  - docs/models/operations/createdatasetresponsebody.md
+  - docs/models/operations/createdatasetresponse.md
+  - docs/models/operations/updatedatasetresponse.md
+  - docs/models/operations/createeventrequestbody.md
+  - docs/models/operations/createeventresponsebody.md
+  - docs/models/operations/createeventresponse.md
+  - docs/models/operations/updateeventrequestbody.md
+  - docs/models/operations/updateeventresponse.md
+  - docs/models/operations/deleteeventrequest.md
+  - docs/models/operations/deleteeventresponse.md
+  - docs/models/operations/deletemetricrequest.md
+  - docs/models/operations/deletemetricresponse.md
   - docs/models/operations/getmetricsrequest.md
   - docs/models/operations/getmetricsresponse.md
-  - docs/models/operations/postmetricsresponse.md
-  - docs/models/operations/putmetricsresponse.md
+  - docs/models/operations/createmetricresponse.md
+  - docs/models/operations/updatemetricresponse.md
   - docs/models/operations/deleteprojectrequest.md
   - docs/models/operations/deleteprojectresponse.md
   - docs/models/operations/getprojectsrequest.md
@@ -162,44 +162,27 @@ generatedFiles:
   - docs/models/operations/deletetoolrequest.md
   - docs/models/operations/deletetoolresponse.md
   - docs/models/operations/gettoolsresponse.md
+  - docs/models/operations/createtoolresult.md
+  - docs/models/operations/createtoolresponsebody.md
   - docs/models/operations/createtoolresponse.md
   - docs/models/operations/updatetoolresponse.md
+  - docs/models/components/env.md
   - docs/models/components/typet.md
-  - docs/models/components/calltype.md
-  - docs/models/components/hyperparameters.md
-  - docs/models/components/selectedfunctions.md
-  - docs/models/components/functioncallparams.md
-  - docs/models/components/parameterst.md
-  - docs/models/components/userproperties.md
   - docs/models/components/configuration.md
   - docs/models/components/history.md
   - docs/models/components/inputs.md
-  - docs/models/components/metadata.md
   - docs/models/components/datapoint.md
-  - docs/models/components/createdatapointrequestinputs.md
-  - docs/models/components/createdatapointrequestmetadata.md
   - docs/models/components/createdatapointrequesttype.md
   - docs/models/components/createdatapointrequest.md
   - docs/models/components/updatedatapointrequesthistory.md
-  - docs/models/components/updatedatapointrequestinputs.md
-  - docs/models/components/updatedatapointrequestmetadata.md
   - docs/models/components/updatedatapointrequest.md
   - docs/models/components/datasettype.md
   - docs/models/components/dataset.md
-  - docs/models/components/createdatasetrequestmetadata.md
   - docs/models/components/pipelinetype.md
   - docs/models/components/createdatasetrequesttype.md
   - docs/models/components/createdatasetrequest.md
-  - docs/models/components/datasetupdatemetadata.md
   - docs/models/components/datasetupdate.md
-  - docs/models/components/config.md
   - docs/models/components/eventtype.md
-  - docs/models/components/feedback.md
-  - docs/models/components/createeventrequestinputs.md
-  - docs/models/components/createeventrequestmetadata.md
-  - docs/models/components/metrics.md
-  - docs/models/components/outputs.md
-  - docs/models/components/createeventrequestuserproperties.md
   - docs/models/components/createeventrequest.md
   - docs/models/components/returntypet.md
   - docs/models/components/threshold.md
@@ -210,32 +193,17 @@ generatedFiles:
   - docs/models/components/metriceditthreshold.md
   - docs/models/components/metricedittype.md
   - docs/models/components/metricedit.md
-  - docs/models/components/projecttype.md
   - docs/models/components/project.md
-  - docs/models/components/createprojectrequesttype.md
   - docs/models/components/createprojectrequest.md
-  - docs/models/components/sessionstartrequestconfig.md
-  - docs/models/components/sessionstartrequestfeedback.md
-  - docs/models/components/sessionstartrequestinputs.md
-  - docs/models/components/sessionstartrequestmetadata.md
-  - docs/models/components/sessionstartrequestmetrics.md
-  - docs/models/components/sessionstartrequestoutputs.md
-  - docs/models/components/sessionstartrequestuserproperties.md
+  - docs/models/components/updateprojectrequest.md
   - docs/models/components/sessionstartrequest.md
-  - docs/models/components/eventconfig.md
   - docs/models/components/eventeventtype.md
-  - docs/models/components/eventfeedback.md
-  - docs/models/components/eventinputs.md
-  - docs/models/components/eventmetadata.md
-  - docs/models/components/eventmetrics.md
-  - docs/models/components/eventoutputs.md
-  - docs/models/components/eventuserproperties.md
   - docs/models/components/event.md
-  - docs/models/components/toolparameters.md
   - docs/models/components/tooltype.md
   - docs/models/components/tool.md
-  - docs/models/components/toolupdateparameters.md
-  - docs/models/components/toolupdate.md
+  - docs/models/components/createtoolrequesttype.md
+  - docs/models/components/createtoolrequest.md
+  - docs/models/components/updatetoolrequest.md
   - docs/models/components/security.md
   - docs/sdks/honeyhive/README.md
   - docs/sdks/configurations/README.md

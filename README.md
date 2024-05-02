@@ -22,8 +22,8 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 ### Example
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -31,8 +31,10 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
     if (res.statusCode == 200) {
         // handle response
@@ -64,23 +66,23 @@ run();
 
 ### [datasets](docs/sdks/datasets/README.md)
 
-* [deleteDatasets](docs/sdks/datasets/README.md#deletedatasets) - Delete a dataset
+* [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
 * [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Get datasets
-* [postDatasets](docs/sdks/datasets/README.md#postdatasets) - Create a dataset
-* [putDatasets](docs/sdks/datasets/README.md#putdatasets) - Update a dataset
+* [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a dataset
+* [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
 
 ### [events](docs/sdks/events/README.md)
 
-* [postEvents](docs/sdks/events/README.md#postevents) - Create a new event
-* [putEvents](docs/sdks/events/README.md#putevents) - Update an event
-* [deleteEventsEventId](docs/sdks/events/README.md#deleteeventseventid) - Delete an event
+* [createEvent](docs/sdks/events/README.md#createevent) - Create a new event
+* [updateEvent](docs/sdks/events/README.md#updateevent) - Update an event
+* [deleteEvent](docs/sdks/events/README.md#deleteevent) - Delete an event
 
 ### [metrics](docs/sdks/metrics/README.md)
 
-* [deleteMetrics](docs/sdks/metrics/README.md#deletemetrics) - Delete a metric
+* [deleteMetric](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
 * [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
-* [postMetrics](docs/sdks/metrics/README.md#postmetrics) - Create a new metric
-* [putMetrics](docs/sdks/metrics/README.md#putmetrics) - Update an existing metric
+* [createMetric](docs/sdks/metrics/README.md#createmetric) - Create a new metric
+* [updateMetric](docs/sdks/metrics/README.md#updatemetric) - Update an existing metric
 
 ### [projects](docs/sdks/projects/README.md)
 
@@ -116,8 +118,8 @@ Handling errors in this SDK should largely match your expectations.  All operati
 Example
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -125,10 +127,12 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
     let res;
     try {
-        res = await sdk.configurations.getConfigurations(projectName, type);
+        res = await sdk.configurations.getConfigurations(projectName, type, env, name);
     } catch (err) {
         if (err instanceof errors.SDKError) {
             console.error(err); // handle exception
@@ -160,8 +164,8 @@ You can override the default server globally by passing a server index to the `s
 #### Example
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -170,8 +174,10 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
     if (res.statusCode == 200) {
         // handle response
@@ -187,8 +193,8 @@ run();
 
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -197,8 +203,10 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
     if (res.statusCode == 200) {
         // handle response
@@ -218,7 +226,7 @@ The Typescript SDK makes API calls using the [axios](https://axios-http.com/docs
 For example, you could specify a header for every request that your sdk makes as follows:
 
 ```typescript
-import { HoneyHive } from "HoneyHive";
+import { honeyhive } from "HoneyHive";
 import axios from "axios";
 
 const httpClient = axios.create({
@@ -242,8 +250,8 @@ This SDK supports the following security scheme globally:
 
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
-import { HoneyHive } from "HoneyHive";
-import { GetConfigurationsRequest, TypeT } from "HoneyHive/dist/models/operations";
+import { HoneyHive } from "honeyhive";
+import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -251,8 +259,10 @@ async function run() {
     });
     const projectName: string = "<value>";
     const type: TypeT = TypeT.Llm;
+    const env: Env = Env.Prod;
+    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type);
+    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
 
     if (res.statusCode == 200) {
         // handle response

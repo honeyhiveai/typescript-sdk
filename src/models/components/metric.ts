@@ -28,11 +28,12 @@ export class Threshold extends SpeakeasyBase {
 }
 
 /**
- * Type of the metric - "custom" or "model"
+ * Type of the metric - "custom", "model" or "human"
  */
 export enum MetricType {
     Custom = "custom",
     Model = "model",
+    Human = "human",
 }
 
 export class Metric extends SpeakeasyBase {
@@ -49,6 +50,13 @@ export class Metric extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "code_snippet" })
     codeSnippet?: string;
+
+    /**
+     * Criteria for human metrics
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "criteria" })
+    criteria?: string;
 
     /**
      * Short description of what the metric does
@@ -129,7 +137,7 @@ export class Metric extends SpeakeasyBase {
     threshold?: Threshold;
 
     /**
-     * Type of the metric - "custom" or "model"
+     * Type of the metric - "custom", "model" or "human"
      */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })

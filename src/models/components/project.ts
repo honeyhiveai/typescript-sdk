@@ -5,11 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose } from "class-transformer";
 
-export enum ProjectType {
-    Completions = "completions",
-    Chat = "chat",
-}
-
 export class Project extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
@@ -22,8 +17,4 @@ export class Project extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
     name: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type: ProjectType;
 }

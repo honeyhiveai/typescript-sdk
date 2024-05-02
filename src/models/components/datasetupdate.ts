@@ -3,12 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-/**
- * Updated metadata to track for the dataset
- */
-export class DatasetUpdateMetadata extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 export class DatasetUpdate extends SpeakeasyBase {
     /**
@@ -44,8 +39,7 @@ export class DatasetUpdate extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => DatasetUpdateMetadata)
-    metadata?: DatasetUpdateMetadata;
+    metadata?: Record<string, any>;
 
     /**
      * Updated name for the dataset
