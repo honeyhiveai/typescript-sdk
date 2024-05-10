@@ -1,11 +1,11 @@
 # TypeT
 
-Configuration type - "LLM" or "pipeline" - default is "LLM"
+Type of data - "session" or "event"
 
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Llm`      | LLM        |
-| `Pipeline` | pipeline   |
+| Name      | Value     |
+| --------- | --------- |
+| `Session` | session   |
+| `Event`   | event     |

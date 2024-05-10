@@ -21,7 +21,7 @@ export class Datapoints {
      */
     async getDatapoints(
         project: string,
-        type?: operations.QueryParamType,
+        type?: operations.TypeT,
         datapointIds?: string[],
         config?: AxiosRequestConfig
     ): Promise<operations.GetDatapointsResponse> {
@@ -197,22 +197,101 @@ export class Datapoints {
     }
 
     /**
+     * Retrieve a specific datapoint
+     */
+    async getDatapoint(
+        id: string,
+        config?: AxiosRequestConfig
+    ): Promise<operations.GetDatapointResponse> {
+        const req = new operations.GetDatapointRequest({
+            id: id,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const operationUrl: string = utils.generateURL(baseURL, "/datapoints/{id}", req);
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: operationUrl,
+            method: "get",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.GetDatapointResponse = new operations.GetDatapointResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.GetDatapointResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
      * Update a specific datapoint
      */
     async updateDatapoint(
-        datapointId: string,
+        id: string,
         updateDatapointRequest: components.UpdateDatapointRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.UpdateDatapointResponse> {
         const req = new operations.UpdateDatapointRequest({
-            datapointId: datapointId,
+            id: id,
             updateDatapointRequest: updateDatapointRequest,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/datapoints";
+        const operationUrl: string = utils.generateURL(baseURL, "/datapoints/{id}", req);
 
         let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
 
@@ -241,7 +320,6 @@ export class Datapoints {
             ...config?.headers,
             ...properties.headers,
         };
-        const queryParams: string = utils.serializeQueryParams(req);
         if (reqBody == null) throw new Error("request body is required");
         headers["Accept"] = "*/*";
 
@@ -249,7 +327,7 @@ export class Datapoints {
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl + queryParams,
+            url: operationUrl,
             method: "put",
             headers: headers,
             responseType: "arraybuffer",
@@ -310,7 +388,7 @@ export class Datapoints {
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "*/*";
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
@@ -334,78 +412,13 @@ export class Datapoints {
             contentType: responseContentType,
             rawResponse: httpRes,
         });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Retrieve a specific datapoint
-     */
-    async getDatapoint(
-        id: string,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetDatapointResponse> {
-        const req = new operations.GetDatapointRequest({
-            id: id,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = utils.generateURL(baseURL, "/datapoints/{id}", req);
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        headers["Accept"] = "application/json";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetDatapointResponse = new operations.GetDatapointResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
         const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
                 if (utils.matchContentType(responseContentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.GetDatapointResponseBody
+                        operations.DeleteDatapointResponseBody
                     );
                 } else {
                     throw new errors.SDKError(

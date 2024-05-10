@@ -5,9 +5,9 @@
 
 * [getDatapoints](#getdatapoints) - Retrieve a list of datapoints
 * [createDatapoint](#createdatapoint) - Create a new datapoint
+* [getDatapoint](#getdatapoint) - Retrieve a specific datapoint
 * [updateDatapoint](#updatedatapoint) - Update a specific datapoint
 * [deleteDatapoint](#deletedatapoint) - Delete a specific datapoint
-* [getDatapoint](#getdatapoint) - Retrieve a specific datapoint
 
 ## getDatapoints
 
@@ -17,14 +17,14 @@ Retrieve a list of datapoints
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { GetDatapointsRequest, QueryParamType } from "honeyhive/dist/models/operations";
+import { GetDatapointsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const project: string = "<value>";
-const type: QueryParamType = QueryParamType.Evaluation;
+const type: TypeT = TypeT.Session;
 const datapointIds: string[] = [
   "<value>",
 ];
@@ -41,12 +41,12 @@ run();
 
 ### Parameters
 
-| Parameter                                                              | Type                                                                   | Required                                                               | Description                                                            |
-| ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| `project`                                                              | *string*                                                               | :heavy_check_mark:                                                     | Project ID to filter datapoints                                        |
-| `type`                                                                 | [operations.QueryParamType](../../models/operations/queryparamtype.md) | :heavy_minus_sign:                                                     | Type of data - "evaluation" or "event"                                 |
-| `datapointIds`                                                         | *string*[]                                                             | :heavy_minus_sign:                                                     | List of datapoint ids to fetch                                         |
-| `config`                                                               | [AxiosRequestConfig](https://axios-http.com/docs/req_config)           | :heavy_minus_sign:                                                     | Available config options for making requests.                          |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | Project ID to filter datapoints                              |
+| `type`                                                       | [operations.TypeT](../../models/operations/typet.md)         | :heavy_minus_sign:                                           | Type of data - "session" or "event"                          |
+| `datapointIds`                                               | *string*[]                                                   | :heavy_minus_sign:                                           | List of datapoint ids to fetch                               |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
@@ -74,23 +74,28 @@ async function run() {
   });
 
   const res = await sdk.datapoints.createDatapoint({
-    groundTruth: {
-      "key": "<value>",
-    },
+    project: "653454f3138a956964341c07",
     inputs: {
-      "key": "<value>",
+      "query": "what's the temperature in Iceland?",
     },
-    linkedDatasets: [
-      "<value>",
-    ],
+    type: CreateDatapointRequestType.Event,
+    groundTruth: {
+      "role": "assistant",
+      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+    },
+    linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
     linkedEvals: [
       "<value>",
     ],
+    linkedDatasets: [
+      "<value>",
+    ],
     metadata: {
-      "key": "<value>",
+      "question_type": "weather",
+      "completion_tokens": 47,
+      "prompt_tokens": 696,
+      "total_tokens": 743,
     },
-    project: "<value>",
-    type: CreateDatapointRequestType.Evaluation,
   });
 
   if (res.statusCode == 200) {
@@ -118,6 +123,49 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
+## getDatapoint
+
+Retrieve a specific datapoint
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+import { GetDatapointRequest } from "honeyhive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const id: string = "<value>";
+
+  const res = await sdk.datapoints.getDatapoint(id);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | Datapoint ID like `65c13dbbd65fb876b7886cdb`                 |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.GetDatapointResponse](../../models/operations/getdatapointresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4xx-5xx         | */*             |
+
 ## updateDatapoint
 
 Update a specific datapoint
@@ -133,29 +181,34 @@ async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const datapointId: string = "<value>";
+const id: string = "<value>";
 const updateDatapointRequest: UpdateDatapointRequest = {
-  groundTruth: {
-    "key": "<value>",
+  inputs: {
+    "query": "what's the temperature in Reykjavik?",
   },
   history: [
     {},
+    {},
   ],
-  inputs: {
-    "key": "<value>",
+  groundTruth: {
+    "role": "assistant",
+    "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
   },
-  linkedDatasets: [
-    "<value>",
-  ],
   linkedEvals: [
     "<value>",
   ],
+  linkedDatasets: [
+    "<value>",
+  ],
+  saved: true,
+  type: "event",
   metadata: {
-    "key": "<value>",
+    "question_type": "capital-weather",
+    "random_field": 0,
   },
 };
 
-  const res = await sdk.datapoints.updateDatapoint(datapointId, updateDatapointRequest);
+  const res = await sdk.datapoints.updateDatapoint(id, updateDatapointRequest);
 
   if (res.statusCode == 200) {
     // handle response
@@ -167,11 +220,11 @@ run();
 
 ### Parameters
 
-| Parameter                                                                              | Type                                                                                   | Required                                                                               | Description                                                                            |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `datapointId`                                                                          | *string*                                                                               | :heavy_check_mark:                                                                     | ID of datapoint to update                                                              |
-| `updateDatapointRequest`                                                               | [components.UpdateDatapointRequest](../../models/components/updatedatapointrequest.md) | :heavy_check_mark:                                                                     | N/A                                                                                    |
-| `config`                                                                               | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                           | :heavy_minus_sign:                                                                     | Available config options for making requests.                                          |
+| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | ID of datapoint to update                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `updateDatapointRequest`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [components.UpdateDatapointRequest](../../models/components/updatedatapointrequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | {<br/>"inputs": {<br/>"query": "what's the temperature in Reykjavik?"<br/>},<br/>"history": [<br/>{<br/>"role": "system",<br/>"content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""<br/>},<br/>{<br/>"role": "user",<br/>"content": "what's the temperature in Reykjavik?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"<br/>}<br/>],<br/>"ground_truth": {<br/>"role": "assistant",<br/>"content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."<br/>},<br/>"linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",<br/>"linked_evals": [],<br/>"linked_datasets": [],<br/>"type": "event",<br/>"saved": true,<br/>"metadata": {<br/>"question_type": "capital-weather",<br/>"random_field": 0<br/>}<br/>} |
+| `config`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Available config options for making requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 
 ### Response
@@ -213,56 +266,13 @@ run();
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | Datapoint ID                                                 |
+| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | Datapoint ID like `65c13dbbd65fb876b7886cdb`                 |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response
 
 **Promise<[operations.DeleteDatapointResponse](../../models/operations/deletedatapointresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
-## getDatapoint
-
-Retrieve a specific datapoint
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "honeyhive";
-import { GetDatapointRequest } from "honeyhive/dist/models/operations";
-
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const id: string = "<value>";
-
-  const res = await sdk.datapoints.getDatapoint(id);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | Datapoint ID                                                 |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.GetDatapointResponse](../../models/operations/getdatapointresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

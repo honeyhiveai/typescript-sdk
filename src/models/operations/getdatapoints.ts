@@ -8,10 +8,10 @@ import { AxiosResponse } from "axios";
 import { Expose, Type } from "class-transformer";
 
 /**
- * Type of data - "evaluation" or "event"
+ * Type of data - "session" or "event"
  */
-export enum QueryParamType {
-    Evaluation = "evaluation",
+export enum TypeT {
+    Session = "session",
     Event = "event",
 }
 
@@ -23,10 +23,10 @@ export class GetDatapointsRequest extends SpeakeasyBase {
     project: string;
 
     /**
-     * Type of data - "evaluation" or "event"
+     * Type of data - "session" or "event"
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: QueryParamType;
+    type?: TypeT;
 
     /**
      * List of datapoint ids to fetch

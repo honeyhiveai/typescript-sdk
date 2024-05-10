@@ -7,14 +7,14 @@ import { Expose } from "class-transformer";
 
 export class Project extends SpeakeasyBase {
     @SpeakeasyMetadata()
-    @Expose({ name: "description" })
-    description: string;
-
-    @SpeakeasyMetadata()
     @Expose({ name: "id" })
     id?: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
     name: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "description" })
+    description: string;
 }

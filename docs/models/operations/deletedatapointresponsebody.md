@@ -1,8 +1,10 @@
-# DeleteSessionRequest
+# DeleteDatapointResponseBody
+
+Datapoint successfully deleted
 
 
 ## Fields
 
 | Field              | Type               | Required           | Description        |
 | ------------------ | ------------------ | ------------------ | ------------------ |
-| `sessionId`        | *string*           | :heavy_check_mark: | N/A                |
+| `deleted`          | *boolean*          | :heavy_minus_sign: | N/A                |

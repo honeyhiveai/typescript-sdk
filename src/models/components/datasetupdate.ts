@@ -7,13 +7,6 @@ import { Expose } from "class-transformer";
 
 export class DatasetUpdate extends SpeakeasyBase {
     /**
-     * Updated list of datapoint ids for the dataset
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "datapoints" })
-    datapoints?: string[];
-
-    /**
      * The unique identifier of the dataset being updated
      */
     @SpeakeasyMetadata()
@@ -21,11 +14,25 @@ export class DatasetUpdate extends SpeakeasyBase {
     datasetId: string;
 
     /**
+     * Updated name for the dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "name" })
+    name?: string;
+
+    /**
      * Updated description for the dataset
      */
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
     description?: string;
+
+    /**
+     * Updated list of datapoint ids for the dataset - note the full list is needed
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "datapoints" })
+    datapoints?: string[];
 
     /**
      * Updated list of unique evaluation run ids to be associated with this dataset
@@ -40,19 +47,4 @@ export class DatasetUpdate extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
     metadata?: Record<string, any>;
-
-    /**
-     * Updated name for the dataset
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "name" })
-    name?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "num_points" })
-    numPoints?: number;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
 }

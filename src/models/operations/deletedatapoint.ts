@@ -4,13 +4,23 @@
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { AxiosResponse } from "axios";
+import { Expose } from "class-transformer";
 
 export class DeleteDatapointRequest extends SpeakeasyBase {
     /**
-     * Datapoint ID
+     * Datapoint ID like `65c13dbbd65fb876b7886cdb`
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;
+}
+
+/**
+ * Datapoint successfully deleted
+ */
+export class DeleteDatapointResponseBody extends SpeakeasyBase {
+    @SpeakeasyMetadata()
+    @Expose({ name: "deleted" })
+    deleted?: boolean;
 }
 
 export class DeleteDatapointResponse extends SpeakeasyBase {
@@ -31,4 +41,10 @@ export class DeleteDatapointResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
+
+    /**
+     * Datapoint successfully deleted
+     */
+    @SpeakeasyMetadata()
+    object?: DeleteDatapointResponseBody;
 }

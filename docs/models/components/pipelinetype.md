@@ -1,6 +1,6 @@
 # PipelineType
 
-The type of data included in the dataset - "event" or "session"
+The type of data included in the dataset - "event" (default) or "session"
 
 
 ## Values

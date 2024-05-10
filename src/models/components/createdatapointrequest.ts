@@ -6,20 +6,20 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose } from "class-transformer";
 
 /**
- * Type of datapoint - "evaluation" or "fine-tuning"
+ * Type of datapoint - "event" or "session"
  */
 export enum CreateDatapointRequestType {
-    Evaluation = "evaluation",
-    FineTuning = "fine-tuning",
+    Event = "event",
+    Session = "session",
 }
 
 export class CreateDatapointRequest extends SpeakeasyBase {
     /**
-     * Expected output JSON object for the datapoint
+     * UUID for the project to which the datapoint belongs
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "ground_truth" })
-    groundTruth?: Record<string, any>;
+    @Expose({ name: "project" })
+    project: string;
 
     /**
      * Arbitrary JSON object containing the inputs for the datapoint
@@ -29,18 +29,18 @@ export class CreateDatapointRequest extends SpeakeasyBase {
     inputs: Record<string, any>;
 
     /**
-     * Ids of all datasets that include the datapoint
+     * Type of datapoint - "event" or "session"
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_datasets" })
-    linkedDatasets?: string[];
+    @Expose({ name: "type" })
+    type: CreateDatapointRequestType;
 
     /**
-     * Ids of evaluations where the datapoint is included
+     * Expected output JSON object for the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_evals" })
-    linkedEvals?: string[];
+    @Expose({ name: "ground_truth" })
+    groundTruth?: Record<string, any>;
 
     /**
      * Event id for the event from which the datapoint was created
@@ -50,30 +50,23 @@ export class CreateDatapointRequest extends SpeakeasyBase {
     linkedEvent?: string;
 
     /**
+     * Ids of evaluations where the datapoint is included
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "linked_evals" })
+    linkedEvals?: string[];
+
+    /**
+     * Ids of all datasets that include the datapoint
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "linked_datasets" })
+    linkedDatasets?: string[];
+
+    /**
      * Any additional metadata for the datapoint
      */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
     metadata?: Record<string, any>;
-
-    /**
-     * UUID for the project to which the datapoint belongs
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "project" })
-    project: string;
-
-    /**
-     * Whether the datapoint is saved or detected
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
-
-    /**
-     * Type of datapoint - "evaluation" or "fine-tuning"
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type: CreateDatapointRequestType;
 }
