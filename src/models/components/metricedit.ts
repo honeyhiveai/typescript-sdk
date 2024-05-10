@@ -6,13 +6,12 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose, Type } from "class-transformer";
 
 /**
- * Type of event that the metric is set to be computed on
+ * Type of the metric - "custom", "model" or "human"
  */
-export enum MetricEditEventType {
+export enum MetricEditType {
+    Custom = "custom",
     Model = "model",
-    Tool = "tool",
-    Chain = "chain",
-    Session = "session",
+    Human = "human",
 }
 
 /**
@@ -29,30 +28,31 @@ export enum MetricEditReturnType {
  */
 export class MetricEditThreshold extends SpeakeasyBase {
     @SpeakeasyMetadata()
-    @Expose({ name: "max" })
-    max?: number;
-
-    @SpeakeasyMetadata()
     @Expose({ name: "min" })
     min?: number;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "max" })
+    max?: number;
 }
 
 /**
- * Type of the metric - "custom", "model" or "human"
+ * Type of event that the metric is set to be computed on
  */
-export enum MetricEditType {
-    Custom = "custom",
+export enum MetricEditEventType {
     Model = "model",
-    Human = "human",
+    Tool = "tool",
+    Chain = "chain",
+    Session = "session",
 }
 
 export class MetricEdit extends SpeakeasyBase {
     /**
-     * Updated code block for the metric
+     * Unique identifier of the metric
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "code_snippet" })
-    codeSnippet?: string;
+    @Expose({ name: "metric_id" })
+    metricId: string;
 
     /**
      * Criteria for human metrics
@@ -62,11 +62,39 @@ export class MetricEdit extends SpeakeasyBase {
     criteria?: string;
 
     /**
+     * Updated name of the metric
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "name" })
+    name?: string;
+
+    /**
      * Short description of what the metric does
      */
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
     description?: string;
+
+    /**
+     * Updated code block for the metric
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "code_snippet" })
+    codeSnippet?: string;
+
+    /**
+     * Updated Evaluator prompt for the metric
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "prompt" })
+    prompt?: string;
+
+    /**
+     * Type of the metric - "custom", "model" or "human"
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: MetricEditType;
 
     /**
      * Whether to compute on all production events automatically
@@ -76,53 +104,11 @@ export class MetricEdit extends SpeakeasyBase {
     enabledInProd?: boolean;
 
     /**
-     * Name of event that the metric is set to be computed on
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "event_name" })
-    eventName?: string;
-
-    /**
-     * Type of event that the metric is set to be computed on
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "event_type" })
-    eventType?: MetricEditEventType;
-
-    /**
-     * Unique identifier of the metric
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "metric_id" })
-    metricId: string;
-
-    /**
-     * Updated name of the metric
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "name" })
-    name?: string;
-
-    /**
      * Whether a ground truth (on metadata) is required to compute it
      */
     @SpeakeasyMetadata()
     @Expose({ name: "needs_ground_truth" })
     needsGroundTruth?: boolean;
-
-    /**
-     * Threshold for boolean metrics to decide passing or failing in tests
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "pass_when" })
-    passWhen?: boolean;
-
-    /**
-     * Updated Evaluator prompt for the metric
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "prompt" })
-    prompt?: string;
 
     /**
      * The data type of the metric value - "boolean", "float", "string"
@@ -140,9 +126,23 @@ export class MetricEdit extends SpeakeasyBase {
     threshold?: MetricEditThreshold;
 
     /**
-     * Type of the metric - "custom", "model" or "human"
+     * Threshold for boolean metrics to decide passing or failing in tests
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: MetricEditType;
+    @Expose({ name: "pass_when" })
+    passWhen?: boolean;
+
+    /**
+     * Name of event that the metric is set to be computed on
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_name" })
+    eventName?: string;
+
+    /**
+     * Type of event that the metric is set to be computed on
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_type" })
+    eventType?: MetricEditEventType;
 }

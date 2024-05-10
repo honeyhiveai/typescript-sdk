@@ -53,9 +53,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "1.0.1";
-    sdkVersion = "0.4.1";
-    genVersion = "2.319.10";
-    userAgent = "speakeasy-sdk/typescript 0.4.1 2.319.10 1.0.1 honeyhive";
+    sdkVersion = "0.4.2";
+    genVersion = "2.326.3";
+    userAgent = "speakeasy-sdk/typescript 0.4.2 2.326.3 1.0.1 honeyhive";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -63,14 +63,14 @@ export class SDKConfiguration {
 }
 
 export class HoneyHive {
-    public configurations: Configurations;
-    public datapoints: Datapoints;
-    public datasets: Datasets;
+    public session: Session;
     public events: Events;
     public metrics: Metrics;
-    public projects: Projects;
-    public session: Session;
     public tools: Tools;
+    public datapoints: Datapoints;
+    public datasets: Datasets;
+    public projects: Projects;
+    public configurations: Configurations;
 
     private sdkConfiguration: SDKConfiguration;
 
@@ -94,13 +94,13 @@ export class HoneyHive {
             retryConfig: props?.retryConfig,
         });
 
-        this.configurations = new Configurations(this.sdkConfiguration);
-        this.datapoints = new Datapoints(this.sdkConfiguration);
-        this.datasets = new Datasets(this.sdkConfiguration);
+        this.session = new Session(this.sdkConfiguration);
         this.events = new Events(this.sdkConfiguration);
         this.metrics = new Metrics(this.sdkConfiguration);
-        this.projects = new Projects(this.sdkConfiguration);
-        this.session = new Session(this.sdkConfiguration);
         this.tools = new Tools(this.sdkConfiguration);
+        this.datapoints = new Datapoints(this.sdkConfiguration);
+        this.datasets = new Datasets(this.sdkConfiguration);
+        this.projects = new Projects(this.sdkConfiguration);
+        this.configurations = new Configurations(this.sdkConfiguration);
     }
 }

@@ -10,14 +10,14 @@ import { Expose, Type } from "class-transformer";
 /**
  * Type of the dataset - "evaluation" or "fine-tuning"
  */
-export enum GetDatasetsQueryParamType {
+export enum QueryParamType {
     Evaluation = "evaluation",
     FineTuning = "fine-tuning",
 }
 
 export class GetDatasetsRequest extends SpeakeasyBase {
     /**
-     * Project ID associated with the datasets
+     * Project ID associated with the datasets like `65e0fc2d6a2eb95f55a92cbc`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
     project: string;
@@ -26,10 +26,10 @@ export class GetDatasetsRequest extends SpeakeasyBase {
      * Type of the dataset - "evaluation" or "fine-tuning"
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: GetDatasetsQueryParamType;
+    type?: QueryParamType;
 
     /**
-     * Unique dataset ID for filtering specific dataset
+     * Unique dataset ID for filtering specific dataset like `663876ec4611c47f4970f0c3`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_id" })
     datasetId?: string;

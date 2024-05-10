@@ -5,7 +5,7 @@
 
 * [createEvent](#createevent) - Create a new event
 * [updateEvent](#updateevent) - Update an event
-* [deleteEvent](#deleteevent) - Delete an event
+* [getEvents](#getevents) - Retrieve events based on filters
 
 ## createEvent
 
@@ -15,7 +15,7 @@ Please refer to our instrumentation guide for detailed information
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { EventType } from "honeyhive/dist/models/components";
+import { CreateEventRequestEventType } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
@@ -24,33 +24,53 @@ async function run() {
 
   const res = await sdk.events.createEvent({
     event: {
+      project: "Simple RAG",
+      source: "playground",
+      eventName: "Model Completion",
+      eventType: CreateEventRequestEventType.Model,
+      eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
       childrenIds: [
         "<value>",
       ],
       config: {
-        "key": "<value>",
-      },
-      eventName: "<value>",
-      eventType: EventType.Model,
-      feedback: {
-        "key": "<value>",
+        "model": "gpt-3.5-turbo",
+        "version": "v0.1",
+        "provider": "openai",
+        "hyperparameters": "<value>",
+        "template": "<value>",
+        "type": "chat",
       },
       inputs: {
-        "key": "<value>",
-      },
-      metadata: {
-        "key": "<value>",
-      },
-      metrics: {
-        "key": "<value>",
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": "<value>",
       },
       outputs: {
-        "key": "<value>",
+        "role": "assistant",
+        "content": "Hello world",
       },
-      project: "<value>",
-      source: "<value>",
+      error: null,
+      startTime: 1714978764301,
+      endTime: 1714978765301,
+      duration: 999.8056,
+      metadata: {
+        "cost": 0.00008,
+        "completion_tokens": 23,
+        "prompt_tokens": 35,
+        "total_tokens": 58,
+      },
+      feedback: {
+
+      },
+      metrics: {
+        "Answer Faithfulness": 5,
+        "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
+        "Number of words": 18,
+      },
       userProperties: {
-        "key": "<value>",
+        "user": "google-oauth2|111840237613341303366",
       },
     },
   });
@@ -96,10 +116,10 @@ async function run() {
 
   const res = await sdk.events.updateEvent({
     eventId: "<value>",
-    feedback: {
+    metadata: {
       "key": "<value>",
     },
-    metadata: {
+    feedback: {
       "key": "<value>",
     },
     metrics: {
@@ -135,24 +155,33 @@ run();
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
 
-## deleteEvent
+## getEvents
 
-Delete an event
+Retrieve events based on filters
 
 ### Example Usage
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { DeleteEventRequest } from "honeyhive/dist/models/operations";
+import { Operator, TypeT } from "honeyhive/dist/models/components";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
-const eventId: string = "<value>";
-const project: string = "<value>";
 
-  const res = await sdk.events.deleteEvent(eventId, project);
+  const res = await sdk.events.getEvents({
+    project: "<value>",
+    filters: [
+      {
+        field: "event_type",
+        value: "model",
+        operator: Operator.Is,
+        type: TypeT.String,
+      },
+    ],
+    dateRange: {},
+  });
 
   if (res.statusCode == 200) {
     // handle response
@@ -164,16 +193,15 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `eventId`                                                    | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+| Parameter                                                                          | Type                                                                               | Required                                                                           | Description                                                                        |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `request`                                                                          | [operations.GetEventsRequestBody](../../models/operations/geteventsrequestbody.md) | :heavy_check_mark:                                                                 | The request object to use for the request.                                         |
+| `config`                                                                           | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                       | :heavy_minus_sign:                                                                 | Available config options for making requests.                                      |
 
 
 ### Response
 
-**Promise<[operations.DeleteEventResponse](../../models/operations/deleteeventresponse.md)>**
+**Promise<[operations.GetEventsResponse](../../models/operations/geteventsresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

@@ -5,30 +5,41 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose, Transform, Type } from "class-transformer";
 
-export class History extends SpeakeasyBase {}
-
 /**
  * Arbitrary JSON object containing the inputs for the datapoint
  */
 export class Inputs extends SpeakeasyBase {}
 
+export class History extends SpeakeasyBase {}
+
 export class Datapoint extends SpeakeasyBase {
+    /**
+     * UUID for the datapoint
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "_id" })
+    id?: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "tenant" })
+    tenant?: string;
+
+    /**
+     * UUID for the project where the datapoint is stored
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project_id" })
+    projectId?: string;
+
     @SpeakeasyMetadata()
     @Expose({ name: "created_at" })
     @Transform(({ value }) => new Date(value), { toClassOnly: true })
     createdAt?: Date;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "ground_truth" })
-    groundTruth?: Record<string, any>;
-
-    /**
-     * Update history for the datapoint
-     */
-    @SpeakeasyMetadata({ elemType: History })
-    @Expose({ name: "history" })
-    @Type(() => History)
-    history?: History[];
+    @Expose({ name: "updated_at" })
+    @Transform(({ value }) => new Date(value), { toClassOnly: true })
+    updatedAt?: Date;
 
     /**
      * Arbitrary JSON object containing the inputs for the datapoint
@@ -39,11 +50,23 @@ export class Datapoint extends SpeakeasyBase {
     inputs?: Inputs;
 
     /**
-     * Ids of all datasets that include the datapoint
+     * Conversation history associated with the datapoint
+     */
+    @SpeakeasyMetadata({ elemType: History })
+    @Expose({ name: "history" })
+    @Type(() => History)
+    history?: History[];
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "ground_truth" })
+    groundTruth?: Record<string, any>;
+
+    /**
+     * Event id for the event from which the datapoint was created
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_datasets" })
-    linkedDatasets?: string[];
+    @Expose({ name: "linked_event" })
+    linkedEvent?: string;
 
     /**
      * Ids of evaluations where the datapoint is included
@@ -53,37 +76,24 @@ export class Datapoint extends SpeakeasyBase {
     linkedEvals?: string[];
 
     /**
-     * Event id for the event from which the datapoint was created
+     * Ids of all datasets that include the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_event" })
-    linkedEvent?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "metadata" })
-    metadata?: Record<string, any>;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "project_id" })
-    projectId?: string;
+    @Expose({ name: "linked_datasets" })
+    linkedDatasets?: string[];
 
     @SpeakeasyMetadata()
     @Expose({ name: "saved" })
     saved?: boolean;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "tenant" })
-    tenant?: string;
-
     /**
-     * evaluation or event - specify the type of usage
+     * session or event - specify the type of data
      */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
     type?: string;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "updated_at" })
-    @Transform(({ value }) => new Date(value), { toClassOnly: true })
-    updatedAt?: Date;
+    @Expose({ name: "metadata" })
+    metadata?: Record<string, any>;
 }

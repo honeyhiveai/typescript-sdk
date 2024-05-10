@@ -14,7 +14,7 @@ export enum Env {
 /**
  * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
  */
-export enum TypeT {
+export enum ConfigurationType {
     Llm = "LLM",
     Pipeline = "pipeline",
 }
@@ -28,11 +28,11 @@ export class Configuration extends SpeakeasyBase {
     id?: string;
 
     /**
-     * List of environments where the configuration is active
+     * ID of the project to which this configuration belongs
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "env" })
-    env?: Env[];
+    @Expose({ name: "project" })
+    project: string;
 
     /**
      * Name of the configuration
@@ -41,16 +41,12 @@ export class Configuration extends SpeakeasyBase {
     @Expose({ name: "name" })
     name: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "parameters" })
-    parameters: Record<string, any>;
-
     /**
-     * ID of the project to which this configuration belongs
+     * List of environments where the configuration is active
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "project" })
-    project: string;
+    @Expose({ name: "env" })
+    env?: Env[];
 
     /**
      * Name of the provider - "openai", "anthropic", etc.
@@ -59,12 +55,16 @@ export class Configuration extends SpeakeasyBase {
     @Expose({ name: "provider" })
     provider: string;
 
+    @SpeakeasyMetadata()
+    @Expose({ name: "parameters" })
+    parameters: Record<string, any>;
+
     /**
      * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
      */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
-    type: TypeT;
+    type?: ConfigurationType;
 
     /**
      * Details of user who created the configuration

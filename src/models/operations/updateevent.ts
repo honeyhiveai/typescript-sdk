@@ -12,12 +12,12 @@ export class UpdateEventRequestBody extends SpeakeasyBase {
     eventId: string;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "feedback" })
-    feedback?: Record<string, any>;
-
-    @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
     metadata?: Record<string, any>;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "feedback" })
+    feedback?: Record<string, any>;
 
     @SpeakeasyMetadata()
     @Expose({ name: "metrics" })

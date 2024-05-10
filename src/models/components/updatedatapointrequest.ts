@@ -9,21 +9,6 @@ export class UpdateDatapointRequestHistory extends SpeakeasyBase {}
 
 export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
-     * Expected output JSON object for the datapoint
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "ground_truth" })
-    groundTruth?: Record<string, any>;
-
-    /**
-     * Update history for the datapoint
-     */
-    @SpeakeasyMetadata({ elemType: UpdateDatapointRequestHistory })
-    @Expose({ name: "history" })
-    @Type(() => UpdateDatapointRequestHistory)
-    history?: UpdateDatapointRequestHistory[];
-
-    /**
      * Arbitrary JSON object containing the inputs for the datapoint
      */
     @SpeakeasyMetadata()
@@ -31,11 +16,19 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     inputs?: Record<string, any>;
 
     /**
-     * Ids of all datasets that include the datapoint
+     * Conversation history associated with the datapoint
+     */
+    @SpeakeasyMetadata({ elemType: UpdateDatapointRequestHistory })
+    @Expose({ name: "history" })
+    @Type(() => UpdateDatapointRequestHistory)
+    history?: UpdateDatapointRequestHistory[];
+
+    /**
+     * Expected output JSON object for the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "linked_datasets" })
-    linkedDatasets?: string[];
+    @Expose({ name: "ground_truth" })
+    groundTruth?: Record<string, any>;
 
     /**
      * Ids of evaluations where the datapoint is included
@@ -45,11 +38,11 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     linkedEvals?: string[];
 
     /**
-     * Any additional metadata for the datapoint
+     * Ids of all datasets that include the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "metadata" })
-    metadata?: Record<string, any>;
+    @Expose({ name: "linked_datasets" })
+    linkedDatasets?: string[];
 
     /**
      * Whether the datapoint is saved or detected
@@ -59,9 +52,16 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     saved?: boolean;
 
     /**
-     * evaluation or event - specify the type of usage
+     * session or event - specify the type of datapoint
      */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
     type?: string;
+
+    /**
+     * Any additional metadata for the datapoint
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "metadata" })
+    metadata?: Record<string, any>;
 }

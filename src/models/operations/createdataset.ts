@@ -7,6 +7,9 @@ import { AxiosResponse } from "axios";
 import { Expose, Type } from "class-transformer";
 
 export class CreateDatasetResult extends SpeakeasyBase {
+    /**
+     * UUID for the created dataset
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "insertedId" })
     insertedId?: string;

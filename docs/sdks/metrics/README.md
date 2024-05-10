@@ -3,53 +3,10 @@
 
 ### Available Operations
 
-* [deleteMetric](#deletemetric) - Delete a metric
 * [getMetrics](#getmetrics) - Get all metrics
 * [createMetric](#createmetric) - Create a new metric
 * [updateMetric](#updatemetric) - Update an existing metric
-
-## deleteMetric
-
-Remove a metric
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "honeyhive";
-import { DeleteMetricRequest } from "honeyhive/dist/models/operations";
-
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const metricId: string = "<value>";
-
-  const res = await sdk.metrics.deleteMetric(metricId);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `metricId`                                                   | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteMetricResponse](../../models/operations/deletemetricresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
+* [deleteMetric](#deletemetric) - Delete a metric
 
 ## getMetrics
 
@@ -110,12 +67,12 @@ async function run() {
   });
 
   const res = await sdk.metrics.createMetric({
-    description: "Mandatory eco-centric open system",
     name: "<value>",
-    returnType: ReturnTypeT.Float,
     task: "<value>",
+    type: MetricType.Model,
+    description: "Fully-configurable neutral framework",
+    returnType: ReturnTypeT.String,
     threshold: {},
-    type: MetricType.Human,
   });
 
   if (res.statusCode == 200) {
@@ -182,6 +139,49 @@ run();
 ### Response
 
 **Promise<[operations.UpdateMetricResponse](../../models/operations/updatemetricresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4xx-5xx         | */*             |
+
+## deleteMetric
+
+Remove a metric
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+import { DeleteMetricRequest } from "honeyhive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const metricId: string = "<value>";
+
+  const res = await sdk.metrics.deleteMetric(metricId);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `metricId`                                                   | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteMetricResponse](../../models/operations/deletemetricresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

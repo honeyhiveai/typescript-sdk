@@ -199,22 +199,31 @@ export class Events {
     }
 
     /**
-     * Delete an event
+     * Retrieve events based on filters
      */
-    async deleteEvent(
-        eventId: string,
-        project: string,
+    async getEvents(
+        req: operations.GetEventsRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteEventResponse> {
-        const req = new operations.DeleteEventRequest({
-            eventId: eventId,
-            project: project,
-        });
+    ): Promise<operations.GetEventsResponse> {
+        if (!(req instanceof utils.SpeakeasyBase)) {
+            req = new operations.GetEventsRequestBody(req);
+        }
+
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const operationUrl: string = utils.generateURL(baseURL, "/events/{event_id}", req);
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/export";
+
+        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
+
+        try {
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new Error(`Error serializing request body, cause: ${e.message}`);
+            }
+        }
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -224,18 +233,23 @@ export class Events {
             globalSecurity = new components.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
+        const headers: RawAxiosRequestHeaders = {
+            ...reqBodyHeaders,
+            ...config?.headers,
+            ...properties.headers,
+        };
+        if (reqBody == null) throw new Error("request body is required");
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "delete",
+            url: operationUrl,
+            method: "post",
             headers: headers,
             responseType: "arraybuffer",
+            data: reqBody,
             ...config,
         });
 
@@ -245,20 +259,34 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteEventResponse = new operations.DeleteEventResponse({
+        const res: operations.GetEventsResponse = new operations.GetEventsResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
         });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.GetEventsResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    httpRes?.data,
+                    decodedRes,
                     httpRes
                 );
         }

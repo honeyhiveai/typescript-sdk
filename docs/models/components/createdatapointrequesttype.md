@@ -1,11 +1,11 @@
 # CreateDatapointRequestType
 
-Type of datapoint - "evaluation" or "fine-tuning"
+Type of datapoint - "event" or "session"
 
 
 ## Values
 
-| Name         | Value        |
-| ------------ | ------------ |
-| `Evaluation` | evaluation   |
-| `FineTuning` | fine-tuning  |
+| Name      | Value     |
+| --------- | --------- |
+| `Event`   | event     |
+| `Session` | session   |
