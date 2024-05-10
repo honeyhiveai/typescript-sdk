@@ -9,7 +9,7 @@ import { Expose, Type } from "class-transformer";
 
 export class GetDatapointRequest extends SpeakeasyBase {
     /**
-     * Datapoint ID
+     * Datapoint ID like `65c13dbbd65fb876b7886cdb`
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;

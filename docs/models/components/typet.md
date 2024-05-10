@@ -1,11 +1,13 @@
 # TypeT
 
-Type of the configuration - "LLM" or "pipeline" - "LLM" by default
+The data type you are using - "string", "number", "boolean", "id" (for object ids)
 
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Llm`      | LLM        |
-| `Pipeline` | pipeline   |
+| Name      | Value     |
+| --------- | --------- |
+| `String`  | string    |
+| `Number`  | number    |
+| `Boolean` | boolean   |
+| `Id`      | id        |

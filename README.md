@@ -23,18 +23,43 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const projectName: string = "<value>";
-    const type: TypeT = TypeT.Llm;
-    const env: Env = Env.Prod;
-    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+    const res = await sdk.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            config: {
+                key: "<value>",
+            },
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: "<value>",
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
     if (res.statusCode == 200) {
         // handle response
@@ -49,61 +74,59 @@ run();
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
-### [configurations](docs/sdks/configurations/README.md)
+### [session](docs/sdks/session/README.md)
 
-* [getConfigurations](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
-* [createConfiguration](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
-* [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
-* [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
-
-### [datapoints](docs/sdks/datapoints/README.md)
-
-* [getDatapoints](docs/sdks/datapoints/README.md#getdatapoints) - Retrieve a list of datapoints
-* [createDatapoint](docs/sdks/datapoints/README.md#createdatapoint) - Create a new datapoint
-* [updateDatapoint](docs/sdks/datapoints/README.md#updatedatapoint) - Update a specific datapoint
-* [deleteDatapoint](docs/sdks/datapoints/README.md#deletedatapoint) - Delete a specific datapoint
-* [getDatapoint](docs/sdks/datapoints/README.md#getdatapoint) - Retrieve a specific datapoint
-
-### [datasets](docs/sdks/datasets/README.md)
-
-* [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
-* [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Get datasets
-* [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a dataset
-* [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
+* [startSession](docs/sdks/session/README.md#startsession) - Start a new session
+* [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
 
 ### [events](docs/sdks/events/README.md)
 
 * [createEvent](docs/sdks/events/README.md#createevent) - Create a new event
 * [updateEvent](docs/sdks/events/README.md#updateevent) - Update an event
-* [deleteEvent](docs/sdks/events/README.md#deleteevent) - Delete an event
+* [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
 
 ### [metrics](docs/sdks/metrics/README.md)
 
-* [deleteMetric](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
 * [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
 * [createMetric](docs/sdks/metrics/README.md#createmetric) - Create a new metric
 * [updateMetric](docs/sdks/metrics/README.md#updatemetric) - Update an existing metric
-
-### [projects](docs/sdks/projects/README.md)
-
-* [deleteProject](docs/sdks/projects/README.md#deleteproject) - Delete a project
-* [getProjects](docs/sdks/projects/README.md#getprojects) - Get a list of projects
-* [createProject](docs/sdks/projects/README.md#createproject) - Create a new project
-* [updateProject](docs/sdks/projects/README.md#updateproject) - Update an existing project
-
-### [session](docs/sdks/session/README.md)
-
-* [startSession](docs/sdks/session/README.md#startsession) - Start a new session
-* [deleteSession](docs/sdks/session/README.md#deletesession) - Delete a session
-* [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
-* [processEventTrace](docs/sdks/session/README.md#processeventtrace) - Process an event trace for a given session
+* [deleteMetric](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
 
 ### [tools](docs/sdks/tools/README.md)
 
-* [deleteTool](docs/sdks/tools/README.md#deletetool) - Delete a tool
 * [getTools](docs/sdks/tools/README.md#gettools) - Retrieve a list of tools
 * [createTool](docs/sdks/tools/README.md#createtool) - Create a new tool
 * [updateTool](docs/sdks/tools/README.md#updatetool) - Update an existing tool
+* [deleteTool](docs/sdks/tools/README.md#deletetool) - Delete a tool
+
+### [datapoints](docs/sdks/datapoints/README.md)
+
+* [getDatapoints](docs/sdks/datapoints/README.md#getdatapoints) - Retrieve a list of datapoints
+* [createDatapoint](docs/sdks/datapoints/README.md#createdatapoint) - Create a new datapoint
+* [getDatapoint](docs/sdks/datapoints/README.md#getdatapoint) - Retrieve a specific datapoint
+* [updateDatapoint](docs/sdks/datapoints/README.md#updatedatapoint) - Update a specific datapoint
+* [deleteDatapoint](docs/sdks/datapoints/README.md#deletedatapoint) - Delete a specific datapoint
+
+### [datasets](docs/sdks/datasets/README.md)
+
+* [getDatasets](docs/sdks/datasets/README.md#getdatasets) - Get datasets
+* [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a dataset
+* [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
+* [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
+
+### [projects](docs/sdks/projects/README.md)
+
+* [getProjects](docs/sdks/projects/README.md#getprojects) - Get a list of projects
+* [createProject](docs/sdks/projects/README.md#createproject) - Create a new project
+* [updateProject](docs/sdks/projects/README.md#updateproject) - Update an existing project
+* [deleteProject](docs/sdks/projects/README.md#deleteproject) - Delete a project
+
+### [configurations](docs/sdks/configurations/README.md)
+
+* [getConfigurations](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
+* [createConfiguration](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
+* [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
+* [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- Start Error Handling [errors] -->
@@ -119,20 +142,45 @@ Example
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const projectName: string = "<value>";
-    const type: TypeT = TypeT.Llm;
-    const env: Env = Env.Prod;
-    const name: string = "<value>";
 
     let res;
     try {
-        res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+        res = await sdk.session.startSession({
+            session: {
+                project: "Simple RAG Project",
+                sessionName: "Playground Session",
+                source: "playground",
+                sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+                config: {
+                    key: "<value>",
+                },
+                inputs: {
+                    context: "Hello world",
+                    question: "What is in the context?",
+                    chat_history: "<value>",
+                },
+                outputs: {
+                    role: "assistant",
+                    content: "Hello world",
+                },
+                error: null,
+                duration: 824.8056,
+                userProperties: {
+                    user: "google-oauth2|111840237613341303366",
+                },
+                metrics: {},
+                feedback: {},
+                metadata: {},
+                startTime: 1712025501605,
+                endTime: 1712025499832,
+            },
+        });
     } catch (err) {
         if (err instanceof errors.SDKError) {
             console.error(err); // handle exception
@@ -165,19 +213,44 @@ You can override the default server globally by passing a server index to the `s
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverIdx: 0,
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const projectName: string = "<value>";
-    const type: TypeT = TypeT.Llm;
-    const env: Env = Env.Prod;
-    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+    const res = await sdk.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            config: {
+                key: "<value>",
+            },
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: "<value>",
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
     if (res.statusCode == 200) {
         // handle response
@@ -194,19 +267,44 @@ run();
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         serverURL: "https://api.honeyhive.ai",
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const projectName: string = "<value>";
-    const type: TypeT = TypeT.Llm;
-    const env: Env = Env.Prod;
-    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+    const res = await sdk.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            config: {
+                key: "<value>",
+            },
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: "<value>",
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
     if (res.statusCode == 200) {
         // handle response
@@ -251,18 +349,43 @@ This SDK supports the following security scheme globally:
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
-    const projectName: string = "<value>";
-    const type: TypeT = TypeT.Llm;
-    const env: Env = Env.Prod;
-    const name: string = "<value>";
 
-    const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+    const res = await sdk.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            config: {
+                key: "<value>",
+            },
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: "<value>",
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
     if (res.statusCode == 200) {
         // handle response

@@ -9,7 +9,7 @@ import { AxiosResponse } from "axios";
 /**
  * Configuration type - "LLM" or "pipeline" - default is "LLM"
  */
-export enum TypeT {
+export enum GetConfigurationsQueryParamType {
     Llm = "LLM",
     Pipeline = "pipeline",
 }
@@ -25,7 +25,7 @@ export enum Env {
 
 export class GetConfigurationsRequest extends SpeakeasyBase {
     /**
-     * Project name for configuration
+     * Project name for configuration like `Example Project`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project_name" })
     projectName: string;
@@ -34,7 +34,7 @@ export class GetConfigurationsRequest extends SpeakeasyBase {
      * Configuration type - "LLM" or "pipeline" - default is "LLM"
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: TypeT;
+    type?: GetConfigurationsQueryParamType;
 
     /**
      * Environment - "dev", "staging" or "prod"
@@ -43,7 +43,7 @@ export class GetConfigurationsRequest extends SpeakeasyBase {
     env?: Env;
 
     /**
-     * The name of the configuration
+     * The name of the configuration like `v0`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=name" })
     name?: string;

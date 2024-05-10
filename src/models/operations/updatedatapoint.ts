@@ -10,8 +10,8 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
      * ID of datapoint to update
      */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=datapoint_id" })
-    datapointId: string;
+    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
+    id: string;
 
     @SpeakeasyMetadata({ data: "request, media_type=application/json" })
     updateDatapointRequest: components.UpdateDatapointRequest;

@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 
 export class DeleteDatasetRequest extends SpeakeasyBase {
     /**
-     * The unique identifier of the dataset to be deleted
+     * The unique identifier of the dataset to be deleted like `663876ec4611c47f4970f0c3`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_id" })
     datasetId: string;

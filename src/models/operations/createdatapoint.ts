@@ -6,7 +6,7 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { AxiosResponse } from "axios";
 import { Expose, Type } from "class-transformer";
 
-export class Result extends SpeakeasyBase {
+export class CreateDatapointResult extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "insertedId" })
     insertedId?: string;
@@ -18,8 +18,8 @@ export class Result extends SpeakeasyBase {
 export class CreateDatapointResponseBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "result" })
-    @Type(() => Result)
-    result?: Result;
+    @Type(() => CreateDatapointResult)
+    result?: CreateDatapointResult;
 }
 
 export class CreateDatapointResponse extends SpeakeasyBase {

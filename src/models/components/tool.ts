@@ -15,13 +15,20 @@ export class Tool extends SpeakeasyBase {
     @Expose({ name: "_id" })
     id?: string;
 
+    /**
+     * Name of the project associated with this tool
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "description" })
-    description?: string;
+    @Expose({ name: "task" })
+    task: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
     name: string;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "description" })
+    description?: string;
 
     /**
      * These can be function call params or plugin call params
@@ -29,13 +36,6 @@ export class Tool extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "parameters" })
     parameters: Record<string, any>;
-
-    /**
-     * Name of the project associated with this tool
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "task" })
-    task: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "tool_type" })

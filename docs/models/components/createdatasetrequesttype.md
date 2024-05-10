@@ -1,6 +1,6 @@
 # CreateDatasetRequestType
 
-What the dataset is to be used for - "evaluation" or "fine-tuning"
+What the dataset is to be used for - "evaluation" (default) or "fine-tuning"
 
 
 ## Values

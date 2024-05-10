@@ -8,13 +8,13 @@ import { AxiosResponse } from "axios";
 
 export class UpdateConfigurationRequest extends SpeakeasyBase {
     /**
-     * Configuration ID
+     * Configuration ID like `6638187d505c6812e4043f24`
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;
 
     @SpeakeasyMetadata({ data: "request, media_type=application/json" })
-    configuration: components.Configuration;
+    putConfigurationRequest: components.PutConfigurationRequest;
 }
 
 export class UpdateConfigurationResponse extends SpeakeasyBase {

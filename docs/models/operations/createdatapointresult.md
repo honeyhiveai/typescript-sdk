@@ -1,4 +1,4 @@
-# CreateToolResult
+# CreateDatapointResult
 
 
 ## Fields

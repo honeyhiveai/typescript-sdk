@@ -3,53 +3,10 @@
 
 ### Available Operations
 
-* [deleteProject](#deleteproject) - Delete a project
 * [getProjects](#getprojects) - Get a list of projects
 * [createProject](#createproject) - Create a new project
 * [updateProject](#updateproject) - Update an existing project
-
-## deleteProject
-
-Delete a project
-
-### Example Usage
-
-```typescript
-import { HoneyHive } from "honeyhive";
-import { DeleteProjectRequest } from "honeyhive/dist/models/operations";
-
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const name: string = "<value>";
-
-  const res = await sdk.projects.deleteProject(name);
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `name`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
-
-### Response
-
-**Promise<[operations.DeleteProjectResponse](../../models/operations/deleteprojectresponse.md)>**
-### Errors
-
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
+* [deleteProject](#deleteproject) - Delete a project
 
 ## getProjects
 
@@ -174,6 +131,49 @@ run();
 ### Response
 
 **Promise<[operations.UpdateProjectResponse](../../models/operations/updateprojectresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4xx-5xx         | */*             |
+
+## deleteProject
+
+Delete a project
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+import { DeleteProjectRequest } from "honeyhive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const name: string = "<value>";
+
+  const res = await sdk.projects.deleteProject(name);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `name`                                                       | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
+
+
+### Response
+
+**Promise<[operations.DeleteProjectResponse](../../models/operations/deleteprojectresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

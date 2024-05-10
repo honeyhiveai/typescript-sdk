@@ -7,88 +7,11 @@ import { Expose } from "class-transformer";
 
 export class SessionStartRequest extends SpeakeasyBase {
     /**
-     * Id of events that are nested within the session
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "children_ids" })
-    childrenIds?: string[];
-
-    /**
-     * Associated configuration for the session
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "config" })
-    config?: Record<string, any>;
-
-    /**
-     * How long the session took in milliseconds
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "duration" })
-    duration?: number;
-
-    /**
-     * UTC timestamp (in milliseconds) for the session end
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "end_time" })
-    endTime?: number;
-
-    /**
-     * Any error description if session failed
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "error" })
-    error?: string;
-
-    /**
-     * Any user feedback provided for the session output
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "feedback" })
-    feedback?: Record<string, any>;
-
-    /**
-     * Input object passed to the session - user query, text blob, etc
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "inputs" })
-    inputs?: Record<string, any>;
-
-    /**
-     * Any system or application metadata associated with the session
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "metadata" })
-    metadata?: Record<string, any>;
-
-    /**
-     * Any values computed over the output of the session
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "metrics" })
-    metrics?: Record<string, any>;
-
-    /**
-     * Final output of the session - completion, chunks, etc
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "outputs" })
-    outputs?: Record<string, any>;
-
-    /**
      * Project name associated with the session
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
     project: string;
-
-    /**
-     * Unique id of the session, if not set, it will be auto-generated
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "session_id" })
-    sessionId?: string;
 
     /**
      * Name of the session
@@ -105,11 +28,53 @@ export class SessionStartRequest extends SpeakeasyBase {
     source: string;
 
     /**
-     * UTC timestamp (in milliseconds) for the session start
+     * Unique id of the session, if not set, it will be auto-generated
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "start_time" })
-    startTime?: number;
+    @Expose({ name: "session_id" })
+    sessionId?: string;
+
+    /**
+     * Id of events that are nested within the session
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "children_ids" })
+    childrenIds?: string[];
+
+    /**
+     * Associated configuration for the session
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "config" })
+    config?: Record<string, any>;
+
+    /**
+     * Input object passed to the session - user query, text blob, etc
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "inputs" })
+    inputs?: Record<string, any>;
+
+    /**
+     * Final output of the session - completion, chunks, etc
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "outputs" })
+    outputs?: Record<string, any>;
+
+    /**
+     * Any error description if session failed
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "error" })
+    error?: string;
+
+    /**
+     * How long the session took in milliseconds
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "duration" })
+    duration?: number;
 
     /**
      * Any user properties associated with the session
@@ -117,4 +82,39 @@ export class SessionStartRequest extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
     userProperties?: Record<string, any>;
+
+    /**
+     * Any values computed over the output of the session
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "metrics" })
+    metrics?: Record<string, any>;
+
+    /**
+     * Any user feedback provided for the session output
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "feedback" })
+    feedback?: Record<string, any>;
+
+    /**
+     * Any system or application metadata associated with the session
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "metadata" })
+    metadata?: Record<string, any>;
+
+    /**
+     * UTC timestamp (in milliseconds) for the session start
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "start_time" })
+    startTime?: number;
+
+    /**
+     * UTC timestamp (in milliseconds) for the session end
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "end_time" })
+    endTime?: number;
 }
