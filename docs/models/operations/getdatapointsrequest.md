@@ -3,8 +3,8 @@
 
 ## Fields
 
-| Field                                                | Type                                                 | Required                                             | Description                                          |
-| ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------- |
-| `project`                                            | *string*                                             | :heavy_check_mark:                                   | Project ID to filter datapoints                      |
-| `type`                                               | [operations.TypeT](../../models/operations/typet.md) | :heavy_minus_sign:                                   | Type of data - "session" or "event"                  |
-| `datapointIds`                                       | *string*[]                                           | :heavy_minus_sign:                                   | List of datapoint ids to fetch                       |
+| Field                                      | Type                                       | Required                                   | Description                                |
+| ------------------------------------------ | ------------------------------------------ | ------------------------------------------ | ------------------------------------------ |
+| `project`                                  | *string*                                   | :heavy_check_mark:                         | Project ID to filter datapoints            |
+| `datapointIds`                             | *string*[]                                 | :heavy_minus_sign:                         | List of datapoint ids to fetch             |
+| `datasetName`                              | *string*                                   | :heavy_minus_sign:                         | Name of the dataset to get datapoints from |

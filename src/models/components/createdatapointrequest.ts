@@ -5,14 +5,6 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose } from "class-transformer";
 
-/**
- * Type of datapoint - "event" or "session"
- */
-export enum CreateDatapointRequestType {
-    Event = "event",
-    Session = "session",
-}
-
 export class CreateDatapointRequest extends SpeakeasyBase {
     /**
      * UUID for the project to which the datapoint belongs
@@ -29,11 +21,11 @@ export class CreateDatapointRequest extends SpeakeasyBase {
     inputs: Record<string, any>;
 
     /**
-     * Type of datapoint - "event" or "session"
+     * Conversation history associated with the datapoint
      */
     @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type: CreateDatapointRequestType;
+    @Expose({ name: "history" })
+    history?: Record<string, any>[];
 
     /**
      * Expected output JSON object for the datapoint
@@ -48,13 +40,6 @@ export class CreateDatapointRequest extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "linked_event" })
     linkedEvent?: string;
-
-    /**
-     * Ids of evaluations where the datapoint is included
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "linked_evals" })
-    linkedEvals?: string[];
 
     /**
      * Ids of all datasets that include the datapoint

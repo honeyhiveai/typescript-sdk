@@ -45,20 +45,6 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     linkedDatasets?: string[];
 
     /**
-     * Whether the datapoint is saved or detected
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
-
-    /**
-     * session or event - specify the type of datapoint
-     */
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: string;
-
-    /**
      * Any additional metadata for the datapoint
      */
     @SpeakeasyMetadata()

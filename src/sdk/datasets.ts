@@ -21,7 +21,7 @@ export class Datasets {
      */
     async getDatasets(
         project: string,
-        type?: operations.QueryParamType,
+        type?: operations.TypeT,
         datasetId?: string,
         config?: AxiosRequestConfig
     ): Promise<operations.GetDatasetsResponse> {

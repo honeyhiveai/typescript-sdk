@@ -1,11 +1,11 @@
 # TypeT
 
-Type of data - "session" or "event"
+Type of the dataset - "evaluation" or "fine-tuning"
 
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Session` | session   |
-| `Event`   | event     |
+| Name         | Value        |
+| ------------ | ------------ |
+| `Evaluation` | evaluation   |
+| `FineTuning` | fine-tuning  |

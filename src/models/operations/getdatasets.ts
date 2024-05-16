@@ -10,7 +10,7 @@ import { Expose, Type } from "class-transformer";
 /**
  * Type of the dataset - "evaluation" or "fine-tuning"
  */
-export enum QueryParamType {
+export enum TypeT {
     Evaluation = "evaluation",
     FineTuning = "fine-tuning",
 }
@@ -26,7 +26,7 @@ export class GetDatasetsRequest extends SpeakeasyBase {
      * Type of the dataset - "evaluation" or "fine-tuning"
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: QueryParamType;
+    type?: TypeT;
 
     /**
      * Unique dataset ID for filtering specific dataset like `663876ec4611c47f4970f0c3`

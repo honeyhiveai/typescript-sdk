@@ -16,14 +16,14 @@ Get datasets
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { GetDatasetsRequest, QueryParamType } from "honeyhive/dist/models/operations";
+import { GetDatasetsRequest, TypeT } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const project: string = "<value>";
-const type: QueryParamType = QueryParamType.Evaluation;
+const type: TypeT = TypeT.Evaluation;
 const datasetId: string = "<value>";
 
   const res = await sdk.datasets.getDatasets(project, type, datasetId);
@@ -41,7 +41,7 @@ run();
 | Parameter                                                                        | Type                                                                             | Required                                                                         | Description                                                                      |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `project`                                                                        | *string*                                                                         | :heavy_check_mark:                                                               | Project ID associated with the datasets like `65e0fc2d6a2eb95f55a92cbc`          |
-| `type`                                                                           | [operations.QueryParamType](../../models/operations/queryparamtype.md)           | :heavy_minus_sign:                                                               | Type of the dataset - "evaluation" or "fine-tuning"                              |
+| `type`                                                                           | [operations.TypeT](../../models/operations/typet.md)                             | :heavy_minus_sign:                                                               | Type of the dataset - "evaluation" or "fine-tuning"                              |
 | `datasetId`                                                                      | *string*                                                                         | :heavy_minus_sign:                                                               | Unique dataset ID for filtering specific dataset like `663876ec4611c47f4970f0c3` |
 | `config`                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                     | :heavy_minus_sign:                                                               | Available config options for making requests.                                    |
 
