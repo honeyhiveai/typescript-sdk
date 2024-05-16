@@ -257,8 +257,6 @@ paths:
       - Tools
       summary: Retrieve a list of tools
       operationId: getTools
-      security:
-      - BearerAuth: []
       responses:
         '200':
           description: Successfully retrieved the list of tools
@@ -273,8 +271,6 @@ paths:
       - Tools
       summary: Create a new tool
       operationId: createTool
-      security:
-      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -299,8 +295,6 @@ paths:
       - Tools
       summary: Update an existing tool
       operationId: updateTool
-      security:
-      - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -337,15 +331,6 @@ paths:
         schema:
           type: string
         description: Project ID to filter datapoints
-      - name: type
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - session
-          - event
-        description: Type of data - "session" or "event"
       - name: datapoint_ids
         in: query
         required: false
@@ -354,6 +339,12 @@ paths:
           items:
             type: string
         description: List of datapoint ids to fetch
+      - name: dataset_name
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Name of the dataset to get datapoints from
       responses:
         '200':
           description: Successful response
@@ -636,15 +627,6 @@ paths:
         schema:
           type: string
         description: Project name for configuration like `Example Project`
-      - name: type
-        in: query
-        required: false
-        schema:
-          type: string
-          enum:
-          - LLM
-          - pipeline
-        description: Configuration type - "LLM" or "pipeline" - default is "LLM"
       - name: env
         in: query
         required: false
@@ -1461,12 +1443,12 @@ components:
           type: object
           additionalProperties: true
           description: Arbitrary JSON object containing the inputs for the datapoint
-        type:
-          type: string
-          enum:
-          - event
-          - session
-          description: Type of datapoint - "event" or "session"
+        history:
+          type: array
+          description: Conversation history associated with the datapoint
+          items:
+            type: object
+            additionalProperties: true
         ground_truth:
           type: object
           additionalProperties: true
@@ -1474,11 +1456,6 @@ components:
         linked_event:
           type: string
           description: Event id for the event from which the datapoint was created
-        linked_evals:
-          type: array
-          description: Ids of evaluations where the datapoint is included
-          items:
-            type: string
         linked_datasets:
           type: array
           description: Ids of all datasets that include the datapoint
@@ -1491,7 +1468,6 @@ components:
       required:
       - project
       - inputs
-      - type
       example:
         project: 653454f3138a956964341c07
         inputs:
@@ -1515,9 +1491,7 @@ components:
             -15C. Please note that weather conditions can change rapidly, so it's
             best to check a reliable source for the most up-to-date information.
         linked_event: 6bba5182-d4b1-4b29-a64a-f0a8bd964f76
-        linked_evals: []
         linked_datasets: []
-        type: event
         metadata:
           question_type: weather
           completion_tokens: 47
@@ -1549,12 +1523,6 @@ components:
           description: Ids of all datasets that include the datapoint
           items:
             type: string
-        saved:
-          type: boolean
-          description: Whether the datapoint is saved or detected
-        type:
-          type: string
-          description: session or event - specify the type of datapoint
         metadata:
           type: object
           additionalProperties: true
@@ -1583,8 +1551,6 @@ components:
         linked_event: 6bba5182-d4b1-4b29-a64a-f0a8bd964f76
         linked_evals: []
         linked_datasets: []
-        type: event
-        saved: true
         metadata:
           question_type: capital-weather
           random_field: 0

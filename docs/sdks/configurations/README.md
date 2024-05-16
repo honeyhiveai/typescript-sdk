@@ -16,18 +16,17 @@ Retrieve a list of configurations
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsQueryParamType, GetConfigurationsRequest } from "honeyhive/dist/models/operations";
+import { Env, GetConfigurationsRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
   const sdk = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
   });
 const projectName: string = "<value>";
-const type: GetConfigurationsQueryParamType = GetConfigurationsQueryParamType.Llm;
-const env: Env = Env.Prod;
+const env: Env = Env.Dev;
 const name: string = "<value>";
 
-  const res = await sdk.configurations.getConfigurations(projectName, type, env, name);
+  const res = await sdk.configurations.getConfigurations(projectName, env, name);
 
   if (res.statusCode == 200) {
     // handle response
@@ -39,13 +38,12 @@ run();
 
 ### Parameters
 
-| Parameter                                                                                                | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
-| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `projectName`                                                                                            | *string*                                                                                                 | :heavy_check_mark:                                                                                       | Project name for configuration like `Example Project`                                                    |
-| `type`                                                                                                   | [operations.GetConfigurationsQueryParamType](../../models/operations/getconfigurationsqueryparamtype.md) | :heavy_minus_sign:                                                                                       | Configuration type - "LLM" or "pipeline" - default is "LLM"                                              |
-| `env`                                                                                                    | [operations.Env](../../models/operations/env.md)                                                         | :heavy_minus_sign:                                                                                       | Environment - "dev", "staging" or "prod"                                                                 |
-| `name`                                                                                                   | *string*                                                                                                 | :heavy_minus_sign:                                                                                       | The name of the configuration like `v0`                                                                  |
-| `config`                                                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                             | :heavy_minus_sign:                                                                                       | Available config options for making requests.                                                            |
+| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `projectName`                                                | *string*                                                     | :heavy_check_mark:                                           | Project name for configuration like `Example Project`        |
+| `env`                                                        | [operations.Env](../../models/operations/env.md)             | :heavy_minus_sign:                                           | Environment - "dev", "staging" or "prod"                     |
+| `name`                                                       | *string*                                                     | :heavy_minus_sign:                                           | The name of the configuration like `v0`                      |
+| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
 
 
 ### Response

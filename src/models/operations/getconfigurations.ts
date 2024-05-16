@@ -7,14 +7,6 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
 /**
- * Configuration type - "LLM" or "pipeline" - default is "LLM"
- */
-export enum GetConfigurationsQueryParamType {
-    Llm = "LLM",
-    Pipeline = "pipeline",
-}
-
-/**
  * Environment - "dev", "staging" or "prod"
  */
 export enum Env {
@@ -29,12 +21,6 @@ export class GetConfigurationsRequest extends SpeakeasyBase {
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project_name" })
     projectName: string;
-
-    /**
-     * Configuration type - "LLM" or "pipeline" - default is "LLM"
-     */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: GetConfigurationsQueryParamType;
 
     /**
      * Environment - "dev", "staging" or "prod"

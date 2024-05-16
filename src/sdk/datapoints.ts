@@ -21,14 +21,14 @@ export class Datapoints {
      */
     async getDatapoints(
         project: string,
-        type?: operations.TypeT,
         datapointIds?: string[],
+        datasetName?: string,
         config?: AxiosRequestConfig
     ): Promise<operations.GetDatapointsResponse> {
         const req = new operations.GetDatapointsRequest({
             project: project,
-            type: type,
             datapointIds: datapointIds,
+            datasetName: datasetName,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,

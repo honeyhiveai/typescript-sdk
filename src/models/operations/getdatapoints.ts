@@ -7,14 +7,6 @@ import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 import { Expose, Type } from "class-transformer";
 
-/**
- * Type of data - "session" or "event"
- */
-export enum TypeT {
-    Session = "session",
-    Event = "event",
-}
-
 export class GetDatapointsRequest extends SpeakeasyBase {
     /**
      * Project ID to filter datapoints
@@ -23,16 +15,16 @@ export class GetDatapointsRequest extends SpeakeasyBase {
     project: string;
 
     /**
-     * Type of data - "session" or "event"
-     */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type?: TypeT;
-
-    /**
      * List of datapoint ids to fetch
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=datapoint_ids" })
     datapointIds?: string[];
+
+    /**
+     * Name of the dataset to get datapoints from
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_name" })
+    datasetName?: string;
 }
 
 /**
