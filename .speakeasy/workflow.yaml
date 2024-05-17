@@ -4,6 +4,8 @@ sources:
     my-source:
         inputs:
             - location: openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/honey-hive/honeyhive-jxo/my-source
 targets:
     typescript:
         target: typescript

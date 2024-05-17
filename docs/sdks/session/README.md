@@ -35,7 +35,18 @@ async function run() {
       inputs: {
         "context": "Hello world",
         "question": "What is in the context?",
-        "chat_history": "<value>",
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "Answer the user's question only using provided context.
+
+            Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
       },
       outputs: {
         "role": "assistant",

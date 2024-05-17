@@ -3,18 +3,18 @@ id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
   docChecksum: 8409b9ebd940b18bdbd40d2d8cde9c29
   docVersion: 1.0.1
-  speakeasyVersion: 1.209.2
-  generationVersion: 2.281.2
-  releaseVersion: 0.4.3
-  configChecksum: 1c882ce75d64dc61cc0de251793adf82
+  speakeasyVersion: 1.293.0
+  generationVersion: 2.332.4
+  releaseVersion: 0.4.4
+  configChecksum: 21515210abd6f1f1f14b3dc3f936c4bc
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
 features:
   typescript:
-    core: 3.4.8
+    core: 3.4.9
     flattening: 2.81.1
-    globalSecurity: 2.82.4
+    globalSecurity: 2.82.5
     globalServerURLs: 2.82.2
 generatedFiles:
   - src/sdk/session.ts
