@@ -1,12 +1,5 @@
 import OpenAI from "openai";
 import axios from "axios";
-import {
-  HoneyHive,
-  SessionTracer,
-  Config,
-  ToolConfig,
-  ModelConfig,
-} from "honeyhive";
 
 // Configure your API keys here
 const OPENAI_KEY = process.env.OPENAI_KEY;
@@ -16,13 +9,7 @@ const HH_API_KEY = process.env.HH_API_KEY;
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
 
 // Function to search Google using the SERP API
-async function searchGoogle(
-  query: string,
-  tracer: SessionTracer,
-): Promise<string[]> {
-  const searchConfig: ToolConfig = { type: "tool", name: "GoogleSearch" };
-  tracer.startEvent("tool", "Google Search", searchConfig, { query });
-
+async function searchGoogle(query: string): Promise<string[]> {
   const url = `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=en&gl=us&api_key=${SERP_API_KEY}`;
   let results = [];
   try {
@@ -34,7 +21,6 @@ async function searchGoogle(
     console.error("Error during Google search:", error);
   }
 
-  tracer.endEvent({ results });
   return results;
 }
 
@@ -42,16 +28,8 @@ async function searchGoogle(
 async function generateAnswer(
   text: string,
   question: string,
-  tracer: SessionTracer,
 ): Promise<string | null> {
-  const summarizeConfig: ModelConfig = {
-    type: "model",
-    name: "OpenAI Summarization",
-    provider: "OpenAI",
-    model: "gpt-3.5-turbo",
-  };
   const prompt = `Answer the question "${question}" with the help of the following text:\n${text}`;
-  tracer.startEvent("model", "Text Summarization", summarizeConfig, { prompt });
 
   let summary = null;
   try {
@@ -64,7 +42,6 @@ async function generateAnswer(
     console.error("Error during text summarization:", error);
   }
 
-  tracer.endEvent({ summary });
   return summary;
 }
 
@@ -72,16 +49,8 @@ async function generateAnswer(
 async function isAnswerSatisfactory(
   question: string,
   text: string,
-  tracer: SessionTracer,
 ): Promise<boolean> {
-  const answerConfig: ModelConfig = {
-    type: "model",
-    name: "OpenAI Summarization",
-    provider: "OpenAI",
-    model: "gpt-3.5-turbo",
-  };
   const prompt = `Question: "${question}"\n\nAnswer: "${text}"\n\nIs the provided answer clear and satisfactory? Please respond with "Yes" or "No".`;
-  tracer.startEvent("model", "Answer Verification", answerConfig, { prompt });
   let ans = false;
   let response = null;
 
@@ -99,26 +68,11 @@ async function isAnswerSatisfactory(
     console.error("Error determining if the answer is satisfactory:", error);
   }
 
-  const outputs = { answer: ans, model_response: response };
-  tracer.endEvent({ outputs });
   return ans;
 }
 
 // Main pipeline function
-export async function ReActPipeline(
-  question: string,
-  source: string,
-  metadata: { [key: string]: any },
-): Promise<SessionTracer> {
-  const tracer = new SessionTracer(
-    HH_API_KEY || "",
-    HH_PROJECT || "",
-    "My ReAct Pipeline",
-    {},
-    source,
-    metadata,
-  );
-  await tracer.startSession({ question: question });
+export async function ReActPipeline(question: string): Promise<void> {
   let attempts = 0;
   const maxAttempts = 5;
   let satisfactory = false;
@@ -128,7 +82,7 @@ export async function ReActPipeline(
     // Step 1: Turn the user question into a search query
     const searchQuery = `${question}`;
     console.log(`Searching for: ${searchQuery}`);
-    const searchResults = await searchGoogle(searchQuery, tracer);
+    const searchResults = await searchGoogle(searchQuery);
 
     if (searchResults.length === 0) {
       console.log("No search results found. Trying a different phrasing...");
@@ -140,11 +94,11 @@ export async function ReActPipeline(
     const combinedSearchResults = searchResults.join("\n\n");
 
     // Step 3: Generate a summary of the search results
-    summary = await generateAnswer(combinedSearchResults, question, tracer);
+    summary = await generateAnswer(combinedSearchResults, question);
 
     // Step 4: Check if the summary is satisfactory
     if (summary) {
-      satisfactory = await isAnswerSatisfactory(question, summary, tracer);
+      satisfactory = await isAnswerSatisfactory(question, summary);
     } else {
       console.log("Failed to generate a summary. Trying again...");
     }
@@ -160,7 +114,4 @@ export async function ReActPipeline(
       "Failed to find a satisfactory summary after several attempts.",
     );
   }
-
-  await tracer.endSession({ finalSummary: summary });
-  return tracer;
 }
