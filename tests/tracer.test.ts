@@ -1,36 +1,34 @@
-const { v4: uuidv4 } = require("uuid");
-import { HoneyHive, HoneyHiveTracer } from "honeyhive";
-import { ReActPipeline } from "./agent_script";
+import { HoneyHive } from "honeyhive";
 import { Operator } from "honeyhive/dist/models/components";
+const fs = require("fs");
+const path = require("path");
 import assert from "assert";
 
 const HH_API_KEY = process.env.HH_API_KEY || "";
 const HH_API_URL = process.env.HH_API_URL;
-const HH_PROJECT = process.env.HH_PROJECT || "";
 const HH_PROJECT_ID = process.env.HH_PROJECT_ID || "";
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe("TypeScript Tracer", () => {
-  it("should successfully trace a session", async () => {
-    const sessionName = `HoneyHive TS Tracer Test ${uuidv4()}`;
-    await HoneyHiveTracer.init({
-      apiKey: HH_API_KEY,
-      project: HH_PROJECT,
-      sessionName: sessionName,
-      source: "HoneyHive TS Tracer Test",
-      serverUrl: HH_API_URL,
+  let sessionName: string;
+  beforeAll(function (done) {
+    // Read the session name from the file
+    const sessionFilePath = path.join(__dirname, "session_name.txt");
+    fs.readFile(sessionFilePath, "utf8", (err: NodeJS.ErrnoException | null, data: string) => {
+      if (err) {
+        return done(err);
+      }
+      sessionName = data;
+      done();
     });
-    const userQuestion =
-      "What is the effect of climate change on the polar bear population?";
-    await ReActPipeline(userQuestion);
+  });
 
-    // Find the session here
+  it("should successfully trace a session", async () => {
     const sdk = new HoneyHive({
       bearerAuth: HH_API_KEY,
       serverURL: HH_API_URL,
     });
-    await sleep(15000);
     let res = await sdk.events.getEvents({
       project: HH_PROJECT_ID,
       filters: [

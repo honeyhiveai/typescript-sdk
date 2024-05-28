@@ -72,7 +72,7 @@ async function isAnswerSatisfactory(
 }
 
 // Main pipeline function
-export async function ReActPipeline(question: string): Promise<void> {
+export async function ReActPipeline(question: string): Promise<string | null> {
   let attempts = 0;
   const maxAttempts = 5;
   let satisfactory = false;
@@ -114,4 +114,5 @@ export async function ReActPipeline(question: string): Promise<void> {
       "Failed to find a satisfactory summary after several attempts.",
     );
   }
+  return summary;
 }
