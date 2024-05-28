@@ -1,10 +1,14 @@
 {
   "dependencies": {
+    "@traceloop/node-server-sdk": "^0.8.4",
+    "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
     "honeyhive": "file:../.",
     "jest": "^29.7.0",
     "openai": "^4.28.4",
-    "ts-jest": "^29.1.2"
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1"
   },
   "scripts": {
     "test": "jest"
