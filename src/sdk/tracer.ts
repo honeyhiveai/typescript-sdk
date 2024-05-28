@@ -11,7 +11,6 @@ import * as pinecone from '@pinecone-database/pinecone';
 import * as ChainsModule from "langchain/chains";
 import * as AgentsModule from "langchain/agents";
 import * as ToolsModule from "langchain/tools";
-import * as LlamaIndex from "llamaindex";
 import * as chromadb from "chromadb";
 
 interface InitParams {
@@ -49,6 +48,7 @@ export class HoneyHiveTracer {
           baseUrl: `${serverUrl}/opentelemetry`,
           appName: sessionId,
           apiKey: apiKey,
+          disableBatch: true,
           instrumentModules: {
             openAI: OpenAI,
             anthropic: anthropic,
@@ -62,7 +62,6 @@ export class HoneyHiveTracer {
               agentsModule: AgentsModule,
               toolsModule: ToolsModule,
             },
-            llamaIndex: LlamaIndex,
             chromadb: chromadb,
           },
         });
