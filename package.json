@@ -1,6 +1,6 @@
 {
   "name": "honeyhive",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": "HoneyHive",
   "scripts": {
     "prepare": "tsc --build",
