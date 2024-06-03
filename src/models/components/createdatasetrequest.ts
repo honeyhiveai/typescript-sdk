@@ -23,7 +23,7 @@ export enum CreateDatasetRequestPipelineType {
 
 export class CreateDatasetRequest extends SpeakeasyBase {
     /**
-     * UUID of the project associated with this dataset like `65e0fc2d6a2eb95f55a92cbc`
+     * Name of the project associated with this dataset like `New Project`
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })

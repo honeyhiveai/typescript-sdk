@@ -43,7 +43,7 @@ run();
 
 | Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | Project ID to filter datapoints                              |
+| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | Project name to filter datapoints                            |
 | `datapointIds`                                               | *string*[]                                                   | :heavy_minus_sign:                                           | List of datapoint ids to fetch                               |
 | `datasetName`                                                | *string*                                                     | :heavy_minus_sign:                                           | Name of the dataset to get datapoints from                   |
 | `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
@@ -73,7 +73,7 @@ async function run() {
   });
 
   const res = await sdk.datapoints.createDatapoint({
-    project: "653454f3138a956964341c07",
+    project: "New Project",
     inputs: {
       "query": "what's the temperature in Iceland?",
     },

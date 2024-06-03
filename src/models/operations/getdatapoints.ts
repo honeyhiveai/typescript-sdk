@@ -9,7 +9,7 @@ import { Expose, Type } from "class-transformer";
 
 export class GetDatapointsRequest extends SpeakeasyBase {
     /**
-     * Project ID to filter datapoints
+     * Project name to filter datapoints
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
     project: string;

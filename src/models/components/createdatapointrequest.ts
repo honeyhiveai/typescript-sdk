@@ -7,7 +7,7 @@ import { Expose } from "class-transformer";
 
 export class CreateDatapointRequest extends SpeakeasyBase {
     /**
-     * UUID for the project to which the datapoint belongs
+     * Name for the project to which the datapoint belongs
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })

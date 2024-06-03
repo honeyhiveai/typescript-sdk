@@ -17,7 +17,7 @@ export enum TypeT {
 
 export class GetDatasetsRequest extends SpeakeasyBase {
     /**
-     * Project ID associated with the datasets like `65e0fc2d6a2eb95f55a92cbc`
+     * Project Name associated with the datasets like `New Project`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
     project: string;
