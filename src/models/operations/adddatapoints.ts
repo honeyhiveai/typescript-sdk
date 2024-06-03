@@ -58,7 +58,7 @@ export class AddDatapointsRequestBody extends SpeakeasyBase {
 
 export class AddDatapointsRequest extends SpeakeasyBase {
     /**
-     * The unique identifier of the dataset to add datapoints to like `663876ec4611c47f4970f0c3`
+     * The unique identifier of the dataset to add datapoints to like  `663876ec4611c47f4970f0c3`
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=dataset_id" })
     datasetId: string;

@@ -1,4 +1,4 @@
-# GetRunsRunIdRequest
+# DeleteRunRequest
 
 
 ## Fields

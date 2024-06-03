@@ -6,7 +6,12 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
-export class PostRunsResponse extends SpeakeasyBase {
+export class DeleteRunRequest extends SpeakeasyBase {
+    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=run_id" })
+    runId: string;
+}
+
+export class DeleteRunResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
@@ -29,5 +34,5 @@ export class PostRunsResponse extends SpeakeasyBase {
      * Successful response
      */
     @SpeakeasyMetadata()
-    createRunResponse?: components.CreateRunResponse;
+    deleteRunResponse?: components.DeleteRunResponse;
 }
