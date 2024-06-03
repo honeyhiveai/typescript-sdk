@@ -6,12 +6,7 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
-export class GetRunsRunIdRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=runId" })
-    runId: string;
-}
-
-export class GetRunsRunIdResponse extends SpeakeasyBase {
+export class CreateRunResponse extends SpeakeasyBase {
     /**
      * HTTP response content type for this operation
      */
@@ -34,5 +29,5 @@ export class GetRunsRunIdResponse extends SpeakeasyBase {
      * Successful response
      */
     @SpeakeasyMetadata()
-    getRunResponse?: components.GetRunResponse;
+    createRunResponse?: components.CreateRunResponse;
 }
