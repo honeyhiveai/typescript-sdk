@@ -45,12 +45,27 @@ describe("TypeScript Tracer", () => {
       ],
     });
     expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toEqual(1);
-    expect(res.object?.events?.length).toEqual(1);
+    expect(res.object?.totalEvents).toEqual(2);
+    expect(res.object?.events?.length).toEqual(2);
 
     const events = res.object?.events;
     assert(events, "Expected 'events' to be defined");
-    const sessionId = events[0]?.sessionId;
+
+    let sessionId = events[0]?.sessionId;
+    res = await sdk.events.getEvents({
+      project: HH_PROJECT_ID,
+      filters: [
+        {
+          field: "session_id",
+          value: sessionId,
+          operator: Operator.Is,
+        },
+      ],
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.object?.totalEvents).toBeGreaterThan(1);
+
+    sessionId = events[1]?.sessionId;
     res = await sdk.events.getEvents({
       project: HH_PROJECT_ID,
       filters: [
