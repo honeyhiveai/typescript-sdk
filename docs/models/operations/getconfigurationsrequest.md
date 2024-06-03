@@ -5,6 +5,6 @@
 
 | Field                                                 | Type                                                  | Required                                              | Description                                           |
 | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
-| `projectName`                                         | *string*                                              | :heavy_check_mark:                                    | Project name for configuration like `Example Project` |
+| `project`                                             | *string*                                              | :heavy_check_mark:                                    | Project name for configuration like `Example Project` |
 | `env`                                                 | [operations.Env](../../models/operations/env.md)      | :heavy_minus_sign:                                    | Environment - "dev", "staging" or "prod"              |
 | `name`                                                | *string*                                              | :heavy_minus_sign:                                    | The name of the configuration like `v0`               |

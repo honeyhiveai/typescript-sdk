@@ -25,7 +25,7 @@ export class DateRange extends SpeakeasyBase {
 
 export class GetEventsRequestBody extends SpeakeasyBase {
     /**
-     * UUID of the project associated with the event like `65e0fc2d6a2eb95f55a92cbc`
+     * Name of the project associated with the event like `New Project`
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })

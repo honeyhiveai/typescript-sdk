@@ -19,8 +19,8 @@ export class GetConfigurationsRequest extends SpeakeasyBase {
     /**
      * Project name for configuration like `Example Project`
      */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project_name" })
-    projectName: string;
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
+    project: string;
 
     /**
      * Environment - "dev", "staging" or "prod"

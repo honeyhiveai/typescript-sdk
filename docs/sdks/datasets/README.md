@@ -7,6 +7,7 @@
 * [createDataset](#createdataset) - Create a dataset
 * [updateDataset](#updatedataset) - Update a dataset
 * [deleteDataset](#deletedataset) - Delete a dataset
+* [addDatapoints](#adddatapoints) - Add datapoints to a dataset
 
 ## getDatasets
 
@@ -40,7 +41,7 @@ run();
 
 | Parameter                                                                        | Type                                                                             | Required                                                                         | Description                                                                      |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `project`                                                                        | *string*                                                                         | :heavy_check_mark:                                                               | Project ID associated with the datasets like `65e0fc2d6a2eb95f55a92cbc`          |
+| `project`                                                                        | *string*                                                                         | :heavy_check_mark:                                                               | Project Name associated with the datasets like `New Project`                     |
 | `type`                                                                           | [operations.TypeT](../../models/operations/typet.md)                             | :heavy_minus_sign:                                                               | Type of the dataset - "evaluation" or "fine-tuning"                              |
 | `datasetId`                                                                      | *string*                                                                         | :heavy_minus_sign:                                                               | Unique dataset ID for filtering specific dataset like `663876ec4611c47f4970f0c3` |
 | `config`                                                                         | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                     | :heavy_minus_sign:                                                               | Available config options for making requests.                                    |
@@ -71,7 +72,7 @@ async function run() {
   });
 
   const res = await sdk.datasets.createDataset({
-    project: "65e0fc2d6a2eb95f55a92cbc",
+    project: "New Project",
     name: "test-dataset",
     description: "A test dataset",
     type: CreateDatasetRequestType.Evaluation,
@@ -205,6 +206,68 @@ run();
 ### Response
 
 **Promise<[operations.DeleteDatasetResponse](../../models/operations/deletedatasetresponse.md)>**
+### Errors
+
+| Error Object    | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4xx-5xx         | */*             |
+
+## addDatapoints
+
+Add datapoints to a dataset
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+import { AddDatapointsRequest, AddDatapointsRequestBody, Mapping } from "honeyhive/dist/models/operations";
+
+async function run() {
+  const sdk = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  });
+const datasetId: string = "<value>";
+const requestBody: AddDatapointsRequestBody = {
+  data: [
+    {
+      "key": "<value>",
+    },
+  ],
+  mapping: {
+    inputs: [
+      "<value>",
+    ],
+    groundTruth: [
+      "<value>",
+    ],
+    history: [
+      "<value>",
+    ],
+  },
+};
+
+  const res = await sdk.datasets.addDatapoints(datasetId, requestBody);
+
+  if (res.statusCode == 200) {
+    // handle response
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                  | Type                                                                                       | Required                                                                                   | Description                                                                                |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `datasetId`                                                                                | *string*                                                                                   | :heavy_check_mark:                                                                         | The unique identifier of the dataset to add datapoints to like `663876ec4611c47f4970f0c3`  |
+| `requestBody`                                                                              | [operations.AddDatapointsRequestBody](../../models/operations/adddatapointsrequestbody.md) | :heavy_check_mark:                                                                         | N/A                                                                                        |
+| `config`                                                                                   | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                               | :heavy_minus_sign:                                                                         | Available config options for making requests.                                              |
+
+
+### Response
+
+**Promise<[operations.AddDatapointsResponse](../../models/operations/adddatapointsresponse.md)>**
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
