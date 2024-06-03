@@ -8,20 +8,24 @@ const HH_API_KEY = process.env.HH_API_KEY || "";
 const HH_API_URL = process.env.HH_API_URL;
 const HH_PROJECT_ID = process.env.HH_PROJECT_ID || "";
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe("TypeScript Tracer", () => {
   let sessionName: string;
   beforeAll(function (done) {
     // Read the session name from the file
     const sessionFilePath = path.join(__dirname, "session_name.txt");
-    fs.readFile(sessionFilePath, "utf8", (err: NodeJS.ErrnoException | null, data: string) => {
-      if (err) {
-        return done(err);
-      }
-      sessionName = data;
-      done();
-    });
+    fs.readFile(
+      sessionFilePath,
+      "utf8",
+      (err: NodeJS.ErrnoException | null, data: string) => {
+        if (err) {
+          return done(err);
+        }
+        sessionName = data;
+        done();
+      },
+    );
   });
 
   it("should successfully trace a session", async () => {
@@ -45,12 +49,27 @@ describe("TypeScript Tracer", () => {
       ],
     });
     expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toEqual(1);
-    expect(res.object?.events?.length).toEqual(1);
+    expect(res.object?.totalEvents).toEqual(2);
+    expect(res.object?.events?.length).toEqual(2);
 
     const events = res.object?.events;
     assert(events, "Expected 'events' to be defined");
-    const sessionId = events[0]?.sessionId;
+
+    let sessionId = events[0]?.sessionId;
+    res = await sdk.events.getEvents({
+      project: HH_PROJECT_ID,
+      filters: [
+        {
+          field: "session_id",
+          value: sessionId,
+          operator: Operator.Is,
+        },
+      ],
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.object?.totalEvents).toBeGreaterThan(1);
+
+    sessionId = events[1]?.sessionId;
     res = await sdk.events.getEvents({
       project: HH_PROJECT_ID,
       filters: [
