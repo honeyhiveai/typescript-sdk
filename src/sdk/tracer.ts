@@ -2,12 +2,12 @@ import { HoneyHive } from "./sdk";
 import * as traceloop from "@traceloop/node-server-sdk";
 
 import OpenAI from "openai";
-import * as anthropic from '@anthropic-ai/sdk';
+import * as anthropic from "@anthropic-ai/sdk";
 import * as azureOpenAI from "@azure/openai";
 import * as cohere from "cohere-ai";
 import * as bedrock from "@aws-sdk/client-bedrock-runtime";
 import * as google_aiplatform from "@google-cloud/aiplatform";
-import * as pinecone from '@pinecone-database/pinecone';
+import * as pinecone from "@pinecone-database/pinecone";
 import * as ChainsModule from "langchain/chains";
 import * as AgentsModule from "langchain/agents";
 import * as ToolsModule from "langchain/tools";
@@ -29,7 +29,13 @@ export class HoneyHiveTracer {
     this.sdk = sdk;
   }
 
-  private async initSession(project: string, sessionName: string, source: string, apiKey: string, serverUrl: string): Promise<void> {
+  private async initSession(
+    project: string,
+    sessionName: string,
+    source: string,
+    apiKey: string,
+    serverUrl: string,
+  ): Promise<void> {
     try {
       const requestBody = {
         session: {
@@ -89,7 +95,7 @@ export class HoneyHiveTracer {
         {
           session_id: this.sessionId,
         },
-        fn
+        fn,
       );
     } else {
       console.error("Session ID is not initialized");

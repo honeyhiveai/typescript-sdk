@@ -8,20 +8,24 @@ const HH_API_KEY = process.env.HH_API_KEY || "";
 const HH_API_URL = process.env.HH_API_URL;
 const HH_PROJECT_ID = process.env.HH_PROJECT_ID || "";
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe("TypeScript Tracer", () => {
   let sessionName: string;
   beforeAll(function (done) {
     // Read the session name from the file
     const sessionFilePath = path.join(__dirname, "session_name.txt");
-    fs.readFile(sessionFilePath, "utf8", (err: NodeJS.ErrnoException | null, data: string) => {
-      if (err) {
-        return done(err);
-      }
-      sessionName = data;
-      done();
-    });
+    fs.readFile(
+      sessionFilePath,
+      "utf8",
+      (err: NodeJS.ErrnoException | null, data: string) => {
+        if (err) {
+          return done(err);
+        }
+        sessionName = data;
+        done();
+      },
+    );
   });
 
   it("should successfully trace a session", async () => {

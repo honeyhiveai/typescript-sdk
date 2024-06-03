@@ -9,7 +9,7 @@ const HH_API_URL = process.env.HH_API_URL;
 const HH_PROJECT = process.env.HH_PROJECT || "";
 const HH_PROJECT_ID = process.env.HH_PROJECT_ID || "";
 
-const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const sessionFilePath = path.join(__dirname, "session_name.txt");
 
 async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
@@ -35,13 +35,17 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
 
   const tracer1 = await initializeTracer(sessionName);
   await tracer1.trace(async () => {
-    const agentResponse = await ReActPipeline("What is the effect of climate change on the polar bear population?");
+    const agentResponse = await ReActPipeline(
+      "What is the effect of climate change on the polar bear population?",
+    );
     console.log(agentResponse);
   });
 
   const tracer2 = await initializeTracer(sessionName);
   await tracer2.trace(async () => {
-    const agentResponse = await ReActPipeline("How does deforestation impact local ecosystems?");
+    const agentResponse = await ReActPipeline(
+      "How does deforestation impact local ecosystems?",
+    );
     console.log(agentResponse);
   });
 
