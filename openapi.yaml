@@ -142,8 +142,8 @@ paths:
               properties:
                 project:
                   type: string
-                  description: UUID of the project associated with the event like
-                    `65e0fc2d6a2eb95f55a92cbc`
+                  description: Name of the project associated with the event like
+                    `New Project`
                 filters:
                   type: array
                   items:
@@ -182,6 +182,174 @@ paths:
                   totalEvents:
                     type: number
                     description: Total number of events in the specified filter
+  /events/model:
+    post:
+      tags:
+      - Events
+      operationId: createModelEvent
+      summary: Create a new model event
+      description: Please refer to our instrumentation guide for detailed information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  $ref: '#/components/schemas/CreateModelEvent'
+      responses:
+        '200':
+          description: Model event created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  success:
+                    type: boolean
+                example:
+                  event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                  success: true
+  /events/batch:
+    post:
+      tags:
+      - Events
+      operationId: createEventBatch
+      summary: Create a batch of events
+      description: Please refer to our instrumentation guide for detailed information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CreateEventRequest'
+                is_single_session:
+                  type: boolean
+                  description: Default is false. If true, all events will be associated
+                    with the same session
+              required:
+              - events
+      responses:
+        '200':
+          description: Events created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_ids:
+                    type: array
+                    items:
+                      type: string
+                  session_id:
+                    type: string
+                  success:
+                    type: boolean
+                example:
+                  event_ids:
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+                  session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+                  success: true
+        '500':
+          description: Events partially created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_ids:
+                    type: array
+                    items:
+                      type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Any failure messages for events that could not
+                        be created
+                  success:
+                    type: boolean
+                example:
+                  event_ids:
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+                  errors:
+                  - Could not create event due to missing inputs
+                  - Could not create event due to missing source
+                  success: true
+  /events/model/batch:
+    post:
+      tags:
+      - Events
+      operationId: createModelEventBatch
+      summary: Create a batch of model events
+      description: Please refer to our instrumentation guide for detailed information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model_events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CreateModelEvent'
+      responses:
+        '200':
+          description: Model events created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_ids:
+                    type: array
+                    items:
+                      type: string
+                  success:
+                    type: boolean
+                example:
+                  event_ids:
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+                  success: true
+        '500':
+          description: Model events partially created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_ids:
+                    type: array
+                    items:
+                      type: string
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      description: Any failure messages for events that could not
+                        be created
+                  success:
+                    type: boolean
+                example:
+                  event_ids:
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                  - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+                  errors:
+                  - Could not create event due to missing model
+                  - Could not create event due to missing provider
+                  success: true
   /metrics:
     get:
       tags:
@@ -330,7 +498,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Project ID to filter datapoints
+        description: Project name to filter datapoints
       - name: datapoint_ids
         in: query
         required: false
@@ -465,7 +633,7 @@ paths:
         required: true
         schema:
           type: string
-        description: Project ID associated with the datasets like `65e0fc2d6a2eb95f55a92cbc`
+        description: Project Name associated with the datasets like `New Project`
       - in: query
         name: type
         schema:
@@ -547,6 +715,78 @@ paths:
       responses:
         '200':
           description: Successful delete
+  /datasets/{dataset_id}/datapoints:
+    post:
+      tags:
+      - Datasets
+      summary: Add datapoints to a dataset
+      operationId: addDatapoints
+      parameters:
+      - in: path
+        name: dataset_id
+        required: true
+        schema:
+          type: string
+        description: The unique identifier of the dataset to add datapoints to like
+          `663876ec4611c47f4970f0c3`
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                project:
+                  type: string
+                  description: Name of the project associated with this dataset like
+                    `New Project`
+                data:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: true
+                  description: List of JSON objects to be added as datapoints
+                mapping:
+                  description: Mapping of keys in the data object to be used as inputs,
+                    ground truth, and history, everything else goes into metadata
+                  type: object
+                  properties:
+                    inputs:
+                      type: array
+                      items:
+                        type: string
+                      description: List of keys in the data object to be used as inputs
+                    ground_truth:
+                      type: array
+                      items:
+                        type: string
+                      description: List of keys in the data object to be used as ground
+                        truth
+                    history:
+                      type: array
+                      items:
+                        type: string
+                      description: List of keys in the data object to be used as chat
+                        history, can be empty list if not needed
+                  required:
+                  - inputs
+                  - ground_truth
+                  - history
+      responses:
+        '200':
+          description: Successful addition
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inserted:
+                    type: boolean
+                  datapoint_ids:
+                    type: array
+                    items:
+                      type: string
+                    description: List of unique datapoint ids added to the dataset
   /projects:
     get:
       tags:
@@ -614,6 +854,98 @@ paths:
       responses:
         '200':
           description: Project deleted
+  /runs:
+    post:
+      summary: Create a new evaluation run
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRunRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRunResponse'
+        '400':
+          description: Invalid input
+    get:
+      summary: Get a list of evaluation runs
+      parameters:
+      - in: query
+        name: project
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRunsResponse'
+        '400':
+          description: Error fetching evaluations
+  /runs/{runId}:
+    get:
+      summary: Get details of an evaluation run
+      parameters:
+      - in: path
+        name: runId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRunResponse'
+        '400':
+          description: Error fetching evaluation
+    put:
+      summary: Update an evaluation run
+      parameters:
+      - in: path
+        name: runId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRunRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateRunResponse'
+        '400':
+          description: Invalid input
+    delete:
+      summary: Delete an evaluation run
+      parameters:
+      - in: path
+        name: runId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRunResponse'
+        '400':
+          description: Error deleting evaluation
   /configurations:
     get:
       summary: Retrieve a list of configurations
@@ -621,7 +953,7 @@ paths:
       tags:
       - Configurations
       parameters:
-      - name: project_name
+      - name: project
         in: query
         required: true
         schema:
@@ -812,7 +1144,7 @@ components:
       properties:
         project_id:
           type: string
-          description: UUID of project associated with the event
+          description: Name of project associated with the event
         source:
           type: string
           description: Source of the event - production, staging, etc
@@ -892,7 +1224,7 @@ components:
           additionalProperties: true
           description: Any user properties associated with the event
       example:
-        project_id: 65e0fc2d6a2eb95f55a92cbc
+        project_id: New Project
         source: playground
         session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
         event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
@@ -1144,6 +1476,138 @@ components:
           Number of words: 18
         user_properties:
           user: google-oauth2|111840237613341303366
+    CreateModelEvent:
+      type: object
+      properties:
+        project:
+          type: string
+          description: Project associated with the event
+        model:
+          type: string
+          description: Model name
+        provider:
+          type: string
+          description: Model provider
+        messages:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Messages passed to the model
+        response:
+          type: object
+          additionalProperties: true
+          description: Final output JSON of the event
+        duration:
+          type: number
+          description: How long the event took in milliseconds
+        usage:
+          type: object
+          additionalProperties: true
+          description: Usage statistics of the model
+        cost:
+          type: number
+          description: Cost of the model completion
+        error:
+          type: string
+          description: Any error description if event failed
+        source:
+          type: string
+          description: Source of the event - production, staging, etc
+        event_name:
+          type: string
+          description: Name of the event
+        hyperparameters:
+          type: object
+          additionalProperties: true
+          description: Hyperparameters used for the model
+        template:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Template used for the model
+        template_inputs:
+          type: object
+          additionalProperties: true
+          description: Inputs for the template
+        tools:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Tools used for the model
+        tool_choice:
+          type: string
+          description: Tool choice for the model
+        response_format:
+          type: object
+          additionalProperties: true
+          description: Response format for the model
+      required:
+      - project
+      - model
+      - provider
+      - messages
+      - response
+      - duration
+      - usage
+      example:
+        project: New Project
+        model: gpt-4o
+        provider: openai
+        messages:
+        - role: system
+          content: Hello, world!
+        response:
+          role: assistant
+          content: Hello, world!
+        duration: 42
+        usage:
+          prompt_tokens: 10
+          completion_tokens: 10
+          total_tokens: 20
+        cost: 8.0e-05
+        error: null
+        source: playground
+        event_name: Model Completion
+        hyperparameters:
+          temperature: 0
+          top_p: 1
+          max_tokens: 1000
+          presence_penalty: 0
+          frequency_penalty: 0
+          stop: []
+          n: 1
+        template:
+        - role: system
+          content: Hello, {{ name }}!
+        template_inputs:
+          name: world
+        tools:
+          type: function
+          function:
+            name: get_current_weather
+            description: Get the current weather
+            parameters:
+              type: object
+              properties:
+                location:
+                  type: string
+                  description: The city and state, e.g. San Francisco, CA
+                format:
+                  type: string
+                  enum:
+                  - celsius
+                  - fahrenheit
+                  description: The temperature unit to use. Infer this from the users
+                    location.
+              required:
+              - location
+              - format
+        tool_choice: none
+        response_format:
+          type: text
     Metric:
       type: object
       properties:
@@ -1438,7 +1902,7 @@ components:
       properties:
         project:
           type: string
-          description: UUID for the project to which the datapoint belongs
+          description: Name for the project to which the datapoint belongs
         inputs:
           type: object
           additionalProperties: true
@@ -1469,7 +1933,7 @@ components:
       - project
       - inputs
       example:
-        project: 653454f3138a956964341c07
+        project: New Project
         inputs:
           query: what's the temperature in Iceland?
         history:
@@ -1559,7 +2023,8 @@ components:
       properties:
         project:
           type: string
-          description: UUID of the project associated with this dataset like `65e0fc2d6a2eb95f55a92cbc`
+          description: Name of the project associated with this dataset like `New
+            Project`
         name:
           type: string
           description: Name of the dataset
@@ -1601,7 +2066,7 @@ components:
       - project
       - name
       example:
-        project: 65e0fc2d6a2eb95f55a92cbc
+        project: New Project
         name: test-dataset
         description: A test dataset
         type: evaluation
@@ -1662,7 +2127,7 @@ components:
           format: date-time
           description: Timestamp of when the dataset was last updated
       example:
-        project: 65e0fc2d6a2eb95f55a92cbc
+        project: New Project
         name: test-dataset
         description: A test dataset
         type: evaluation
@@ -1748,6 +2213,170 @@ components:
       - name
       - description
       - type
+    CreateRunRequest:
+      type: object
+      required:
+      - project
+      - name
+      - event_ids
+      properties:
+        project:
+          type: string
+          description: The UUID of the project this run is associated with
+        name:
+          type: string
+          description: The name of the run to be displayed
+        event_ids:
+          type: array
+          description: The UUIDs of the sessions/events this run is associated with
+          items:
+            $ref: '#/components/schemas/UUIDType'
+        dataset_id:
+          type: string
+          description: The UUID of the dataset this run is associated with
+        datapoint_ids:
+          type: array
+          description: The UUIDs of the datapoints from the original dataset this
+            run is associated with
+          items:
+            type: string
+        configuration:
+          type: object
+          description: The configuration being used for this run
+          additionalProperties: true
+        metadata:
+          type: object
+          description: Additional metadata for the run
+          additionalProperties: true
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+          description: The status of the run
+    CreateRunResponse:
+      type: object
+      properties:
+        evaluation:
+          $ref: '#/components/schemas/EvaluationRun'
+          description: The evaluation run created
+        run_id:
+          $ref: '#/components/schemas/UUIDType'
+          description: The UUID of the run created
+    GetRunsResponse:
+      type: object
+      properties:
+        evaluations:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvaluationRun'
+    GetRunResponse:
+      type: object
+      properties:
+        evaluation:
+          $ref: '#/components/schemas/EvaluationRun'
+    UpdateRunRequest:
+      type: object
+      properties:
+        event_ids:
+          type: array
+          description: Additional sessions/events to associate with this run
+          items:
+            $ref: '#/components/schemas/UUIDType'
+        dataset_id:
+          type: string
+          description: The UUID of the dataset this run is associated with
+        datapoint_ids:
+          type: array
+          description: Additional datapoints to associate with this run
+          items:
+            type: string
+        configuration:
+          type: object
+          description: The configuration being used for this run
+          additionalProperties: true
+        metadata:
+          type: object
+          description: Additional metadata for the run
+          additionalProperties: true
+        name:
+          type: string
+          description: The name of the run to be displayed
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+    UpdateRunResponse:
+      type: object
+      properties:
+        evaluation:
+          type: object
+          description: Database update success message
+          additionalProperties: true
+        warning:
+          type: string
+          description: A warning message if the logged events don't have an associated
+            datapoint id on the event metadata
+          nullable: true
+    DeleteRunResponse:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UUIDType'
+        deleted:
+          type: boolean
+    EvaluationRun:
+      type: object
+      properties:
+        run_id:
+          $ref: '#/components/schemas/UUIDType'
+          description: The UUID of the run
+        project:
+          type: string
+          description: The UUID of the project this run is associated with
+        created_at:
+          type: string
+          format: date-time
+          description: The date and time the run was created
+        event_ids:
+          type: array
+          description: The UUIDs of the sessions/events this run is associated with
+          items:
+            $ref: '#/components/schemas/UUIDType'
+        dataset_id:
+          type: string
+          description: The UUID of the dataset this run is associated with
+          nullable: true
+        datapoint_ids:
+          type: array
+          description: The UUIDs of the datapoints from the original dataset this
+            run is associated with
+          items:
+            type: string
+        results:
+          type: object
+          description: The results of the evaluation (including pass/fails and metric
+            aggregations)
+        configuration:
+          type: object
+          description: The configuration being used for this run
+          additionalProperties: true
+        metadata:
+          type: object
+          description: Additional metadata for the run
+          additionalProperties: true
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+        name:
+          type: string
+          description: The name of the run to be displayed
+    UUIDType:
+      type: string
+      format: uuid
     Configuration:
       type: object
       properties:
@@ -1845,7 +2474,7 @@ components:
       - parameters
       example:
         _id: 6638187d505c6812e4044f24
-        project: 660d7ba7995cacccce4d299e
+        project: New Project
         type:
           type: string
           enum:
@@ -1901,7 +2530,7 @@ components:
       properties:
         project:
           type: string
-          description: ID of the project to which this configuration belongs
+          description: Name of the project to which this configuration belongs
         name:
           type: string
           description: Name of the configuration
@@ -1989,7 +2618,7 @@ components:
       - provider
       - parameters
       example:
-        project: 660d7ba7995cacccce4d299e
+        project: New Project
         name: function-v0
         provider: openai
         parameters:
@@ -2039,7 +2668,7 @@ components:
       properties:
         project:
           type: string
-          description: ID of the project to which this configuration belongs
+          description: Name of the project to which this configuration belongs
         name:
           type: string
           description: Name of the configuration

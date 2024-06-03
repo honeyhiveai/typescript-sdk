@@ -20,13 +20,13 @@ export class Configurations {
      * Retrieve a list of configurations
      */
     async getConfigurations(
-        projectName: string,
+        project: string,
         env?: operations.Env,
         name?: string,
         config?: AxiosRequestConfig
     ): Promise<operations.GetConfigurationsResponse> {
         const req = new operations.GetConfigurationsRequest({
-            projectName: projectName,
+            project: project,
             env: env,
             name: name,
         });

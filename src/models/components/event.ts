@@ -17,7 +17,7 @@ export enum EventType {
 
 export class Event extends SpeakeasyBase {
     /**
-     * UUID of project associated with the event
+     * Name of project associated with the event
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project_id" })

@@ -23,41 +23,23 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 
 ```typescript
 import { HoneyHive } from "honeyhive";
+import { Status } from "honeyhive/dist/models/components";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
 
-    const res = await sdk.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            config: {
-                key: "<value>",
-            },
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: "<value>",
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
+    const res = await sdk.postRuns({
+        project: "<value>",
+        name: "<value>",
+        eventIds: ["7ca92550-e86b-4cb5-8288-452bedab53f3"],
+        datapointIds: ["<value>"],
+        configuration: {
+            key: "<value>",
+        },
+        metadata: {
+            key: "<value>",
         },
     });
 
@@ -74,6 +56,14 @@ run();
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
+### [HoneyHive SDK](docs/sdks/honeyhive/README.md)
+
+* [postRuns](docs/sdks/honeyhive/README.md#postruns) - Create a new evaluation run
+* [getRuns](docs/sdks/honeyhive/README.md#getruns) - Get a list of evaluation runs
+* [getRunsRunId](docs/sdks/honeyhive/README.md#getrunsrunid) - Get details of an evaluation run
+* [putRunsRunId](docs/sdks/honeyhive/README.md#putrunsrunid) - Update an evaluation run
+* [deleteRunsRunId](docs/sdks/honeyhive/README.md#deleterunsrunid) - Delete an evaluation run
+
 ### [session](docs/sdks/session/README.md)
 
 * [startSession](docs/sdks/session/README.md#startsession) - Start a new session
@@ -84,6 +74,9 @@ run();
 * [createEvent](docs/sdks/events/README.md#createevent) - Create a new event
 * [updateEvent](docs/sdks/events/README.md#updateevent) - Update an event
 * [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
+* [createModelEvent](docs/sdks/events/README.md#createmodelevent) - Create a new model event
+* [createEventBatch](docs/sdks/events/README.md#createeventbatch) - Create a batch of events
+* [createModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch) - Create a batch of model events
 
 ### [metrics](docs/sdks/metrics/README.md)
 
@@ -113,6 +106,7 @@ run();
 * [createDataset](docs/sdks/datasets/README.md#createdataset) - Create a dataset
 * [updateDataset](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
 * [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
+* [addDatapoints](docs/sdks/datasets/README.md#adddatapoints) - Add datapoints to a dataset
 
 ### [projects](docs/sdks/projects/README.md)
 
@@ -134,14 +128,16 @@ run();
 
 Handling errors in this SDK should largely match your expectations.  All operations return a response object or throw an error.  If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
 
-| Error Object    | Status Code     | Content Type    |
-| --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
+| Error Object                        | Status Code                         | Content Type                        |
+| ----------------------------------- | ----------------------------------- | ----------------------------------- |
+| errors.CreateEventBatchResponseBody | 500                                 | application/json                    |
+| errors.SDKError                     | 4xx-5xx                             | */*                                 |
 
 Example
 
 ```typescript
 import { HoneyHive } from "honeyhive";
+import { CreateEventRequestEventType } from "honeyhive/dist/models/components";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -150,39 +146,62 @@ async function run() {
 
     let res;
     try {
-        res = await sdk.session.startSession({
-            session: {
-                project: "Simple RAG Project",
-                sessionName: "Playground Session",
-                source: "playground",
-                sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-                childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-                config: {
-                    key: "<value>",
+        res = await sdk.events.createEventBatch({
+            events: [
+                {
+                    project: "Simple RAG",
+                    source: "playground",
+                    eventName: "Model Completion",
+                    eventType: CreateEventRequestEventType.Model,
+                    eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+                    sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    childrenIds: ["<value>"],
+                    config: {
+                        model: "gpt-3.5-turbo",
+                        version: "v0.1",
+                        provider: "openai",
+                        hyperparameters: "<value>",
+                        template: "<value>",
+                        type: "chat",
+                    },
+                    inputs: {
+                        context: "Hello world",
+                        question: "What is in the context?",
+                        chat_history: "<value>",
+                    },
+                    outputs: {
+                        role: "assistant",
+                        content: "Hello world",
+                    },
+                    error: null,
+                    startTime: 1714978764301,
+                    endTime: 1714978765301,
+                    duration: 999.8056,
+                    metadata: {
+                        cost: 0.00008,
+                        completion_tokens: 23,
+                        prompt_tokens: 35,
+                        total_tokens: 58,
+                    },
+                    feedback: {},
+                    metrics: {
+                        "Answer Faithfulness": 5,
+                        "Answer Faithfulness_explanation":
+                            "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
+                        "Number of words": 18,
+                    },
+                    userProperties: {
+                        user: "google-oauth2|111840237613341303366",
+                    },
                 },
-                inputs: {
-                    context: "Hello world",
-                    question: "What is in the context?",
-                    chat_history: "<value>",
-                },
-                outputs: {
-                    role: "assistant",
-                    content: "Hello world",
-                },
-                error: null,
-                duration: 824.8056,
-                userProperties: {
-                    user: "google-oauth2|111840237613341303366",
-                },
-                metrics: {},
-                feedback: {},
-                metadata: {},
-                startTime: 1712025501605,
-                endTime: 1712025499832,
-            },
+            ],
         });
     } catch (err) {
-        if (err instanceof errors.SDKError) {
+        if (err instanceof errors.CreateEventBatchResponseBody) {
+            console.error(err); // handle exception
+            throw err;
+        } else if (err instanceof errors.SDKError) {
             console.error(err); // handle exception
             throw err;
         }
@@ -213,6 +232,7 @@ You can override the default server globally by passing a server index to the `s
 
 ```typescript
 import { HoneyHive } from "honeyhive";
+import { Status } from "honeyhive/dist/models/components";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -220,35 +240,16 @@ async function run() {
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
 
-    const res = await sdk.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            config: {
-                key: "<value>",
-            },
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: "<value>",
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
+    const res = await sdk.postRuns({
+        project: "<value>",
+        name: "<value>",
+        eventIds: ["7ca92550-e86b-4cb5-8288-452bedab53f3"],
+        datapointIds: ["<value>"],
+        configuration: {
+            key: "<value>",
+        },
+        metadata: {
+            key: "<value>",
         },
     });
 
@@ -267,6 +268,7 @@ run();
 The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "honeyhive";
+import { Status } from "honeyhive/dist/models/components";
 
 async function run() {
     const sdk = new HoneyHive({
@@ -274,35 +276,16 @@ async function run() {
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
 
-    const res = await sdk.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            config: {
-                key: "<value>",
-            },
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: "<value>",
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
+    const res = await sdk.postRuns({
+        project: "<value>",
+        name: "<value>",
+        eventIds: ["7ca92550-e86b-4cb5-8288-452bedab53f3"],
+        datapointIds: ["<value>"],
+        configuration: {
+            key: "<value>",
+        },
+        metadata: {
+            key: "<value>",
         },
     });
 
@@ -349,41 +332,23 @@ This SDK supports the following security scheme globally:
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "honeyhive";
+import { Status } from "honeyhive/dist/models/components";
 
 async function run() {
     const sdk = new HoneyHive({
         bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
     });
 
-    const res = await sdk.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            config: {
-                key: "<value>",
-            },
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: "<value>",
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
+    const res = await sdk.postRuns({
+        project: "<value>",
+        name: "<value>",
+        eventIds: ["7ca92550-e86b-4cb5-8288-452bedab53f3"],
+        datapointIds: ["<value>"],
+        configuration: {
+            key: "<value>",
+        },
+        metadata: {
+            key: "<value>",
         },
     });
 

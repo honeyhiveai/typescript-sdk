@@ -13,7 +13,7 @@ export enum PostConfigurationRequestEnv {
 
 export class PostConfigurationRequest extends SpeakeasyBase {
     /**
-     * ID of the project to which this configuration belongs
+     * Name of the project to which this configuration belongs
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
