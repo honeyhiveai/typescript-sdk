@@ -1,4 +1,4 @@
-# PutRunsRunIdResponse
+# UpdateRunResponse
 
 
 ## Fields

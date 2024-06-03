@@ -1,4 +1,4 @@
-# GetRunsRunIdResponse
+# GetRunResponse
 
 
 ## Fields

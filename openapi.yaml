@@ -727,8 +727,7 @@ paths:
         required: true
         schema:
           type: string
-        description: The unique identifier of the dataset to add datapoints to like
-          `663876ec4611c47f4970f0c3`
+        description: The unique identifier of the dataset to add datapoints to like  `663876ec4611c47f4970f0c3`
       requestBody:
         required: true
         content:
@@ -857,6 +856,9 @@ paths:
   /runs:
     post:
       summary: Create a new evaluation run
+      operationId: createRun
+      tags:
+      - runs
       requestBody:
         required: true
         content:
@@ -874,6 +876,9 @@ paths:
           description: Invalid input
     get:
       summary: Get a list of evaluation runs
+      operationId: getRuns
+      tags:
+      - runs
       parameters:
       - in: query
         name: project
@@ -888,12 +893,15 @@ paths:
                 $ref: '#/components/schemas/GetRunsResponse'
         '400':
           description: Error fetching evaluations
-  /runs/{runId}:
+  /runs/{run_id}:
     get:
       summary: Get details of an evaluation run
+      operationId: getRun
+      tags:
+      - runs
       parameters:
       - in: path
-        name: runId
+        name: run_id
         required: true
         schema:
           type: string
@@ -908,9 +916,12 @@ paths:
           description: Error fetching evaluation
     put:
       summary: Update an evaluation run
+      operationId: updateRun
+      tags:
+      - runs
       parameters:
       - in: path
-        name: runId
+        name: run_id
         required: true
         schema:
           type: string
@@ -931,9 +942,12 @@ paths:
           description: Invalid input
     delete:
       summary: Delete an evaluation run
+      operationId: deleteRun
+      tags:
+      - runs
       parameters:
       - in: path
-        name: runId
+        name: run_id
         required: true
         schema:
           type: string
