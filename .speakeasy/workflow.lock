@@ -1,6 +1,19 @@
-speakeasyVersion: 1.285.6
-sources: {}
-targets: {}
+speakeasyVersion: 1.293.0
+sources:
+    my-source:
+        sourceNamespace: my-source
+        sourceRevisionDigest: sha256:b5c0abb353ed1c763794857f2e5675763b71bfaf72c82dc5faa39f605cdcbce6
+        sourceBlobDigest: sha256:f2036664c8465ef96bf42a268263a7e1c73df82103b70fb10f790810e2b141f6
+        tags:
+            - latest
+            - main
+targets:
+    typescript:
+        source: my-source
+        sourceNamespace: my-source
+        sourceRevisionDigest: sha256:b5c0abb353ed1c763794857f2e5675763b71bfaf72c82dc5faa39f605cdcbce6
+        sourceBlobDigest: sha256:f2036664c8465ef96bf42a268263a7e1c73df82103b70fb10f790810e2b141f6
+        outLocation: /github/workspace/repo
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -8,6 +21,8 @@ workflow:
         my-source:
             inputs:
                 - location: openapi.yaml
+            registry:
+                location: registry.speakeasyapi.dev/honey-hive/honeyhive-jxo/my-source
     targets:
         typescript:
             target: typescript

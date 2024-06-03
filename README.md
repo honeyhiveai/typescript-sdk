@@ -49,7 +49,6 @@ async function run() {
 }
 
 run();
-
 ```
 <!-- End SDK Example Usage [usage] -->
 
@@ -206,14 +205,14 @@ async function run() {
             throw err;
         }
     }
+  }
 
-    if (res.statusCode == 200) {
-        // handle response
-    }
+  if (res.statusCode == 200) {
+    // handle response
+  }
 }
 
 run();
-
 ```
 <!-- End Error Handling [errors] -->
 
@@ -259,7 +258,6 @@ async function run() {
 }
 
 run();
-
 ```
 
 
@@ -295,7 +293,6 @@ async function run() {
 }
 
 run();
-
 ```
 <!-- End Server Selection [server] -->
 
@@ -358,7 +355,6 @@ async function run() {
 }
 
 run();
-
 ```
 <!-- End Authentication [security] -->
 
