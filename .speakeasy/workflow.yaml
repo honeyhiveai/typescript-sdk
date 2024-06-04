@@ -10,3 +10,5 @@ targets:
     typescript:
         target: typescript
         source: my-source
+        codeSamples:
+            output: codeSamples.yaml
