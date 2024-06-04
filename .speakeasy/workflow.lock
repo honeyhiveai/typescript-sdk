@@ -2,16 +2,16 @@ speakeasyVersion: 1.299.6
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:50a8ed40ae1193c7212ed324dfb08ad455a5ee47dd2a2ad97fa8a1fdf0a622f3
+        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
         sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
         tags:
             - latest
-            - update-spec
+            - mintlify-integration
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:50a8ed40ae1193c7212ed324dfb08ad455a5ee47dd2a2ad97fa8a1fdf0a622f3
+        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
         sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
         outLocation: /github/workspace/repo
 workflow:
@@ -27,3 +27,5 @@ workflow:
         typescript:
             target: typescript
             source: my-source
+            codeSamples:
+                output: codeSamples.yaml
