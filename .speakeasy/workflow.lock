@@ -1,17 +1,17 @@
-speakeasyVersion: 1.299.6
+speakeasyVersion: 1.300.1
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
+        sourceRevisionDigest: sha256:3777affcc1a871209526718aca0ef63a590082d8d53747ca9649f5703ee80825
         sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
         tags:
             - latest
-            - mintlify-integration
+            - main
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
+        sourceRevisionDigest: sha256:3777affcc1a871209526718aca0ef63a590082d8d53747ca9649f5703ee80825
         sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
         outLocation: /github/workspace/repo
 workflow:
