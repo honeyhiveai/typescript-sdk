@@ -77,50 +77,11 @@ async function run() {
     parameters: {
       "call_type": "chat",
       "model": "gpt-4-turbo-preview",
-      "hyperparameters": {
-        "temperature": 0,
-        "max_tokens": 1000,
-        "top_p": 1,
-        "top_k": -1,
-        "frequency_penalty": 0,
-        "presence_penalty": 0,
-        "stop_sequences": [
-          "<value>",
-        ],
-      },
-      "selectedFunctions": [
-        {
-          "id": "64e3ba90e81f9b3a3808c27f",
-          "name": "get_google_information",
-          "description": "Get information from Google when you do not have that information in your context",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "query": {
-                "type": "string",
-                "description": "The query asked by the user",
-              },
-            },
-            "required": [
-              "query",
-            ],
-          },
-        },
-      ],
+      "hyperparameters": "<value>",
+      "selectedFunctions": "<value>",
       "functionCallParams": "auto",
-      "forceFunction": {
-
-      },
-      "template": [
-        {
-          "role": "system",
-          "content": "You are a web search assistant.",
-        },
-        {
-          "role": "user",
-          "content": "{{ query }}",
-        },
-      ],
+      "forceFunction": "<value>",
+      "template": "<value>",
     },
     env: [
       PostConfigurationRequestEnv.Staging,
@@ -181,53 +142,12 @@ const putConfigurationRequest: PutConfigurationRequest = {
   parameters: {
     "call_type": "chat",
     "model": "gpt-4-turbo-preview",
-    "hyperparameters": {
-      "temperature": 0,
-      "max_tokens": 1000,
-      "top_p": 1,
-      "top_k": -1,
-      "frequency_penalty": 0,
-      "presence_penalty": 0,
-      "stop_sequences": [
-        "<value>",
-      ],
-    },
-    "responseFormat": {
-      "type": "text",
-    },
-    "selectedFunctions": [
-      {
-        "id": "64e3ba90e81f9b3a3808c27f",
-        "name": "get_google_information",
-        "description": "Get information from Google when you do not have that information in your context",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "The query asked by the user",
-            },
-          },
-          "required": [
-            "query",
-          ],
-        },
-      },
-    ],
+    "hyperparameters": "<value>",
+    "responseFormat": "<value>",
+    "selectedFunctions": "<value>",
     "functionCallParams": "auto",
-    "forceFunction": {
-
-    },
-    "template": [
-      {
-        "role": "system",
-        "content": "You are a web search assistant.",
-      },
-      {
-        "role": "user",
-        "content": "{{ query }}",
-      },
-    ],
+    "forceFunction": "<value>",
+    "template": "<value>",
   },
   env: [
     PutConfigurationRequestEnv.Staging,

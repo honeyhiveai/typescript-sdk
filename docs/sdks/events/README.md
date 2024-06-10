@@ -41,46 +41,14 @@ async function run() {
         "model": "gpt-3.5-turbo",
         "version": "v0.1",
         "provider": "openai",
-        "hyperparameters": {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
-          "frequency_penalty": 0,
-          "stop": [
-            "<value>",
-          ],
-          "n": 1,
-        },
-        "template": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
-
-            Context: {{ context }}",
-          },
-          {
-            "role": "user",
-            "content": "{{question}}",
-          },
-        ],
+        "hyperparameters": "<value>",
+        "template": "<value>",
         "type": "chat",
       },
       inputs: {
         "context": "Hello world",
         "question": "What is in the context?",
-        "chat_history": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
-
-            Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
+        "chat_history": "<value>",
       },
       outputs: {
         "role": "assistant",
@@ -288,9 +256,7 @@ async function run() {
         "max_tokens": 1000,
         "presence_penalty": 0,
         "frequency_penalty": 0,
-        "stop": [
-          "<value>",
-        ],
+        "stop": "<value>",
         "n": 1,
       },
       template: [
@@ -371,46 +337,14 @@ async function run() {
           "model": "gpt-3.5-turbo",
           "version": "v0.1",
           "provider": "openai",
-          "hyperparameters": {
-            "temperature": 0,
-            "top_p": 1,
-            "max_tokens": 1000,
-            "presence_penalty": 0,
-            "frequency_penalty": 0,
-            "stop": [
-              "<value>",
-            ],
-            "n": 1,
-          },
-          "template": [
-            {
-              "role": "system",
-              "content": "Answer the user's question only using provided context.
-
-              Context: {{ context }}",
-            },
-            {
-              "role": "user",
-              "content": "{{question}}",
-            },
-          ],
+          "hyperparameters": "<value>",
+          "template": "<value>",
           "type": "chat",
         },
         inputs: {
           "context": "Hello world",
           "question": "What is in the context?",
-          "chat_history": [
-            {
-              "role": "system",
-              "content": "Answer the user's question only using provided context.
-
-              Context: Hello world",
-            },
-            {
-              "role": "user",
-              "content": "What is in the context?",
-            },
-          ],
+          "chat_history": "<value>",
         },
         outputs: {
           "role": "assistant",
@@ -513,9 +447,7 @@ async function run() {
           "max_tokens": 1000,
           "presence_penalty": 0,
           "frequency_penalty": 0,
-          "stop": [
-            "<value>",
-          ],
+          "stop": "<value>",
           "n": 1,
         },
         template: [

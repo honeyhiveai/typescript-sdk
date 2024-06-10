@@ -858,7 +858,7 @@ paths:
       summary: Create a new evaluation run
       operationId: createRun
       tags:
-      - runs
+      - Runs
       requestBody:
         required: true
         content:
@@ -878,7 +878,7 @@ paths:
       summary: Get a list of evaluation runs
       operationId: getRuns
       tags:
-      - runs
+      - Runs
       parameters:
       - in: query
         name: project
@@ -898,7 +898,7 @@ paths:
       summary: Get details of an evaluation run
       operationId: getRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -918,7 +918,7 @@ paths:
       summary: Update an evaluation run
       operationId: updateRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -944,7 +944,7 @@ paths:
       summary: Delete an evaluation run
       operationId: deleteRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -1846,10 +1846,12 @@ components:
         inputs:
           type: object
           description: Arbitrary JSON object containing the inputs for the datapoint
+          additionalProperties: true
         history:
           type: array
           items:
             type: object
+            additionalProperties: true
           description: Conversation history associated with the datapoint
         ground_truth:
           type: object
@@ -1987,6 +1989,7 @@ components:
           description: Conversation history associated with the datapoint
           items:
             type: object
+            additionalProperties: true
         ground_truth:
           type: object
           description: Expected output JSON object for the datapoint
