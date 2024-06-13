@@ -74,6 +74,10 @@ async function isAnswerSatisfactory(
 
 // Main pipeline function
 export async function ReActPipeline(question: string, tracer?: HoneyHiveTracer): Promise<string | null> {
+  if (tracer) {
+    tracer.setMetadata({ "application-env": "testing" })
+  }
+  
   let attempts = 0;
   const maxAttempts = 5;
   let satisfactory = false;
@@ -111,12 +115,14 @@ export async function ReActPipeline(question: string, tracer?: HoneyHiveTracer):
   if (satisfactory && summary) {
     if (tracer) {
       tracer.setEvaluator({ satisfactorySummaryFound: true });
+      tracer.setFeedback({ accepted: true });
     }
-    
+
     console.log("Satisfactory Summary Found:", summary);
   } else {
     if (tracer) {
       tracer.setEvaluator({ satisfactorySummaryFound: false });
+      tracer.setFeedback({ accepted: false });
     }
 
     console.log(
