@@ -37,6 +37,7 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
   await tracer1.trace(async () => {
     const agentResponse = await ReActPipeline(
       "What is the effect of climate change on the polar bear population?",
+      tracer1,
     );
     console.log(agentResponse);
   });
@@ -45,6 +46,7 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
   await tracer2.trace(async () => {
     const agentResponse = await ReActPipeline(
       "How does deforestation impact local ecosystems?",
+      tracer2,
     );
     console.log(agentResponse);
   });

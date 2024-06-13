@@ -28,7 +28,7 @@ describe("TypeScript Tracer", () => {
     );
   });
 
-  it("should successfully trace a session", async () => {
+  it("should successfully trace a session and update evaluators on it", async () => {
     const sdk = new HoneyHive({
       bearerAuth: HH_API_KEY,
       serverURL: HH_API_URL,
@@ -55,6 +55,12 @@ describe("TypeScript Tracer", () => {
     const events = res.object?.events;
     assert(events, "Expected 'events' to be defined");
 
+    // make sure the metrics on both events has a field called
+    // satisfactorySummaryFound
+    for (const event of events) {
+      expect(event.metrics).toHaveProperty("satisfactorySummaryFound");
+    }
+    
     let sessionId = events[0]?.sessionId;
     res = await sdk.events.getEvents({
       project: HH_PROJECT_ID,

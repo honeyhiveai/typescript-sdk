@@ -89,6 +89,51 @@ export class HoneyHiveTracer {
     return tracer;
   }
 
+  public async setFeedback(feedback: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          feedback: feedback
+        });
+      } catch (error) {
+        console.error("Failed to set feedback:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setEvaluator(metrics: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metrics: metrics
+        });
+      } catch (error) {
+        console.error("Failed to set metrics:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+  
+  public async setMetadata(metadata: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metadata: metadata
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
   public trace(fn: () => void): void {
     if (this.sessionId) {
       traceloop.withAssociationProperties(

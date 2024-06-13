@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import axios from "axios";
+import { HoneyHiveTracer } from "honeyhive";
 
 // Configure your API keys here
 const OPENAI_KEY = process.env.OPENAI_KEY;
@@ -72,7 +73,7 @@ async function isAnswerSatisfactory(
 }
 
 // Main pipeline function
-export async function ReActPipeline(question: string): Promise<string | null> {
+export async function ReActPipeline(question: string, tracer?: HoneyHiveTracer): Promise<string | null> {
   let attempts = 0;
   const maxAttempts = 5;
   let satisfactory = false;
@@ -108,8 +109,16 @@ export async function ReActPipeline(question: string): Promise<string | null> {
 
   // Output the final summary if satisfactory, or indicate failure
   if (satisfactory && summary) {
+    if (tracer) {
+      tracer.setEvaluator({ satisfactorySummaryFound: true });
+    }
+    
     console.log("Satisfactory Summary Found:", summary);
   } else {
+    if (tracer) {
+      tracer.setEvaluator({ satisfactorySummaryFound: false });
+    }
+
     console.log(
       "Failed to find a satisfactory summary after several attempts.",
     );
