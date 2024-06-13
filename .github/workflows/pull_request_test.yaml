@@ -1,26 +1,28 @@
+name: Run PR Tests
+
 on:
   pull_request:
     branches:
       - main
   
 jobs:
-  name: PR Test
-  runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Check out repository
-      uses: actions/checkout@v2
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build -f tests/Dockerfile . -t my-test
+      - name: Build Docker image
+        run: docker build -f tests/Dockerfile . -t my-test
 
-    - name: Run Docker image
-      run: |
-        docker run -e HH_API_KEY="${{ secrets.HH_API_KEY }}" \
-                    -e HH_PROJECT="${{ secrets.HH_PROJECT }}" \
-                    -e HH_API_URL="${{ secrets.HH_API_URL }}" \
-                    -e HH_PROJECT_ID="${{ secrets.HH_PROJECT_ID }}" \
-                    -e HH_DATASET="${{ secrets.HH_DATASET }}" \
-                    -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
-                    -e SERP_API_KEY="${{ secrets.SERP_API_KEY }}" \
-                    -t my-test
+      - name: Run Docker image
+        run: |
+          docker run -e HH_API_KEY="${{ secrets.HH_API_KEY }}" \
+                      -e HH_PROJECT="${{ secrets.HH_PROJECT }}" \
+                      -e HH_API_URL="${{ secrets.HH_API_URL }}" \
+                      -e HH_PROJECT_ID="${{ secrets.HH_PROJECT_ID }}" \
+                      -e HH_DATASET="${{ secrets.HH_DATASET }}" \
+                      -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+                      -e SERP_API_KEY="${{ secrets.SERP_API_KEY }}" \
+                      -t my-test
