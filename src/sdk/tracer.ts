@@ -21,9 +21,15 @@ interface InitParams {
   serverUrl?: string;
 }
 
+interface InitSessionIdParams {
+  apiKey: string;
+  sessionId: string;
+  serverUrl?: string;
+}
+
 export class HoneyHiveTracer {
   private sdk: HoneyHive;
-  private sessionId: string | undefined;
+  public sessionId: string | undefined;
 
   private constructor(sdk: HoneyHive) {
     this.sdk = sdk;
@@ -46,6 +52,7 @@ export class HoneyHiveTracer {
       };
       const res = await this.sdk.session.startSession(requestBody);
       this.sessionId = res.object?.sessionId;
+
       if (this.sessionId) {
         traceloop.initialize({
           baseUrl: `${serverUrl}/opentelemetry`,
@@ -73,6 +80,34 @@ export class HoneyHiveTracer {
     }
   }
 
+  private async initSessionFromId(
+    sessionId: string,
+    apiKey: string,
+    serverUrl: string,
+  ): Promise<void> {
+    this.sessionId = sessionId;
+    traceloop.initialize({
+      baseUrl: `${serverUrl}/opentelemetry`,
+      apiKey: apiKey,
+      disableBatch: true,
+      instrumentModules: {
+        openAI: OpenAI,
+        anthropic: anthropic,
+        azureOpenAI: azureOpenAI,
+        cohere: cohere,
+        bedrock: bedrock,
+        google_aiplatform: google_aiplatform,
+        pinecone: pinecone,
+        langchain: {
+          chainsModule: ChainsModule,
+          agentsModule: AgentsModule,
+          toolsModule: ToolsModule,
+        },
+        chromadb: chromadb,
+      },
+    });
+  }
+
   public static async init({
     apiKey,
     project,
@@ -86,6 +121,20 @@ export class HoneyHiveTracer {
     });
     const tracer = new HoneyHiveTracer(sdk);
     await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    return tracer;
+  }
+
+  public static async initFromSessionId({
+    apiKey,
+    sessionId,
+    serverUrl = "https://api.honeyhive.ai",
+  }: InitSessionIdParams): Promise<HoneyHiveTracer> {
+    const sdk = new HoneyHive({
+      bearerAuth: apiKey,
+      serverURL: serverUrl,
+    });
+    const tracer = new HoneyHiveTracer(sdk);
+    await tracer.initSessionFromId(sessionId, apiKey, serverUrl);
     return tracer;
   }
 
