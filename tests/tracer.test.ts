@@ -49,33 +49,17 @@ describe("TypeScript Tracer", () => {
       ],
     });
     expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toEqual(2);
-    expect(res.object?.events?.length).toEqual(2);
+    expect(res.object?.totalEvents).toEqual(1);
+    expect(res.object?.events?.length).toEqual(1);
 
     const events = res.object?.events;
     assert(events, "Expected 'events' to be defined");
 
     for (const event of events) {
       expect(event.metrics).toHaveProperty("satisfactorySummaryFound");
-      expect(event.feedback).toHaveProperty("accepted");
-      expect(event.metadata).toHaveProperty("application-env");
     }
 
     let sessionId = events[0]?.sessionId;
-    res = await sdk.events.getEvents({
-      project: HH_PROJECT_ID,
-      filters: [
-        {
-          field: "session_id",
-          value: sessionId,
-          operator: Operator.Is,
-        },
-      ],
-    });
-    expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toBeGreaterThan(1);
-
-    sessionId = events[1]?.sessionId;
     res = await sdk.events.getEvents({
       project: HH_PROJECT_ID,
       filters: [

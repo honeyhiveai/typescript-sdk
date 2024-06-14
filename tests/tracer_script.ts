@@ -24,6 +24,20 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
   return tracer;
 }
 
+async function initializeTracerFromSessionId(sessionId: string | undefined): Promise<HoneyHiveTracer> {
+  if (!sessionId) {
+    throw new Error("Session ID is not defined");
+  }
+  
+  const tracer = await HoneyHiveTracer.initFromSessionId({
+    apiKey: HH_API_KEY,
+    sessionId: sessionId,
+    serverUrl: HH_API_URL,
+  });
+
+  return tracer;
+}
+
 (async () => {
   console.log("Script started");
   const sessionName = `HoneyHive TS Tracer Test ${uuidv4()}`;
@@ -42,7 +56,9 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
     console.log(agentResponse);
   });
 
-  const tracer2 = await initializeTracer(sessionName);
+  const oldSessionId = tracer1.sessionId;
+
+  const tracer2 = await initializeTracerFromSessionId(oldSessionId);
   await tracer2.trace(async () => {
     const agentResponse = await ReActPipeline(
       "How does deforestation impact local ecosystems?",
