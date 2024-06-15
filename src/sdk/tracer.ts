@@ -153,7 +153,7 @@ export class HoneyHiveTracer {
     }
   }
 
-  public async setEvaluator(metrics: Record<string, any>): Promise<void> {
+  public async setMetric(metrics: Record<string, any>): Promise<void> {
     if (this.sessionId) {
       try {
         await this.sdk.events.updateEvent({
@@ -161,7 +161,7 @@ export class HoneyHiveTracer {
           metrics: metrics
         });
       } catch (error) {
-        console.error("Failed to set metrics:", error);
+        console.error("Failed to set metric:", error);
       }
     } else {
       console.error("Session ID is not initialized");
