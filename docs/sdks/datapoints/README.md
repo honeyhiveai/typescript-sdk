@@ -179,7 +179,7 @@ Update a specific datapoint
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { UpdateDatapointRequest, UpdateDatapointRequestHistory } from "honeyhive/dist/models/components";
+import { UpdateDatapointRequest } from "honeyhive/dist/models/components";
 import { UpdateDatapointRequest } from "honeyhive/dist/models/operations";
 
 async function run() {
@@ -192,8 +192,14 @@ const updateDatapointRequest: UpdateDatapointRequest = {
     "query": "what's the temperature in Reykjavik?",
   },
   history: [
-    {},
-    {},
+    {
+      "role": "system",
+      "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\"",
+    },
+    {
+      "role": "user",
+      "content": "what's the temperature in Reykjavik?\n\n\n--Google search API results below:---\n\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]",
+    },
   ],
   groundTruth: {
     "role": "assistant",

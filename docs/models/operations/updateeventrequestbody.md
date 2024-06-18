@@ -10,3 +10,6 @@
 | `feedback`            | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
 | `metrics`             | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
 | `outputs`             | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `config`              | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `userProperties`      | Record<string, *any*> | :heavy_minus_sign:    | N/A                   |
+| `duration`            | *number*              | :heavy_minus_sign:    | N/A                   |

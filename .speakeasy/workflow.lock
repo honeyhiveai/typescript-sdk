@@ -1,19 +1,18 @@
-speakeasyVersion: 1.299.6
+speakeasyVersion: 1.308.1
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
-        sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
+        sourceRevisionDigest: sha256:ffcc5fc885f2515ae53de03394c252673bffabaebb94cf0ff2430a6b51359e9e
+        sourceBlobDigest: sha256:076b13439aeab99d2d98ad228a9adee4bb43c26c275a93d61548dcb3821d5581
         tags:
             - latest
-            - mintlify-integration
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:cb513d378729fccfc7024932e11369f99651a80d23ad6ddb536f393dcc16edde
-        sourceBlobDigest: sha256:9220b55ef5bddf46e5e94a14c3223886197318487bf4443fd49ba1f6fe4a703c
-        outLocation: /github/workspace/repo
+        sourceRevisionDigest: sha256:ffcc5fc885f2515ae53de03394c252673bffabaebb94cf0ff2430a6b51359e9e
+        sourceBlobDigest: sha256:076b13439aeab99d2d98ad228a9adee4bb43c26c275a93d61548dcb3821d5581
+        outLocation: /Users/dhruvsingh/honeyhive/typescript-sdk
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

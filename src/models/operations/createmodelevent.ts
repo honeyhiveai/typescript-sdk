@@ -9,9 +9,9 @@ import { Expose, Type } from "class-transformer";
 
 export class CreateModelEventRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
-    @Expose({ name: "event" })
+    @Expose({ name: "model_event" })
     @Type(() => components.CreateModelEvent)
-    event?: components.CreateModelEvent;
+    modelEvent?: components.CreateModelEvent;
 }
 
 /**

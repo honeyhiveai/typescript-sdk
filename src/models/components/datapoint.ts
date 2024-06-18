@@ -3,14 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Transform, Type } from "class-transformer";
-
-/**
- * Arbitrary JSON object containing the inputs for the datapoint
- */
-export class Inputs extends SpeakeasyBase {}
-
-export class History extends SpeakeasyBase {}
+import { Expose, Transform } from "class-transformer";
 
 export class Datapoint extends SpeakeasyBase {
     /**
@@ -46,16 +39,14 @@ export class Datapoint extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => Inputs)
-    inputs?: Inputs;
+    inputs?: Record<string, any>;
 
     /**
      * Conversation history associated with the datapoint
      */
-    @SpeakeasyMetadata({ elemType: History })
+    @SpeakeasyMetadata()
     @Expose({ name: "history" })
-    @Type(() => History)
-    history?: History[];
+    history?: Record<string, any>[];
 
     @SpeakeasyMetadata()
     @Expose({ name: "ground_truth" })

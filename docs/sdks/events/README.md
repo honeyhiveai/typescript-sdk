@@ -163,6 +163,12 @@ async function run() {
     outputs: {
       "key": "<value>",
     },
+    config: {
+      "key": "<value>",
+    },
+    userProperties: {
+      "key": "<value>",
+    },
   });
 
   if (res.statusCode == 200) {
@@ -258,7 +264,7 @@ async function run() {
   });
 
   const res = await sdk.events.createModelEvent({
-    event: {
+    modelEvent: {
       project: "New Project",
       model: "gpt-4o",
       provider: "openai",

@@ -38,14 +38,14 @@ export class AddDatapointsRequestBody extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
-    project?: string;
+    project: string;
 
     /**
      * List of JSON objects to be added as datapoints
      */
     @SpeakeasyMetadata()
     @Expose({ name: "data" })
-    data?: Record<string, any>[];
+    data: Record<string, any>[];
 
     /**
      * Mapping of keys in the data object to be used as inputs, ground truth, and history, everything else goes into metadata
@@ -53,7 +53,7 @@ export class AddDatapointsRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "mapping" })
     @Type(() => Mapping)
-    mapping?: Mapping;
+    mapping: Mapping;
 }
 
 export class AddDatapointsRequest extends SpeakeasyBase {

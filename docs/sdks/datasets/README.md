@@ -228,6 +228,7 @@ async function run() {
   });
 const datasetId: string = "<value>";
 const requestBody: AddDatapointsRequestBody = {
+  project: "<value>",
   data: [
     {
       "key": "<value>",
