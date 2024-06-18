@@ -26,6 +26,18 @@ export class UpdateEventRequestBody extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "outputs" })
     outputs?: Record<string, any>;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "config" })
+    config?: Record<string, any>;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "user_properties" })
+    userProperties?: Record<string, any>;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "duration" })
+    duration?: number;
 }
 
 export class UpdateEventResponse extends SpeakeasyBase {

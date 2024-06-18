@@ -3,9 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
-
-export class UpdateDatapointRequestHistory extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
@@ -18,10 +16,9 @@ export class UpdateDatapointRequest extends SpeakeasyBase {
     /**
      * Conversation history associated with the datapoint
      */
-    @SpeakeasyMetadata({ elemType: UpdateDatapointRequestHistory })
+    @SpeakeasyMetadata()
     @Expose({ name: "history" })
-    @Type(() => UpdateDatapointRequestHistory)
-    history?: UpdateDatapointRequestHistory[];
+    history?: Record<string, any>[];
 
     /**
      * Expected output JSON object for the datapoint
