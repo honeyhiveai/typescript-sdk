@@ -106,6 +106,14 @@ paths:
                 outputs:
                   type: object
                   additionalProperties: true
+                config:
+                  type: object
+                  additionalProperties: true
+                user_properties:
+                  type: object
+                  additionalProperties: true
+                duration:
+                  type: number
               required:
               - event_id
             example:
@@ -122,6 +130,13 @@ paths:
               outputs:
                 role: assistant
                 content: Hello world
+              config:
+                template:
+                - role: system
+                  content: Hello, {{ name }}!
+              user_properties:
+                user_id: 691b1f94-d38c-4e92-b051-5e03fee9ff86
+              duration: 42
       responses:
         '200':
           description: Event updated
@@ -196,7 +211,7 @@ paths:
             schema:
               type: object
               properties:
-                event:
+                model_event:
                   $ref: '#/components/schemas/CreateModelEvent'
       responses:
         '200':
@@ -771,6 +786,10 @@ paths:
                   - inputs
                   - ground_truth
                   - history
+              required:
+              - project
+              - data
+              - mapping
       responses:
         '200':
           description: Successful addition
@@ -858,7 +877,7 @@ paths:
       summary: Create a new evaluation run
       operationId: createRun
       tags:
-      - runs
+      - Runs
       requestBody:
         required: true
         content:
@@ -878,7 +897,7 @@ paths:
       summary: Get a list of evaluation runs
       operationId: getRuns
       tags:
-      - runs
+      - Runs
       parameters:
       - in: query
         name: project
@@ -898,7 +917,7 @@ paths:
       summary: Get details of an evaluation run
       operationId: getRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -918,7 +937,7 @@ paths:
       summary: Update an evaluation run
       operationId: updateRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -944,7 +963,7 @@ paths:
       summary: Delete an evaluation run
       operationId: deleteRun
       tags:
-      - runs
+      - Runs
       parameters:
       - in: path
         name: run_id
@@ -1198,13 +1217,6 @@ components:
           type: object
           additionalProperties: true
           description: Input JSON given to the event - prompt, chunks, etc
-          properties:
-            chat_history:
-              type: array
-              items:
-                type: object
-                additionalProperties: true
-              description: Messages passed to the model
         outputs:
           type: object
           additionalProperties: true
@@ -1379,13 +1391,6 @@ components:
           type: object
           additionalProperties: true
           description: Input JSON given to the event - prompt, chunks, etc
-          properties:
-            chat_history:
-              type: array
-              items:
-                type: object
-                additionalProperties: true
-              description: Messages passed to the model
         outputs:
           type: object
           additionalProperties: true
@@ -1846,10 +1851,12 @@ components:
         inputs:
           type: object
           description: Arbitrary JSON object containing the inputs for the datapoint
+          additionalProperties: true
         history:
           type: array
           items:
             type: object
+            additionalProperties: true
           description: Conversation history associated with the datapoint
         ground_truth:
           type: object
@@ -1987,6 +1994,7 @@ components:
           description: Conversation history associated with the datapoint
           items:
             type: object
+            additionalProperties: true
         ground_truth:
           type: object
           description: Expected output JSON object for the datapoint
