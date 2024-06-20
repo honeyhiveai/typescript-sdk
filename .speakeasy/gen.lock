@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: abf23eff5ce129c759516146ef3e7ac8
+  docChecksum: fbfe26308ed66ab751c99533c3149a24
   docVersion: 1.0.1
-  speakeasyVersion: 1.299.6
-  generationVersion: 2.338.12
-  releaseVersion: 0.4.5
-  configChecksum: d4164b904f96925da0673a48bae2cce4
+  speakeasyVersion: 1.310.0
+  generationVersion: 2.347.4
+  releaseVersion: 0.4.6
+  configChecksum: 59e6aa3d334539206aa7a64ef5c573a4
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -229,11 +229,8 @@ generatedFiles:
   - docs/models/components/createtoolrequesttype.md
   - docs/models/components/createtoolrequest.md
   - docs/models/components/updatetoolrequest.md
-  - docs/models/components/inputs.md
-  - docs/models/components/history.md
   - docs/models/components/datapoint.md
   - docs/models/components/createdatapointrequest.md
-  - docs/models/components/updatedatapointrequesthistory.md
   - docs/models/components/updatedatapointrequest.md
   - docs/models/components/datasettype.md
   - docs/models/components/pipelinetype.md
