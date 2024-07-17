@@ -1,19 +1,18 @@
-speakeasyVersion: 1.310.0
+speakeasyVersion: 1.340.0
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:3a80343220e53c69d9e53a507da02aab082eec82c32d7bd6381c2f61756153fe
-        sourceBlobDigest: sha256:a06a05da7948e697fefb8b21b4cd7f11d5fa6f0b385fb5bb607c2d6dd9781598
+        sourceRevisionDigest: sha256:51ecd7898f12e4259d3ac6b61c80f8cab1b48a2fed594fa2404487dc8e96900d
+        sourceBlobDigest: sha256:c0501949abfaf0e8bd3473879c8817f884e8fb12980857721cf58053bc5414fd
         tags:
             - latest
-            - update-spec
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:3a80343220e53c69d9e53a507da02aab082eec82c32d7bd6381c2f61756153fe
-        sourceBlobDigest: sha256:a06a05da7948e697fefb8b21b4cd7f11d5fa6f0b385fb5bb607c2d6dd9781598
-        outLocation: /github/workspace/repo
+        sourceRevisionDigest: sha256:51ecd7898f12e4259d3ac6b61c80f8cab1b48a2fed594fa2404487dc8e96900d
+        sourceBlobDigest: sha256:c0501949abfaf0e8bd3473879c8817f884e8fb12980857721cf58053bc5414fd
+        outLocation: /Users/dhruvsingh/honeyhive/typescript-sdk
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
