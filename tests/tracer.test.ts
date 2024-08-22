@@ -29,6 +29,7 @@ describe("TypeScript Tracer", () => {
   });
 
   it("should successfully trace a session and update evaluators on it", async () => {
+    await sleep(10000);
     const sdk = new HoneyHive({
       bearerAuth: HH_API_KEY,
       serverURL: HH_API_URL,
