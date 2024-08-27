@@ -1,236 +1,198 @@
-import { v4 as uuidv4 } from 'uuid';
-import { HoneyHive } from './sdk';
+import { HoneyHive } from "./sdk";
+import * as traceloop from "@traceloop/node-server-sdk";
 
+import OpenAI from "openai";
+import * as anthropic from "@anthropic-ai/sdk";
+import * as azureOpenAI from "@azure/openai";
+import * as cohere from "cohere-ai";
+import * as bedrock from "@aws-sdk/client-bedrock-runtime";
+import * as google_aiplatform from "@google-cloud/aiplatform";
+import * as pinecone from "@pinecone-database/pinecone";
+import * as ChainsModule from "langchain/chains";
+import * as AgentsModule from "langchain/agents";
+import * as ToolsModule from "langchain/tools";
+import * as chromadb from "chromadb";
 
-export type EventType = "chain" | "generic" | "tool" | "model";
-
-export interface Config {
-    type: string;
-    name?: string;
-    description?: string;
+interface InitParams {
+  apiKey: string;
+  project: string;
+  sessionName: string;
+  source: string;
+  serverUrl?: string;
 }
 
-export interface ModelConfig extends Config {
-    provider: string;
-    endpoint?: string;
-    model: string;
-    prompt_template?: string;
-    chat_template?: ChatMessage[];
-    temperature?: number;
-    max_tokens?: number;
-    top_p?: number;
-    stop?: string | string[];
-    presence_penalty?: number;
-    frequency_penalty?: number;
-    other?: { [key: string]: any };
+interface InitSessionIdParams {
+  apiKey: string;
+  sessionId: string;
+  serverUrl?: string;
 }
 
-export interface ToolConfig extends Config {
-    source?: string;
-    other?: { [key: string]: any };
-}
+export class HoneyHiveTracer {
+  private sdk: HoneyHive;
+  public sessionId: string | undefined;
 
-export interface AgentOther {
-    max_iterations: number;
-    stop?: string | string[];
-    output_parser?: string;
-}
+  private constructor(sdk: HoneyHive) {
+    this.sdk = sdk;
+  }
 
-export interface AgentConfig extends Config {
-    agent_class: string;
-    tools: ToolConfig[];
-    model_config: ModelConfig;
-    other: AgentOther;
-}
+  private async initSession(
+    project: string,
+    sessionName: string,
+    source: string,
+    apiKey: string,
+    serverUrl: string,
+  ): Promise<void> {
+    try {
+      const requestBody = {
+        session: {
+          project: project,
+          sessionName: sessionName,
+          source: source,
+        },
+      };
+      const res = await this.sdk.session.startSession(requestBody);
+      this.sessionId = res.object?.sessionId;
 
-export enum ChatRole {
-    User = "user",
-    Assistant = "assistant",
-    System = "system"
-}
-
-export interface ChatMessage {
-    role: ChatRole;
-    content: string;
-    name?: string;
-}
-
-export interface ParentLog {
-    project?: string;
-    event_id?: string;
-    session_id?: string;
-    event_type?: EventType;
-    event_name?: string;
-    config?: Config | ModelConfig | ToolConfig | AgentConfig;
-    inputs?: { [key: string]: any };
-    outputs?: { [key: string]: any };
-    children?: ChildLog[];
-    user_properties?: { [key: string]: any };
-    metadata?: { [key: string]: any };
-    source?: string;
-    start_time?: number;
-    end_time?: number;
-    duration?: number;
-    error?: string;
-    metrics?: { [key: string]: number };
-    feedback?: { [key: string]: any };
-}
-
-export interface ChildLog {
-    project?: string;
-    event_id?: string;
-    session_id?: string;
-    parent_id?: string;
-    event_type: EventType;
-    event_name: string;
-    config: Config | ModelConfig | ToolConfig | AgentConfig;
-    inputs: { [key: string]: any };
-    outputs?: { [key: string]: any };
-    children?: ChildLog[];
-    user_properties?: { [key: string]: any };
-    metadata?: { [key: string]: any };
-    source?: string;
-    start_time?: number;
-    end_time?: number;
-    duration?: number;
-    error?: string;
-    metrics?: { [key: string]: number };
-    feedback?: { [key: string]: any };
-}
-
-export class SessionTracer {
-    private eventStack: ChildLog[];
-    private sdk: HoneyHive;
-    private session_id: string;
-    private parentEvent: ParentLog;
-
-    constructor(private api_key: string, private project: string, private session_name: string, private user_properties: { [key: string]: any } = {}, private source: string = 'HoneyHive Typescript SDK') {
-        this.eventStack = [];
-        this.sdk = new HoneyHive({
-            bearerAuth: api_key,
+      if (this.sessionId) {
+        traceloop.initialize({
+          baseUrl: `${serverUrl}/opentelemetry`,
+          apiKey: apiKey,
+          disableBatch: true,
+          instrumentModules: {
+            openAI: OpenAI,
+            anthropic: anthropic,
+            azureOpenAI: azureOpenAI,
+            cohere: cohere,
+            bedrock: bedrock,
+            google_aiplatform: google_aiplatform,
+            pinecone: pinecone,
+            langchain: {
+              chainsModule: ChainsModule,
+              agentsModule: AgentsModule,
+              toolsModule: ToolsModule,
+            },
+            chromadb: chromadb,
+          },
         });
-        this.session_id = "";
-        this.parentEvent = {};
+      }
+    } catch (error) {
+      console.error("Failed to create session:", error);
     }
+  }
 
-    async startSession(inputs?: { [key: string]: any }): Promise<void> {
-        try {
-            const session = {
-                project: this.project,
-                eventType: "chain",
-                eventName: this.session_name,
-                config: { type: "chain" },
-                inputs: inputs || {},
-                startTime: 1000 * Date.now(),
-                userProperties: this.user_properties,
-                metadata: {},
-                source: this.source,
-                children_ids: [],
-                metrics: {},
-                feedback: {},
-            };
-            this.parentEvent = {
-                project: this.project,
-                event_type: "chain",
-                event_name: this.session_name,
-                config: { type: "chain" },
-                inputs: inputs || {},
-                start_time: 1000 * Date.now(),
-                user_properties: this.user_properties,
-                metadata: {},
-                source: this.source,
-                children: [],
-                metrics: {},
-                feedback: {},
-            };
-            const res = await this.sdk.session.startSession({
-                session: session,
-            });
-            const session_id = res.object?.sessionId;
-            if (session_id) {
-                this.session_id = session_id;
-            } else {
-                throw new Error("Session start failed!");
-            }
-        } catch {
-            // continue regardless of error
-        }
+  private async initSessionFromId(
+    sessionId: string,
+    apiKey: string,
+    serverUrl: string,
+  ): Promise<void> {
+    this.sessionId = sessionId;
+    traceloop.initialize({
+      baseUrl: `${serverUrl}/opentelemetry`,
+      apiKey: apiKey,
+      disableBatch: true,
+      instrumentModules: {
+        openAI: OpenAI,
+        anthropic: anthropic,
+        azureOpenAI: azureOpenAI,
+        cohere: cohere,
+        bedrock: bedrock,
+        google_aiplatform: google_aiplatform,
+        pinecone: pinecone,
+        langchain: {
+          chainsModule: ChainsModule,
+          agentsModule: AgentsModule,
+          toolsModule: ToolsModule,
+        },
+        chromadb: chromadb,
+      },
+    });
+  }
+
+  public static async init({
+    apiKey,
+    project,
+    sessionName,
+    source,
+    serverUrl = "https://api.honeyhive.ai",
+  }: InitParams): Promise<HoneyHiveTracer> {
+    const sdk = new HoneyHive({
+      bearerAuth: apiKey,
+      serverURL: serverUrl,
+    });
+    const tracer = new HoneyHiveTracer(sdk);
+    await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    return tracer;
+  }
+
+  public static async initFromSessionId({
+    apiKey,
+    sessionId,
+    serverUrl = "https://api.honeyhive.ai",
+  }: InitSessionIdParams): Promise<HoneyHiveTracer> {
+    const sdk = new HoneyHive({
+      bearerAuth: apiKey,
+      serverURL: serverUrl,
+    });
+    const tracer = new HoneyHiveTracer(sdk);
+    await tracer.initSessionFromId(sessionId, apiKey, serverUrl);
+    return tracer;
+  }
+
+  public async setFeedback(feedback: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          feedback: feedback
+        });
+      } catch (error) {
+        console.error("Failed to set feedback:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
     }
+  }
 
-    startEvent(event_type: EventType, event_name: string, config: Config | ModelConfig | ToolConfig | AgentConfig, inputs: { [key: string]: any }): void {
-        try {
-            const newEvent: ChildLog = {
-                session_id: this.session_id,
-                event_id: uuidv4(),
-                project: this.project,
-                parent_id: this.eventStack.length > 0 ? this.eventStack[this.eventStack.length - 1].event_id : this.parentEvent.event_id,
-                event_type,
-                event_name,
-                config,
-                inputs,
-                start_time: 1000 * Date.now(),
-                user_properties: this.user_properties,
-                metadata: {},
-                source: this.source,
-                children: [],
-                error: "",
-                metrics: {},
-                feedback: {},
-            };
-            this.eventStack.push(newEvent);
-        } catch {
-            // continue regardless of error
-        }
+  public async setMetric(metrics: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metrics: metrics
+        });
+      } catch (error) {
+        console.error("Failed to set metric:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
     }
-
-    endEvent(outputs?: { [key: string]: any }, error?: string): void {
-        try {
-            if (this.eventStack.length < 1) {
-                throw new Error("No event to end. Stack length must be at least 1.");
-            }
-            const currentEvent = this.eventStack.pop();
-            if (currentEvent) {
-                currentEvent.end_time = 1000 * Date.now();
-                currentEvent.duration = currentEvent.end_time - (currentEvent.start_time || currentEvent.end_time);
-                currentEvent.outputs = outputs;
-                if (error) {
-                    currentEvent.error = error;
-                }
-                if (this.eventStack.length > 0) {
-                  this.eventStack[this.eventStack.length - 1].children = [...(this.eventStack[this.eventStack.length - 1].children || []), currentEvent];
-                } else {
-                  this.parentEvent.children = [...(this.parentEvent.children || []), currentEvent];
-                }
-            }
-        } catch {
-            // continue regardless of error
-        }
+  }
+  
+  public async setMetadata(metadata: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metadata: metadata
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
     }
+  }
 
-    async endSession(outputs?: { [key:string]: any }, error?: string): Promise<void> {
-        try {
-            while (this.eventStack.length > 0) {
-                this.endEvent();
-            }
-            const session_trace = this.parentEvent;
-            session_trace.end_time = 1000 * Date.now();
-            session_trace.duration = session_trace.end_time - (session_trace.start_time || session_trace.end_time);
-            session_trace.outputs = outputs;
-            if (error) {
-                session_trace.error = error;
-            }
-            if (session_trace) {
-                const res = await this.sdk.session.processEventTrace(this.session_id, { logs: [session_trace] });
-
-                if (res.statusCode == 200) {
-                    // handle response
-                    console.log('Session trace sent successfully.');
-                } else {
-                    console.error('Failed to send session trace:', res);
-                }
-            }
-        } catch {
-            // continue regardless of error
-        }
+  public trace(fn: () => void): void {
+    if (this.sessionId) {
+      traceloop.withAssociationProperties(
+        {
+          session_id: this.sessionId,
+        },
+        fn,
+      );
+    } else {
+      console.error("Session ID is not initialized");
     }
+  }
 }

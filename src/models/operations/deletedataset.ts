@@ -4,20 +4,13 @@
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { AxiosResponse } from "axios";
-import { Expose } from "class-transformer";
 
 export class DeleteDatasetRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
-    id: string;
-}
-
-/**
- * Dataset deleted
- */
-export class DeleteDatasetResponseBody extends SpeakeasyBase {
-    @SpeakeasyMetadata()
-    @Expose({ name: "message" })
-    message?: string;
+    /**
+     * The unique identifier of the dataset to be deleted like `663876ec4611c47f4970f0c3`
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=dataset_id" })
+    datasetId: string;
 }
 
 export class DeleteDatasetResponse extends SpeakeasyBase {
@@ -38,10 +31,4 @@ export class DeleteDatasetResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * Dataset deleted
-     */
-    @SpeakeasyMetadata()
-    object?: DeleteDatasetResponseBody;
 }

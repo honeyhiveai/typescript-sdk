@@ -3,95 +3,149 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
+import { Expose } from "class-transformer";
 
-export class Config extends SpeakeasyBase {}
-
-export class Feedback extends SpeakeasyBase {}
-
-export class EventInputs extends SpeakeasyBase {}
-
-export class EventMetadata extends SpeakeasyBase {}
-
-export class Metrics extends SpeakeasyBase {}
-
-export class Outputs extends SpeakeasyBase {}
-
-export class EventUserProperties extends SpeakeasyBase {}
+/**
+ * Specify whether the event is of "session", "model", "tool" or "chain" type
+ */
+export enum EventType {
+    Session = "session",
+    Model = "model",
+    Tool = "tool",
+    Chain = "chain",
+}
 
 export class Event extends SpeakeasyBase {
+    /**
+     * Name of project associated with the event
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "children_ids" })
-    childrenIds?: string[];
+    @Expose({ name: "project_id" })
+    projectId?: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "config" })
-    @Type(() => Config)
-    config?: Config;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "duration" })
-    duration?: number;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "end_time" })
-    endTime?: number;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "error" })
-    error?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "event_name" })
-    eventName?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "event_type" })
-    eventType?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "feedback" })
-    @Type(() => Feedback)
-    feedback?: Feedback;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "inputs" })
-    @Type(() => EventInputs)
-    inputs?: EventInputs;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "metadata" })
-    @Type(() => EventMetadata)
-    metadata?: EventMetadata;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "metrics" })
-    @Type(() => Metrics)
-    metrics?: Metrics;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "outputs" })
-    @Type(() => Outputs)
-    outputs?: Outputs;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "parent_id" })
-    parentId?: string;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "project" })
-    project?: string;
-
+    /**
+     * Source of the event - production, staging, etc
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "source" })
     source?: string;
 
+    /**
+     * Name of the event
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_name" })
+    eventName?: string;
+
+    /**
+     * Specify whether the event is of "session", "model", "tool" or "chain" type
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_type" })
+    eventType?: EventType;
+
+    /**
+     * Unique id of the event, if not set, it will be auto-generated
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "event_id" })
+    eventId?: string;
+
+    /**
+     * Unique id of the session associated with the event, if not set, it will be auto-generated
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "session_id" })
+    sessionId?: string;
+
+    /**
+     * Id of the parent event if nested
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "parent_id" })
+    parentId?: string;
+
+    /**
+     * Id of events that are nested within the event
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "children_ids" })
+    childrenIds?: string[];
+
+    /**
+     * Associated configuration JSON for the event - model name, vector index name, etc
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "config" })
+    config?: Record<string, any>;
+
+    /**
+     * Input JSON given to the event - prompt, chunks, etc
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "inputs" })
+    inputs?: Record<string, any>;
+
+    /**
+     * Final output JSON of the event
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "outputs" })
+    outputs?: Record<string, any>;
+
+    /**
+     * Any error description if event failed
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "error" })
+    error?: string;
+
+    /**
+     * UTC timestamp (in milliseconds) for the event start
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "start_time" })
     startTime?: number;
 
+    /**
+     * UTC timestamp (in milliseconds) for the event end
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "end_time" })
+    endTime?: number;
+
+    /**
+     * How long the event took in milliseconds
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "duration" })
+    duration?: number;
+
+    /**
+     * Any system or application metadata associated with the event
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "metadata" })
+    metadata?: Record<string, any>;
+
+    /**
+     * Any user feedback provided for the event output
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "feedback" })
+    feedback?: Record<string, any>;
+
+    /**
+     * Any values computed over the output of the event
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "metrics" })
+    metrics?: Record<string, any>;
+
+    /**
+     * Any user properties associated with the event
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => EventUserProperties)
-    userProperties?: EventUserProperties;
+    userProperties?: Record<string, any>;
 }

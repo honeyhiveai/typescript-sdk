@@ -3,19 +3,23 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Transform, Type } from "class-transformer";
-
-export class Inputs extends SpeakeasyBase {}
-
-export class History extends SpeakeasyBase {}
-
-export class Metadata extends SpeakeasyBase {}
+import { Expose, Transform } from "class-transformer";
 
 export class Datapoint extends SpeakeasyBase {
+    /**
+     * UUID for the datapoint
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "_id" })
+    id?: string;
+
     @SpeakeasyMetadata()
     @Expose({ name: "tenant" })
     tenant?: string;
 
+    /**
+     * UUID for the project where the datapoint is stored
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "project_id" })
     projectId?: string;
@@ -30,28 +34,41 @@ export class Datapoint extends SpeakeasyBase {
     @Transform(({ value }) => new Date(value), { toClassOnly: true })
     updatedAt?: Date;
 
+    /**
+     * Arbitrary JSON object containing the inputs for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => Inputs)
-    inputs?: Inputs;
+    inputs?: Record<string, any>;
 
-    @SpeakeasyMetadata({ elemType: History })
+    /**
+     * Conversation history associated with the datapoint
+     */
+    @SpeakeasyMetadata()
     @Expose({ name: "history" })
-    @Type(() => History)
-    history?: History[];
+    history?: Record<string, any>[];
 
     @SpeakeasyMetadata()
     @Expose({ name: "ground_truth" })
     groundTruth?: Record<string, any>;
 
+    /**
+     * Event id for the event from which the datapoint was created
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_event" })
     linkedEvent?: string;
 
+    /**
+     * Ids of evaluations where the datapoint is included
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_evals" })
     linkedEvals?: string[];
 
+    /**
+     * Ids of all datasets that include the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_datasets" })
     linkedDatasets?: string[];
@@ -60,12 +77,14 @@ export class Datapoint extends SpeakeasyBase {
     @Expose({ name: "saved" })
     saved?: boolean;
 
+    /**
+     * session or event - specify the type of data
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
     type?: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => Metadata)
-    metadata?: Metadata;
+    metadata?: Record<string, any>;
 }

@@ -9,8 +9,10 @@ generation:
     nameResolutionDec2023: false
     parameterOrderingFeb2024: false
     requestResponseComponentNamesFeb2024: false
+  auth:
+    oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.2.4
+  version: 0.4.7
   author: HoneyHive
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
@@ -25,5 +27,5 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   outputModelSuffix: output
-  packageName: HoneyHive
+  packageName: honeyhive
   templateVersion: v2

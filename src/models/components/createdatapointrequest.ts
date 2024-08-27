@@ -3,68 +3,55 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { RFCDate } from "../../types";
-import { Expose, Transform, Type } from "class-transformer";
-
-export class CreateDatapointRequestInputs extends SpeakeasyBase {}
-
-export class CreateDatapointRequestHistory extends SpeakeasyBase {}
-
-export class CreateDatapointRequestMetadata extends SpeakeasyBase {}
+import { Expose } from "class-transformer";
 
 export class CreateDatapointRequest extends SpeakeasyBase {
+    /**
+     * Name for the project to which the datapoint belongs
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
-    project?: string;
+    project: string;
 
+    /**
+     * Arbitrary JSON object containing the inputs for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "inputs" })
-    @Type(() => CreateDatapointRequestInputs)
-    inputs?: CreateDatapointRequestInputs;
+    inputs: Record<string, any>;
 
-    @SpeakeasyMetadata({ elemType: CreateDatapointRequestHistory })
+    /**
+     * Conversation history associated with the datapoint
+     */
+    @SpeakeasyMetadata()
     @Expose({ name: "history" })
-    @Type(() => CreateDatapointRequestHistory)
-    history?: CreateDatapointRequestHistory[];
+    history?: Record<string, any>[];
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "created_at" })
-    @Type(() => String)
-    @Transform(({ value }) => new RFCDate(value), { toClassOnly: true })
-    createdAt?: RFCDate;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "updated_at" })
-    @Type(() => String)
-    @Transform(({ value }) => new RFCDate(value), { toClassOnly: true })
-    updatedAt?: RFCDate;
-
+    /**
+     * Expected output JSON object for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "ground_truth" })
     groundTruth?: Record<string, any>;
 
+    /**
+     * Event id for the event from which the datapoint was created
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_event" })
     linkedEvent?: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "linked_evals" })
-    linkedEvals?: string[];
-
+    /**
+     * Ids of all datasets that include the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "linked_datasets" })
     linkedDatasets?: string[];
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "saved" })
-    saved?: boolean;
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type?: string;
-
+    /**
+     * Any additional metadata for the datapoint
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "metadata" })
-    @Type(() => CreateDatapointRequestMetadata)
-    metadata?: CreateDatapointRequestMetadata;
+    metadata?: Record<string, any>;
 }

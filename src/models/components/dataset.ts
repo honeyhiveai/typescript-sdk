@@ -3,41 +3,98 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 
-export class File extends SpeakeasyBase {}
+/**
+ * What the dataset is to be used for - "evaluation" or "fine-tuning"
+ */
+export enum DatasetType {
+    Evaluation = "evaluation",
+    FineTuning = "fine-tuning",
+}
+
+/**
+ * The type of data included in the dataset - "event" (default) or "session"
+ */
+export enum PipelineType {
+    Event = "event",
+    Session = "session",
+}
 
 export class Dataset extends SpeakeasyBase {
+    /**
+     * UUID of the project associated with this dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project" })
+    project?: string;
+
+    /**
+     * Name of the dataset
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
-    name: string;
+    name?: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "purpose" })
-    purpose: string;
-
-    @SpeakeasyMetadata({ elemType: File })
-    @Expose({ name: "file" })
-    @Type(() => File)
-    file: File[];
-
-    @SpeakeasyMetadata()
-    @Expose({ name: "bytes" })
-    bytes: number;
-
+    /**
+     * A description for the dataset
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
-    description: string;
+    description?: string;
+
+    /**
+     * What the dataset is to be used for - "evaluation" or "fine-tuning"
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: DatasetType;
+
+    /**
+     * List of unique datapoint ids to be included in this dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "datapoints" })
+    datapoints?: string[];
+
+    /**
+     * Number of datapoints included in the dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "num_points" })
+    numPoints?: number;
 
     @SpeakeasyMetadata()
-    @Expose({ name: "task" })
-    task: string;
+    @Expose({ name: "linked_evals" })
+    linkedEvals?: string[];
 
+    /**
+     * Whether the dataset has been saved or detected
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "prompt" })
-    prompt: string;
+    @Expose({ name: "saved" })
+    saved?: boolean;
 
+    /**
+     * The type of data included in the dataset - "event" (default) or "session"
+     */
     @SpeakeasyMetadata()
-    @Expose({ name: "id" })
-    id?: string;
+    @Expose({ name: "pipeline_type" })
+    pipelineType?: PipelineType;
+
+    /**
+     * Timestamp of when the dataset was created
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "created_at" })
+    @Transform(({ value }) => new Date(value), { toClassOnly: true })
+    createdAt?: Date;
+
+    /**
+     * Timestamp of when the dataset was last updated
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "updated_at" })
+    @Transform(({ value }) => new Date(value), { toClassOnly: true })
+    updatedAt?: Date;
 }

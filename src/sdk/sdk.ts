@@ -5,14 +5,13 @@
 import * as utils from "../internal/utils";
 import * as components from "../models/components";
 import { Configurations } from "./configurations";
-import { Datapoint } from "./datapoint";
+import { Datapoints } from "./datapoints";
 import { Datasets } from "./datasets";
 import { Events } from "./events";
 import { Metrics } from "./metrics";
-import { Prompts } from "./prompts";
+import { Projects } from "./projects";
+import { Runs } from "./runs";
 import { Session } from "./session";
-import { Tasks } from "./tasks";
-import { Testcases } from "./testcases";
 import { Tools } from "./tools";
 import axios from "axios";
 import { AxiosInstance } from "axios";
@@ -55,9 +54,9 @@ export class SDKConfiguration {
     serverDefaults: any;
     language = "typescript";
     openapiDocVersion = "1.0.1";
-    sdkVersion = "0.2.4";
-    genVersion = "2.263.3";
-    userAgent = "speakeasy-sdk/typescript 0.2.4 2.263.3 1.0.1 HoneyHive";
+    sdkVersion = "0.4.7";
+    genVersion = "2.375.5";
+    userAgent = "speakeasy-sdk/typescript 0.4.7 2.375.5 1.0.1 honeyhive";
     retryConfig?: utils.RetryConfig;
     public constructor(init?: Partial<SDKConfiguration>) {
         Object.assign(this, init);
@@ -65,24 +64,26 @@ export class SDKConfiguration {
 }
 
 export class HoneyHive {
-    public configurations: Configurations;
-    public datapoint: Datapoint;
-    public datasets: Datasets;
+    public session: Session;
     public events: Events;
     public metrics: Metrics;
-    public prompts: Prompts;
-    public session: Session;
-    public tasks: Tasks;
-    public testcases: Testcases;
     public tools: Tools;
+    public datapoints: Datapoints;
+    public datasets: Datasets;
+    public projects: Projects;
+    public runs: Runs;
+    public configurations: Configurations;
 
     private sdkConfiguration: SDKConfiguration;
 
     constructor(props?: SDKProps) {
         let serverURL = props?.serverURL;
-        const serverIdx = props?.serverIdx ?? 0;
 
         if (!serverURL) {
+            const serverIdx = props?.serverIdx ?? 0;
+            if (serverIdx < 0 || serverIdx >= ServerList.length) {
+                throw new Error(`Invalid server index ${serverIdx}`);
+            }
             serverURL = ServerList[serverIdx];
         }
 
@@ -95,15 +96,14 @@ export class HoneyHive {
             retryConfig: props?.retryConfig,
         });
 
-        this.configurations = new Configurations(this.sdkConfiguration);
-        this.datapoint = new Datapoint(this.sdkConfiguration);
-        this.datasets = new Datasets(this.sdkConfiguration);
+        this.session = new Session(this.sdkConfiguration);
         this.events = new Events(this.sdkConfiguration);
         this.metrics = new Metrics(this.sdkConfiguration);
-        this.prompts = new Prompts(this.sdkConfiguration);
-        this.session = new Session(this.sdkConfiguration);
-        this.tasks = new Tasks(this.sdkConfiguration);
-        this.testcases = new Testcases(this.sdkConfiguration);
         this.tools = new Tools(this.sdkConfiguration);
+        this.datapoints = new Datapoints(this.sdkConfiguration);
+        this.datasets = new Datasets(this.sdkConfiguration);
+        this.projects = new Projects(this.sdkConfiguration);
+        this.runs = new Runs(this.sdkConfiguration);
+        this.configurations = new Configurations(this.sdkConfiguration);
     }
 }

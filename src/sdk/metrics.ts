@@ -17,17 +17,17 @@ export class Metrics {
     }
 
     /**
-     * Delete a metric
+     * Get all metrics
      *
      * @remarks
-     * Remove a metric
+     * Retrieve a list of all metrics
      */
-    async deleteMetrics(
-        metricId: string,
+    async getMetrics(
+        projectName: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteMetricsResponse> {
-        const req = new operations.DeleteMetricsRequest({
-            metricId: metricId,
+    ): Promise<operations.GetMetricsResponse> {
+        const req = new operations.GetMetricsRequest({
+            projectName: projectName,
         });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
@@ -45,75 +45,13 @@ export class Metrics {
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
         const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "delete",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.DeleteMetricsResponse = new operations.DeleteMetricsResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * Get all metrics
-     *
-     * @remarks
-     * Retrieve a list of all metrics
-     */
-    async getMetrics(config?: AxiosRequestConfig): Promise<operations.GetMetricsResponse> {
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/metrics";
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
         headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl,
+            url: operationUrl + queryParams,
             method: "get",
             headers: headers,
             responseType: "arraybuffer",
@@ -170,10 +108,10 @@ export class Metrics {
      * @remarks
      * Add a new metric
      */
-    async postMetrics(
+    async createMetric(
         req: components.Metric,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostMetricsResponse> {
+    ): Promise<operations.CreateMetricResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.Metric(req);
         }
@@ -228,7 +166,7 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostMetricsResponse = new operations.PostMetricsResponse({
+        const res: operations.CreateMetricResponse = new operations.CreateMetricResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -255,10 +193,10 @@ export class Metrics {
      * @remarks
      * Edit a metric
      */
-    async putMetrics(
+    async updateMetric(
         req: components.MetricEdit,
         config?: AxiosRequestConfig
-    ): Promise<operations.PutMetricsResponse> {
+    ): Promise<operations.UpdateMetricResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
             req = new components.MetricEdit(req);
         }
@@ -313,7 +251,7 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PutMetricsResponse = new operations.PutMetricsResponse({
+        const res: operations.UpdateMetricResponse = new operations.UpdateMetricResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -335,19 +273,23 @@ export class Metrics {
     }
 
     /**
-     * Compute metric
+     * Delete a metric
      *
      * @remarks
-     * Compute a specific metric (details not provided in the test)
+     * Remove a metric
      */
-    async postMetricsCompute(
+    async deleteMetric(
+        metricId: string,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostMetricsComputeResponse> {
+    ): Promise<operations.DeleteMetricResponse> {
+        const req = new operations.DeleteMetricRequest({
+            metricId: metricId,
+        });
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/metrics/compute";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/metrics";
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -358,14 +300,15 @@ export class Metrics {
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
         const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
         headers["Accept"] = "*/*";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl,
-            method: "post",
+            url: operationUrl + queryParams,
+            method: "delete",
             headers: headers,
             responseType: "arraybuffer",
             ...config,
@@ -377,12 +320,11 @@ export class Metrics {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostMetricsComputeResponse =
-            new operations.PostMetricsComputeResponse({
-                statusCode: httpRes.status,
-                contentType: responseContentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.DeleteMetricResponse = new operations.DeleteMetricResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
         switch (true) {
             case httpRes?.status == 200:
                 break;

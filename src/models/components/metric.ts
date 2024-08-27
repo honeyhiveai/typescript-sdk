@@ -5,6 +5,27 @@
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import { Expose, Type } from "class-transformer";
 
+/**
+ * Type of the metric - "custom", "model" or "human"
+ */
+export enum MetricType {
+    Custom = "custom",
+    Model = "model",
+    Human = "human",
+}
+
+/**
+ * The data type of the metric value - "boolean", "float", "string"
+ */
+export enum ReturnTypeT {
+    Boolean = "boolean",
+    Float = "float",
+    String = "string",
+}
+
+/**
+ * Threshold for numeric metrics to decide passing or failing in tests
+ */
 export class Threshold extends SpeakeasyBase {
     @SpeakeasyMetadata()
     @Expose({ name: "min" })
@@ -16,55 +37,108 @@ export class Threshold extends SpeakeasyBase {
 }
 
 export class Metric extends SpeakeasyBase {
+    /**
+     * Name of the metric
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
-    name?: string;
+    name: string;
 
+    /**
+     * Criteria for human metrics
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "criteria" })
+    criteria?: string;
+
+    /**
+     * Associated code block for the metric
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "code_snippet" })
     codeSnippet?: string;
 
+    /**
+     * Evaluator prompt for the metric
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "prompt" })
+    prompt?: string;
+
+    /**
+     * Name of the project associated with metric
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "task" })
-    task?: string;
+    task: string;
 
+    /**
+     * Type of the metric - "custom", "model" or "human"
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "type" })
-    type?: string;
+    type: MetricType;
 
+    /**
+     * Short description of what the metric does
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "description" })
-    description?: string;
+    description: string;
 
+    /**
+     * Whether to compute on all production events automatically
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "enabled_in_prod" })
     enabledInProd?: boolean;
 
+    /**
+     * Whether a ground truth (on metadata) is required to compute it
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "needs_ground_truth" })
     needsGroundTruth?: boolean;
 
+    /**
+     * The data type of the metric value - "boolean", "float", "string"
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "return_type" })
-    returnType?: string;
+    returnType: ReturnTypeT;
 
+    /**
+     * Threshold for numeric metrics to decide passing or failing in tests
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "threshold" })
     @Type(() => Threshold)
     threshold?: Threshold;
 
+    /**
+     * Threshold for boolean metrics to decide passing or failing in tests
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "pass_when" })
     passWhen?: boolean;
 
+    /**
+     * Unique idenitifier
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "_id" })
     id?: string;
 
+    /**
+     * Name of event that the metric is set to be computed on
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "event_name" })
     eventName?: string;
 
+    /**
+     * Type of event that the metric is set to be computed on
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "event_type" })
     eventType?: string;

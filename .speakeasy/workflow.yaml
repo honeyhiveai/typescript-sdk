@@ -1,0 +1,14 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+    my-source:
+        inputs:
+            - location: openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/honey-hive/honeyhive-jxo/my-source
+targets:
+    typescript:
+        target: typescript
+        source: my-source
+        codeSamples:
+            output: codeSamples.yaml

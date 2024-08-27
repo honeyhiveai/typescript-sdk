@@ -3,8 +3,31 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
+import { Expose, Type } from "class-transformer";
+
+export class CreateDatasetResult extends SpeakeasyBase {
+    /**
+     * UUID for the created dataset
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "insertedId" })
+    insertedId?: string;
+}
+
+/**
+ * Successful creation
+ */
+export class CreateDatasetResponseBody extends SpeakeasyBase {
+    @SpeakeasyMetadata()
+    @Expose({ name: "inserted" })
+    inserted?: boolean;
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "result" })
+    @Type(() => CreateDatasetResult)
+    result?: CreateDatasetResult;
+}
 
 export class CreateDatasetResponse extends SpeakeasyBase {
     /**
@@ -26,8 +49,8 @@ export class CreateDatasetResponse extends SpeakeasyBase {
     rawResponse: AxiosResponse;
 
     /**
-     * Dataset created
+     * Successful creation
      */
     @SpeakeasyMetadata()
-    dataset?: components.Dataset;
+    object?: CreateDatasetResponseBody;
 }

@@ -17,72 +17,6 @@ export class Tools {
     }
 
     /**
-     * Delete a tool
-     */
-    async deleteTool(
-        functionId: string,
-        config?: AxiosRequestConfig
-    ): Promise<operations.DeleteToolResponse> {
-        const req = new operations.DeleteToolRequest({
-            functionId: functionId,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/tools";
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "delete",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.DeleteToolResponse = new operations.DeleteToolResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
      * Retrieve a list of tools
      */
     async getTools(config?: AxiosRequestConfig): Promise<operations.GetToolsResponse> {
@@ -162,11 +96,11 @@ export class Tools {
      * Create a new tool
      */
     async createTool(
-        req: components.Tool,
+        req: components.CreateToolRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.CreateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.Tool(req);
+            req = new components.CreateToolRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -199,7 +133,7 @@ export class Tools {
             ...properties.headers,
         };
         if (reqBody == null) throw new Error("request body is required");
-        headers["Accept"] = "*/*";
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
@@ -224,15 +158,29 @@ export class Tools {
             contentType: responseContentType,
             rawResponse: httpRes,
         });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.CreateToolResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    httpRes?.data,
+                    decodedRes,
                     httpRes
                 );
         }
@@ -244,11 +192,11 @@ export class Tools {
      * Update an existing tool
      */
     async updateTool(
-        req: components.ToolUpdate,
+        req: components.UpdateToolRequest,
         config?: AxiosRequestConfig
     ): Promise<operations.UpdateToolResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new components.ToolUpdate(req);
+            req = new components.UpdateToolRequest(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -302,6 +250,72 @@ export class Tools {
         }
 
         const res: operations.UpdateToolResponse = new operations.UpdateToolResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
+        switch (true) {
+            case httpRes?.status == 200:
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    httpRes?.data,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Delete a tool
+     */
+    async deleteTool(
+        functionId: string,
+        config?: AxiosRequestConfig
+    ): Promise<operations.DeleteToolResponse> {
+        const req = new operations.DeleteToolRequest({
+            functionId: functionId,
+        });
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/tools";
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
+        const queryParams: string = utils.serializeQueryParams(req);
+        headers["Accept"] = "*/*";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: operationUrl + queryParams,
+            method: "delete",
+            headers: headers,
+            responseType: "arraybuffer",
+            ...config,
+        });
+
+        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.DeleteToolResponse = new operations.DeleteToolResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,

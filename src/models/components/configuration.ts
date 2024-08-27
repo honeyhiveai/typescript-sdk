@@ -3,40 +3,73 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import { Expose, Type } from "class-transformer";
+import { Expose } from "class-transformer";
 
-export class ParametersT extends SpeakeasyBase {}
+export enum Env {
+    Dev = "dev",
+    Staging = "staging",
+    Prod = "prod",
+}
 
-export class UserProperties extends SpeakeasyBase {}
+/**
+ * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
+ */
+export enum ConfigurationType {
+    Llm = "LLM",
+    Pipeline = "pipeline",
+}
 
 export class Configuration extends SpeakeasyBase {
+    /**
+     * ID of the configuration
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "_id" })
     id?: string;
 
+    /**
+     * ID of the project to which this configuration belongs
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "project" })
     project: string;
 
-    @SpeakeasyMetadata()
-    @Expose({ name: "type" })
-    type: string;
-
+    /**
+     * Name of the configuration
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "name" })
     name: string;
 
+    /**
+     * List of environments where the configuration is active
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "env" })
+    env?: Env[];
+
+    /**
+     * Name of the provider - "openai", "anthropic", etc.
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "provider" })
     provider: string;
 
     @SpeakeasyMetadata()
     @Expose({ name: "parameters" })
-    @Type(() => ParametersT)
-    parameters?: ParametersT;
+    parameters: Record<string, any>;
 
+    /**
+     * Type of the configuration - "LLM" or "pipeline" - "LLM" by default
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "type" })
+    type?: ConfigurationType;
+
+    /**
+     * Details of user who created the configuration
+     */
     @SpeakeasyMetadata()
     @Expose({ name: "user_properties" })
-    @Type(() => UserProperties)
-    userProperties?: UserProperties;
+    userProperties?: Record<string, any>;
 }

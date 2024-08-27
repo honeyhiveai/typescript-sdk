@@ -7,7 +7,7 @@ import { AxiosResponse } from "axios";
 
 export class DeleteConfigurationRequest extends SpeakeasyBase {
     /**
-     * Configuration ID
+     * Configuration ID like `6638187d505c6812e4043f24`
      */
     @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
     id: string;

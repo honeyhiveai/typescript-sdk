@@ -1,5 +1,7 @@
 # Threshold
 
+Threshold for numeric metrics to decide passing or failing in tests
+
 
 ## Fields
 

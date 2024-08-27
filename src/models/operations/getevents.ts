@@ -3,14 +3,74 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
+import { Expose, Type } from "class-transformer";
 
-export class GetEventsRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
+export class DateRange extends SpeakeasyBase {
+    /**
+     * ISO String for start of date time filter like `2024-04-01T22:38:19.000Z`
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "$gte" })
+    dollarGte?: string;
+
+    /**
+     * ISO String for end of date time filter like `2024-04-01T22:38:19.000Z`
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "$lte" })
+    dollarLte?: string;
+}
+
+export class GetEventsRequestBody extends SpeakeasyBase {
+    /**
+     * Name of the project associated with the event like `New Project`
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "project" })
     project: string;
 
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=filters" })
-    filters: string;
+    @SpeakeasyMetadata({ elemType: components.EventFilter })
+    @Expose({ name: "filters" })
+    @Type(() => components.EventFilter)
+    filters: components.EventFilter[];
+
+    @SpeakeasyMetadata()
+    @Expose({ name: "dateRange" })
+    @Type(() => DateRange)
+    dateRange?: DateRange;
+
+    /**
+     * Limit number of results to speed up query (default is 1000, max is 7500)
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "limit" })
+    limit?: number;
+
+    /**
+     * Page number of results (default is 1)
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "page" })
+    page?: number;
+}
+
+/**
+ * Success
+ */
+export class GetEventsResponseBody extends SpeakeasyBase {
+    @SpeakeasyMetadata({ elemType: components.Event })
+    @Expose({ name: "events" })
+    @Type(() => components.Event)
+    events?: components.Event[];
+
+    /**
+     * Total number of events in the specified filter
+     */
+    @SpeakeasyMetadata()
+    @Expose({ name: "totalEvents" })
+    totalEvents?: number;
 }
 
 export class GetEventsResponse extends SpeakeasyBase {
@@ -31,4 +91,10 @@ export class GetEventsResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
+
+    /**
+     * Success
+     */
+    @SpeakeasyMetadata()
+    object?: GetEventsResponseBody;
 }

@@ -1,0 +1,13 @@
+# DatasetUpdate
+
+
+## Fields
+
+| Field                                                                        | Type                                                                         | Required                                                                     | Description                                                                  |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `datasetId`                                                                  | *string*                                                                     | :heavy_check_mark:                                                           | The unique identifier of the dataset being updated                           |
+| `name`                                                                       | *string*                                                                     | :heavy_minus_sign:                                                           | Updated name for the dataset                                                 |
+| `description`                                                                | *string*                                                                     | :heavy_minus_sign:                                                           | Updated description for the dataset                                          |
+| `datapoints`                                                                 | *string*[]                                                                   | :heavy_minus_sign:                                                           | Updated list of datapoint ids for the dataset - note the full list is needed |
+| `linkedEvals`                                                                | *string*[]                                                                   | :heavy_minus_sign:                                                           | Updated list of unique evaluation run ids to be associated with this dataset |
+| `metadata`                                                                   | Record<string, *any*>                                                        | :heavy_minus_sign:                                                           | Updated metadata to track for the dataset                                    |

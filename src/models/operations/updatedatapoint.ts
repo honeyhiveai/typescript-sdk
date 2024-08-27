@@ -3,7 +3,19 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
+import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
+
+export class UpdateDatapointRequest extends SpeakeasyBase {
+    /**
+     * ID of datapoint to update
+     */
+    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
+    id: string;
+
+    @SpeakeasyMetadata({ data: "request, media_type=application/json" })
+    updateDatapointRequest: components.UpdateDatapointRequest;
+}
 
 export class UpdateDatapointResponse extends SpeakeasyBase {
     /**

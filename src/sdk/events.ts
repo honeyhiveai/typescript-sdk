@@ -17,82 +17,17 @@ export class Events {
     }
 
     /**
-     * Retrieve events based on filters
-     */
-    async getEvents(
-        project: string,
-        filters: string,
-        config?: AxiosRequestConfig
-    ): Promise<operations.GetEventsResponse> {
-        const req = new operations.GetEventsRequest({
-            project: project,
-            filters: filters,
-        });
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events";
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        let globalSecurity = this.sdkConfiguration.security;
-        if (typeof globalSecurity === "function") {
-            globalSecurity = await globalSecurity();
-        }
-        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
-            globalSecurity = new components.Security(globalSecurity);
-        }
-        const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "get",
-            headers: headers,
-            responseType: "arraybuffer",
-            ...config,
-        });
-
-        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.GetEventsResponse = new operations.GetEventsResponse({
-            statusCode: httpRes.status,
-            contentType: responseContentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
      * Create a new event
+     *
+     * @remarks
+     * Please refer to our instrumentation guide for detailed information
      */
-    async postEvents(
-        req: operations.PostEventsRequestBody,
+    async createEvent(
+        req: operations.CreateEventRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.PostEventsResponse> {
+    ): Promise<operations.CreateEventResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new operations.PostEventsRequestBody(req);
+            req = new operations.CreateEventRequestBody(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -145,7 +80,7 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PostEventsResponse = new operations.PostEventsResponse({
+        const res: operations.CreateEventResponse = new operations.CreateEventResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -156,7 +91,7 @@ export class Events {
                 if (utils.matchContentType(responseContentType, `application/json`)) {
                     res.object = utils.objectToClass(
                         JSON.parse(decodedRes),
-                        operations.PostEventsResponseBody
+                        operations.CreateEventResponseBody
                     );
                 } else {
                     throw new errors.SDKError(
@@ -183,12 +118,12 @@ export class Events {
     /**
      * Update an event
      */
-    async putEvents(
-        req: operations.PutEventsRequestBody,
+    async updateEvent(
+        req: operations.UpdateEventRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.PutEventsResponse> {
+    ): Promise<operations.UpdateEventResponse> {
         if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new operations.PutEventsRequestBody(req);
+            req = new operations.UpdateEventRequestBody(req);
         }
 
         const baseURL: string = utils.templateUrl(
@@ -241,7 +176,7 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.PutEventsResponse = new operations.PutEventsResponse({
+        const res: operations.UpdateEventResponse = new operations.UpdateEventResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
@@ -264,24 +199,31 @@ export class Events {
     }
 
     /**
-     * Retrieve a chart of events
+     * Retrieve events based on filters
      */
-    async getEventsChart(
-        project: string,
-        page?: number,
-        limit?: number,
+    async getEvents(
+        req: operations.GetEventsRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.GetEventsChartResponse> {
-        const req = new operations.GetEventsChartRequest({
-            project: project,
-            page: page,
-            limit: limit,
-        });
+    ): Promise<operations.GetEventsResponse> {
+        if (!(req instanceof utils.SpeakeasyBase)) {
+            req = new operations.GetEventsRequestBody(req);
+        }
+
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/chart";
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/export";
+
+        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
+
+        try {
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new Error(`Error serializing request body, cause: ${e.message}`);
+            }
+        }
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -291,18 +233,23 @@ export class Events {
             globalSecurity = new components.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
+        const headers: RawAxiosRequestHeaders = {
+            ...reqBodyHeaders,
+            ...config?.headers,
+            ...properties.headers,
+        };
+        if (reqBody == null) throw new Error("request body is required");
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "get",
+            url: operationUrl,
+            method: "post",
             headers: headers,
             responseType: "arraybuffer",
+            data: reqBody,
             ...config,
         });
 
@@ -312,20 +259,34 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.GetEventsChartResponse = new operations.GetEventsChartResponse({
+        const res: operations.GetEventsResponse = new operations.GetEventsResponse({
             statusCode: httpRes.status,
             contentType: responseContentType,
             rawResponse: httpRes,
         });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.GetEventsResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    httpRes?.data,
+                    decodedRes,
                     httpRes
                 );
         }
@@ -334,22 +295,34 @@ export class Events {
     }
 
     /**
-     * Delete an event
+     * Create a new model event
+     *
+     * @remarks
+     * Please refer to our instrumentation guide for detailed information
      */
-    async deleteEventsEventId(
-        eventId: string,
-        project: string,
+    async createModelEvent(
+        req: operations.CreateModelEventRequestBody,
         config?: AxiosRequestConfig
-    ): Promise<operations.DeleteEventsEventIdResponse> {
-        const req = new operations.DeleteEventsEventIdRequest({
-            eventId: eventId,
-            project: project,
-        });
+    ): Promise<operations.CreateModelEventResponse> {
+        if (!(req instanceof utils.SpeakeasyBase)) {
+            req = new operations.CreateModelEventRequestBody(req);
+        }
+
         const baseURL: string = utils.templateUrl(
             this.sdkConfiguration.serverURL,
             this.sdkConfiguration.serverDefaults
         );
-        const operationUrl: string = utils.generateURL(baseURL, "/events/{event_id}", req);
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/model";
+
+        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
+
+        try {
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new Error(`Error serializing request body, cause: ${e.message}`);
+            }
+        }
         const client: AxiosInstance = this.sdkConfiguration.defaultClient;
         let globalSecurity = this.sdkConfiguration.security;
         if (typeof globalSecurity === "function") {
@@ -359,18 +332,23 @@ export class Events {
             globalSecurity = new components.Security(globalSecurity);
         }
         const properties = utils.parseSecurityProperties(globalSecurity);
-        const headers: RawAxiosRequestHeaders = { ...config?.headers, ...properties.headers };
-        const queryParams: string = utils.serializeQueryParams(req);
-        headers["Accept"] = "*/*";
+        const headers: RawAxiosRequestHeaders = {
+            ...reqBodyHeaders,
+            ...config?.headers,
+            ...properties.headers,
+        };
+        if (reqBody == null) throw new Error("request body is required");
+        headers["Accept"] = "application/json";
 
         headers["user-agent"] = this.sdkConfiguration.userAgent;
 
         const httpRes: AxiosResponse = await client.request({
             validateStatus: () => true,
-            url: operationUrl + queryParams,
-            method: "delete",
+            url: operationUrl,
+            method: "post",
             headers: headers,
             responseType: "arraybuffer",
+            data: reqBody,
             ...config,
         });
 
@@ -380,21 +358,267 @@ export class Events {
             throw new Error(`status code not found in response: ${httpRes}`);
         }
 
-        const res: operations.DeleteEventsEventIdResponse =
-            new operations.DeleteEventsEventIdResponse({
-                statusCode: httpRes.status,
-                contentType: responseContentType,
-                rawResponse: httpRes,
-            });
+        const res: operations.CreateModelEventResponse = new operations.CreateModelEventResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
         switch (true) {
             case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.CreateModelEventResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):
                 throw new errors.SDKError(
                     "API error occurred",
                     httpRes.status,
-                    httpRes?.data,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Create a batch of events
+     *
+     * @remarks
+     * Please refer to our instrumentation guide for detailed information
+     */
+    async createEventBatch(
+        req: operations.CreateEventBatchRequestBody,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CreateEventBatchResponse> {
+        if (!(req instanceof utils.SpeakeasyBase)) {
+            req = new operations.CreateEventBatchRequestBody(req);
+        }
+
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/batch";
+
+        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
+
+        try {
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new Error(`Error serializing request body, cause: ${e.message}`);
+            }
+        }
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = {
+            ...reqBodyHeaders,
+            ...config?.headers,
+            ...properties.headers,
+        };
+        if (reqBody == null) throw new Error("request body is required");
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: operationUrl,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            data: reqBody,
+            ...config,
+        });
+
+        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CreateEventBatchResponse = new operations.CreateEventBatchResponse({
+            statusCode: httpRes.status,
+            contentType: responseContentType,
+            rawResponse: httpRes,
+        });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.CreateEventBatchResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case httpRes?.status == 500:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    const err = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        errors.CreateEventBatchResponseBody
+                    );
+                    err.rawResponse = httpRes;
+                    throw new errors.CreateEventBatchResponseBody(err);
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
+                    httpRes
+                );
+        }
+
+        return res;
+    }
+
+    /**
+     * Create a batch of model events
+     *
+     * @remarks
+     * Please refer to our instrumentation guide for detailed information
+     */
+    async createModelEventBatch(
+        req: operations.CreateModelEventBatchRequestBody,
+        config?: AxiosRequestConfig
+    ): Promise<operations.CreateModelEventBatchResponse> {
+        if (!(req instanceof utils.SpeakeasyBase)) {
+            req = new operations.CreateModelEventBatchRequestBody(req);
+        }
+
+        const baseURL: string = utils.templateUrl(
+            this.sdkConfiguration.serverURL,
+            this.sdkConfiguration.serverDefaults
+        );
+        const operationUrl: string = baseURL.replace(/\/$/, "") + "/events/model/batch";
+
+        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
+
+        try {
+            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw new Error(`Error serializing request body, cause: ${e.message}`);
+            }
+        }
+        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
+        let globalSecurity = this.sdkConfiguration.security;
+        if (typeof globalSecurity === "function") {
+            globalSecurity = await globalSecurity();
+        }
+        if (!(globalSecurity instanceof utils.SpeakeasyBase)) {
+            globalSecurity = new components.Security(globalSecurity);
+        }
+        const properties = utils.parseSecurityProperties(globalSecurity);
+        const headers: RawAxiosRequestHeaders = {
+            ...reqBodyHeaders,
+            ...config?.headers,
+            ...properties.headers,
+        };
+        if (reqBody == null) throw new Error("request body is required");
+        headers["Accept"] = "application/json";
+
+        headers["user-agent"] = this.sdkConfiguration.userAgent;
+
+        const httpRes: AxiosResponse = await client.request({
+            validateStatus: () => true,
+            url: operationUrl,
+            method: "post",
+            headers: headers,
+            responseType: "arraybuffer",
+            data: reqBody,
+            ...config,
+        });
+
+        const responseContentType: string = httpRes?.headers?.["content-type"] ?? "";
+
+        if (httpRes?.status == null) {
+            throw new Error(`status code not found in response: ${httpRes}`);
+        }
+
+        const res: operations.CreateModelEventBatchResponse =
+            new operations.CreateModelEventBatchResponse({
+                statusCode: httpRes.status,
+                contentType: responseContentType,
+                rawResponse: httpRes,
+            });
+        const decodedRes = new TextDecoder().decode(httpRes?.data);
+        switch (true) {
+            case httpRes?.status == 200:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    res.object = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        operations.CreateModelEventBatchResponseBody
+                    );
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case httpRes?.status == 500:
+                if (utils.matchContentType(responseContentType, `application/json`)) {
+                    const err = utils.objectToClass(
+                        JSON.parse(decodedRes),
+                        errors.CreateModelEventBatchResponseBody
+                    );
+                    err.rawResponse = httpRes;
+                    throw new errors.CreateModelEventBatchResponseBody(err);
+                } else {
+                    throw new errors.SDKError(
+                        "unknown content-type received: " + responseContentType,
+                        httpRes.status,
+                        decodedRes,
+                        httpRes
+                    );
+                }
+                break;
+            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
+                (httpRes?.status >= 500 && httpRes?.status < 600):
+                throw new errors.SDKError(
+                    "API error occurred",
+                    httpRes.status,
+                    decodedRes,
                     httpRes
                 );
         }

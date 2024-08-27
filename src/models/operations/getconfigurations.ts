@@ -6,18 +6,33 @@ import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
 import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
 
+/**
+ * Environment - "dev", "staging" or "prod"
+ */
+export enum Env {
+    Dev = "dev",
+    Staging = "staging",
+    Prod = "prod",
+}
+
 export class GetConfigurationsRequest extends SpeakeasyBase {
     /**
-     * Project identifier
+     * Project name for configuration like `Example Project`
      */
     @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=project" })
     project: string;
 
     /**
-     * Configuration type
+     * Environment - "dev", "staging" or "prod"
      */
-    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=type" })
-    type: string;
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=env" })
+    env?: Env;
+
+    /**
+     * The name of the configuration like `v0`
+     */
+    @SpeakeasyMetadata({ data: "queryParam, style=form;explode=true;name=name" })
+    name?: string;
 }
 
 export class GetConfigurationsResponse extends SpeakeasyBase {

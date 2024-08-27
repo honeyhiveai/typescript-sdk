@@ -3,16 +3,7 @@
  */
 
 import { SpeakeasyBase, SpeakeasyMetadata } from "../../internal/utils";
-import * as components from "../../models/components";
 import { AxiosResponse } from "axios";
-
-export class UpdateDatasetRequest extends SpeakeasyBase {
-    @SpeakeasyMetadata({ data: "pathParam, style=simple;explode=false;name=id" })
-    id: string;
-
-    @SpeakeasyMetadata({ data: "request, media_type=application/json" })
-    dataset: components.Dataset;
-}
 
 export class UpdateDatasetResponse extends SpeakeasyBase {
     /**
@@ -32,10 +23,4 @@ export class UpdateDatasetResponse extends SpeakeasyBase {
      */
     @SpeakeasyMetadata()
     rawResponse: AxiosResponse;
-
-    /**
-     * Dataset updated
-     */
-    @SpeakeasyMetadata()
-    dataset?: components.Dataset;
 }
