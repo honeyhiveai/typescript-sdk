@@ -3,6 +3,122 @@ info:
   title: CodeSamples overlay for typescript target
   version: 0.0.0
 actions:
+  - target: $["paths"]["/runs/{run_id}"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteRun
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.runs.deleteRun("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/metrics"]["put"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: updateMetric
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.updateMetric({\n    metricId: \"<value>\",\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/metrics"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteMetric
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.deleteMetric(\"<value>\");\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/datasets"]["put"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: updateDataset
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datasets.updateDataset({\n    datasetId: \"663876ec4611c47f4970f0c3\",\n    name: \"new-dataset-name\",\n    description: \"An updated dataset description\",\n    datapoints: [\n      \"66369748b5773befbdc661e\",\n    ],\n    linkedEvals: [\n      \"66369748b5773befbdasdk1\",\n    ],\n    metadata: {\n      \"updated\": true,\n      \"source\": \"prod\",\n    },\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/datasets"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteDataset
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datasets.deleteDataset(\"<value>\");\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/session/start"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: startSession
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.session.startSession({\n    session: {\n      project: \"Simple RAG Project\",\n      sessionName: \"Playground Session\",\n      source: \"playground\",\n      sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      childrenIds: [\n        \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n      ],\n      inputs: {\n        \"context\": \"Hello world\",\n        \"question\": \"What is in the context?\",\n        \"chat_history\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: Hello world\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"What is in the context?\",\n          },\n        ],\n      },\n      outputs: {\n        \"role\": \"assistant\",\n        \"content\": \"Hello world\",\n      },\n      error: null,\n      duration: 824.8056,\n      userProperties: {\n        \"user\": \"google-oauth2|111840237613341303366\",\n      },\n      metrics: {\n  \n      },\n      feedback: {\n  \n      },\n      metadata: {\n  \n      },\n      startTime: 1712025501605,\n      endTime: 1712025499832,\n    },\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+  - target: $["paths"]["/datapoints/{id}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getDatapoint
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.datapoints.getDatapoint("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/datapoints/{id}"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteDatapoint
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.datapoints.deleteDatapoint("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/projects"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getProjects
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.projects.getProjects();
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/projects"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteProject
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.projects.deleteProject(\"<value>\");\n\n  \n}\n\nrun();"
   - target: $["paths"]["/runs"]["get"]
     update:
       x-codeSamples:
@@ -23,26 +139,12 @@ actions:
             }
 
             run();
-  - target: $["paths"]["/configurations"]["get"]
+  - target: $["paths"]["/events"]["put"]
     update:
       x-codeSamples:
         - lang: typescript
-          label: getConfigurations
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.configurations.getConfigurations("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
+          label: updateEvent
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.events.updateEvent({\n    eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n    metadata: {\n      \"cost\": 0.00008,\n      \"completion_tokens\": 23,\n      \"prompt_tokens\": 35,\n      \"total_tokens\": 58,\n    },\n    feedback: {\n      \"rating\": 5,\n    },\n    metrics: {\n      \"num_words\": 2,\n    },\n    outputs: {\n      \"role\": \"assistant\",\n      \"content\": \"Hello world\",\n    },\n    config: {\n      \"template\": [\n        {\n          \"role\": \"system\",\n          \"content\": \"Hello, {{ name }}!\",\n        },\n      ],\n    },\n    userProperties: {\n      \"user_id\": \"691b1f94-d38c-4e92-b051-5e03fee9ff86\",\n    },\n    duration: 42,\n  });\n\n  \n}\n\nrun();"
   - target: $["paths"]["/events/model"]["post"]
     update:
       x-codeSamples:
@@ -245,12 +347,6 @@ actions:
             }
 
             run();
-  - target: $["paths"]["/metrics"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateMetric
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.updateMetric({\n    metricId: \"<value>\",\n  });\n\n  \n}\n\nrun();"
   - target: $["paths"]["/tools"]["post"]
     update:
       x-codeSamples:
@@ -278,165 +374,6 @@ actions:
             }
 
             run();
-  - target: $["paths"]["/datasets"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteDataset
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datasets.deleteDataset(\"<value>\");\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/events"]["post"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: createEvent
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.events.createEvent({\n    event: {\n      project: \"Simple RAG\",\n      source: \"playground\",\n      eventName: \"Model Completion\",\n      eventType: \"model\",\n      eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n      sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      parentId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      childrenIds: [\n        \"<value>\",\n      ],\n      config: {\n        \"model\": \"gpt-3.5-turbo\",\n        \"version\": \"v0.1\",\n        \"provider\": \"openai\",\n        \"hyperparameters\": {\n          \"temperature\": 0,\n          \"top_p\": 1,\n          \"max_tokens\": 1000,\n          \"presence_penalty\": 0,\n          \"frequency_penalty\": 0,\n          \"stop\": [\n            \"<value>\",\n          ],\n          \"n\": 1,\n        },\n        \"template\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: {{ context }}\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"{{question}}\",\n          },\n        ],\n        \"type\": \"chat\",\n      },\n      inputs: {\n        \"context\": \"Hello world\",\n        \"question\": \"What is in the context?\",\n        \"chat_history\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: Hello world\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"What is in the context?\",\n          },\n        ],\n      },\n      outputs: {\n        \"role\": \"assistant\",\n        \"content\": \"Hello world\",\n      },\n      error: null,\n      startTime: 1714978764301,\n      endTime: 1714978765301,\n      duration: 999.8056,\n      metadata: {\n        \"cost\": 0.00008,\n        \"completion_tokens\": 23,\n        \"prompt_tokens\": 35,\n        \"total_tokens\": 58,\n      },\n      feedback: {\n  \n      },\n      metrics: {\n        \"Answer Faithfulness\": 5,\n        \"Answer Faithfulness_explanation\": \"The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.\",\n        \"Number of words\": 18,\n      },\n      userProperties: {\n        \"user\": \"google-oauth2|111840237613341303366\",\n      },\n    },\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
-  - target: $["paths"]["/tools"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getTools
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.tools.getTools();
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/runs/{run_id}"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getRun
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.runs.getRun("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/metrics"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteMetric
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.deleteMetric(\"<value>\");\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/datapoints"]["post"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: createDatapoint
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.datapoints.createDatapoint({
-                project: "New Project",
-                inputs: {
-                  "query": "what's the temperature in Iceland?",
-                },
-                history: [
-                  {
-                    "role": "system",
-                    "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\"",
-                  },
-                  {
-                    "role": "user",
-                    "content": "what's the temperature in Iceland?\n\n\n--Google search API results below:---\n\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]",
-                  },
-                ],
-                groundTruth: {
-                  "role": "assistant",
-                  "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
-                },
-                linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
-                linkedDatasets: [
-                  "<value>",
-                ],
-                metadata: {
-                  "question_type": "weather",
-                  "completion_tokens": 47,
-                  "prompt_tokens": 696,
-                  "total_tokens": 743,
-                },
-              });
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/datapoints/{id}"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteDatapoint
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.datapoints.deleteDatapoint("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/projects"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateProject
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.projects.updateProject({\n    projectId: \"<value>\",\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/runs"]["post"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: createRun
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.runs.createRun({
-                project: "<value>",
-                name: "<value>",
-                eventIds: [
-                  "1b590040-fd4d-40db-a8d8-d6e550cfa9f3",
-                ],
-              });
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
   - target: $["paths"]["/runs/{run_id}"]["put"]
     update:
       x-codeSamples:
@@ -457,17 +394,11 @@ actions:
             }
 
             run();
-  - target: $["paths"]["/session/start"]["post"]
+  - target: $["paths"]["/configurations"]["get"]
     update:
       x-codeSamples:
         - lang: typescript
-          label: startSession
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.session.startSession({\n    session: {\n      project: \"Simple RAG Project\",\n      sessionName: \"Playground Session\",\n      source: \"playground\",\n      sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      childrenIds: [\n        \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n      ],\n      inputs: {\n        \"context\": \"Hello world\",\n        \"question\": \"What is in the context?\",\n        \"chat_history\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: Hello world\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"What is in the context?\",\n          },\n        ],\n      },\n      outputs: {\n        \"role\": \"assistant\",\n        \"content\": \"Hello world\",\n      },\n      error: null,\n      duration: 824.8056,\n      userProperties: {\n        \"user\": \"google-oauth2|111840237613341303366\",\n      },\n      metrics: {\n  \n      },\n      feedback: {\n  \n      },\n      metadata: {\n  \n      },\n      startTime: 1712025501605,\n      endTime: 1712025499832,\n    },\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
-  - target: $["paths"]["/session/{session_id}"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getSession
+          label: getConfigurations
           source: |-
             import { HoneyHive } from "honeyhive";
 
@@ -476,25 +407,43 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.session.getSession("<value>");
+              const result = await honeyHive.configurations.getConfigurations("<value>");
 
               // Handle the result
               console.log(result)
             }
 
             run();
-  - target: $["paths"]["/events/batch"]["post"]
+  - target: $["paths"]["/configurations/{id}"]["put"]
     update:
       x-codeSamples:
         - lang: typescript
-          label: createEventBatch
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.events.createEventBatch({\n    events: [\n      {\n        project: \"Simple RAG\",\n        source: \"playground\",\n        eventName: \"Model Completion\",\n        eventType: \"model\",\n        eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n        sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n        parentId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n        childrenIds: [\n          \"<value>\",\n        ],\n        config: {\n          \"model\": \"gpt-3.5-turbo\",\n          \"version\": \"v0.1\",\n          \"provider\": \"openai\",\n          \"hyperparameters\": {\n            \"temperature\": 0,\n            \"top_p\": 1,\n            \"max_tokens\": 1000,\n            \"presence_penalty\": 0,\n            \"frequency_penalty\": 0,\n            \"stop\": [\n              \"<value>\",\n            ],\n            \"n\": 1,\n          },\n          \"template\": [\n            {\n              \"role\": \"system\",\n              \"content\": \"Answer the user's question only using provided context.\n  \n              Context: {{ context }}\",\n            },\n            {\n              \"role\": \"user\",\n              \"content\": \"{{question}}\",\n            },\n          ],\n          \"type\": \"chat\",\n        },\n        inputs: {\n          \"context\": \"Hello world\",\n          \"question\": \"What is in the context?\",\n          \"chat_history\": [\n            {\n              \"role\": \"system\",\n              \"content\": \"Answer the user's question only using provided context.\n  \n              Context: Hello world\",\n            },\n            {\n              \"role\": \"user\",\n              \"content\": \"What is in the context?\",\n            },\n          ],\n        },\n        outputs: {\n          \"role\": \"assistant\",\n          \"content\": \"Hello world\",\n        },\n        error: null,\n        startTime: 1714978764301,\n        endTime: 1714978765301,\n        duration: 999.8056,\n        metadata: {\n          \"cost\": 0.00008,\n          \"completion_tokens\": 23,\n          \"prompt_tokens\": 35,\n          \"total_tokens\": 58,\n        },\n        feedback: {\n  \n        },\n        metrics: {\n          \"Answer Faithfulness\": 5,\n          \"Answer Faithfulness_explanation\": \"The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.\",\n          \"Number of words\": 18,\n        },\n        userProperties: {\n          \"user\": \"google-oauth2|111840237613341303366\",\n        },\n      },\n    ],\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
-  - target: $["paths"]["/datasets"]["put"]
+          label: updateConfiguration
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.configurations.updateConfiguration(\"<value>\", {\n    project: \"New Project\",\n    name: \"function-v0\",\n    provider: \"openai\",\n    parameters: {\n      callType: \"chat\",\n      model: \"gpt-4-turbo-preview\",\n      hyperparameters: {\n        \"temperature\": 0,\n        \"max_tokens\": 1000,\n        \"top_p\": 1,\n        \"top_k\": -1,\n        \"frequency_penalty\": 0,\n        \"presence_penalty\": 0,\n        \"stop_sequences\": [\n          \"<value>\",\n        ],\n      },\n      responseFormat: {},\n      selectedFunctions: [\n        {\n          id: \"64e3ba90e81f9b3a3808c27f\",\n          name: \"get_google_information\",\n          description: \"Get information from Google when you do not have that information in your context\",\n          parameters: {\n            \"type\": \"object\",\n            \"properties\": {\n              \"query\": {\n                \"type\": \"string\",\n                \"description\": \"The query asked by the user\",\n              },\n            },\n            \"required\": [\n              \"query\",\n            ],\n          },\n        },\n      ],\n      functionCallParams: \"auto\",\n      forceFunction: {\n  \n      },\n      additionalProperties: {\n        \"template\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"You are a web search assistant.\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"{{ query }}\",\n          },\n        ],\n      },\n    },\n    env: [\n      \"staging\",\n    ],\n    type: \"LLM\",\n    userProperties: {\n      \"user_id\": \"google-oauth2|108897808434934946583\",\n      \"user_name\": \"Dhruv Singh\",\n      \"user_picture\": \"https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c\",\n      \"user_email\": \"dhruv@honeyhive.ai\",\n    },\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/configurations/{id}"]["delete"]
     update:
       x-codeSamples:
         - lang: typescript
-          label: updateDataset
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datasets.updateDataset({\n    datasetId: \"663876ec4611c47f4970f0c3\",\n    name: \"new-dataset-name\",\n    description: \"An updated dataset description\",\n    datapoints: [\n      \"66369748b5773befbdc661e\",\n    ],\n    linkedEvals: [\n      \"66369748b5773befbdasdk1\",\n    ],\n    metadata: {\n      \"updated\": true,\n      \"source\": \"prod\",\n    },\n  });\n\n  \n}\n\nrun();"
+          label: deleteConfiguration
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.configurations.deleteConfiguration(\"<value>\");\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/metrics"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: createMetric
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.createMetric({\n    name: \"<value>\",\n    task: \"<value>\",\n    type: \"model\",\n    description: \"Fully-configurable neutral framework\",\n    returnType: \"string\",\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/tools"]["put"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: updateTool
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.tools.updateTool({\n    id: \"<id>\",\n    name: \"<value>\",\n    parameters: {\n      \"key\": \"<value>\",\n    },\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/datapoints/{id}"]["put"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: updateDatapoint
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datapoints.updateDatapoint(\"<value>\", {\n    inputs: {\n      \"query\": \"what's the temperature in Reykjavik?\",\n    },\n    history: [\n      {\n        \"role\": \"system\",\n        \"content\": \"You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \\\"I apologize but I'm not sure.\\\"\",\n      },\n      {\n        \"role\": \"user\",\n        \"content\": \"what's the temperature in Reykjavik?\\n\\n\\n--Google search API results below:---\\n\\n\\\"snippet\\\":\\\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\\\",\\\"snippet_highlighted_words\\\":[\\\"Feb 4, 29 / 20 °F\\\"]\",\n      },\n    ],\n    groundTruth: {\n      \"role\": \"assistant\",\n      \"content\": \"The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.\",\n    },\n    linkedEvals: [\n      \"<value>\",\n    ],\n    linkedDatasets: [\n      \"<value>\",\n    ],\n    metadata: {\n      \"question_type\": \"capital-weather\",\n      \"random_field\": 0,\n    },\n  });\n\n  \n}\n\nrun();"
   - target: $["paths"]["/projects"]["post"]
     update:
       x-codeSamples:
@@ -517,204 +466,6 @@ actions:
             }
 
             run();
-  - target: $["paths"]["/metrics"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getMetrics
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.metrics.getMetrics("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/datapoints/{id}"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateDatapoint
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.datapoints.updateDatapoint(\"<value>\", {\n    inputs: {\n      \"query\": \"what's the temperature in Reykjavik?\",\n    },\n    history: [\n      {\n        \"role\": \"system\",\n        \"content\": \"You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \\\"I apologize but I'm not sure.\\\"\",\n      },\n      {\n        \"role\": \"user\",\n        \"content\": \"what's the temperature in Reykjavik?\\n\\n\\n--Google search API results below:---\\n\\n\\\"snippet\\\":\\\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\\\",\\\"snippet_highlighted_words\\\":[\\\"Feb 4, 29 / 20 °F\\\"]\",\n      },\n    ],\n    groundTruth: {\n      \"role\": \"assistant\",\n      \"content\": \"The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.\",\n    },\n    linkedEvals: [\n      \"<value>\",\n    ],\n    linkedDatasets: [\n      \"<value>\",\n    ],\n    metadata: {\n      \"question_type\": \"capital-weather\",\n      \"random_field\": 0,\n    },\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/projects"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteProject
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.projects.deleteProject(\"<value>\");\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/runs/{run_id}"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteRun
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.runs.deleteRun("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/events"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateEvent
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.events.updateEvent({\n    eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n    metadata: {\n      \"cost\": 0.00008,\n      \"completion_tokens\": 23,\n      \"prompt_tokens\": 35,\n      \"total_tokens\": 58,\n    },\n    feedback: {\n      \"rating\": 5,\n    },\n    metrics: {\n      \"num_words\": 2,\n    },\n    outputs: {\n      \"role\": \"assistant\",\n      \"content\": \"Hello world\",\n    },\n    config: {\n      \"template\": [\n        {\n          \"role\": \"system\",\n          \"content\": \"Hello, {{ name }}!\",\n        },\n      ],\n    },\n    userProperties: {\n      \"user_id\": \"691b1f94-d38c-4e92-b051-5e03fee9ff86\",\n    },\n    duration: 42,\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/datapoints"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getDatapoints
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.datapoints.getDatapoints("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/datasets"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getDatasets
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.datasets.getDatasets("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/projects"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getProjects
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.projects.getProjects();
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/configurations/{id}"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteConfiguration
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.configurations.deleteConfiguration(\"<value>\");\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/events/export"]["post"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getEvents
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.events.getEvents({
-                project: "<value>",
-                filters: [
-                  {
-                    field: "event_type",
-                    value: "model",
-                    operator: "is",
-                    type: "string",
-                  },
-                ],
-              });
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/tools"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateTool
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.tools.updateTool({\n    id: \"<id>\",\n    name: \"<value>\",\n    parameters: {\n      \"key\": \"<value>\",\n    },\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/datapoints/{id}"]["get"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: getDatapoint
-          source: |-
-            import { HoneyHive } from "honeyhive";
-
-            const honeyHive = new HoneyHive({
-              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-            });
-
-            async function run() {
-              const result = await honeyHive.datapoints.getDatapoint("<value>");
-
-              // Handle the result
-              console.log(result)
-            }
-
-            run();
-  - target: $["paths"]["/configurations/{id}"]["put"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: updateConfiguration
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.configurations.updateConfiguration(\"<value>\", {\n    project: \"New Project\",\n    name: \"function-v0\",\n    provider: \"openai\",\n    parameters: {\n      callType: \"chat\",\n      model: \"gpt-4-turbo-preview\",\n      hyperparameters: {\n        \"temperature\": 0,\n        \"max_tokens\": 1000,\n        \"top_p\": 1,\n        \"top_k\": -1,\n        \"frequency_penalty\": 0,\n        \"presence_penalty\": 0,\n        \"stop_sequences\": [\n          \"<value>\",\n        ],\n      },\n      responseFormat: {},\n      selectedFunctions: [\n        {\n          id: \"64e3ba90e81f9b3a3808c27f\",\n          name: \"get_google_information\",\n          description: \"Get information from Google when you do not have that information in your context\",\n          parameters: {\n            \"type\": \"object\",\n            \"properties\": {\n              \"query\": {\n                \"type\": \"string\",\n                \"description\": \"The query asked by the user\",\n              },\n            },\n            \"required\": [\n              \"query\",\n            ],\n          },\n        },\n      ],\n      functionCallParams: \"auto\",\n      forceFunction: {\n  \n      },\n      additionalProperties: {\n        \"template\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"You are a web search assistant.\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"{{ query }}\",\n          },\n        ],\n      },\n    },\n    env: [\n      \"staging\",\n    ],\n    type: \"LLM\",\n    userProperties: {\n      \"user_id\": \"google-oauth2|108897808434934946583\",\n      \"user_name\": \"Dhruv Singh\",\n      \"user_picture\": \"https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c\",\n      \"user_email\": \"dhruv@honeyhive.ai\",\n    },\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/metrics"]["post"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: createMetric
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.metrics.createMetric({\n    name: \"<value>\",\n    task: \"<value>\",\n    type: \"model\",\n    description: \"Fully-configurable neutral framework\",\n    returnType: \"string\",\n  });\n\n  \n}\n\nrun();"
-  - target: $["paths"]["/tools"]["delete"]
-    update:
-      x-codeSamples:
-        - lang: typescript
-          label: deleteTool
-          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.tools.deleteTool(\"<value>\");\n\n  \n}\n\nrun();"
   - target: $["paths"]["/datasets"]["post"]
     update:
       x-codeSamples:
@@ -795,3 +546,252 @@ actions:
         - lang: typescript
           label: createConfiguration
           source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.configurations.createConfiguration({\n    project: \"660d7ba7995cacccce4d299e\",\n    name: \"function-v0\",\n    provider: \"openai\",\n    parameters: {\n      callType: \"chat\",\n      model: \"gpt-4-turbo-preview\",\n      hyperparameters: {\n        \"temperature\": 0,\n        \"max_tokens\": 1000,\n        \"top_p\": 1,\n        \"top_k\": -1,\n        \"frequency_penalty\": 0,\n        \"presence_penalty\": 0,\n        \"stop_sequences\": [\n          \"<value>\",\n        ],\n      },\n      selectedFunctions: [\n        {\n          id: \"64e3ba90e81f9b3a3808c27f\",\n          name: \"get_google_information\",\n          description: \"Get information from Google when you do not have that information in your context\",\n          parameters: {\n            \"type\": \"object\",\n            \"properties\": {\n              \"query\": {\n                \"type\": \"string\",\n                \"description\": \"The query asked by the user\",\n              },\n            },\n            \"required\": [\n              \"query\",\n            ],\n          },\n        },\n      ],\n      functionCallParams: \"auto\",\n      forceFunction: {\n  \n      },\n      additionalProperties: {\n        \"template\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"You are a web search assistant.\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"{{ query }}\",\n          },\n        ],\n      },\n    },\n    env: [\n      \"staging\",\n    ],\n    userProperties: {\n      \"user_id\": \"google-oauth2|108897808434934946583\",\n      \"user_name\": \"Dhruv Singh\",\n      \"user_picture\": \"https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c\",\n      \"user_email\": \"dhruv@honeyhive.ai\",\n    },\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/events"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: createEvent
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.events.createEvent({\n    event: {\n      project: \"Simple RAG\",\n      source: \"playground\",\n      eventName: \"Model Completion\",\n      eventType: \"model\",\n      eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n      sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      parentId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n      childrenIds: [\n        \"<value>\",\n      ],\n      config: {\n        \"model\": \"gpt-3.5-turbo\",\n        \"version\": \"v0.1\",\n        \"provider\": \"openai\",\n        \"hyperparameters\": {\n          \"temperature\": 0,\n          \"top_p\": 1,\n          \"max_tokens\": 1000,\n          \"presence_penalty\": 0,\n          \"frequency_penalty\": 0,\n          \"stop\": [\n            \"<value>\",\n          ],\n          \"n\": 1,\n        },\n        \"template\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: {{ context }}\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"{{question}}\",\n          },\n        ],\n        \"type\": \"chat\",\n      },\n      inputs: {\n        \"context\": \"Hello world\",\n        \"question\": \"What is in the context?\",\n        \"chat_history\": [\n          {\n            \"role\": \"system\",\n            \"content\": \"Answer the user's question only using provided context.\n  \n            Context: Hello world\",\n          },\n          {\n            \"role\": \"user\",\n            \"content\": \"What is in the context?\",\n          },\n        ],\n      },\n      outputs: {\n        \"role\": \"assistant\",\n        \"content\": \"Hello world\",\n      },\n      error: null,\n      startTime: 1714978764301,\n      endTime: 1714978765301,\n      duration: 999.8056,\n      metadata: {\n        \"cost\": 0.00008,\n        \"completion_tokens\": 23,\n        \"prompt_tokens\": 35,\n        \"total_tokens\": 58,\n      },\n      feedback: {\n  \n      },\n      metrics: {\n        \"Answer Faithfulness\": 5,\n        \"Answer Faithfulness_explanation\": \"The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.\",\n        \"Number of words\": 18,\n      },\n      userProperties: {\n        \"user\": \"google-oauth2|111840237613341303366\",\n      },\n    },\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+  - target: $["paths"]["/events/export"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getEvents
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.events.getEvents({
+                project: "<value>",
+                filters: [
+                  {
+                    field: "event_type",
+                    value: "model",
+                    operator: "is",
+                    type: "string",
+                  },
+                ],
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/events/batch"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: createEventBatch
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  const result = await honeyHive.events.createEventBatch({\n    events: [\n      {\n        project: \"Simple RAG\",\n        source: \"playground\",\n        eventName: \"Model Completion\",\n        eventType: \"model\",\n        eventId: \"7f22137a-6911-4ed3-bc36-110f1dde6b66\",\n        sessionId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n        parentId: \"caf77ace-3417-4da4-944d-f4a0688f3c23\",\n        childrenIds: [\n          \"<value>\",\n        ],\n        config: {\n          \"model\": \"gpt-3.5-turbo\",\n          \"version\": \"v0.1\",\n          \"provider\": \"openai\",\n          \"hyperparameters\": {\n            \"temperature\": 0,\n            \"top_p\": 1,\n            \"max_tokens\": 1000,\n            \"presence_penalty\": 0,\n            \"frequency_penalty\": 0,\n            \"stop\": [\n              \"<value>\",\n            ],\n            \"n\": 1,\n          },\n          \"template\": [\n            {\n              \"role\": \"system\",\n              \"content\": \"Answer the user's question only using provided context.\n  \n              Context: {{ context }}\",\n            },\n            {\n              \"role\": \"user\",\n              \"content\": \"{{question}}\",\n            },\n          ],\n          \"type\": \"chat\",\n        },\n        inputs: {\n          \"context\": \"Hello world\",\n          \"question\": \"What is in the context?\",\n          \"chat_history\": [\n            {\n              \"role\": \"system\",\n              \"content\": \"Answer the user's question only using provided context.\n  \n              Context: Hello world\",\n            },\n            {\n              \"role\": \"user\",\n              \"content\": \"What is in the context?\",\n            },\n          ],\n        },\n        outputs: {\n          \"role\": \"assistant\",\n          \"content\": \"Hello world\",\n        },\n        error: null,\n        startTime: 1714978764301,\n        endTime: 1714978765301,\n        duration: 999.8056,\n        metadata: {\n          \"cost\": 0.00008,\n          \"completion_tokens\": 23,\n          \"prompt_tokens\": 35,\n          \"total_tokens\": 58,\n        },\n        feedback: {\n  \n        },\n        metrics: {\n          \"Answer Faithfulness\": 5,\n          \"Answer Faithfulness_explanation\": \"The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.\",\n          \"Number of words\": 18,\n        },\n        userProperties: {\n          \"user\": \"google-oauth2|111840237613341303366\",\n        },\n      },\n    ],\n  });\n\n  // Handle the result\n  console.log(result)\n}\n\nrun();"
+  - target: $["paths"]["/datapoints"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: createDatapoint
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.datapoints.createDatapoint({
+                project: "New Project",
+                inputs: {
+                  "query": "what's the temperature in Iceland?",
+                },
+                history: [
+                  {
+                    "role": "system",
+                    "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\"",
+                  },
+                  {
+                    "role": "user",
+                    "content": "what's the temperature in Iceland?\n\n\n--Google search API results below:---\n\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]",
+                  },
+                ],
+                groundTruth: {
+                  "role": "assistant",
+                  "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+                },
+                linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
+                linkedDatasets: [
+                  "<value>",
+                ],
+                metadata: {
+                  "question_type": "weather",
+                  "completion_tokens": 47,
+                  "prompt_tokens": 696,
+                  "total_tokens": 743,
+                },
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/tools"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getTools
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.tools.getTools();
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/datapoints"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getDatapoints
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.datapoints.getDatapoints("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/projects"]["put"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: updateProject
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.projects.updateProject({\n    projectId: \"<value>\",\n  });\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/runs"]["post"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: createRun
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.runs.createRun({
+                project: "<value>",
+                name: "<value>",
+                eventIds: [
+                  "1b590040-fd4d-40db-a8d8-d6e550cfa9f3",
+                ],
+              });
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/runs/{run_id}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getRun
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.runs.getRun("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/session/{session_id}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getSession
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.session.getSession("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/metrics"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getMetrics
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.metrics.getMetrics("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
+  - target: $["paths"]["/tools"]["delete"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: deleteTool
+          source: "import { HoneyHive } from \"honeyhive\";\n\nconst honeyHive = new HoneyHive({\n  bearerAuth: \"<YOUR_BEARER_TOKEN_HERE>\",\n});\n\nasync function run() {\n  await honeyHive.tools.deleteTool(\"<value>\");\n\n  \n}\n\nrun();"
+  - target: $["paths"]["/datasets"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getDatasets
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.datasets.getDatasets("<value>");
+
+              // Handle the result
+              console.log(result)
+            }
+
+            run();
