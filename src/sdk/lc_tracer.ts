@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import * as uuid from 'uuid';
+import { v4 as uuid } from 'uuid'
 import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import { Serialized } from '@langchain/core/load/serializable';
 import { ChainValues } from '@langchain/core/utils/types';
@@ -41,7 +41,7 @@ export class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.source = source;
     this.name = name;
     this.userProperties = userProperties;
-    this.sessionId = uuid.v4();
+    this.sessionId = uuid();
 
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (apiKey || process.env['HONEYHIVE_API_KEY']) {
