@@ -33,7 +33,6 @@ typescript:
   inputModelSuffix: input
   maxMethodParams: 4
   methodArguments: require-security-and-request
-  moduleFormat: esm
   outputModelSuffix: output
   packageName: honeyhive
   responseFormat: flat
