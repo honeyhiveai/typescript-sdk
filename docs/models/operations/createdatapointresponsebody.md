@@ -2,6 +2,13 @@
 
 Datapoint successfully created
 
+## Example Usage
+
+```typescript
+import { CreateDatapointResponseBody } from "honeyhive/models/operations";
+
+let value: CreateDatapointResponseBody = {};
+```
 
 ## Fields
 

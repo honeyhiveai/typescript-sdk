@@ -1,10 +1,15 @@
 # PostConfigurationRequestEnv
 
+## Example Usage
+
+```typescript
+import { PostConfigurationRequestEnv } from "honeyhive/models/components";
+
+let value: PostConfigurationRequestEnv = "staging";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Dev`     | dev       |
-| `Staging` | staging   |
-| `Prod`    | prod      |
+```typescript
+"dev" | "staging" | "prod"
+```

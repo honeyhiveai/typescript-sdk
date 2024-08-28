@@ -1,5 +1,14 @@
 # GetConfigurationsRequest
 
+## Example Usage
+
+```typescript
+import { GetConfigurationsRequest } from "honeyhive/models/operations";
+
+let value: GetConfigurationsRequest = {
+    project: "<value>",
+};
+```
 
 ## Fields
 

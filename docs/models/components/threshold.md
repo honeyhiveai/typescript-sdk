@@ -2,6 +2,13 @@
 
 Threshold for numeric metrics to decide passing or failing in tests
 
+## Example Usage
+
+```typescript
+import { Threshold } from "honeyhive/models/components";
+
+let value: Threshold = {};
+```
 
 ## Fields
 

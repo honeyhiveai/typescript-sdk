@@ -2,6 +2,13 @@
 
 Session successfully started
 
+## Example Usage
+
+```typescript
+import { StartSessionResponseBody } from "honeyhive/models/operations";
+
+let value: StartSessionResponseBody = {};
+```
 
 ## Fields
 

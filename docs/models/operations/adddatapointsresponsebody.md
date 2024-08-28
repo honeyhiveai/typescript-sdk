@@ -2,6 +2,13 @@
 
 Successful addition
 
+## Example Usage
+
+```typescript
+import { AddDatapointsResponseBody } from "honeyhive/models/operations";
+
+let value: AddDatapointsResponseBody = {};
+```
 
 ## Fields
 

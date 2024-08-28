@@ -13,8 +13,14 @@ generation:
     oAuth2ClientCredentialsEnabled: false
 typescript:
   version: 0.5.4
+  additionalDependencies:
+    dependencies: {}
+    devDependencies: {}
+    peerDependencies: {}
+  additionalPackageJSON: {}
   author: HoneyHive
   clientServerStatusCodesAsErrors: true
+  enumFormat: union
   flattenGlobalSecurity: true
   imports:
     option: openapi
@@ -26,7 +32,10 @@ typescript:
       webhooks: models/webhooks
   inputModelSuffix: input
   maxMethodParams: 4
+  methodArguments: require-security-and-request
+  moduleFormat: esm
   outputModelSuffix: output
   packageName: honeyhive
+  responseFormat: flat
   templateVersion: v2
-  moduleFormat: esm
+  useIndexModules: true

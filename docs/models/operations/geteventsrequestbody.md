@@ -1,5 +1,22 @@
 # GetEventsRequestBody
 
+## Example Usage
+
+```typescript
+import { GetEventsRequestBody } from "honeyhive/models/operations";
+
+let value: GetEventsRequestBody = {
+    project: "<value>",
+    filters: [
+        {
+            field: "event_type",
+            value: "model",
+            operator: "is",
+            type: "string",
+        },
+    ],
+};
+```
 
 ## Fields
 

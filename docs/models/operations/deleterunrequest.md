@@ -1,5 +1,14 @@
 # DeleteRunRequest
 
+## Example Usage
+
+```typescript
+import { DeleteRunRequest } from "honeyhive/models/operations";
+
+let value: DeleteRunRequest = {
+    runId: "<value>",
+};
+```
 
 ## Fields
 

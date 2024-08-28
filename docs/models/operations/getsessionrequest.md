@@ -1,5 +1,14 @@
 # GetSessionRequest
 
+## Example Usage
+
+```typescript
+import { GetSessionRequest } from "honeyhive/models/operations";
+
+let value: GetSessionRequest = {
+    sessionId: "<value>",
+};
+```
 
 ## Fields
 

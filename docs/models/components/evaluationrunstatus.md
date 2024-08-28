@@ -1,9 +1,15 @@
 # EvaluationRunStatus
 
+## Example Usage
+
+```typescript
+import { EvaluationRunStatus } from "honeyhive/models/components";
+
+let value: EvaluationRunStatus = "completed";
+```
 
 ## Values
 
-| Name        | Value       |
-| ----------- | ----------- |
-| `Pending`   | pending     |
-| `Completed` | completed   |
+```typescript
+"pending" | "completed"
+```

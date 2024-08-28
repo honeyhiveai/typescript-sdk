@@ -1,5 +1,12 @@
 # DeleteRunResponse
 
+## Example Usage
+
+```typescript
+import { DeleteRunResponse } from "honeyhive/models/components";
+
+let value: DeleteRunResponse = {};
+```
 
 ## Fields
 

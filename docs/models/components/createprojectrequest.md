@@ -1,5 +1,14 @@
 # CreateProjectRequest
 
+## Example Usage
+
+```typescript
+import { CreateProjectRequest } from "honeyhive/models/components";
+
+let value: CreateProjectRequest = {
+    name: "<value>",
+};
+```
 
 ## Fields
 
