@@ -3,4 +3,5 @@
  */
 
 export * from "./sdk/sdk.js";
+export * from "./sdk/lc_tracer.js";
 export * from "./lib/config.js";
