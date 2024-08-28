@@ -3,10 +3,10 @@ id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
   docChecksum: fbfe26308ed66ab751c99533c3149a24
   docVersion: 1.0.1
-  speakeasyVersion: 1.381.0
+  speakeasyVersion: 1.381.4
   generationVersion: 2.404.9
-  releaseVersion: 0.5.4
-  configChecksum: cdf18ddd2ca45ee29912bbfaa33c5104
+  releaseVersion: 0.5.5
+  configChecksum: 7be3da410d67696fd9bfc4a97ff41d61
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
