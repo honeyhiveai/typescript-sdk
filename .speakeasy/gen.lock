@@ -5,8 +5,8 @@ management:
   docVersion: 1.0.1
   speakeasyVersion: 1.381.4
   generationVersion: 2.404.9
-  releaseVersion: 0.5.5
-  configChecksum: 7be3da410d67696fd9bfc4a97ff41d61
+  releaseVersion: 0.5.6
+  configChecksum: be3518b253c4097949cc1d28dab6f462
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -81,9 +81,7 @@ generatedFiles:
   - FUNCTIONS.md
   - RUNTIMES.md
   - jsr.json
-  - package.json
   - src/core.ts
-  - src/index.ts
   - src/lib/base64.ts
   - src/lib/config.ts
   - src/lib/dlv.ts
@@ -98,7 +96,6 @@ generatedFiles:
   - src/lib/sdks.ts
   - src/lib/security.ts
   - src/lib/url.ts
-  - src/sdk/index.ts
   - src/models/errors/httpclienterrors.ts
   - src/models/errors/sdkerror.ts
   - src/models/errors/sdkvalidationerror.ts
@@ -109,7 +106,6 @@ generatedFiles:
   - src/types/index.ts
   - src/types/operations.ts
   - src/types/rfcdate.ts
-  - tsconfig.json
   - src/models/operations/startsession.ts
   - src/models/operations/getsession.ts
   - src/models/operations/createevent.ts
