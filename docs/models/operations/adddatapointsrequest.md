@@ -1,5 +1,27 @@
 # AddDatapointsRequest
 
+## Example Usage
+
+```typescript
+import { AddDatapointsRequest } from "honeyhive/models/operations";
+
+let value: AddDatapointsRequest = {
+    datasetId: "<value>",
+    requestBody: {
+        project: "<value>",
+        data: [
+            {
+                key: "<value>",
+            },
+        ],
+        mapping: {
+            inputs: ["<value>"],
+            groundTruth: ["<value>"],
+            history: ["<value>"],
+        },
+    },
+};
+```
 
 ## Fields
 

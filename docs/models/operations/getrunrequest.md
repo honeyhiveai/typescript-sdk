@@ -1,5 +1,14 @@
 # GetRunRequest
 
+## Example Usage
+
+```typescript
+import { GetRunRequest } from "honeyhive/models/operations";
+
+let value: GetRunRequest = {
+    runId: "<value>",
+};
+```
 
 ## Fields
 

@@ -2,6 +2,16 @@
 
 Event created
 
+## Example Usage
+
+```typescript
+import { CreateEventResponseBody } from "honeyhive/models/operations";
+
+let value: CreateEventResponseBody = {
+    eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+    success: true,
+};
+```
 
 ## Fields
 

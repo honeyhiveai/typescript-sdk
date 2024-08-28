@@ -1,5 +1,12 @@
 # GetRunsResponse
 
+## Example Usage
+
+```typescript
+import { GetRunsResponse } from "honeyhive/models/components";
+
+let value: GetRunsResponse = {};
+```
 
 ## Fields
 

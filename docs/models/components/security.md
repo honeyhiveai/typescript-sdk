@@ -1,5 +1,14 @@
 # Security
 
+## Example Usage
+
+```typescript
+import { Security } from "honeyhive/models/components";
+
+let value: Security = {
+    bearerAuth: "<value>",
+};
+```
 
 ## Fields
 

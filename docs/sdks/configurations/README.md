@@ -1,6 +1,8 @@
 # Configurations
 (*configurations*)
 
+## Overview
+
 ### Available Operations
 
 * [getConfigurations](#getconfigurations) - Retrieve a list of configurations
@@ -16,21 +18,46 @@ Retrieve a list of configurations
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { Env, GetConfigurationsRequest } from "honeyhive/dist/models/operations";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const project: string = "<value>";
-const env: Env = Env.Dev;
-const name: string = "<value>";
+  const result = await honeyHive.configurations.getConfigurations("<value>");
 
-  const res = await sdk.configurations.getConfigurations(project, env, name);
+  // Handle the result
+  console.log(result)
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { configurationsGetConfigurations } from "honeyhive/funcs/configurationsGetConfigurations.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await configurationsGetConfigurations(honeyHive, "<value>");
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
 }
 
 run();
@@ -38,22 +65,25 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `project`                                                    | *string*                                                     | :heavy_check_mark:                                           | Project name for configuration like `Example Project`        |
-| `env`                                                        | [operations.Env](../../models/operations/env.md)             | :heavy_minus_sign:                                           | Environment - "dev", "staging" or "prod"                     |
-| `name`                                                       | *string*                                                     | :heavy_minus_sign:                                           | The name of the configuration like `v0`                      |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `project`                                                                                                                                                                      | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | Project name for configuration like `Example Project`                                                                                                                          |
+| `env`                                                                                                                                                                          | [operations.Env](../../models/operations/env.md)                                                                                                                               | :heavy_minus_sign:                                                                                                                                                             | Environment - "dev", "staging" or "prod"                                                                                                                                       |
+| `name`                                                                                                                                                                         | *string*                                                                                                                                                                       | :heavy_minus_sign:                                                                                                                                                             | The name of the configuration like `v0`                                                                                                                                        |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.GetConfigurationsResponse](../../models/operations/getconfigurationsresponse.md)>**
+**Promise\<[components.Configuration[]](../../models/.md)\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## createConfiguration
 
@@ -63,21 +93,20 @@ Create a new configuration
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { PostConfigurationRequestEnv } from "honeyhive/dist/models/components";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-
-  const res = await sdk.configurations.createConfiguration({
+  await honeyHive.configurations.createConfiguration({
     project: "660d7ba7995cacccce4d299e",
     name: "function-v0",
     provider: "openai",
     parameters: {
-      "call_type": "chat",
-      "model": "gpt-4-turbo-preview",
-      "hyperparameters": {
+      callType: "chat",
+      model: "gpt-4-turbo-preview",
+      hyperparameters: {
         "temperature": 0,
         "max_tokens": 1000,
         "top_p": 1,
@@ -88,12 +117,12 @@ async function run() {
           "<value>",
         ],
       },
-      "selectedFunctions": [
+      selectedFunctions: [
         {
-          "id": "64e3ba90e81f9b3a3808c27f",
-          "name": "get_google_information",
-          "description": "Get information from Google when you do not have that information in your context",
-          "parameters": {
+          id: "64e3ba90e81f9b3a3808c27f",
+          name: "get_google_information",
+          description: "Get information from Google when you do not have that information in your context",
+          parameters: {
             "type": "object",
             "properties": {
               "query": {
@@ -107,23 +136,25 @@ async function run() {
           },
         },
       ],
-      "functionCallParams": "auto",
-      "forceFunction": {
-
+      functionCallParams: "auto",
+      forceFunction: {
+  
       },
-      "template": [
-        {
-          "role": "system",
-          "content": "You are a web search assistant.",
-        },
-        {
-          "role": "user",
-          "content": "{{ query }}",
-        },
-      ],
+      additionalProperties: {
+        "template": [
+          {
+            "role": "system",
+            "content": "You are a web search assistant.",
+          },
+          {
+            "role": "user",
+            "content": "{{ query }}",
+          },
+        ],
+      },
     },
     env: [
-      PostConfigurationRequestEnv.Staging,
+      "staging",
     ],
     userProperties: {
       "user_id": "google-oauth2|108897808434934946583",
@@ -133,9 +164,99 @@ async function run() {
     },
   });
 
-  if (res.statusCode == 200) {
-    // handle response
+  
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { configurationsCreateConfiguration } from "honeyhive/funcs/configurationsCreateConfiguration.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await configurationsCreateConfiguration(honeyHive, {
+    project: "660d7ba7995cacccce4d299e",
+    name: "function-v0",
+    provider: "openai",
+    parameters: {
+      callType: "chat",
+      model: "gpt-4-turbo-preview",
+      hyperparameters: {
+        "temperature": 0,
+        "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "stop_sequences": [
+          "<value>",
+        ],
+      },
+      selectedFunctions: [
+        {
+          id: "64e3ba90e81f9b3a3808c27f",
+          name: "get_google_information",
+          description: "Get information from Google when you do not have that information in your context",
+          parameters: {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The query asked by the user",
+              },
+            },
+            "required": [
+              "query",
+            ],
+          },
+        },
+      ],
+      functionCallParams: "auto",
+      forceFunction: {
+  
+      },
+      additionalProperties: {
+        "template": [
+          {
+            "role": "system",
+            "content": "You are a web search assistant.",
+          },
+          {
+            "role": "user",
+            "content": "{{ query }}",
+          },
+        ],
+      },
+    },
+    env: [
+      "staging",
+    ],
+    userProperties: {
+      "user_id": "google-oauth2|108897808434934946583",
+      "user_name": "Dhruv Singh",
+      "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  
 }
 
 run();
@@ -143,20 +264,23 @@ run();
 
 ### Parameters
 
-| Parameter                                                                                  | Type                                                                                       | Required                                                                                   | Description                                                                                |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| `request`                                                                                  | [components.PostConfigurationRequest](../../models/components/postconfigurationrequest.md) | :heavy_check_mark:                                                                         | The request object to use for the request.                                                 |
-| `config`                                                                                   | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                               | :heavy_minus_sign:                                                                         | Available config options for making requests.                                              |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [components.PostConfigurationRequest](../../models/components/postconfigurationrequest.md)                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.CreateConfigurationResponse](../../models/operations/createconfigurationresponse.md)>**
+**Promise\<void\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## updateConfiguration
 
@@ -166,86 +290,174 @@ Update an existing configuration
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { PutConfigurationRequest, PutConfigurationRequestEnv, PutConfigurationRequestType } from "honeyhive/dist/models/components";
-import { UpdateConfigurationRequest } from "honeyhive/dist/models/operations";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const id: string = "<value>";
-const putConfigurationRequest: PutConfigurationRequest = {
-  project: "New Project",
-  name: "function-v0",
-  provider: "openai",
-  parameters: {
-    "call_type": "chat",
-    "model": "gpt-4-turbo-preview",
-    "hyperparameters": {
-      "temperature": 0,
-      "max_tokens": 1000,
-      "top_p": 1,
-      "top_k": -1,
-      "frequency_penalty": 0,
-      "presence_penalty": 0,
-      "stop_sequences": [
-        "<value>",
-      ],
-    },
-    "responseFormat": {
-      "type": "text",
-    },
-    "selectedFunctions": [
-      {
-        "id": "64e3ba90e81f9b3a3808c27f",
-        "name": "get_google_information",
-        "description": "Get information from Google when you do not have that information in your context",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "The query asked by the user",
+  await honeyHive.configurations.updateConfiguration("<value>", {
+    project: "New Project",
+    name: "function-v0",
+    provider: "openai",
+    parameters: {
+      callType: "chat",
+      model: "gpt-4-turbo-preview",
+      hyperparameters: {
+        "temperature": 0,
+        "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "stop_sequences": [
+          "<value>",
+        ],
+      },
+      responseFormat: {},
+      selectedFunctions: [
+        {
+          id: "64e3ba90e81f9b3a3808c27f",
+          name: "get_google_information",
+          description: "Get information from Google when you do not have that information in your context",
+          parameters: {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The query asked by the user",
+              },
             },
+            "required": [
+              "query",
+            ],
           },
-          "required": [
-            "query",
-          ],
         },
+      ],
+      functionCallParams: "auto",
+      forceFunction: {
+  
       },
-    ],
-    "functionCallParams": "auto",
-    "forceFunction": {
-
+      additionalProperties: {
+        "template": [
+          {
+            "role": "system",
+            "content": "You are a web search assistant.",
+          },
+          {
+            "role": "user",
+            "content": "{{ query }}",
+          },
+        ],
+      },
     },
-    "template": [
-      {
-        "role": "system",
-        "content": "You are a web search assistant.",
-      },
-      {
-        "role": "user",
-        "content": "{{ query }}",
-      },
+    env: [
+      "staging",
     ],
-  },
-  env: [
-    PutConfigurationRequestEnv.Staging,
-  ],
-  type: PutConfigurationRequestType.Llm,
-  userProperties: {
-    "user_id": "google-oauth2|108897808434934946583",
-    "user_name": "Dhruv Singh",
-    "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
-    "user_email": "dhruv@honeyhive.ai",
-  },
-};
+    type: "LLM",
+    userProperties: {
+      "user_id": "google-oauth2|108897808434934946583",
+      "user_name": "Dhruv Singh",
+      "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
+    },
+  });
 
-  const res = await sdk.configurations.updateConfiguration(id, putConfigurationRequest);
+  
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { configurationsUpdateConfiguration } from "honeyhive/funcs/configurationsUpdateConfiguration.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await configurationsUpdateConfiguration(honeyHive, "<value>", {
+    project: "New Project",
+    name: "function-v0",
+    provider: "openai",
+    parameters: {
+      callType: "chat",
+      model: "gpt-4-turbo-preview",
+      hyperparameters: {
+        "temperature": 0,
+        "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "stop_sequences": [
+          "<value>",
+        ],
+      },
+      responseFormat: {},
+      selectedFunctions: [
+        {
+          id: "64e3ba90e81f9b3a3808c27f",
+          name: "get_google_information",
+          description: "Get information from Google when you do not have that information in your context",
+          parameters: {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The query asked by the user",
+              },
+            },
+            "required": [
+              "query",
+            ],
+          },
+        },
+      ],
+      functionCallParams: "auto",
+      forceFunction: {
+  
+      },
+      additionalProperties: {
+        "template": [
+          {
+            "role": "system",
+            "content": "You are a web search assistant.",
+          },
+          {
+            "role": "user",
+            "content": "{{ query }}",
+          },
+        ],
+      },
+    },
+    env: [
+      "staging",
+    ],
+    type: "LLM",
+    userProperties: {
+      "user_id": "google-oauth2|108897808434934946583",
+      "user_name": "Dhruv Singh",
+      "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  
 }
 
 run();
@@ -253,21 +465,24 @@ run();
 
 ### Parameters
 
-| Parameter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Required                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | *string*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Configuration ID like `6638187d505c6812e4043f24`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `putConfigurationRequest`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | [components.PutConfigurationRequest](../../models/components/putconfigurationrequest.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | :heavy_check_mark:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | N/A                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | {<br/>"project": "New Project",<br/>"name": "function-v0",<br/>"provider": "openai",<br/>"parameters": {<br/>"call_type": "chat",<br/>"model": "gpt-4-turbo-preview",<br/>"hyperparameters": {<br/>"temperature": 0,<br/>"max_tokens": 1000,<br/>"top_p": 1,<br/>"top_k": -1,<br/>"frequency_penalty": 0,<br/>"presence_penalty": 0,<br/>"stop_sequences": []<br/>},<br/>"responseFormat": {<br/>"type": "text"<br/>},<br/>"selectedFunctions": [<br/>{<br/>"id": "64e3ba90e81f9b3a3808c27f",<br/>"name": "get_google_information",<br/>"description": "Get information from Google when you do not have that information in your context",<br/>"parameters": {<br/>"type": "object",<br/>"properties": {<br/>"query": {<br/>"type": "string",<br/>"description": "The query asked by the user"<br/>}<br/>},<br/>"required": [<br/>"query"<br/>]<br/>}<br/>}<br/>],<br/>"functionCallParams": "auto",<br/>"forceFunction": {},<br/>"template": [<br/>{<br/>"role": "system",<br/>"content": "You are a web search assistant."<br/>},<br/>{<br/>"role": "user",<br/>"content": "{{ query }}"<br/>}<br/>]<br/>},<br/>"env": [<br/>"staging"<br/>],<br/>"type": "LLM",<br/>"tags": [],<br/>"user_properties": {<br/>"user_id": "google-oauth2\|108897808434934946583",<br/>"user_name": "Dhruv Singh",<br/>"user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",<br/>"user_email": "dhruv@honeyhive.ai"<br/>}<br/>} |
-| `config`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | :heavy_minus_sign:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | Available config options for making requests.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    | Example                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                                                                                                                                                           | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | Configuration ID like `6638187d505c6812e4043f24`                                                                                                                               |                                                                                                                                                                                |
+| `putConfigurationRequest`                                                                                                                                                      | [components.PutConfigurationRequest](../../models/components/putconfigurationrequest.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            | [object Object]                                                                                                                                                                |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |                                                                                                                                                                                |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |                                                                                                                                                                                |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |                                                                                                                                                                                |
 
 ### Response
 
-**Promise<[operations.UpdateConfigurationResponse](../../models/operations/updateconfigurationresponse.md)>**
+**Promise\<void\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## deleteConfiguration
 
@@ -277,19 +492,44 @@ Delete a configuration
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { DeleteConfigurationRequest } from "honeyhive/dist/models/operations";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const id: string = "<value>";
+  await honeyHive.configurations.deleteConfiguration("<value>");
 
-  const res = await sdk.configurations.deleteConfiguration(id);
+  
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { configurationsDeleteConfiguration } from "honeyhive/funcs/configurationsDeleteConfiguration.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await configurationsDeleteConfiguration(honeyHive, "<value>");
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  
 }
 
 run();
@@ -297,15 +537,17 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `id`                                                         | *string*                                                     | :heavy_check_mark:                                           | Configuration ID like `6638187d505c6812e4043f24`             |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`                                                                                                                                                                           | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | Configuration ID like `6638187d505c6812e4043f24`                                                                                                                               |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.DeleteConfigurationResponse](../../models/operations/deleteconfigurationresponse.md)>**
+**Promise\<void\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

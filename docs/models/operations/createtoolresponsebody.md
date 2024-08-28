@@ -2,6 +2,13 @@
 
 Tool successfully created
 
+## Example Usage
+
+```typescript
+import { CreateToolResponseBody } from "honeyhive/models/operations";
+
+let value: CreateToolResponseBody = {};
+```
 
 ## Fields
 

@@ -1,5 +1,14 @@
 # MetricEdit
 
+## Example Usage
+
+```typescript
+import { MetricEdit } from "honeyhive/models/components";
+
+let value: MetricEdit = {
+    metricId: "<value>",
+};
+```
 
 ## Fields
 

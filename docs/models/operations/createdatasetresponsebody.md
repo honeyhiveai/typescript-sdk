@@ -2,6 +2,13 @@
 
 Successful creation
 
+## Example Usage
+
+```typescript
+import { CreateDatasetResponseBody } from "honeyhive/models/operations";
+
+let value: CreateDatasetResponseBody = {};
+```
 
 ## Fields
 

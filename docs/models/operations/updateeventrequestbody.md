@@ -1,5 +1,14 @@
 # UpdateEventRequestBody
 
+## Example Usage
+
+```typescript
+import { UpdateEventRequestBody } from "honeyhive/models/operations";
+
+let value: UpdateEventRequestBody = {
+    eventId: "<value>",
+};
+```
 
 ## Fields
 

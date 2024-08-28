@@ -1,5 +1,18 @@
 # Metric
 
+## Example Usage
+
+```typescript
+import { Metric } from "honeyhive/models/components";
+
+let value: Metric = {
+    name: "<value>",
+    task: "<value>",
+    type: "model",
+    description: "Pre-emptive multimedia function",
+    returnType: "float",
+};
+```
 
 ## Fields
 

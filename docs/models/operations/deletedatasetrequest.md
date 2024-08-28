@@ -1,5 +1,14 @@
 # DeleteDatasetRequest
 
+## Example Usage
+
+```typescript
+import { DeleteDatasetRequest } from "honeyhive/models/operations";
+
+let value: DeleteDatasetRequest = {
+    datasetId: "<value>",
+};
+```
 
 ## Fields
 

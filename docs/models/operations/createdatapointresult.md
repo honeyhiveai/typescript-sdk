@@ -1,5 +1,12 @@
 # CreateDatapointResult
 
+## Example Usage
+
+```typescript
+import { CreateDatapointResult } from "honeyhive/models/operations";
+
+let value: CreateDatapointResult = {};
+```
 
 ## Fields
 

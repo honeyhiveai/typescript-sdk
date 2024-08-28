@@ -1,9 +1,15 @@
 # UpdateRunRequestStatus
 
+## Example Usage
+
+```typescript
+import { UpdateRunRequestStatus } from "honeyhive/models/components";
+
+let value: UpdateRunRequestStatus = "pending";
+```
 
 ## Values
 
-| Name        | Value       |
-| ----------- | ----------- |
-| `Pending`   | pending     |
-| `Completed` | completed   |
+```typescript
+"pending" | "completed"
+```
