@@ -65,17 +65,17 @@ export class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   override async handleLLMStart(
-    // @ts-ignore
+    // @ts-expect-error
     llm: Serialized,
     prompts: string[],
     runId: string,
     parentRunId?: string,
-    // @ts-ignore
+    // @ts-expect-error
     extraParams?: Record<string, unknown>,
-    // @ts-ignore
+    // @ts-expect-error
     tags?: string[],
     metadata?: Record<string, unknown>,
-    // @ts-ignore
+    // @ts-expect-error
     runName?: string
   ): Promise<void> {
     const inputs = prompts.map(prompt => ({ text: prompt }));
@@ -90,16 +90,16 @@ export class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   override async handleChainStart(
-    // @ts-ignore
+    // @ts-expect-error
     chain: Serialized,
     inputs: ChainValues,
     runId: string,
     parentRunId?: string,
-    // @ts-ignore
+    // @ts-expect-error
     tags?: string[],
     metadata?: Record<string, unknown>,
     runType?: string,
-    // @ts-ignore
+    // @ts-expect-error
     runName?: string
   ): Promise<void> {
     const log = this.createLog(runType || 'chain', inputs, runId, parentRunId, metadata);
