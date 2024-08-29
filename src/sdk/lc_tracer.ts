@@ -18,16 +18,19 @@ interface HoneyHiveTracerInput {
 
 interface Log {
   project?: string;
-  eventId: string;
-  parentId?: string | undefined;
-  eventType: string;
-  eventName: string;
+  event_id: string;
+  parent_id?: string | undefined;
+  event_type: string;
+  event_name: string;
   config: any;
   inputs: Record<string, any>;
+  metrics?: Record<string, any> | undefined;
+  feedback?: Record<string, any> | undefined;
+  user_properties?: Record<string, any> | undefined;
   outputs?: Record<string, any> | undefined;
   children?: Log[];
-  startTime: number;
-  endTime: number;
+  start_time: number;
+  end_time: number;
   duration: number;
   metadata?: Record<string, any> | undefined;
   source?: string;
@@ -66,34 +69,40 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       'Authorization': `Bearer ${apiKey}`,
     };
 
-    (async () => {
+    /*(async () => {
       await this.startNewSession();
-    })();
+    })();*/
   }
 
   private createLog(
-    eventType: string,
-    eventName: string | undefined,
+    event_type: string,
+    event_name: string | undefined,
     inputs: Record<string, any>,
     outputs: Record<string, any> | null,
     config: any,
-    startTime: number,
-    endTime: number,
+    start_time: number,
+    end_time: number,
     error?: string,
-    parentId?: string
+    parent_id?: string,
+    user_properties?: Record<string, any> | null,
+    metrics?: Record<string, any> | null,
+    feedback?: Record<string, any> | null,
   ): Log {
     return {
       project: this.project,
-      eventId: uuidv4(),
-      parentId,
-      eventType,
-      eventName: eventName || "Event",
+      event_id: uuidv4(),
+      parent_id,
+      event_type,
+      event_name: event_name || "Event",
       config,
       inputs,
-      outputs: outputs || undefined,
-      startTime,
-      endTime,
-      duration: endTime - startTime,
+      outputs: outputs || {},
+      user_properties: user_properties || {},
+      metrics: metrics || {},
+      feedback: feedback || {},
+      start_time,
+      end_time,
+      duration: end_time - start_time,
       metadata: this.metadata,
       source: this.source,
       error,
@@ -366,7 +375,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     await this.postTrace([log]);
   }
 
-  private async startNewSession(): Promise<void> {
+  async startNewSession(): Promise<void> {
     const sessionBody = {
       project: this.project,
       source: this.source,
@@ -383,6 +392,14 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
         body: JSON.stringify(sessionBody),
       });
 
+      const text = await response.text();
+      // Parse the JSON response
+      const jsonResponse = JSON.parse(text);
+
+      // Extract the session_id
+      const sessionId = jsonResponse.session_id;
+      this.sessionId = sessionId;
+
       if (!response.ok) {
         throw new Error(`Failed to start new session: ${response.statusText}`);
       }
@@ -396,200 +413,3 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
 }
 
 export { HoneyHiveLangChainTracer };
-/*
-import axios, { AxiosInstance } from 'axios';
-import { v4 as uuid } from 'uuid';
-import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
-import { Serialized } from '@langchain/core/load/serializable';
-import { ChainValues } from '@langchain/core/utils/types';
-import { AgentAction, AgentFinish } from 'langchain/agents';
-import { LLMResult } from '@langchain/core/outputs';
-
-const HONEYHIVE_APP_URL = process.env['HONEYHIVE_APP_URL'] || 'https://api.honeyhive.ai';
-
-interface HoneyHiveTracerConfig {
-  project: string;
-  apiKey?: string;
-  name: string;
-  source?: string;
-  userProperties?: Record<string, any>;
-  metadata?: Record<string, any>;
-  verbose?: boolean;
-  baseUrl?: string;
-}
-
-export class HoneyHiveLangChainTracer extends BaseCallbackHandler {
-  private axiosInstance: AxiosInstance;
-  private project: string;
-  private source: string;
-  name: string;
-  private userProperties?: Record<string, any> | undefined;
-  private sessionId: string;
-  private logs: any[];
-
-  constructor({
-    project,
-    apiKey,
-    name,
-    source = 'langchain',
-    userProperties,
-    verbose = false,
-    baseUrl,
-  }: HoneyHiveTracerConfig) {
-    super();
-    this.project = project;
-    this.source = source;
-    this.name = name;
-    this.userProperties = userProperties;
-    this.sessionId = uuid();
-    this.logs = [];
-
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (apiKey || process.env['HONEYHIVE_API_KEY']) {
-      headers['Authorization'] = `Bearer ${apiKey || process.env['HONEYHIVE_API_KEY']}`;
-    }
-
-    this.axiosInstance = axios.create({
-      baseURL: baseUrl || HONEYHIVE_APP_URL,
-      headers,
-    });
-
-    if (verbose) {
-      this.axiosInstance.interceptors.response.use(
-        response => response,
-        error => {
-          console.warn('HoneyHive API request failed:', error.message);
-          return Promise.reject(error);
-        }
-      );
-    }
-  }
-
-  private createLog(
-    eventType: string,
-    inputs: any,
-    runId: string,
-    parentstring?: string,
-    metadata?: Record<string, any>,
-    startTime?: number
-  ) {
-    const timestamp = startTime || Date.now() * 1000; // microseconds
-    return {
-      project: this.project,
-      event_id: runId,
-      parent_id: parentstring || null,
-      event_type: eventType,
-      event_name: this.name || eventType,
-      config: {},
-      inputs,
-      outputs: null as Record<string, any> | null,
-      children: [],
-      user_properties: this.userProperties,
-      metadata: metadata || {},
-      source: this.source,
-      start_time: timestamp,
-      end_time: timestamp, // Updated when the event ends
-      duration: 0, // Updated when the event ends
-      error: null,
-    };
-  }
-
-  private updateLog(log: any, outputs: any, error?: string) {
-    log.outputs = outputs;
-    log.error = error || null;
-    log.end_time = Date.now() * 1000; // microseconds
-    log.duration = log.end_time - log.start_time;
-  }
-
-  private async postLogs() {
-    if (this.logs.length === 0) return;
-
-    const sessionLogs = {
-      logs: this.logs,
-      session_id: this.sessionId,
-      project: this.project,
-      source: this.source,
-    };
-
-    try {
-      await this.axiosInstance.post(`/session/${this.sessionId}/traces`, sessionLogs);
-      this.logs = []; // Clear logs after successful post
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      console.error('Failed to send trace to HoneyHive:', errorMessage);
-      console.error(error);
-    }
-  }
-
-  override async handleLLMStart(
-    // @ts-expect-error: Not used
-    llm: Serialized,
-    prompts: string[],
-    runId: string,
-    parentstring?: string,
-    // @ts-expect-error: Not used
-    extraParams?: Record<string, unknown>,
-    // @ts-expect-error: Not used
-    tags?: string[],
-    metadata?: Record<string, unknown>,
-    // @ts-expect-error: Not used
-    runName?: string
-  ): Promise<void> {
-    const inputs = prompts.map(prompt => ({ text: prompt }));
-    const log = this.createLog('llm', inputs, runId, parentstring, metadata);
-    this.logs.push(log);
-  }
-
-  override async handleLLMEnd(output: LLMResult, runId: string): Promise<void> {
-    const log = this.logs.find(l => l.event_id === runId);
-    if (log) {
-      const outputs = output.generations?.map(g => g?.[0]?.text) || [];
-      this.updateLog(log, outputs);
-      await this.postLogs();
-    }
-  }
-
-  override async handleChainStart(
-    // @ts-expect-error: Not used
-    chain: Serialized,
-    inputs: ChainValues,
-    runId: string,
-    parentstring?: string,
-    // @ts-expect-error: Not used
-    tags?: string[],
-    metadata?: Record<string, unknown>,
-    runType?: string,
-    // @ts-expect-error: Not used
-    runName?: string
-  ): Promise<void> {
-    const log = this.createLog(runType || 'chain', inputs, runId, parentstring, metadata);
-    this.logs.push(log);
-  }
-
-  override async handleChainEnd(outputs: ChainValues, runId: string): Promise<void> {
-    const log = this.logs.find(l => l.event_id === runId);
-    if (log) {
-      this.updateLog(log, outputs);
-      await this.postLogs();
-    }
-  }
-
-  override async handleAgentAction(
-    action: AgentAction,
-    runId: string,
-    parentstring?: string
-  ): Promise<void> {
-    const log = this.createLog('agent_action', action.toolInput, runId, parentstring);
-    log.metadata = { action };
-    this.logs.push(log);
-  }
-
-  override async handleAgentEnd(action: AgentFinish, runId: string): Promise<void> {
-    const log = this.logs.find(l => l.event_id === runId);
-    if (log) {
-      this.updateLog(log, action.returnValues);
-      await this.postLogs();
-    }
-  }
-}
-*/
