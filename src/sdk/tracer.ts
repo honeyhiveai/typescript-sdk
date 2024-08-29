@@ -1,9 +1,9 @@
-import { HoneyHive } from "./sdk";
+import { HoneyHive } from "./sdk.js";
 import * as traceloop from "@traceloop/node-server-sdk";
 
+// eslint-disable-next-line import/no-named-as-default
 import OpenAI from "openai";
 import * as anthropic from "@anthropic-ai/sdk";
-import * as azureOpenAI from "@azure/openai";
 import * as cohere from "cohere-ai";
 import * as bedrock from "@aws-sdk/client-bedrock-runtime";
 import * as google_aiplatform from "@google-cloud/aiplatform";
@@ -12,6 +12,10 @@ import * as ChainsModule from "langchain/chains";
 import * as AgentsModule from "langchain/agents";
 import * as ToolsModule from "langchain/tools";
 import * as chromadb from "chromadb";
+
+// @ts-expect-error Azure SDK does not provide valid declarations for their CommonJS build
+// https://github.com/Azure/azure-sdk-for-js/issues/28877
+import * as azureOpenAI from "@azure/openai";
 
 interface InitParams {
   apiKey: string;
@@ -51,7 +55,7 @@ export class HoneyHiveTracer {
         },
       };
       const res = await this.sdk.session.startSession(requestBody);
-      this.sessionId = res.object?.sessionId;
+      this.sessionId = res.sessionId;
 
       if (this.sessionId) {
         traceloop.initialize({
@@ -143,7 +147,7 @@ export class HoneyHiveTracer {
       try {
         await this.sdk.events.updateEvent({
           eventId: this.sessionId,
-          feedback: feedback
+          feedback: feedback,
         });
       } catch (error) {
         console.error("Failed to set feedback:", error);
@@ -158,7 +162,7 @@ export class HoneyHiveTracer {
       try {
         await this.sdk.events.updateEvent({
           eventId: this.sessionId,
-          metrics: metrics
+          metrics: metrics,
         });
       } catch (error) {
         console.error("Failed to set metric:", error);
@@ -167,13 +171,13 @@ export class HoneyHiveTracer {
       console.error("Session ID is not initialized");
     }
   }
-  
+
   public async setMetadata(metadata: Record<string, any>): Promise<void> {
     if (this.sessionId) {
       try {
         await this.sdk.events.updateEvent({
           eventId: this.sessionId,
-          metadata: metadata
+          metadata: metadata,
         });
       } catch (error) {
         console.error("Failed to set metadata:", error);
