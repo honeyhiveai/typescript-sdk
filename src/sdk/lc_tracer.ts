@@ -110,6 +110,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   private pushLog(log: Log): void {
     if (this.logStack.length > 0) {
       const parentLog = this.logStack[this.logStack.length - 1];
+      log.parent_id = parentLog?.event_id;
       parentLog?.children?.push(log);
     }
     this.logStack.push(log);
@@ -127,6 +128,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     parentstring?: string,
     extraParams?: Record<string, unknown>
   ): Promise<void> {
+    console.log("LLM start");
     const startTime = Date.now();
     const log = this.createLog(
       'llm',
@@ -149,6 +151,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("LLM end");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -165,6 +168,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
+    console.log("Chain start");
     const startTime = Date.now();
     const log = this.createLog(
       'chain',
@@ -187,6 +191,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("Chain end");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -208,6 +213,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
+    console.log("Tool start");
     const startTime = Date.now();
     const log = this.createLog(
       'tool',
@@ -230,6 +236,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("Tool start");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -245,6 +252,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
+    console.log("Agent action");
     const startTime = Date.now();
     const log = this.createLog(
       'agent',
@@ -267,6 +275,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("Agent finish");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -289,6 +298,8 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   private async postTrace(logs: Log[]): Promise<void> {
+    console.log("Posting trace");
+    console.log(JSON.stringify(logs[0], null, 2));
     try {
       const response = await fetch(`${this.baseUrl}/session/${this.sessionId}/traces`, {
         method: 'POST',
@@ -314,6 +325,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("Chain error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -335,6 +347,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("LLM error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -351,6 +364,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
+    console.log("Tool error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
