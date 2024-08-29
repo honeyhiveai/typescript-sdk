@@ -47,6 +47,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   private headers: Record<string, string>;
   private baseUrl: string;
   private sessionId: string;
+  private logStack: Log[] = [];
 
   constructor(input: HoneyHiveTracerInput) {
     super();
@@ -68,10 +69,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     };
-
-    /*(async () => {
-      await this.startNewSession();
-    })();*/
   }
 
   private createLog(
@@ -106,7 +103,20 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       metadata: this.metadata,
       source: this.source,
       error,
+      children: []
     };
+  }
+
+  private pushLog(log: Log): void {
+    if (this.logStack.length > 0) {
+      const parentLog = this.logStack[this.logStack.length - 1];
+      parentLog?.children?.push(log);
+    }
+    this.logStack.push(log);
+  }
+
+  private popLog(): Log | undefined {
+    return this.logStack.pop();
   }
 
   override async handleLLMStart(
@@ -129,28 +139,23 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    await this.postTrace([log]);
+    this.pushLog(log);
   }
 
   override async handleLLMEnd(
     output: LLMResult,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'llm',
-      'LLM End',
-      {},
-      { generations: output.generations },
-      {},
-      endTime,
-      endTime,
-      undefined,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.outputs = { generations: output.generations };
+    }
   }
 
   override async handleChainStart(
@@ -172,28 +177,28 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    await this.postTrace([log]);
+    this.pushLog(log);
   }
 
   override async handleChainEnd(
     outputs: ChainValues,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'chain',
-      'Chain End',
-      {},
-      outputs,
-      {},
-      endTime,
-      endTime,
-      undefined,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.outputs = outputs;
+
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
+    }
   }
 
   override async handleToolStart(
@@ -215,28 +220,23 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    await this.postTrace([log]);
+    this.pushLog(log);
   }
 
   override async handleToolEnd(
     output: string,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'tool',
-      'Tool End',
-      {},
-      { output },
-      {},
-      endTime,
-      endTime,
-      undefined,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.outputs = { output };
+    }
   }
 
   override async handleAgentAction(
@@ -257,28 +257,23 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    await this.postTrace([log]);
+    this.pushLog(log);
   }
 
   async handleAgentFinish(
     finish: AgentFinish,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'agent',
-      'Agent Finish',
-      {},
-      { output: finish.returnValues },
-      {},
-      endTime,
-      endTime,
-      undefined,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.outputs = { output: finish.returnValues };
+    }
   }
 
   private convertToModelConfig(
@@ -316,63 +311,53 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     error: Error,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'chain',
-      'Chain Error',
-      {},
-      null,
-      {},
-      endTime,
-      endTime,
-      error.message,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.error = error.message;
+
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
+    }
   }
 
   override async handleLLMError(
     error: Error,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'llm',
-      'LLM Error',
-      {},
-      null,
-      {},
-      endTime,
-      endTime,
-      error.message,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.error = error.message;
+    }
   }
 
   override async handleToolError(
     error: Error,
     // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = Date.now();
-    const log = this.createLog(
-      'tool',
-      'Tool Error',
-      {},
-      null,
-      {},
-      endTime,
-      endTime,
-      error.message,
-      parentstring?.toString()
-    );
-    await this.postTrace([log]);
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.error = error.message;
+    }
   }
 
   async startNewSession(): Promise<void> {
