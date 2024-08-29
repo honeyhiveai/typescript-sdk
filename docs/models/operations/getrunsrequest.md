@@ -1,5 +1,12 @@
 # GetRunsRequest
 
+## Example Usage
+
+```typescript
+import { GetRunsRequest } from "honeyhive/models/operations";
+
+let value: GetRunsRequest = {};
+```
 
 ## Fields
 

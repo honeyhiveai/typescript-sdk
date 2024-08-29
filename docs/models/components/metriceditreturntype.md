@@ -2,11 +2,16 @@
 
 The data type of the metric value - "boolean", "float", "string"
 
+## Example Usage
+
+```typescript
+import { MetricEditReturnType } from "honeyhive/models/components";
+
+let value: MetricEditReturnType = "string";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Boolean` | boolean   |
-| `Float`   | float     |
-| `String`  | string    |
+```typescript
+"boolean" | "float" | "string"
+```

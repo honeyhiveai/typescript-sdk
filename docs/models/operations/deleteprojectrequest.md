@@ -1,5 +1,14 @@
 # DeleteProjectRequest
 
+## Example Usage
+
+```typescript
+import { DeleteProjectRequest } from "honeyhive/models/operations";
+
+let value: DeleteProjectRequest = {
+    name: "<value>",
+};
+```
 
 ## Fields
 

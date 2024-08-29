@@ -1,5 +1,12 @@
 # Result
 
+## Example Usage
+
+```typescript
+import { Result } from "honeyhive/models/operations";
+
+let value: Result = {};
+```
 
 ## Fields
 

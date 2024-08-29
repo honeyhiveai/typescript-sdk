@@ -1,5 +1,12 @@
 # UpdateRunRequest
 
+## Example Usage
+
+```typescript
+import { UpdateRunRequest } from "honeyhive/models/components";
+
+let value: UpdateRunRequest = {};
+```
 
 ## Fields
 

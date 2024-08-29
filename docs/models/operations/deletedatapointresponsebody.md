@@ -2,6 +2,13 @@
 
 Datapoint successfully deleted
 
+## Example Usage
+
+```typescript
+import { DeleteDatapointResponseBody } from "honeyhive/models/operations";
+
+let value: DeleteDatapointResponseBody = {};
+```
 
 ## Fields
 

@@ -2,11 +2,16 @@
 
 Type of the metric - "custom", "model" or "human"
 
+## Example Usage
+
+```typescript
+import { MetricEditType } from "honeyhive/models/components";
+
+let value: MetricEditType = "custom";
+```
 
 ## Values
 
-| Name     | Value    |
-| -------- | -------- |
-| `Custom` | custom   |
-| `Model`  | model    |
-| `Human`  | human    |
+```typescript
+"custom" | "model" | "human"
+```

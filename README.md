@@ -9,10 +9,25 @@
 npm add https://github.com/honeyhiveai/typescript-sdk
 ```
 
+### PNPM
+
+```bash
+pnpm add https://github.com/honeyhiveai/typescript-sdk
+```
+
+### Bun
+
+```bash
+bun add https://github.com/honeyhiveai/typescript-sdk
+```
+
 ### Yarn
 
 ```bash
-yarn add https://github.com/honeyhiveai/typescript-sdk
+yarn add https://github.com/honeyhiveai/typescript-sdk zod
+
+# Note that Yarn does not install peer dependencies automatically. You will need
+# to install zod as shown above.
 ```
 <!-- End SDK Installation [installation] -->
 
@@ -24,68 +39,56 @@ yarn add https://github.com/honeyhiveai/typescript-sdk
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
+const honeyHive = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+});
 
-  const res = await sdk.session.startSession({
-    session: {
-      project: "Simple RAG Project",
-      sessionName: "Playground Session",
-      source: "playground",
-      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-      childrenIds: [
-        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-      ],
-      config: {
-        "key": "<value>",
-      },
-      inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
-        "chat_history": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
+async function run() {
+    const result = await honeyHive.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: [
+                    {
+                        role: "system",
+                        content:
+                            "Answer the user's question only using provided context. Context: Hello world",
+                    },
+                    {
+                        role: "user",
+                        content: "What is in the context?",
+                    },
+                ],
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
-            Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
-      },
-      outputs: {
-        "role": "assistant",
-        "content": "Hello world",
-      },
-      error: null,
-      duration: 824.8056,
-      userProperties: {
-        "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
-      },
-      startTime: 1712025501605,
-      endTime: 1712025499832,
-    },
-  });
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    // Handle the result
+    console.log(result);
 }
 
 run();
+
 ```
 <!-- End SDK Example Usage [usage] -->
 
@@ -162,130 +165,131 @@ run();
 <!-- Start Error Handling [errors] -->
 ## Error Handling
 
-Handling errors in this SDK should largely match your expectations.  All operations return a response object or throw an error.  If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
+All SDK methods return a response object or throw an error. If Error objects are specified in your OpenAPI Spec, the SDK will throw the appropriate Error type.
 
 | Error Object                        | Status Code                         | Content Type                        |
 | ----------------------------------- | ----------------------------------- | ----------------------------------- |
 | errors.CreateEventBatchResponseBody | 500                                 | application/json                    |
 | errors.SDKError                     | 4xx-5xx                             | */*                                 |
 
-Example
+Validation errors can also occur when either method arguments or data returned from the server do not match the expected format. The `SDKValidationError` that is thrown as a result will capture the raw value that failed validation in an attribute called `rawValue`. Additionally, a `pretty()` method is available on this error that can be used to log a nicely formatted string since validation errors can list many issues and the plain error string may be difficult read when debugging. 
+
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { CreateEventRequestEventType } from "honeyhive/dist/models/components";
+import { SDKValidationError } from "honeyhive/models/errors";
+
+const honeyHive = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-
-  
-  let res;
-  try {
-    res = await sdk.events.createEventBatch({
-    events: [
-      {
-        project: "Simple RAG",
-        source: "playground",
-        eventName: "Model Completion",
-        eventType: CreateEventRequestEventType.Model,
-        eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-        sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-        parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-        childrenIds: [
-          "<value>",
-        ],
-        config: {
-          "model": "gpt-3.5-turbo",
-          "version": "v0.1",
-          "provider": "openai",
-          "hyperparameters": {
-            "temperature": 0,
-            "top_p": 1,
-            "max_tokens": 1000,
-            "presence_penalty": 0,
-            "frequency_penalty": 0,
-            "stop": [
-              "<value>",
+    let result;
+    try {
+        result = await honeyHive.events.createEventBatch({
+            events: [
+                {
+                    project: "Simple RAG",
+                    source: "playground",
+                    eventName: "Model Completion",
+                    eventType: "model",
+                    eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+                    sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    childrenIds: ["<value>"],
+                    config: {
+                        model: "gpt-3.5-turbo",
+                        version: "v0.1",
+                        provider: "openai",
+                        hyperparameters: {
+                            temperature: 0,
+                            top_p: 1,
+                            max_tokens: 1000,
+                            presence_penalty: 0,
+                            frequency_penalty: 0,
+                            stop: ["<value>"],
+                            n: 1,
+                        },
+                        template: [
+                            {
+                                role: "system",
+                                content:
+                                    "Answer the user's question only using provided context. Context: {{ context }}",
+                            },
+                            {
+                                role: "user",
+                                content: "{{question}}",
+                            },
+                        ],
+                        type: "chat",
+                    },
+                    inputs: {
+                        context: "Hello world",
+                        question: "What is in the context?",
+                        chat_history: [
+                            {
+                                role: "system",
+                                content:
+                                    "Answer the user's question only using provided context. Context: Hello world",
+                            },
+                            {
+                                role: "user",
+                                content: "What is in the context?",
+                            },
+                        ],
+                    },
+                    outputs: {
+                        role: "assistant",
+                        content: "Hello world",
+                    },
+                    error: null,
+                    startTime: 1714978764301,
+                    endTime: 1714978765301,
+                    duration: 999.8056,
+                    metadata: {
+                        cost: 0.00008,
+                        completion_tokens: 23,
+                        prompt_tokens: 35,
+                        total_tokens: 58,
+                    },
+                    feedback: {},
+                    metrics: {
+                        "Answer Faithfulness": 5,
+                        "Answer Faithfulness_explanation":
+                            "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
+                        "Number of words": 18,
+                    },
+                    userProperties: {
+                        user: "google-oauth2|111840237613341303366",
+                    },
+                },
             ],
-            "n": 1,
-          },
-          "template": [
-            {
-              "role": "system",
-              "content": "Answer the user's question only using provided context.
-
-              Context: {{ context }}",
-            },
-            {
-              "role": "user",
-              "content": "{{question}}",
-            },
-          ],
-          "type": "chat",
-        },
-        inputs: {
-          "context": "Hello world",
-          "question": "What is in the context?",
-          "chat_history": [
-            {
-              "role": "system",
-              "content": "Answer the user's question only using provided context.
-
-              Context: Hello world",
-            },
-            {
-              "role": "user",
-              "content": "What is in the context?",
-            },
-          ],
-        },
-        outputs: {
-          "role": "assistant",
-          "content": "Hello world",
-        },
-        error: null,
-        startTime: 1714978764301,
-        endTime: 1714978765301,
-        duration: 999.8056,
-        metadata: {
-          "cost": 0.00008,
-          "completion_tokens": 23,
-          "prompt_tokens": 35,
-          "total_tokens": 58,
-        },
-        feedback: {
-
-        },
-        metrics: {
-          "Answer Faithfulness": 5,
-          "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
-          "Number of words": 18,
-        },
-        userProperties: {
-          "user": "google-oauth2|111840237613341303366",
-        },
-      },
-    ],
-  });
-  } catch (err) { 
-    if (err instanceof errors.CreateEventBatchResponseBody) {
-      console.error(err) // handle exception
-      throw err;
+        });
+    } catch (err) {
+        switch (true) {
+            case err instanceof SDKValidationError: {
+                // Validation errors can be pretty-printed
+                console.error(err.pretty());
+                // Raw value may also be inspected
+                console.error(err.rawValue);
+                return;
+            }
+            case err instanceof errors.CreateEventBatchResponseBody: {
+                console.error(err); // handle exception
+                return;
+            }
+            default: {
+                throw err;
+            }
+        }
     }
-    else if (err instanceof errors.SDKError) {
-     console.error(err) // handle exception
-     throw err;
-    }
-  }
 
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    // Handle the result
+    console.log(result);
 }
 
 run();
+
 ```
 <!-- End Error Handling [errors] -->
 
@@ -294,171 +298,176 @@ run();
 
 ### Select Server by Index
 
-You can override the default server globally by passing a server index to the `serverIdx: number` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the indexes associated with the available servers:
+You can override the default server globally by passing a server index to the `serverIdx` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the indexes associated with the available servers:
 
 | # | Server | Variables |
 | - | ------ | --------- |
 | 0 | `https://api.honeyhive.ai` | None |
 
-#### Example
-
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
+const honeyHive = new HoneyHive({
     serverIdx: 0,
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+});
 
-  const res = await sdk.session.startSession({
-    session: {
-      project: "Simple RAG Project",
-      sessionName: "Playground Session",
-      source: "playground",
-      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-      childrenIds: [
-        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-      ],
-      config: {
-        "key": "<value>",
-      },
-      inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
-        "chat_history": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
+async function run() {
+    const result = await honeyHive.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: [
+                    {
+                        role: "system",
+                        content:
+                            "Answer the user's question only using provided context. Context: Hello world",
+                    },
+                    {
+                        role: "user",
+                        content: "What is in the context?",
+                    },
+                ],
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
-            Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
-      },
-      outputs: {
-        "role": "assistant",
-        "content": "Hello world",
-      },
-      error: null,
-      duration: 824.8056,
-      userProperties: {
-        "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
-      },
-      startTime: 1712025501605,
-      endTime: 1712025499832,
-    },
-  });
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    // Handle the result
+    console.log(result);
 }
 
 run();
+
 ```
 
 
 ### Override Server URL Per-Client
 
-The default server can also be overridden globally by passing a URL to the `serverURL: str` optional parameter when initializing the SDK client instance. For example:
+The default server can also be overridden globally by passing a URL to the `serverURL` optional parameter when initializing the SDK client instance. For example:
+
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
+const honeyHive = new HoneyHive({
     serverURL: "https://api.honeyhive.ai",
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+});
 
-  const res = await sdk.session.startSession({
-    session: {
-      project: "Simple RAG Project",
-      sessionName: "Playground Session",
-      source: "playground",
-      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-      childrenIds: [
-        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-      ],
-      config: {
-        "key": "<value>",
-      },
-      inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
-        "chat_history": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
+async function run() {
+    const result = await honeyHive.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: [
+                    {
+                        role: "system",
+                        content:
+                            "Answer the user's question only using provided context. Context: Hello world",
+                    },
+                    {
+                        role: "user",
+                        content: "What is in the context?",
+                    },
+                ],
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
-            Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
-      },
-      outputs: {
-        "role": "assistant",
-        "content": "Hello world",
-      },
-      error: null,
-      duration: 824.8056,
-      userProperties: {
-        "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
-      },
-      startTime: 1712025501605,
-      endTime: 1712025499832,
-    },
-  });
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    // Handle the result
+    console.log(result);
 }
 
 run();
+
 ```
 <!-- End Server Selection [server] -->
 
 <!-- Start Custom HTTP Client [http-client] -->
 ## Custom HTTP Client
 
-The Typescript SDK makes API calls using the [axios](https://axios-http.com/docs/intro) HTTP library.  In order to provide a convenient way to configure timeouts, cookies, proxies, custom headers, and other low-level configuration, you can initialize the SDK client with a custom `AxiosInstance` object.
+The TypeScript SDK makes API calls using an `HTTPClient` that wraps the native
+[Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API). This
+client is a thin wrapper around `fetch` and provides the ability to attach hooks
+around the request lifecycle that can be used to modify the request or handle
+errors and response.
 
-For example, you could specify a header for every request that your sdk makes as follows:
+The `HTTPClient` constructor takes an optional `fetcher` argument that can be
+used to integrate a third-party HTTP client or when writing tests to mock out
+the HTTP client and feed in fixtures.
+
+The following example shows how to use the `"beforeRequest"` hook to to add a
+custom header and a timeout to requests and how to use the `"requestError"` hook
+to log errors:
 
 ```typescript
-import { honeyhive } from "HoneyHive";
-import axios from "axios";
+import { HoneyHive } from "honeyhive";
+import { HTTPClient } from "honeyhive/lib/http";
 
-const httpClient = axios.create({
-    headers: {'x-custom-header': 'someValue'}
-})
+const httpClient = new HTTPClient({
+  // fetcher takes a function that has the same signature as native `fetch`.
+  fetcher: (request) => {
+    return fetch(request);
+  }
+});
 
-const sdk = new HoneyHive({defaultClient: httpClient});
+httpClient.addHook("beforeRequest", (request) => {
+  const nextRequest = new Request(request, {
+    signal: request.signal || AbortSignal.timeout(5000)
+  });
+
+  nextRequest.headers.set("x-custom-header", "custom value");
+
+  return nextRequest;
+});
+
+httpClient.addHook("requestError", (error, request) => {
+  console.group("Request Error");
+  console.log("Reason:", `${error}`);
+  console.log("Endpoint:", `${request.method} ${request.url}`);
+  console.groupEnd();
+});
+
+const sdk = new HoneyHive({ httpClient });
 ```
 <!-- End Custom HTTP Client [http-client] -->
 
@@ -477,70 +486,282 @@ To authenticate with the API the `bearerAuth` parameter must be set when initial
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
+const honeyHive = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+});
 
-  const res = await sdk.session.startSession({
-    session: {
-      project: "Simple RAG Project",
-      sessionName: "Playground Session",
-      source: "playground",
-      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-      childrenIds: [
-        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-      ],
-      config: {
-        "key": "<value>",
-      },
-      inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
-        "chat_history": [
-          {
-            "role": "system",
-            "content": "Answer the user's question only using provided context.
+async function run() {
+    const result = await honeyHive.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: [
+                    {
+                        role: "system",
+                        content:
+                            "Answer the user's question only using provided context. Context: Hello world",
+                    },
+                    {
+                        role: "user",
+                        content: "What is in the context?",
+                    },
+                ],
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
 
-            Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
-      },
-      outputs: {
-        "role": "assistant",
-        "content": "Hello world",
-      },
-      error: null,
-      duration: 824.8056,
-      userProperties: {
-        "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
-      },
-      startTime: 1712025501605,
-      endTime: 1712025499832,
-    },
-  });
-
-  if (res.statusCode == 200) {
-    // handle response
-  }
+    // Handle the result
+    console.log(result);
 }
 
 run();
+
 ```
 <!-- End Authentication [security] -->
+
+<!-- Start Requirements [requirements] -->
+## Requirements
+
+For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
+<!-- End Requirements [requirements] -->
+
+<!-- Start Standalone functions [standalone-funcs] -->
+## Standalone functions
+
+All the methods listed above are available as standalone functions. These
+functions are ideal for use in applications running in the browser, serverless
+runtimes or other environments where application bundle size is a primary
+concern. When using a bundler to build your application, all unused
+functionality will be either excluded from the final bundle or tree-shaken away.
+
+To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
+
+<details>
+
+<summary>Available standalone functions</summary>
+
+- [configurationsCreateConfiguration](docs/sdks/configurations/README.md#createconfiguration)
+- [configurationsDeleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration)
+- [configurationsGetConfigurations](docs/sdks/configurations/README.md#getconfigurations)
+- [configurationsUpdateConfiguration](docs/sdks/configurations/README.md#updateconfiguration)
+- [datapointsCreateDatapoint](docs/sdks/datapoints/README.md#createdatapoint)
+- [datapointsDeleteDatapoint](docs/sdks/datapoints/README.md#deletedatapoint)
+- [datapointsGetDatapoint](docs/sdks/datapoints/README.md#getdatapoint)
+- [datapointsGetDatapoints](docs/sdks/datapoints/README.md#getdatapoints)
+- [datapointsUpdateDatapoint](docs/sdks/datapoints/README.md#updatedatapoint)
+- [datasetsAddDatapoints](docs/sdks/datasets/README.md#adddatapoints)
+- [datasetsCreateDataset](docs/sdks/datasets/README.md#createdataset)
+- [datasetsDeleteDataset](docs/sdks/datasets/README.md#deletedataset)
+- [datasetsGetDatasets](docs/sdks/datasets/README.md#getdatasets)
+- [datasetsUpdateDataset](docs/sdks/datasets/README.md#updatedataset)
+- [eventsCreateEventBatch](docs/sdks/events/README.md#createeventbatch)
+- [eventsCreateEvent](docs/sdks/events/README.md#createevent)
+- [eventsCreateModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch)
+- [eventsCreateModelEvent](docs/sdks/events/README.md#createmodelevent)
+- [eventsGetEvents](docs/sdks/events/README.md#getevents)
+- [eventsUpdateEvent](docs/sdks/events/README.md#updateevent)
+- [metricsCreateMetric](docs/sdks/metrics/README.md#createmetric)
+- [metricsDeleteMetric](docs/sdks/metrics/README.md#deletemetric)
+- [metricsGetMetrics](docs/sdks/metrics/README.md#getmetrics)
+- [metricsUpdateMetric](docs/sdks/metrics/README.md#updatemetric)
+- [projectsCreateProject](docs/sdks/projects/README.md#createproject)
+- [projectsDeleteProject](docs/sdks/projects/README.md#deleteproject)
+- [projectsGetProjects](docs/sdks/projects/README.md#getprojects)
+- [projectsUpdateProject](docs/sdks/projects/README.md#updateproject)
+- [runsCreateRun](docs/sdks/runs/README.md#createrun)
+- [runsDeleteRun](docs/sdks/runs/README.md#deleterun)
+- [runsGetRun](docs/sdks/runs/README.md#getrun)
+- [runsGetRuns](docs/sdks/runs/README.md#getruns)
+- [runsUpdateRun](docs/sdks/runs/README.md#updaterun)
+- [sessionGetSession](docs/sdks/session/README.md#getsession)
+- [sessionStartSession](docs/sdks/session/README.md#startsession)
+- [toolsCreateTool](docs/sdks/tools/README.md#createtool)
+- [toolsDeleteTool](docs/sdks/tools/README.md#deletetool)
+- [toolsGetTools](docs/sdks/tools/README.md#gettools)
+- [toolsUpdateTool](docs/sdks/tools/README.md#updatetool)
+
+
+</details>
+<!-- End Standalone functions [standalone-funcs] -->
+
+<!-- Start Retries [retries] -->
+## Retries
+
+Some of the endpoints in this SDK support retries.  If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API.  However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
+
+To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
+```typescript
+import { HoneyHive } from "honeyhive";
+
+const honeyHive = new HoneyHive({
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+    const result = await honeyHive.session.startSession(
+        {
+            session: {
+                project: "Simple RAG Project",
+                sessionName: "Playground Session",
+                source: "playground",
+                sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+                inputs: {
+                    context: "Hello world",
+                    question: "What is in the context?",
+                    chat_history: [
+                        {
+                            role: "system",
+                            content:
+                                "Answer the user's question only using provided context. Context: Hello world",
+                        },
+                        {
+                            role: "user",
+                            content: "What is in the context?",
+                        },
+                    ],
+                },
+                outputs: {
+                    role: "assistant",
+                    content: "Hello world",
+                },
+                error: null,
+                duration: 824.8056,
+                userProperties: {
+                    user: "google-oauth2|111840237613341303366",
+                },
+                metrics: {},
+                feedback: {},
+                metadata: {},
+                startTime: 1712025501605,
+                endTime: 1712025499832,
+            },
+        },
+        {
+            retries: {
+                strategy: "backoff",
+                backoff: {
+                    initialInterval: 1,
+                    maxInterval: 50,
+                    exponent: 1.1,
+                    maxElapsedTime: 100,
+                },
+                retryConnectionErrors: false,
+            },
+        }
+    );
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+
+If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
+```typescript
+import { HoneyHive } from "honeyhive";
+
+const honeyHive = new HoneyHive({
+    retryConfig: {
+        strategy: "backoff",
+        backoff: {
+            initialInterval: 1,
+            maxInterval: 50,
+            exponent: 1.1,
+            maxElapsedTime: 100,
+        },
+        retryConnectionErrors: false,
+    },
+    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+    const result = await honeyHive.session.startSession({
+        session: {
+            project: "Simple RAG Project",
+            sessionName: "Playground Session",
+            source: "playground",
+            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
+            inputs: {
+                context: "Hello world",
+                question: "What is in the context?",
+                chat_history: [
+                    {
+                        role: "system",
+                        content:
+                            "Answer the user's question only using provided context. Context: Hello world",
+                    },
+                    {
+                        role: "user",
+                        content: "What is in the context?",
+                    },
+                ],
+            },
+            outputs: {
+                role: "assistant",
+                content: "Hello world",
+            },
+            error: null,
+            duration: 824.8056,
+            userProperties: {
+                user: "google-oauth2|111840237613341303366",
+            },
+            metrics: {},
+            feedback: {},
+            metadata: {},
+            startTime: 1712025501605,
+            endTime: 1712025499832,
+        },
+    });
+
+    // Handle the result
+    console.log(result);
+}
+
+run();
+
+```
+<!-- End Retries [retries] -->
+
+<!-- Start Debugging [debug] -->
+## Debugging
+
+You can setup your SDK to emit debug logs for SDK requests and responses.
+
+You can pass a logger that matches `console`'s interface as an SDK option.
+
+> [!WARNING]
+> Beware that debug logging will reveal secrets, like API tokens in headers, in log messages printed to a console or files. It's recommended to use this feature only during local development and not in production.
+
+```typescript
+import { HoneyHive } from "honeyhive";
+
+const sdk = new HoneyHive({ debugLogger: console });
+```
+<!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 

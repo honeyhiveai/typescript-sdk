@@ -1,5 +1,14 @@
 # GetDatapointRequest
 
+## Example Usage
+
+```typescript
+import { GetDatapointRequest } from "honeyhive/models/operations";
+
+let value: GetDatapointRequest = {
+    id: "<id>",
+};
+```
 
 ## Fields
 

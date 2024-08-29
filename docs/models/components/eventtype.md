@@ -2,12 +2,16 @@
 
 Specify whether the event is of "session", "model", "tool" or "chain" type
 
+## Example Usage
+
+```typescript
+import { EventType } from "honeyhive/models/components";
+
+let value: EventType = "tool";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Session` | session   |
-| `Model`   | model     |
-| `Tool`    | tool      |
-| `Chain`   | chain     |
+```typescript
+"session" | "model" | "tool" | "chain"
+```
