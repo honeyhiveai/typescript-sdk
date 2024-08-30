@@ -26,7 +26,7 @@ export class Telemetry {
       process.env.HONEYHIVE_TELEMETRY.toLowerCase() === "true";
     if (this.telemetryEnabled) {
       this.posthog = new PostHog(
-        "phc_KcTsebtDijhneE25BxiqXoG2W2pJ8rNJUJel2fy7KqR",
+        "phc_yeqaIP07fjwZ5n3w47wPtSz7G58igfczuQ9X3zKhuxa",
         {
           host:'https://us.i.posthog.com'
         }
@@ -149,7 +149,7 @@ export class Telemetry {
     }
   }
 
-  public capture(event: string, properties?: Record<string, any>): void {
+  public async capture(event: string, properties?: Record<string, any>): Promise<void> {
     if (this.telemetryEnabled && this.posthog) {
       let posthogPayload = {
         distinctId: this.getAnonId(),
@@ -159,10 +159,9 @@ export class Telemetry {
           ...this.getContext(),
         },
       };
-      console.log("capturing telemetry", posthogPayload);
       this.posthog.capture(posthogPayload);
       this.posthog.flush();
-      console.log("telemetry flushed");
+      await this.posthog.shutdown();
     }
   }
 

@@ -120,10 +120,9 @@ export class HoneyHiveTracer {
       bearerAuth: apiKey,
       serverURL: serverUrl,
     });
-    console.log("logging telemetry");
-    Telemetry.getInstance().capture("tracer_init", { "server_url": serverUrl });
     const tracer = new HoneyHiveTracer(sdk);
     await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
   }
 
