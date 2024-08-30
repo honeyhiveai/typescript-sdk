@@ -1,4 +1,5 @@
-import { HoneyHive } from "./sdk.js";
+import { HoneyHive } from "./sdk";
+import { Telemetry } from "./telemetry";
 import * as traceloop from "@traceloop/node-server-sdk";
 
 // eslint-disable-next-line import/no-named-as-default
@@ -125,6 +126,7 @@ export class HoneyHiveTracer {
     });
     const tracer = new HoneyHiveTracer(sdk);
     await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
   }
 

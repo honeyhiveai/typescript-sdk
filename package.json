@@ -36,6 +36,14 @@
     "chromadb": "^1.8.1",
     "cohere-ai": "^7.10.0",
     "langchain": "^0.2.0",
-    "llamaindex": "^0.3.12"
-  }
+    "llamaindex": "^0.3.12",
+    "openai": "^4.47.1",
+    "posthog-node": "^4.1.1",
+    "reflect-metadata": "^0.1.13"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md"
+  ]
 }
