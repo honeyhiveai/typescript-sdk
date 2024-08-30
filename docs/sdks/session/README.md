@@ -1,6 +1,8 @@
 # Session
 (*session*)
 
+## Overview
+
 ### Available Operations
 
 * [startSession](#startsession) - Start a new session
@@ -15,12 +17,12 @@ Start a new session
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
-  const res = await sdk.session.startSession({
+async function run() {
+  const result = await honeyHive.session.startSession({
     session: {
       project: "Simple RAG Project",
       sessionName: "Playground Session",
@@ -29,18 +31,13 @@ async function run() {
       childrenIds: [
         "7f22137a-6911-4ed3-bc36-110f1dde6b66",
       ],
-      config: {
-        "key": "<value>",
-      },
       inputs: {
         "context": "Hello world",
         "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context.
-
-            Context: Hello world",
+            "content": "Answer the user's question only using provided context. Context: Hello world",
           },
           {
             "role": "user",
@@ -58,22 +55,95 @@ async function run() {
         "user": "google-oauth2|111840237613341303366",
       },
       metrics: {
-
+  
       },
       feedback: {
-
+  
       },
       metadata: {
-
+  
       },
       startTime: 1712025501605,
       endTime: 1712025499832,
     },
   });
 
-  if (res.statusCode == 200) {
-    // handle response
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { sessionStartSession } from "honeyhive/funcs/sessionStartSession.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await sessionStartSession(honeyHive, {
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: null,
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {
+  
+      },
+      feedback: {
+  
+      },
+      metadata: {
+  
+      },
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
 }
 
 run();
@@ -81,20 +151,23 @@ run();
 
 ### Parameters
 
-| Parameter                                                                                | Type                                                                                     | Required                                                                                 | Description                                                                              |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `request`                                                                                | [operations.StartSessionRequestBody](../../models/operations/startsessionrequestbody.md) | :heavy_check_mark:                                                                       | The request object to use for the request.                                               |
-| `config`                                                                                 | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                             | :heavy_minus_sign:                                                                       | Available config options for making requests.                                            |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.StartSessionRequestBody](../../models/operations/startsessionrequestbody.md)                                                                                       | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.StartSessionResponse](../../models/operations/startsessionresponse.md)>**
+**Promise\<[operations.StartSessionResponseBody](../../models/operations/startsessionresponsebody.md)\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## getSession
 
@@ -104,19 +177,46 @@ Retrieve a session
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { GetSessionRequest } from "honeyhive/dist/models/operations";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const sessionId: string = "<value>";
+  const result = await honeyHive.session.getSession("<value>");
 
-  const res = await sdk.session.getSession(sessionId);
+  // Handle the result
+  console.log(result)
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { sessionGetSession } from "honeyhive/funcs/sessionGetSession.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await sessionGetSession(honeyHive, "<value>");
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
 }
 
 run();
@@ -124,15 +224,17 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `sessionId`                                                  | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `sessionId`                                                                                                                                                                    | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.GetSessionResponse](../../models/operations/getsessionresponse.md)>**
+**Promise\<[components.Event](../../models/components/event.md)\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

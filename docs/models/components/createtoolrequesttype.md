@@ -1,9 +1,15 @@
 # CreateToolRequestType
 
+## Example Usage
+
+```typescript
+import { CreateToolRequestType } from "honeyhive/models/components";
+
+let value: CreateToolRequestType = "function";
+```
 
 ## Values
 
-| Name       | Value      |
-| ---------- | ---------- |
-| `Function` | function   |
-| `Tool`     | tool       |
+```typescript
+"function" | "tool"
+```

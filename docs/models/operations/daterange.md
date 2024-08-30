@@ -1,5 +1,12 @@
 # DateRange
 
+## Example Usage
+
+```typescript
+import { DateRange } from "honeyhive/models/operations";
+
+let value: DateRange = {};
+```
 
 ## Fields
 

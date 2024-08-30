@@ -1,5 +1,24 @@
 # CreateDatasetRequest
 
+## Example Usage
+
+```typescript
+import { CreateDatasetRequest } from "honeyhive/models/components";
+
+let value: CreateDatasetRequest = {
+    project: "New Project",
+    name: "test-dataset",
+    description: "A test dataset",
+    type: "evaluation",
+    datapoints: ["66369748b5773befbdc661e2"],
+    linkedEvals: ["<value>"],
+    saved: false,
+    pipelineType: "event",
+    metadata: {
+        source: "dev",
+    },
+};
+```
 
 ## Fields
 

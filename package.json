@@ -1,12 +1,30 @@
 {
   "name": "honeyhive",
-  "version": "0.6.4",
+  "version": "1.0.0-experimental.3",
   "author": "HoneyHive",
+  "main": "./index.js",
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/honeyhiveai/typescript-sdk.git",
+    "directory": "."
+  },
   "scripts": {
-    "prepare": "tsc --build",
-    "check:tsc": "tsc --noEmit --skipLibCheck",
-    "check:eslint": "eslint --max-warnings=0 src",
-    "check": "npm run check:tsc && npm run check:eslint"
+    "lint": "eslint --max-warnings=0 src",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "zod": ">= 3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "typescript": "^5.4.5",
+    "zod": "^3.23.4"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.21.0",
@@ -15,35 +33,17 @@
     "@google-cloud/aiplatform": "^3.20.0",
     "@pinecone-database/pinecone": "^2.2.1",
     "@traceloop/node-server-sdk": "^0.8.4",
-    "axios": "^1.1.3",
     "chromadb": "^1.8.1",
-    "class-transformer": "^0.5.1",
     "cohere-ai": "^7.10.0",
-    "form-data": "^4.0.0",
-    "jsonpath": "^1.1.1",
     "langchain": "^0.2.0",
     "llamaindex": "^0.3.12",
     "openai": "^4.47.1",
     "posthog-node": "^4.1.1",
     "reflect-metadata": "^0.1.13"
   },
-  "devDependencies": {
-    "@types/jsonpath": "^0.2.0",
-    "@types/node": "^18.11.5",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "eslint": "^8.36.0",
-    "typescript": "^4.8.4"
-  },
-  "main": "dist/index.js",
   "files": [
     "dist",
     "docs",
     "README.md"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/honeyhiveai/typescript-sdk.git",
-    "directory": "."
-  }
+  ]
 }

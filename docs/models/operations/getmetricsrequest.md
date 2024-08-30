@@ -1,5 +1,14 @@
 # GetMetricsRequest
 
+## Example Usage
+
+```typescript
+import { GetMetricsRequest } from "honeyhive/models/operations";
+
+let value: GetMetricsRequest = {
+    projectName: "<value>",
+};
+```
 
 ## Fields
 

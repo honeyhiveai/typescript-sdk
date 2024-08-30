@@ -1,5 +1,12 @@
 # EvaluationRun
 
+## Example Usage
+
+```typescript
+import { EvaluationRun } from "honeyhive/models/components";
+
+let value: EvaluationRun = {};
+```
 
 ## Fields
 

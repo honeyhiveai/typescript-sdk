@@ -1,10 +1,15 @@
 # PutConfigurationRequestEnv
 
+## Example Usage
+
+```typescript
+import { PutConfigurationRequestEnv } from "honeyhive/models/components";
+
+let value: PutConfigurationRequestEnv = "prod";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Dev`     | dev       |
-| `Staging` | staging   |
-| `Prod`    | prod      |
+```typescript
+"dev" | "staging" | "prod"
+```

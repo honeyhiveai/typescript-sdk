@@ -2,11 +2,16 @@
 
 The data type of the metric value - "boolean", "float", "string"
 
+## Example Usage
+
+```typescript
+import { ReturnTypeT } from "honeyhive/models/components";
+
+let value: ReturnTypeT = "string";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Boolean` | boolean   |
-| `Float`   | float     |
-| `String`  | string    |
+```typescript
+"boolean" | "float" | "string"
+```

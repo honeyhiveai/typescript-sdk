@@ -2,11 +2,16 @@
 
 Environment - "dev", "staging" or "prod"
 
+## Example Usage
+
+```typescript
+import { Env } from "honeyhive/models/operations";
+
+let value: Env = "staging";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Dev`     | dev       |
-| `Staging` | staging   |
-| `Prod`    | prod      |
+```typescript
+"dev" | "staging" | "prod"
+```

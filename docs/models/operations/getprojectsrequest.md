@@ -1,5 +1,12 @@
 # GetProjectsRequest
 
+## Example Usage
+
+```typescript
+import { GetProjectsRequest } from "honeyhive/models/operations";
+
+let value: GetProjectsRequest = {};
+```
 
 ## Fields
 

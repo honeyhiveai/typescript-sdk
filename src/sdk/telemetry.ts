@@ -22,8 +22,8 @@ export class Telemetry {
 
   private constructor() {
     this.telemetryEnabled =
-      !process.env.HONEYHIVE_TELEMETRY ||
-      process.env.HONEYHIVE_TELEMETRY.toLowerCase() === "true";
+      !process.env['HONEYHIVE_TELEMETRY'] ||
+      process.env['HONEYHIVE_TELEMETRY']?.toLowerCase() === "true";
     if (this.telemetryEnabled) {
       this.posthog = new PostHog(
         "phc_yeqaIP07fjwZ5n3w47wPtSz7G58igfczuQ9X3zKhuxa",
@@ -94,14 +94,14 @@ export class Telemetry {
   private getRuntimeInfo(): Record<string, string> {
     const runtimeInfo: Record<string, string> = {};
 
-    if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
-      runtimeInfo.environment = 'AWS Lambda';
-    } else if (process.env.AZURE_FUNCTIONS_ENVIRONMENT) {
-      runtimeInfo.environment = 'Azure Functions';
-    } else if (process.env.GOOGLE_CLOUD_PROJECT) {
-      runtimeInfo.environment = 'Google Cloud Functions';
+    if (process.env['AWS_LAMBDA_FUNCTION_NAME']) {
+      runtimeInfo['environment'] = 'AWS Lambda';
+    } else if (process.env['AZURE_FUNCTIONS_ENVIRONMENT']) {
+      runtimeInfo['environment'] = 'Azure Functions';
+    } else if (process.env['GOOGLE_CLOUD_PROJECT']) {
+      runtimeInfo['environment'] = 'Google Cloud Functions';
     } else {
-      runtimeInfo.environment = 'Unknown';
+      runtimeInfo['environment'] = 'Unknown';
     }
 
     // You may want to add detection for server-side frameworks here
@@ -135,7 +135,7 @@ export class Telemetry {
   }
 
   private getExecutionMethod(): string {
-    const execPath = process.argv[0].toLowerCase();
+    const execPath = process.argv[0]?.toLowerCase() ?? '';
     if (execPath.includes('node')) {
       return 'nodejs';
     } else if (execPath.includes('npm')) {
