@@ -1,6 +1,8 @@
 # Tools
 (*tools*)
 
+## Overview
+
 ### Available Operations
 
 * [getTools](#gettools) - Retrieve a list of tools
@@ -17,16 +19,45 @@ Retrieve a list of tools
 ```typescript
 import { HoneyHive } from "honeyhive";
 
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+  const result = await honeyHive.tools.getTools();
 
-  const res = await sdk.tools.getTools();
+  // Handle the result
+  console.log(result)
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { toolsGetTools } from "honeyhive/funcs/toolsGetTools.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await toolsGetTools(honeyHive);
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
 }
 
 run();
@@ -34,19 +65,22 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.GetToolsResponse](../../models/operations/gettoolsresponse.md)>**
+**Promise\<[components.Tool[]](../../models/.md)\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## createTool
 
@@ -56,25 +90,60 @@ Create a new tool
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { CreateToolRequestType } from "honeyhive/dist/models/components";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-
-  const res = await sdk.tools.createTool({
+  const result = await honeyHive.tools.createTool({
     task: "<value>",
     name: "<value>",
     parameters: {
       "key": "<value>",
     },
-    type: CreateToolRequestType.Tool,
+    type: "tool",
   });
 
-  if (res.statusCode == 200) {
-    // handle response
+  // Handle the result
+  console.log(result)
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { toolsCreateTool } from "honeyhive/funcs/toolsCreateTool.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await toolsCreateTool(honeyHive, {
+    task: "<value>",
+    name: "<value>",
+    parameters: {
+      "key": "<value>",
+    },
+    type: "function",
+  });
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result)
 }
 
 run();
@@ -82,20 +151,23 @@ run();
 
 ### Parameters
 
-| Parameter                                                                    | Type                                                                         | Required                                                                     | Description                                                                  |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `request`                                                                    | [components.CreateToolRequest](../../models/components/createtoolrequest.md) | :heavy_check_mark:                                                           | The request object to use for the request.                                   |
-| `config`                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                 | :heavy_minus_sign:                                                           | Available config options for making requests.                                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [components.CreateToolRequest](../../models/components/createtoolrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.CreateToolResponse](../../models/operations/createtoolresponse.md)>**
+**Promise\<[operations.CreateToolResponseBody](../../models/operations/createtoolresponsebody.md)\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## updateTool
 
@@ -106,12 +178,12 @@ Update an existing tool
 ```typescript
 import { HoneyHive } from "honeyhive";
 
-async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
-  const res = await sdk.tools.updateTool({
+async function run() {
+  await honeyHive.tools.updateTool({
     id: "<id>",
     name: "<value>",
     parameters: {
@@ -119,9 +191,42 @@ async function run() {
     },
   });
 
-  if (res.statusCode == 200) {
-    // handle response
+  
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { toolsUpdateTool } from "honeyhive/funcs/toolsUpdateTool.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await toolsUpdateTool(honeyHive, {
+    id: "<id>",
+    name: "<value>",
+    parameters: {
+      "key": "<value>",
+    },
+  });
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  
 }
 
 run();
@@ -129,20 +234,23 @@ run();
 
 ### Parameters
 
-| Parameter                                                                    | Type                                                                         | Required                                                                     | Description                                                                  |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `request`                                                                    | [components.UpdateToolRequest](../../models/components/updatetoolrequest.md) | :heavy_check_mark:                                                           | The request object to use for the request.                                   |
-| `config`                                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config)                 | :heavy_minus_sign:                                                           | Available config options for making requests.                                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [components.UpdateToolRequest](../../models/components/updatetoolrequest.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.UpdateToolResponse](../../models/operations/updatetoolresponse.md)>**
+**Promise\<void\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
 | errors.SDKError | 4xx-5xx         | */*             |
+
 
 ## deleteTool
 
@@ -152,19 +260,44 @@ Delete a tool
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { DeleteToolRequest } from "honeyhive/dist/models/operations";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
 
 async function run() {
-  const sdk = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-  });
-const functionId: string = "<value>";
+  await honeyHive.tools.deleteTool("<value>");
 
-  const res = await sdk.tools.deleteTool(functionId);
+  
+}
 
-  if (res.statusCode == 200) {
-    // handle response
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { toolsDeleteTool } from "honeyhive/funcs/toolsDeleteTool.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await toolsDeleteTool(honeyHive, "<value>");
+
+  if (!res.ok) {
+    throw res.error;
   }
+
+  const { value: result } = res;
+
+  
 }
 
 run();
@@ -172,15 +305,17 @@ run();
 
 ### Parameters
 
-| Parameter                                                    | Type                                                         | Required                                                     | Description                                                  |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `functionId`                                                 | *string*                                                     | :heavy_check_mark:                                           | N/A                                                          |
-| `config`                                                     | [AxiosRequestConfig](https://axios-http.com/docs/req_config) | :heavy_minus_sign:                                           | Available config options for making requests.                |
-
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `functionId`                                                                                                                                                                   | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise<[operations.DeleteToolResponse](../../models/operations/deletetoolresponse.md)>**
+**Promise\<void\>**
+
 ### Errors
 
 | Error Object    | Status Code     | Content Type    |

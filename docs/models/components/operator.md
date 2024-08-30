@@ -2,13 +2,16 @@
 
 The type of filter you are performing - "is", "is not", "contains", "not contains", "greater than"
 
+## Example Usage
+
+```typescript
+import { Operator } from "honeyhive/models/components";
+
+let value: Operator = "not contains";
+```
 
 ## Values
 
-| Name          | Value         |
-| ------------- | ------------- |
-| `Is`          | is            |
-| `IsNot`       | is not        |
-| `Contains`    | contains      |
-| `NotContains` | not contains  |
-| `GreaterThan` | greater than  |
+```typescript
+"is" | "is not" | "contains" | "not contains" | "greater than"
+```

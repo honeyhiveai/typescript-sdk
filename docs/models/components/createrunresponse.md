@@ -1,5 +1,12 @@
 # CreateRunResponse
 
+## Example Usage
+
+```typescript
+import { CreateRunResponse } from "honeyhive/models/components";
+
+let value: CreateRunResponse = {};
+```
 
 ## Fields
 

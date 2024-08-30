@@ -2,11 +2,16 @@
 
 Specify whether the event is of "model", "tool" or "chain" type
 
+## Example Usage
+
+```typescript
+import { CreateEventRequestEventType } from "honeyhive/models/components";
+
+let value: CreateEventRequestEventType = "chain";
+```
 
 ## Values
 
-| Name    | Value   |
-| ------- | ------- |
-| `Model` | model   |
-| `Tool`  | tool    |
-| `Chain` | chain   |
+```typescript
+"model" | "tool" | "chain"
+```

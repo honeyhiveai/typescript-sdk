@@ -1,10 +1,15 @@
 # Env
 
+## Example Usage
+
+```typescript
+import { Env } from "honeyhive/models/components";
+
+let value: Env = "dev";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Dev`     | dev       |
-| `Staging` | staging   |
-| `Prod`    | prod      |
+```typescript
+"dev" | "staging" | "prod"
+```

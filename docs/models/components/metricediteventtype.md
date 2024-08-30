@@ -2,12 +2,16 @@
 
 Type of event that the metric is set to be computed on
 
+## Example Usage
+
+```typescript
+import { MetricEditEventType } from "honeyhive/models/components";
+
+let value: MetricEditEventType = "model";
+```
 
 ## Values
 
-| Name      | Value     |
-| --------- | --------- |
-| `Model`   | model     |
-| `Tool`    | tool      |
-| `Chain`   | chain     |
-| `Session` | session   |
+```typescript
+"model" | "tool" | "chain" | "session"
+```

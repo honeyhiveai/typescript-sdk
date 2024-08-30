@@ -1,5 +1,15 @@
 # Project
 
+## Example Usage
+
+```typescript
+import { Project } from "honeyhive/models/components";
+
+let value: Project = {
+    name: "<value>",
+    description: "Organic fault-tolerant system engine",
+};
+```
 
 ## Fields
 

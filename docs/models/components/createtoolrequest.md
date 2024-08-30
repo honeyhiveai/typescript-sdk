@@ -1,5 +1,19 @@
 # CreateToolRequest
 
+## Example Usage
+
+```typescript
+import { CreateToolRequest } from "honeyhive/models/components";
+
+let value: CreateToolRequest = {
+    task: "<value>",
+    name: "<value>",
+    parameters: {
+        key: "<value>",
+    },
+    type: "function",
+};
+```
 
 ## Fields
 

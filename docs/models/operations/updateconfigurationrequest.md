@@ -1,5 +1,80 @@
 # UpdateConfigurationRequest
 
+## Example Usage
+
+```typescript
+import { UpdateConfigurationRequest } from "honeyhive/models/operations";
+
+let value: UpdateConfigurationRequest = {
+  id: "<id>",
+  putConfigurationRequest: {
+    project: "New Project",
+    name: "function-v0",
+    provider: "openai",
+    parameters: {
+      callType: "chat",
+      model: "gpt-4-turbo-preview",
+      hyperparameters: {
+        "temperature": 0,
+        "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
+        "presence_penalty": 0,
+        "stop_sequences": [
+          "<value>",
+        ],
+      },
+      responseFormat: {},
+      selectedFunctions: [
+        {
+          id: "64e3ba90e81f9b3a3808c27f",
+          name: "get_google_information",
+          description: "Get information from Google when you do not have that information in your context",
+          parameters: {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The query asked by the user",
+              },
+            },
+            "required": [
+              "query",
+            ],
+          },
+        },
+      ],
+      functionCallParams: "auto",
+      forceFunction: {
+
+      },
+      additionalProperties: {
+        "template": [
+          {
+            "role": "system",
+            "content": "You are a web search assistant.",
+          },
+          {
+            "role": "user",
+            "content": "{{ query }}",
+          },
+        ],
+      },
+    },
+    env: [
+      "staging",
+    ],
+    type: "LLM",
+    userProperties: {
+      "user_id": "google-oauth2|108897808434934946583",
+      "user_name": "Dhruv Singh",
+      "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
+    },
+  },
+};
+```
 
 ## Fields
 

@@ -1,5 +1,18 @@
 # UpdateToolRequest
 
+## Example Usage
+
+```typescript
+import { UpdateToolRequest } from "honeyhive/models/components";
+
+let value: UpdateToolRequest = {
+    id: "<id>",
+    name: "<value>",
+    parameters: {
+        key: "<value>",
+    },
+};
+```
 
 ## Fields
 
