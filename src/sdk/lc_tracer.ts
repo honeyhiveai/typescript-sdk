@@ -1,3 +1,4 @@
+import { DocumentInterface } from '@langchain/core/documents';
 import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import { AgentAction, AgentFinish } from '@langchain/core/agents';
 import { ChainValues } from '@langchain/core/utils/types';
@@ -11,7 +12,6 @@ interface HoneyHiveTracerInput {
   source?: string;
   userProperties?: Record<string, any>;
   apiKey?: string;
-  metadata?: Record<string, any>;
   verbose?: boolean;
   baseUrl?: string;
 }
@@ -32,7 +32,7 @@ interface Log {
   start_time: number;
   end_time: number;
   duration: number;
-  metadata?: Record<string, any> | undefined;
+  metadata?: Record<string, unknown> | undefined;
   source?: string;
   error?: string | undefined;
 }
@@ -42,7 +42,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   name: string;
   source: string;
   userProperties?: Record<string, any> | undefined;
-  metadata?: Record<string, any> | undefined;
+  // metadata?: Record<string, any> | undefined;
   verbose: boolean;
   private headers: Record<string, string>;
   private baseUrl: string;
@@ -55,7 +55,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.name = input.name;
     this.source = input.source || 'langchain';
     this.userProperties = input.userProperties;
-    this.metadata = input.metadata;
     this.verbose = input.verbose || false;
     this.baseUrl = input.baseUrl || 'https://api.honeyhive.ai';
     this.sessionId = uuidv4();
@@ -79,6 +78,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     config: any,
     start_time: number,
     end_time: number,
+    metadata?: Record<string, unknown> | undefined,
     error?: string,
     parent_id?: string,
     user_properties?: Record<string, any> | null,
@@ -100,7 +100,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       start_time,
       end_time,
       duration: end_time - start_time,
-      metadata: this.metadata,
+      metadata: metadata,
       source: this.source,
       error,
       children: []
@@ -126,9 +126,11 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     runId: string,
     parentstring?: string,
-    extraParams?: Record<string, unknown>
+    extraParams?: Record<string, unknown>,
+    // @ts-expect-error: Not used
+    tags?: string[],
+    metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log("LLM start");
     const startTime = Date.now();
     const log = this.createLog(
       'llm',
@@ -138,6 +140,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       this.convertToModelConfig(llm, extraParams),
       startTime,
       startTime,
+      metadata,
       undefined,
       parentstring?.toString()
     );
@@ -151,13 +154,33 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("LLM end");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
       log.end_time = endTime;
       log.duration = endTime - log.start_time;
-      log.outputs = { generations: output.generations };
+      // Extract text and generationInfo from the output
+      const generations = output.generations;
+
+      const texts = generations.flat().map((gen) => gen.text);
+      const metadataArray = generations.flat().map((gen) => {
+        const { text, ...rest } = gen;
+        return rest;
+      });
+
+      // Convert the metadata array to an object with index keys
+      const metadata = metadataArray.reduce((acc, curr, index) => {
+        acc[index] = curr;
+        return acc;
+      }, {} as Record<string, unknown>);
+      log.outputs = { generations: texts };
+      if (log.metadata) {
+        log.metadata['generationInfo'] = metadata;
+      }
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
     }
   }
 
@@ -166,9 +189,11 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     inputs: ChainValues,
     // @ts-expect-error: Not used
     runId: string,
-    parentstring?: string
+    parentstring?: string,
+    // @ts-expect-error: Not used
+    tags?: string[],
+    metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log("Chain start");
     const startTime = Date.now();
     const log = this.createLog(
       'chain',
@@ -178,6 +203,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       {},
       startTime,
       startTime,
+      metadata,
       undefined,
       parentstring?.toString()
     );
@@ -191,7 +217,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("Chain end");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -211,9 +236,11 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     input: string,
     // @ts-expect-error: Not used
     runId: string,
-    parentstring?: string
+    parentstring?: string,
+    // @ts-expect-error: Not used
+    tags?: string[],
+    metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log("Tool start");
     const startTime = Date.now();
     const log = this.createLog(
       'tool',
@@ -223,6 +250,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       {},
       startTime,
       startTime,
+      metadata,
       undefined,
       parentstring?.toString()
     );
@@ -236,13 +264,16 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("Tool start");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
       log.end_time = endTime;
       log.duration = endTime - log.start_time;
-      log.outputs = { output };
+      log.outputs = { output: output };
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
     }
   }
 
@@ -252,36 +283,51 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
-    console.log("Agent action");
     const startTime = Date.now();
     const log = this.createLog(
       'agent',
       'Agent Action',
-      { action: action.tool, input: action.toolInput },
+      { action: action.tool, input: action.toolInput, log: action.log },
       null,
       {},
       startTime,
       startTime,
       undefined,
+      undefined,
       parentstring?.toString()
     );
     this.pushLog(log);
+    this.popLog();
+    // If this is the top-level chain, post the entire log structure
+    if (this.logStack.length === 0) {
+      await this.postTrace([log]);
+    }
   }
 
-  async handleAgentFinish(
+  override async handleAgentEnd(
     finish: AgentFinish,
     // @ts-expect-error: Not used
     runId: string,
-    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("Agent finish");
     const endTime = Date.now();
-    const log = this.popLog();
-    if (log) {
-      log.end_time = endTime;
-      log.duration = endTime - log.start_time;
-      log.outputs = { output: finish.returnValues };
+    const log = this.createLog(
+      'agent',
+      'Agent Finish',
+      { output: finish.returnValues, log: finish.log },
+      { output: finish.returnValues, log: finish.log },
+      {},
+      endTime,
+      endTime,
+      undefined,
+      undefined,
+      parentstring?.toString()
+    );
+    this.pushLog(log);
+    this.popLog();
+    // If this is the top-level chain, post the entire log structure
+    if (this.logStack.length === 0) {
+      await this.postTrace([log]);
     }
   }
 
@@ -298,8 +344,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   private async postTrace(logs: Log[]): Promise<void> {
-    console.log("Posting trace");
-    console.log(JSON.stringify(logs[0], null, 2));
     try {
       const response = await fetch(`${this.baseUrl}/session/${this.sessionId}/traces`, {
         method: 'POST',
@@ -325,7 +369,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("Chain error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
@@ -347,13 +390,16 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("LLM error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
       log.end_time = endTime;
       log.duration = endTime - log.start_time;
       log.error = error.message;
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
     }
   }
 
@@ -364,15 +410,85 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    console.log("Tool error");
     const endTime = Date.now();
     const log = this.popLog();
     if (log) {
       log.end_time = endTime;
       log.duration = endTime - log.start_time;
       log.error = error.message;
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
     }
   }
+
+  override async handleRetrieverStart(
+    retriever: Serialized,
+    query: string,
+    // @ts-expect-error: Not used
+    runId: string,
+    parentstring?: string,
+    // @ts-expect-error: Not used
+    tags?: string[],
+    metadata?: Record<string, unknown>
+  ): Promise<void> {
+    const startTime = Date.now();
+    const log = this.createLog(
+      'retriever',
+      retriever.id[retriever.id.length - 1],
+      { query },
+      null,
+      {},
+      startTime,
+      startTime,
+      metadata,
+      undefined,
+      parentstring?.toString()
+    );
+    this.pushLog(log);
+  }
+  
+  override async handleRetrieverEnd(
+    documents: DocumentInterface[],
+    // @ts-expect-error: Not used
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = Date.now();
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.outputs = { documents };
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
+    }
+  }
+  
+  override async handleRetrieverError(
+    error: Error,
+    // @ts-expect-error: Not used
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = Date.now();
+    const log = this.popLog();
+    if (log) {
+      log.end_time = endTime;
+      log.duration = endTime - log.start_time;
+      log.error = error.message;
+      // If this is the top-level chain, post the entire log structure
+      if (this.logStack.length === 0) {
+        await this.postTrace([log]);
+      }
+    }
+  }
+
 
   async startNewSession(): Promise<void> {
     const sessionBody = {
@@ -381,7 +497,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       sessionId: this.sessionId,
       sessionName: this.name,
       userProperties: this.userProperties,
-      metadata: this.metadata,
     };
 
     try {
