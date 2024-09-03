@@ -11,6 +11,8 @@ interface HoneyHiveTracerInput {
   sessionName: string;
   source?: string;
   userProperties?: Record<string, any>;
+  metrics?: Record<string, any>;
+  config?: Record<string, any>;
   metadata?: Record<string, any>;
   apiKey?: string;
   verbose?: boolean;
@@ -45,7 +47,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   userProperties?: Record<string, any> | undefined;
   verbose: boolean;
   private headers: Record<string, string>;
+  private metrics?: Record<string, any> | undefined;
   private sessionMetadata?: Record<string, any> | undefined;
+  private config?: Record<string, any> | undefined;
   private baseUrl: string;
   private sessionId: string;
   private logStack: Log[] = [];
@@ -56,6 +60,8 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.name = input.sessionName;
     this.source = input.source || 'langchain';
     this.userProperties = input.userProperties;
+    this.metrics = input.metrics;
+    this.config = input.config;
     this.sessionMetadata = input.metadata;
     this.verbose = input.verbose || false;
     this.baseUrl = input.baseUrl || 'https://api.honeyhive.ai';
@@ -498,7 +504,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       source: this.source,
       session_id: this.sessionId,
       session_name: this.name,
-      userProperties: this.userProperties,
+      user_properties: this.userProperties,
+      metrics: this.metrics,
+      config: this.config,
       metadata: this.sessionMetadata,
     };
 
