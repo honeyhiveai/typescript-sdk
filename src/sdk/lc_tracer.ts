@@ -8,9 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface HoneyHiveTracerInput {
   project: string;
-  name: string;
+  sessionName: string;
   source?: string;
   userProperties?: Record<string, any>;
+  metadata?: Record<string, any>;
   apiKey?: string;
   verbose?: boolean;
   baseUrl?: string;
@@ -44,6 +45,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   userProperties?: Record<string, any> | undefined;
   verbose: boolean;
   private headers: Record<string, string>;
+  private sessionMetadata?: Record<string, any> | undefined;
   private baseUrl: string;
   private sessionId: string;
   private logStack: Log[] = [];
@@ -51,9 +53,10 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   constructor(input: HoneyHiveTracerInput) {
     super();
     this.project = input.project;
-    this.name = input.name;
+    this.name = input.sessionName;
     this.source = input.source || 'langchain';
     this.userProperties = input.userProperties;
+    this.sessionMetadata = input.metadata;
     this.verbose = input.verbose || false;
     this.baseUrl = input.baseUrl || 'https://api.honeyhive.ai';
     this.sessionId = uuidv4();
@@ -493,9 +496,10 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const sessionBody = {
       project: this.project,
       source: this.source,
-      sessionId: this.sessionId,
-      sessionName: this.name,
+      session_id: this.sessionId,
+      session_name: this.name,
       userProperties: this.userProperties,
+      metadata: this.sessionMetadata,
     };
 
     try {
