@@ -1,3 +1,4 @@
+import { HoneyHive } from "./sdk";
 import { DocumentInterface } from '@langchain/core/documents';
 import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import { AgentAction, AgentFinish } from '@langchain/core/agents';
@@ -46,6 +47,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   source: string;
   userProperties?: Record<string, any> | undefined;
   verbose: boolean;
+  private sdk: HoneyHive;
   private headers: Record<string, string>;
   private metrics?: Record<string, any> | undefined;
   private sessionMetadata?: Record<string, any> | undefined;
@@ -76,6 +78,11 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     };
+
+    this.sdk = new HoneyHive({
+      bearerAuth: apiKey,
+      serverURL: this.baseUrl,
+    });
   }
 
   private createLog(
@@ -497,6 +504,65 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
+  public async setFeedback(feedback: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          feedback: feedback,
+        });
+      } catch (error) {
+        console.error("Failed to set feedback:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setMetric(metrics: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metrics: metrics,
+        });
+      } catch (error) {
+        console.error("Failed to set metric:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setMetadata(metadata: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metadata: metadata,
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setUserProperties(userProperties: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          userProperties: userProperties,
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
 
   async startNewSession(): Promise<void> {
     const sessionBody = {
