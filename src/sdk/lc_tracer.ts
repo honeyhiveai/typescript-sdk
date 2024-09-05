@@ -339,25 +339,36 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     console.log("Agent finish start");
     const endTime = 1000 * Date.now();
-    const log = this.createLog(
-      runId,
-      'tool',
-      'Agent Finish',
-      { output: finish.returnValues, log: finish.log },
-      { output: finish.returnValues, log: finish.log },
-      {},
-      endTime,
-      endTime,
-      undefined,
-      undefined,
-      parentstring?.toString()
-    );
-    this.addLogToParent(log);
-    // this.pushLog(log);
-    // this.popLog();
-    // If this is the top-level chain, post the entire log structure
-    if (log.parent_id === undefined) {
-      await this.postTrace(this.rootLogs);
+    const log = this.logMap[runId];
+    // const log = this.popLog();
+    if (log) {
+      console.log(log.event_name + " end");
+      log.end_time = endTime;
+      log.duration = (endTime - log.start_time) / 1000;
+      log.outputs = { output: finish.returnValues, log: finish.log };
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
+    } else {
+      const log = this.createLog(
+        runId,
+        'tool',
+        'Agent Finish',
+        { output: finish.returnValues, log: finish.log },
+        { output: finish.returnValues, log: finish.log },
+        {},
+        endTime,
+        endTime,
+        undefined,
+        undefined,
+        parentstring?.toString()
+      );
+      this.addLogToParent(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
