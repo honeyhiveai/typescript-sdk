@@ -79,6 +79,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   private createLog(
+    event_id: string,
     event_type: string,
     event_name: string | undefined,
     inputs: Record<string, any>,
@@ -95,7 +96,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Log {
     return {
       project: this.project,
-      event_id: uuidv4(),
+      event_id: event_id,
       parent_id,
       event_type,
       event_name: event_name || "Event",
@@ -131,7 +132,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   override async handleLLMStart(
     llm: Serialized,
     prompts: string[],
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string,
     extraParams?: Record<string, unknown>,
@@ -141,6 +141,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const startTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'model',
       llm.id[llm.id.length - 1],
       { prompts },
@@ -195,7 +196,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   override async handleChainStart(
     chain: Serialized,
     inputs: ChainValues,
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string,
     // @ts-expect-error: Not used
@@ -204,6 +204,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const startTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'chain',
       chain.id[chain.id.length - 1],
       inputs,
@@ -222,12 +223,14 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     outputs: ChainValues,
     // @ts-expect-error: Not used
     runId: string,
-    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.popLog();
     if (log) {
+      console.log(log.event_name + " end");
+      console.log("Parent is " + parentstring);
+
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = outputs;
@@ -242,7 +245,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   override async handleToolStart(
     tool: Serialized,
     input: string,
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string,
     // @ts-expect-error: Not used
@@ -251,6 +253,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const startTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'tool',
       tool.id[tool.id.length - 1],
       { input },
@@ -287,12 +290,12 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
 
   override async handleAgentAction(
     action: AgentAction,
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string
   ): Promise<void> {
     const startTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'tool',
       'Agent Action',
       { action: action.tool, input: action.toolInput, log: action.log },
@@ -314,12 +317,12 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
 
   override async handleAgentEnd(
     finish: AgentFinish,
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'tool',
       'Agent Finish',
       { output: finish.returnValues, log: finish.log },
@@ -434,7 +437,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   override async handleRetrieverStart(
     retriever: Serialized,
     query: string,
-    // @ts-expect-error: Not used
     runId: string,
     parentstring?: string,
     // @ts-expect-error: Not used
@@ -443,6 +445,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const startTime = 1000 * Date.now();
     const log = this.createLog(
+      runId,
       'tool',
       retriever.id[retriever.id.length - 1],
       { query },
