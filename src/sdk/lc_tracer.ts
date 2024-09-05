@@ -147,7 +147,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log(llm.id[llm.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -163,7 +162,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    // this.pushLog(log);
   }
 
   override async handleLLMEnd(
@@ -175,7 +173,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       // Extract text and generationInfo from the output
@@ -212,7 +209,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log(chain.id[chain.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -227,9 +223,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    console.log(JSON.stringify(log, null, 2));
     this.addLogToParent(log);
-    // this.pushLog(log);
   }
 
   override async handleChainEnd(
@@ -240,9 +234,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
-    // const log = this.popLog();
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = outputs;
@@ -263,7 +255,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log(tool.id[tool.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -279,7 +270,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    // this.pushLog(log);
   }
 
   override async handleToolEnd(
@@ -290,9 +280,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
-    // const log = this.popLog();
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { output: output };
@@ -308,7 +296,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
-    console.log("Agent action start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -324,8 +311,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    // this.pushLog(log);
-    // this.popLog();
     // If this is the top-level chain, post the entire log structure
     if (log.parent_id === undefined) {
       await this.postTrace(this.rootLogs);
@@ -337,12 +322,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
-    console.log("Agent finish start");
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
-    // const log = this.popLog();
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { output: finish.returnValues, log: finish.log };
@@ -415,7 +397,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
@@ -435,7 +416,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
@@ -455,7 +435,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
@@ -475,7 +454,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
-    console.log(retriever.id[retriever.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -491,7 +469,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    // this.pushLog(log);
   }
   
   override async handleRetrieverEnd(
@@ -504,7 +481,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const log = this.logMap[runId];
     // const log = this.popLog();
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { documents };
@@ -524,7 +500,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
