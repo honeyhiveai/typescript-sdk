@@ -1,3 +1,4 @@
+import { HoneyHive } from "./sdk";
 import { DocumentInterface } from '@langchain/core/documents';
 import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import { AgentAction, AgentFinish } from '@langchain/core/agents';
@@ -46,13 +47,15 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   source: string;
   userProperties?: Record<string, any> | undefined;
   verbose: boolean;
+  private sdk: HoneyHive;
   private headers: Record<string, string>;
   private metrics?: Record<string, any> | undefined;
   private sessionMetadata?: Record<string, any> | undefined;
   private config?: Record<string, any> | undefined;
   private baseUrl: string;
   private sessionId: string;
-  private logStack: Log[] = [];
+  private logMap: Record<string, Log> = {};  // Store logs by their event_id
+  private rootLogs: Log[] = [];  // Keep track of top-level logs
 
   constructor(input: HoneyHiveTracerInput) {
     super();
@@ -76,6 +79,11 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
     };
+
+    this.sdk = new HoneyHive({
+      bearerAuth: apiKey,
+      serverURL: this.baseUrl,
+    });
   }
 
   private createLog(
@@ -116,17 +124,37 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     };
   }
 
-  private pushLog(log: Log): void {
-    if (this.logStack.length > 0) {
-      const parentLog = this.logStack[this.logStack.length - 1];
-      log.parent_id = parentLog?.event_id;
-      parentLog?.children?.push(log);
-    }
-    this.logStack.push(log);
+  private convertToModelConfig(
+    llm: Serialized,
+    extraParams?: Record<string, unknown>
+  ): any {
+    // This is a simplified conversion. You might need to adjust based on the actual structure of your LLM serialization
+    return {
+      model: llm.id[llm.id.length - 1],
+      provider: llm.id[1], // Assuming the provider is the second element in the id array
+      ...extraParams,
+    };
   }
 
-  private popLog(): Log | undefined {
-    return this.logStack.pop();
+  private addLogToParent(log: Log): void {
+    if (log.parent_id) {
+      const parentLog = this.logMap[log.parent_id];
+      if (parentLog) {
+        parentLog.children?.push(log); // Add log as a child of its parent
+      }
+    } else {
+      // If there's no parent, it's a top-level log
+      this.rootLogs.push(log);
+    }
+    this.logMap[log.event_id] = log; // Store in the logMap by event_id
+  }
+
+  private finalizeLog(log: Log): void {
+    // If this is the top-level chain, post the entire log structure
+    if (log.parent_id === undefined) {
+      this.rootLogs = this.rootLogs.filter((rootLog) => rootLog.event_id !== log.event_id);
+      this.postTrace([log]);
+    }
   }
 
   override async handleLLMStart(
@@ -153,43 +181,38 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
+    this.addLogToParent(log);
   }
 
   override async handleLLMEnd(
     output: LLMResult,
-    // @ts-expect-error: Not used
     runId: string,
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
-    const log = this.popLog();
+    const log = this.logMap[runId];
     if (log) {
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
-      // Extract text and generationInfo from the output
       const generations = output.generations;
-
       const texts = generations.flat().map((gen) => gen.text);
       const metadataArray = generations.flat().map((gen) => {
         const { text, ...rest } = gen;
         return rest;
       });
 
-      // Convert the metadata array to an object with index keys
       const metadata = metadataArray.reduce((acc, curr, index) => {
         acc[index] = curr;
         return acc;
       }, {} as Record<string, unknown>);
+
       log.outputs = { generations: texts };
       if (log.metadata) {
         log.metadata['generationInfo'] = metadata;
       }
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
+
+      this.finalizeLog(log);
     }
   }
 
@@ -216,29 +239,23 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
+    this.addLogToParent(log);
   }
 
   override async handleChainEnd(
     outputs: ChainValues,
-    // @ts-expect-error: Not used
     runId: string,
+    // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
-    const log = this.popLog();
+    const log = this.logMap[runId];
     if (log) {
-      console.log(log.event_name + " end");
-      console.log("Parent is " + parentstring);
-
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = outputs;
 
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
+      this.finalizeLog(log);
     }
   }
 
@@ -265,26 +282,23 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
+    this.addLogToParent(log);
   }
 
   override async handleToolEnd(
     output: string,
-    // @ts-expect-error: Not used
     runId: string,
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
-    const log = this.popLog();
+    const log = this.logMap[runId];
     if (log) {
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { output: output };
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
+
+      this.finalizeLog(log);
     }
   }
 
@@ -307,12 +321,8 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
-    this.popLog();
-    // If this is the top-level chain, post the entire log structure
-    if (this.logStack.length === 0) {
-      await this.postTrace([log]);
-    }
+    this.addLogToParent(log);
+    this.finalizeLog(log);  // Finalize log after each action
   }
 
   override async handleAgentEnd(
@@ -334,104 +344,8 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
-    this.popLog();
-    // If this is the top-level chain, post the entire log structure
-    if (this.logStack.length === 0) {
-      await this.postTrace([log]);
-    }
-  }
-
-  private convertToModelConfig(
-    llm: Serialized,
-    extraParams?: Record<string, unknown>
-  ): any {
-    // This is a simplified conversion. You might need to adjust based on the actual structure of your LLM serialization
-    return {
-      model: llm.id[llm.id.length - 1],
-      provider: llm.id[1], // Assuming the provider is the second element in the id array
-      ...extraParams,
-    };
-  }
-
-  private async postTrace(logs: Log[]): Promise<void> {
-    try {
-      const response = await fetch(`${this.baseUrl}/session/${this.sessionId}/traces`, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify({ logs }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to post trace: ${response.statusText}`);
-      }
-    } catch (error) {
-      console.error('Error posting trace:', error);
-      if (this.verbose) {
-        console.error(error);
-      }
-    }
-  }
-
-  override async handleChainError(
-    error: Error,
-    // @ts-expect-error: Not used
-    runId: string,
-    // @ts-expect-error: Not used
-    parentstring?: string
-  ): Promise<void> {
-    const endTime = 1000 * Date.now();
-    const log = this.popLog();
-    if (log) {
-      log.end_time = endTime;
-      log.duration = (endTime - log.start_time) / 1000;
-      log.error = error.message;
-
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
-    }
-  }
-
-  override async handleLLMError(
-    error: Error,
-    // @ts-expect-error: Not used
-    runId: string,
-    // @ts-expect-error: Not used
-    parentstring?: string
-  ): Promise<void> {
-    const endTime = 1000 * Date.now();
-    const log = this.popLog();
-    if (log) {
-      log.end_time = endTime;
-      log.duration = (endTime - log.start_time) / 1000;
-      log.error = error.message;
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
-    }
-  }
-
-  override async handleToolError(
-    error: Error,
-    // @ts-expect-error: Not used
-    runId: string,
-    // @ts-expect-error: Not used
-    parentstring?: string
-  ): Promise<void> {
-    const endTime = 1000 * Date.now();
-    const log = this.popLog();
-    if (log) {
-      log.end_time = endTime;
-      log.duration = (endTime - log.start_time) / 1000;
-      log.error = error.message;
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
-    }
+    this.addLogToParent(log);
+    this.finalizeLog(log);  // Finalize log after agent finish
   }
 
   override async handleRetrieverStart(
@@ -457,49 +371,173 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
-    this.pushLog(log);
+    this.addLogToParent(log);
   }
-  
+
   override async handleRetrieverEnd(
     documents: DocumentInterface[],
-    // @ts-expect-error: Not used
     runId: string,
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
-    const log = this.popLog();
+    const log = this.logMap[runId];
     if (log) {
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { documents };
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
+
+      this.finalizeLog(log);
+    }
+  }
+
+  private async postTrace(logs: Log[]): Promise<void> {
+    console.log(JSON.stringify(logs[0]));
+    try {
+      const response = await fetch(`${this.baseUrl}/session/${this.sessionId}/traces`, {
+        method: 'POST',
+        headers: this.headers,
+        body: JSON.stringify({ logs }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to post trace: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Error posting trace:', error);
+      if (this.verbose) {
+        console.error(error);
       }
     }
   }
-  
-  override async handleRetrieverError(
+
+  override async handleChainError(
     error: Error,
-    // @ts-expect-error: Not used
     runId: string,
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
     const endTime = 1000 * Date.now();
-    const log = this.popLog();
+    const log = this.logMap[runId];
     if (log) {
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
-      // If this is the top-level chain, post the entire log structure
-      if (this.logStack.length === 0) {
-        await this.postTrace([log]);
-      }
+
+      this.finalizeLog(log);
     }
   }
 
+  override async handleLLMError(
+    error: Error,
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = 1000 * Date.now();
+    const log = this.logMap[runId];
+    if (log) {
+      log.end_time = endTime;
+      log.duration = (endTime - log.start_time) / 1000;
+      log.error = error.message;
+
+      this.finalizeLog(log);
+    }
+  }
+
+  override async handleToolError(
+    error: Error,
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = 1000 * Date.now();
+    const log = this.logMap[runId];
+    if (log) {
+      log.end_time = endTime;
+      log.duration = (endTime - log.start_time) / 1000;
+      log.error = error.message;
+
+      this.finalizeLog(log);
+    }
+  }
+
+  override async handleRetrieverError(
+    error: Error,
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = 1000 * Date.now();
+    const log = this.logMap[runId];
+    if (log) {
+      log.end_time = endTime;
+      log.duration = (endTime - log.start_time) / 1000;
+      log.error = error.message;
+
+      this.finalizeLog(log);
+    }
+  }
+
+  public async setFeedback(feedback: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          feedback: feedback,
+        });
+      } catch (error) {
+        console.error("Failed to set feedback:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setMetric(metrics: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metrics: metrics,
+        });
+      } catch (error) {
+        console.error("Failed to set metric:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setMetadata(metadata: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          metadata: metadata,
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
+
+  public async setUserProperties(userProperties: Record<string, any>): Promise<void> {
+    if (this.sessionId) {
+      try {
+        await this.sdk.events.updateEvent({
+          eventId: this.sessionId,
+          userProperties: userProperties,
+        });
+      } catch (error) {
+        console.error("Failed to set metadata:", error);
+      }
+    } else {
+      console.error("Session ID is not initialized");
+    }
+  }
 
   async startNewSession(): Promise<void> {
     const sessionBody = {
@@ -521,10 +559,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       });
 
       const text = await response.text();
-      // Parse the JSON response
       const jsonResponse = JSON.parse(text);
-
-      // Extract the session_id
       const sessionId = jsonResponse.session_id;
       this.sessionId = sessionId;
 
