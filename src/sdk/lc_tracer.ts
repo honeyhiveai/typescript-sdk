@@ -117,22 +117,10 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       start_time: start_time,
       end_time: end_time,
       duration: (end_time - start_time) / 1000,
-      metadata: metadata,
+      metadata: metadata || {},
       source: this.source,
       error,
       children: []
-    };
-  }
-
-  private convertToModelConfig(
-    llm: Serialized,
-    extraParams?: Record<string, unknown>
-  ): any {
-    // This is a simplified conversion. You might need to adjust based on the actual structure of your LLM serialization
-    return {
-      model: llm.id[llm.id.length - 1],
-      provider: llm.id[1], // Assuming the provider is the second element in the id array
-      ...extraParams,
     };
   }
 
@@ -149,14 +137,6 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.logMap[log.event_id] = log; // Store in the logMap by event_id
   }
 
-  private finalizeLog(log: Log): void {
-    // If this is the top-level chain, post the entire log structure
-    if (log.parent_id === undefined) {
-      this.rootLogs = this.rootLogs.filter((rootLog) => rootLog.event_id !== log.event_id);
-      this.postTrace([log]);
-    }
-  }
-
   override async handleLLMStart(
     llm: Serialized,
     prompts: string[],
@@ -167,6 +147,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
+    console.log(llm.id[llm.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -182,6 +163,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
+    // this.pushLog(log);
   }
 
   override async handleLLMEnd(
@@ -193,26 +175,31 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
+      // Extract text and generationInfo from the output
       const generations = output.generations;
+
       const texts = generations.flat().map((gen) => gen.text);
       const metadataArray = generations.flat().map((gen) => {
         const { text, ...rest } = gen;
         return rest;
       });
 
+      // Convert the metadata array to an object with index keys
       const metadata = metadataArray.reduce((acc, curr, index) => {
         acc[index] = curr;
         return acc;
       }, {} as Record<string, unknown>);
-
       log.outputs = { generations: texts };
       if (log.metadata) {
         log.metadata['generationInfo'] = metadata;
       }
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
@@ -225,6 +212,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
+    console.log(chain.id[chain.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -239,7 +227,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       undefined,
       parentstring?.toString()
     );
+    console.log(JSON.stringify(log, null, 2));
     this.addLogToParent(log);
+    // this.pushLog(log);
   }
 
   override async handleChainEnd(
@@ -250,12 +240,17 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
+    // const log = this.popLog();
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = outputs;
 
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
@@ -268,6 +263,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     tags?: string[],
     metadata?: Record<string, unknown>
   ): Promise<void> {
+    console.log(tool.id[tool.id.length - 1] + " start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -283,6 +279,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
+    // this.pushLog(log);
   }
 
   override async handleToolEnd(
@@ -293,12 +290,16 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   ): Promise<void> {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
+    // const log = this.popLog();
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.outputs = { output: output };
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
@@ -307,6 +308,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
+    console.log("Agent action start");
     const startTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -322,7 +324,12 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    this.finalizeLog(log);  // Finalize log after each action
+    // this.pushLog(log);
+    // this.popLog();
+    // If this is the top-level chain, post the entire log structure
+    if (log.parent_id === undefined) {
+      await this.postTrace(this.rootLogs);
+    }
   }
 
   override async handleAgentEnd(
@@ -330,6 +337,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     runId: string,
     parentstring?: string
   ): Promise<void> {
+    console.log("Agent finish start");
     const endTime = 1000 * Date.now();
     const log = this.createLog(
       runId,
@@ -345,54 +353,27 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
       parentstring?.toString()
     );
     this.addLogToParent(log);
-    this.finalizeLog(log);  // Finalize log after agent finish
-  }
-
-  override async handleRetrieverStart(
-    retriever: Serialized,
-    query: string,
-    runId: string,
-    parentstring?: string,
-    // @ts-expect-error: Not used
-    tags?: string[],
-    metadata?: Record<string, unknown>
-  ): Promise<void> {
-    const startTime = 1000 * Date.now();
-    const log = this.createLog(
-      runId,
-      'tool',
-      retriever.id[retriever.id.length - 1],
-      { query },
-      null,
-      {},
-      startTime,
-      startTime,
-      metadata,
-      undefined,
-      parentstring?.toString()
-    );
-    this.addLogToParent(log);
-  }
-
-  override async handleRetrieverEnd(
-    documents: DocumentInterface[],
-    runId: string,
-    // @ts-expect-error: Not used
-    parentstring?: string
-  ): Promise<void> {
-    const endTime = 1000 * Date.now();
-    const log = this.logMap[runId];
-    if (log) {
-      log.end_time = endTime;
-      log.duration = (endTime - log.start_time) / 1000;
-      log.outputs = { documents };
-
-      this.finalizeLog(log);
+    // this.pushLog(log);
+    // this.popLog();
+    // If this is the top-level chain, post the entire log structure
+    if (log.parent_id === undefined) {
+      await this.postTrace(this.rootLogs);
     }
   }
 
+  private convertToModelConfig(
+    llm: Serialized,
+    extraParams?: Record<string, unknown>
+  ): any {
+    // This is a simplified conversion. You might need to adjust based on the actual structure of your LLM serialization
+    return {
+      model: llm.id[llm.id.length - 1],
+      provider: llm.id[1], // Assuming the provider is the second element in the id array
+      ...extraParams,
+    };
+  }
+
   private async postTrace(logs: Log[]): Promise<void> {
-    console.log(JSON.stringify(logs[0]));
     try {
       const response = await fetch(`${this.baseUrl}/session/${this.sessionId}/traces`, {
         method: 'POST',
@@ -402,6 +383,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
 
       if (!response.ok) {
         throw new Error(`Failed to post trace: ${response.statusText}`);
+      } else {
+        this.rootLogs = [];
+        this.logMap = {};
       }
     } catch (error) {
       console.error('Error posting trace:', error);
@@ -420,11 +404,14 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
@@ -437,11 +424,14 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
@@ -454,14 +444,66 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
+  override async handleRetrieverStart(
+    retriever: Serialized,
+    query: string,
+    runId: string,
+    parentstring?: string,
+    // @ts-expect-error: Not used
+    tags?: string[],
+    metadata?: Record<string, unknown>
+  ): Promise<void> {
+    console.log(retriever.id[retriever.id.length - 1] + " start");
+    const startTime = 1000 * Date.now();
+    const log = this.createLog(
+      runId,
+      'tool',
+      retriever.id[retriever.id.length - 1],
+      { query },
+      null,
+      {},
+      startTime,
+      startTime,
+      metadata,
+      undefined,
+      parentstring?.toString()
+    );
+    this.addLogToParent(log);
+    // this.pushLog(log);
+  }
+  
+  override async handleRetrieverEnd(
+    documents: DocumentInterface[],
+    runId: string,
+    // @ts-expect-error: Not used
+    parentstring?: string
+  ): Promise<void> {
+    const endTime = 1000 * Date.now();
+    const log = this.logMap[runId];
+    // const log = this.popLog();
+    if (log) {
+      console.log(log.event_name + " end");
+      log.end_time = endTime;
+      log.duration = (endTime - log.start_time) / 1000;
+      log.outputs = { documents };
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
+    }
+  }
+  
   override async handleRetrieverError(
     error: Error,
     runId: string,
@@ -471,11 +513,14 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
     if (log) {
+      console.log(log.event_name + " end");
       log.end_time = endTime;
       log.duration = (endTime - log.start_time) / 1000;
       log.error = error.message;
-
-      this.finalizeLog(log);
+      // If this is the top-level chain, post the entire log structure
+      if (log.parent_id === undefined) {
+        await this.postTrace(this.rootLogs);
+      }
     }
   }
 
