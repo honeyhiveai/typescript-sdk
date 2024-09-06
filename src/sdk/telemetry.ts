@@ -4,6 +4,7 @@ import * as path from "path";
 import { v4 as uuid } from "uuid";
 import { PostHog } from "posthog-node";
 import * as process from "process";
+import packageJson from 'honeyhive/package.json';
 
 export class Telemetry {
   private static instance: Telemetry;
@@ -58,7 +59,6 @@ export class Telemetry {
 
   private getHoneyhiveVersion(): string {
     try {
-      const packageJson = require('honeyhive/package.json');
       return packageJson.version;
     } catch (e) {
       return "Not installed";
@@ -151,7 +151,7 @@ export class Telemetry {
 
   public async capture(event: string, properties?: Record<string, any>): Promise<void> {
     if (this.telemetryEnabled && this.posthog) {
-      let posthogPayload = {
+      const posthogPayload = {
         distinctId: this.getAnonId(),
         event,
         properties: {

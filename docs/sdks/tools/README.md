@@ -25,7 +25,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.tools.getTools();
-
+  
   // Handle the result
   console.log(result)
 }
@@ -101,10 +101,11 @@ async function run() {
     name: "<value>",
     parameters: {
       "key": "<value>",
+      "key1": "<value>",
     },
-    type: "tool",
+    type: "function",
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -132,6 +133,7 @@ async function run() {
     name: "<value>",
     parameters: {
       "key": "<value>",
+      "key1": "<value>",
     },
     type: "function",
   });
@@ -187,11 +189,9 @@ async function run() {
     id: "<id>",
     name: "<value>",
     parameters: {
-      "key": "<value>",
+  
     },
   });
-
-  
 }
 
 run();
@@ -216,7 +216,7 @@ async function run() {
     id: "<id>",
     name: "<value>",
     parameters: {
-      "key": "<value>",
+  
     },
   });
 
@@ -267,8 +267,6 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.tools.deleteTool("<value>");
-
-  
 }
 
 run();

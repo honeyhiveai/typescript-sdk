@@ -39,57 +39,57 @@ async function run() {
         "<value>",
       ],
       config: {
-        "model": "gpt-3.5-turbo",
-        "version": "v0.1",
-        "provider": "openai",
         "hyperparameters": {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
+        "model": "gpt-3.5-turbo",
+        "provider": "openai",
         "template": [
           {
-            "role": "system",
             "content": "Answer the user's question only using provided context. Context: {{ context }}",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{question}}",
+            "role": "user",
           },
         ],
         "type": "chat",
+        "version": "v0.1",
       },
       inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
         "chat_history": [
           {
-            "role": "system",
             "content": "Answer the user's question only using provided context. Context: Hello world",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "What is in the context?",
+            "role": "user",
           },
         ],
+        "context": "Hello world",
+        "question": "What is in the context?",
       },
       outputs: {
-        "role": "assistant",
         "content": "Hello world",
+        "role": "assistant",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "cost": 0.00008,
         "completion_tokens": 23,
+        "cost": 0.00008,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -106,7 +106,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -142,57 +142,57 @@ async function run() {
         "<value>",
       ],
       config: {
-        "model": "gpt-3.5-turbo",
-        "version": "v0.1",
-        "provider": "openai",
         "hyperparameters": {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
+        "model": "gpt-3.5-turbo",
+        "provider": "openai",
         "template": [
           {
-            "role": "system",
             "content": "Answer the user's question only using provided context. Context: {{ context }}",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{question}}",
+            "role": "user",
           },
         ],
         "type": "chat",
+        "version": "v0.1",
       },
       inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
         "chat_history": [
           {
-            "role": "system",
             "content": "Answer the user's question only using provided context. Context: Hello world",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "What is in the context?",
+            "role": "user",
           },
         ],
+        "context": "Hello world",
+        "question": "What is in the context?",
       },
       outputs: {
-        "role": "assistant",
         "content": "Hello world",
+        "role": "assistant",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "cost": 0.00008,
         "completion_tokens": 23,
+        "cost": 0.00008,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -260,8 +260,8 @@ async function run() {
   await honeyHive.events.updateEvent({
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "cost": 0.00008,
       "completion_tokens": 23,
+      "cost": 0.00008,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -272,8 +272,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "role": "assistant",
       "content": "Hello world",
+      "role": "assistant",
     },
     config: {
       "template": [
@@ -288,8 +288,6 @@ async function run() {
     },
     duration: 42,
   });
-
-  
 }
 
 run();
@@ -313,8 +311,8 @@ async function run() {
   const res = await eventsUpdateEvent(honeyHive, {
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "cost": 0.00008,
       "completion_tokens": 23,
+      "cost": 0.00008,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -325,8 +323,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "role": "assistant",
       "content": "Hello world",
+      "role": "assistant",
     },
     config: {
       "template": [
@@ -399,7 +397,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -488,39 +486,39 @@ async function run() {
       provider: "openai",
       messages: [
         {
-          "role": "system",
           "content": "Hello, world!",
+          "role": "system",
         },
       ],
       response: {
-        "role": "assistant",
         "content": "Hello, world!",
+        "role": "assistant",
       },
       duration: 42,
       usage: {
-        "prompt_tokens": 10,
         "completion_tokens": 10,
+        "prompt_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "temperature": 0,
-        "top_p": 1,
-        "max_tokens": 1000,
-        "presence_penalty": 0,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
+        "n": 1,
+        "presence_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "n": 1,
+        "temperature": 0,
+        "top_p": 1,
       },
       template: [
         {
-          "role": "system",
           "content": "Hello, {{ name }}!",
+          "role": "system",
         },
       ],
       templateInputs: {
@@ -528,32 +526,32 @@ async function run() {
       },
       tools: [
         {
-          "type": "function",
           "function": {
-            "name": "get_current_weather",
             "description": "Get the current weather",
+            "name": "get_current_weather",
             "parameters": {
-              "type": "object",
               "properties": {
-                "location": {
-                  "type": "string",
-                  "description": "The city and state, e.g. San Francisco, CA",
-                },
                 "format": {
-                  "type": "string",
+                  "description": "The temperature unit to use. Infer this from the users location.",
                   "enum": [
                     "celsius",
                     "fahrenheit",
                   ],
-                  "description": "The temperature unit to use. Infer this from the users location.",
+                  "type": "string",
+                },
+                "location": {
+                  "description": "The city and state, e.g. San Francisco, CA",
+                  "type": "string",
                 },
               },
               "required": [
                 "location",
                 "format",
               ],
+              "type": "object",
             },
           },
+          "type": "function",
         },
       ],
       toolChoice: "none",
@@ -562,7 +560,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -592,39 +590,39 @@ async function run() {
       provider: "openai",
       messages: [
         {
-          "role": "system",
           "content": "Hello, world!",
+          "role": "system",
         },
       ],
       response: {
-        "role": "assistant",
         "content": "Hello, world!",
+        "role": "assistant",
       },
       duration: 42,
       usage: {
-        "prompt_tokens": 10,
         "completion_tokens": 10,
+        "prompt_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "temperature": 0,
-        "top_p": 1,
-        "max_tokens": 1000,
-        "presence_penalty": 0,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
+        "n": 1,
+        "presence_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "n": 1,
+        "temperature": 0,
+        "top_p": 1,
       },
       template: [
         {
-          "role": "system",
           "content": "Hello, {{ name }}!",
+          "role": "system",
         },
       ],
       templateInputs: {
@@ -632,32 +630,32 @@ async function run() {
       },
       tools: [
         {
-          "type": "function",
           "function": {
-            "name": "get_current_weather",
             "description": "Get the current weather",
+            "name": "get_current_weather",
             "parameters": {
-              "type": "object",
               "properties": {
-                "location": {
-                  "type": "string",
-                  "description": "The city and state, e.g. San Francisco, CA",
-                },
                 "format": {
-                  "type": "string",
+                  "description": "The temperature unit to use. Infer this from the users location.",
                   "enum": [
                     "celsius",
                     "fahrenheit",
                   ],
-                  "description": "The temperature unit to use. Infer this from the users location.",
+                  "type": "string",
+                },
+                "location": {
+                  "description": "The city and state, e.g. San Francisco, CA",
+                  "type": "string",
                 },
               },
               "required": [
                 "location",
                 "format",
               ],
+              "type": "object",
             },
           },
+          "type": "function",
         },
       ],
       toolChoice: "none",
@@ -728,57 +726,57 @@ async function run() {
           "<value>",
         ],
         config: {
-          "model": "gpt-3.5-turbo",
-          "version": "v0.1",
-          "provider": "openai",
           "hyperparameters": {
-            "temperature": 0,
-            "top_p": 1,
-            "max_tokens": 1000,
-            "presence_penalty": 0,
             "frequency_penalty": 0,
+            "max_tokens": 1000,
+            "n": 1,
+            "presence_penalty": 0,
             "stop": [
               "<value>",
             ],
-            "n": 1,
+            "temperature": 0,
+            "top_p": 1,
           },
+          "model": "gpt-3.5-turbo",
+          "provider": "openai",
           "template": [
             {
-              "role": "system",
               "content": "Answer the user's question only using provided context. Context: {{ context }}",
+              "role": "system",
             },
             {
-              "role": "user",
               "content": "{{question}}",
+              "role": "user",
             },
           ],
           "type": "chat",
+          "version": "v0.1",
         },
         inputs: {
-          "context": "Hello world",
-          "question": "What is in the context?",
           "chat_history": [
             {
-              "role": "system",
               "content": "Answer the user's question only using provided context. Context: Hello world",
+              "role": "system",
             },
             {
-              "role": "user",
               "content": "What is in the context?",
+              "role": "user",
             },
           ],
+          "context": "Hello world",
+          "question": "What is in the context?",
         },
         outputs: {
-          "role": "assistant",
           "content": "Hello world",
+          "role": "assistant",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
         metadata: {
-          "cost": 0.00008,
           "completion_tokens": 23,
+          "cost": 0.00008,
           "prompt_tokens": 35,
           "total_tokens": 58,
         },
@@ -796,7 +794,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -833,57 +831,57 @@ async function run() {
           "<value>",
         ],
         config: {
-          "model": "gpt-3.5-turbo",
-          "version": "v0.1",
-          "provider": "openai",
           "hyperparameters": {
-            "temperature": 0,
-            "top_p": 1,
-            "max_tokens": 1000,
-            "presence_penalty": 0,
             "frequency_penalty": 0,
+            "max_tokens": 1000,
+            "n": 1,
+            "presence_penalty": 0,
             "stop": [
               "<value>",
             ],
-            "n": 1,
+            "temperature": 0,
+            "top_p": 1,
           },
+          "model": "gpt-3.5-turbo",
+          "provider": "openai",
           "template": [
             {
-              "role": "system",
               "content": "Answer the user's question only using provided context. Context: {{ context }}",
+              "role": "system",
             },
             {
-              "role": "user",
               "content": "{{question}}",
+              "role": "user",
             },
           ],
           "type": "chat",
+          "version": "v0.1",
         },
         inputs: {
-          "context": "Hello world",
-          "question": "What is in the context?",
           "chat_history": [
             {
-              "role": "system",
               "content": "Answer the user's question only using provided context. Context: Hello world",
+              "role": "system",
             },
             {
-              "role": "user",
               "content": "What is in the context?",
+              "role": "user",
             },
           ],
+          "context": "Hello world",
+          "question": "What is in the context?",
         },
         outputs: {
-          "role": "assistant",
           "content": "Hello world",
+          "role": "assistant",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
         metadata: {
-          "cost": 0.00008,
           "completion_tokens": 23,
+          "cost": 0.00008,
           "prompt_tokens": 35,
           "total_tokens": 58,
         },
@@ -958,39 +956,39 @@ async function run() {
         provider: "openai",
         messages: [
           {
-            "role": "system",
             "content": "Hello, world!",
+            "role": "system",
           },
         ],
         response: {
-          "role": "assistant",
           "content": "Hello, world!",
+          "role": "assistant",
         },
         duration: 42,
         usage: {
-          "prompt_tokens": 10,
           "completion_tokens": 10,
+          "prompt_tokens": 10,
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
         template: [
           {
-            "role": "system",
             "content": "Hello, {{ name }}!",
+            "role": "system",
           },
         ],
         templateInputs: {
@@ -998,32 +996,32 @@ async function run() {
         },
         tools: [
           {
-            "type": "function",
             "function": {
-              "name": "get_current_weather",
               "description": "Get the current weather",
+              "name": "get_current_weather",
               "parameters": {
-                "type": "object",
                 "properties": {
-                  "location": {
-                    "type": "string",
-                    "description": "The city and state, e.g. San Francisco, CA",
-                  },
                   "format": {
-                    "type": "string",
+                    "description": "The temperature unit to use. Infer this from the users location.",
                     "enum": [
                       "celsius",
                       "fahrenheit",
                     ],
-                    "description": "The temperature unit to use. Infer this from the users location.",
+                    "type": "string",
+                  },
+                  "location": {
+                    "description": "The city and state, e.g. San Francisco, CA",
+                    "type": "string",
                   },
                 },
                 "required": [
                   "location",
                   "format",
                 ],
+                "type": "object",
               },
             },
+            "type": "function",
           },
         ],
         toolChoice: "none",
@@ -1033,7 +1031,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -1064,39 +1062,39 @@ async function run() {
         provider: "openai",
         messages: [
           {
-            "role": "system",
             "content": "Hello, world!",
+            "role": "system",
           },
         ],
         response: {
-          "role": "assistant",
           "content": "Hello, world!",
+          "role": "assistant",
         },
         duration: 42,
         usage: {
-          "prompt_tokens": 10,
           "completion_tokens": 10,
+          "prompt_tokens": 10,
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
         template: [
           {
-            "role": "system",
             "content": "Hello, {{ name }}!",
+            "role": "system",
           },
         ],
         templateInputs: {
@@ -1104,32 +1102,32 @@ async function run() {
         },
         tools: [
           {
-            "type": "function",
             "function": {
-              "name": "get_current_weather",
               "description": "Get the current weather",
+              "name": "get_current_weather",
               "parameters": {
-                "type": "object",
                 "properties": {
-                  "location": {
-                    "type": "string",
-                    "description": "The city and state, e.g. San Francisco, CA",
-                  },
                   "format": {
-                    "type": "string",
+                    "description": "The temperature unit to use. Infer this from the users location.",
                     "enum": [
                       "celsius",
                       "fahrenheit",
                     ],
-                    "description": "The temperature unit to use. Infer this from the users location.",
+                    "type": "string",
+                  },
+                  "location": {
+                    "description": "The city and state, e.g. San Francisco, CA",
+                    "type": "string",
                   },
                 },
                 "required": [
                   "location",
                   "format",
                 ],
+                "type": "object",
               },
             },
+            "type": "function",
           },
         ],
         toolChoice: "none",

@@ -1,18 +1,18 @@
-speakeasyVersion: 1.382.0
+speakeasyVersion: 1.391.3
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:51ecd7898f12e4259d3ac6b61c80f8cab1b48a2fed594fa2404487dc8e96900d
-        sourceBlobDigest: sha256:c0501949abfaf0e8bd3473879c8817f884e8fb12980857721cf58053bc5414fd
+        sourceRevisionDigest: sha256:7d00b1e17b12465db03e74d97a1695e36c70129cf236314a6255f8607bafecac
+        sourceBlobDigest: sha256:96b04af6d3953ca81a29331f39a818a02707a24a79b4c335e50b096bf8a2f5c7
         tags:
             - latest
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:51ecd7898f12e4259d3ac6b61c80f8cab1b48a2fed594fa2404487dc8e96900d
-        sourceBlobDigest: sha256:c0501949abfaf0e8bd3473879c8817f884e8fb12980857721cf58053bc5414fd
-        outLocation: /home/disintegrator/github.com/honeyhiveai/typescript-sdk
+        sourceRevisionDigest: sha256:7d00b1e17b12465db03e74d97a1695e36c70129cf236314a6255f8607bafecac
+        sourceBlobDigest: sha256:96b04af6d3953ca81a29331f39a818a02707a24a79b4c335e50b096bf8a2f5c7
+        outLocation: /Users/michaelacar/work/typescript-sdk
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest

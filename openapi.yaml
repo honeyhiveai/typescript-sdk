@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: HoneyHive API
-  version: 1.0.1
+  version: 1.0.2
 servers:
 - url: https://api.honeyhive.ai
 paths:
@@ -172,6 +172,11 @@ paths:
                     $lte:
                       type: string
                       description: ISO String for end of date time filter like `2024-04-01T22:38:19.000Z`
+                projections:
+                  type: array
+                  items:
+                    type: string
+                  description: Fields to include in the response
                 limit:
                   type: number
                   description: Limit number of results to speed up query (default
@@ -1154,7 +1159,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:
@@ -1268,7 +1276,10 @@ components:
             n: 1
           template:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: {{ context }}'
           - role: user
             content: '{{question}}'
           type: chat
@@ -1278,7 +1289,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:
@@ -1445,7 +1459,10 @@ components:
             n: 1
           template:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: {{ context }}'
           - role: user
             content: '{{question}}'
           type: chat
@@ -1454,7 +1471,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:

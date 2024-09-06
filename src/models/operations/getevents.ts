@@ -25,6 +25,10 @@ export type GetEventsRequestBody = {
     filters: Array<components.EventFilter>;
     dateRange?: DateRange | undefined;
     /**
+     * Fields to include in the response
+     */
+    projections?: Array<string> | undefined;
+    /**
      * Limit number of results to speed up query (default is 1000, max is 7500)
      */
     limit?: number | undefined;
@@ -99,6 +103,7 @@ export const GetEventsRequestBody$inboundSchema: z.ZodType<
     project: z.string(),
     filters: z.array(components.EventFilter$inboundSchema),
     dateRange: z.lazy(() => DateRange$inboundSchema).optional(),
+    projections: z.array(z.string()).optional(),
     limit: z.number().optional(),
     page: z.number().optional(),
 });
@@ -108,6 +113,7 @@ export type GetEventsRequestBody$Outbound = {
     project: string;
     filters: Array<components.EventFilter$Outbound>;
     dateRange?: DateRange$Outbound | undefined;
+    projections?: Array<string> | undefined;
     limit?: number | undefined;
     page?: number | undefined;
 };
@@ -121,6 +127,7 @@ export const GetEventsRequestBody$outboundSchema: z.ZodType<
     project: z.string(),
     filters: z.array(components.EventFilter$outboundSchema),
     dateRange: z.lazy(() => DateRange$outboundSchema).optional(),
+    projections: z.array(z.string()).optional(),
     limit: z.number().optional(),
     page: z.number().optional(),
 });

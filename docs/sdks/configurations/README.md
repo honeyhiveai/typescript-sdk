@@ -25,7 +25,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.configurations.getConfigurations("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -107,15 +107,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "temperature": 0,
-        "max_tokens": 1000,
-        "top_p": 1,
-        "top_k": -1,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
+        "temperature": 0,
+        "top_k": -1,
+        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -123,16 +123,16 @@ async function run() {
           name: "get_google_information",
           description: "Get information from Google when you do not have that information in your context",
           parameters: {
-            "type": "object",
             "properties": {
               "query": {
-                "type": "string",
                 "description": "The query asked by the user",
+                "type": "string",
               },
             },
             "required": [
               "query",
             ],
+            "type": "object",
           },
         },
       ],
@@ -143,12 +143,12 @@ async function run() {
       additionalProperties: {
         "template": [
           {
-            "role": "system",
             "content": "You are a web search assistant.",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{ query }}",
+            "role": "user",
           },
         ],
       },
@@ -157,14 +157,12 @@ async function run() {
       "staging",
     ],
     userProperties: {
+      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
-      "user_email": "dhruv@honeyhive.ai",
     },
   });
-
-  
 }
 
 run();
@@ -193,15 +191,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "temperature": 0,
-        "max_tokens": 1000,
-        "top_p": 1,
-        "top_k": -1,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
+        "temperature": 0,
+        "top_k": -1,
+        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -209,16 +207,16 @@ async function run() {
           name: "get_google_information",
           description: "Get information from Google when you do not have that information in your context",
           parameters: {
-            "type": "object",
             "properties": {
               "query": {
-                "type": "string",
                 "description": "The query asked by the user",
+                "type": "string",
               },
             },
             "required": [
               "query",
             ],
+            "type": "object",
           },
         },
       ],
@@ -229,12 +227,12 @@ async function run() {
       additionalProperties: {
         "template": [
           {
-            "role": "system",
             "content": "You are a web search assistant.",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{ query }}",
+            "role": "user",
           },
         ],
       },
@@ -243,10 +241,10 @@ async function run() {
       "staging",
     ],
     userProperties: {
+      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
-      "user_email": "dhruv@honeyhive.ai",
     },
   });
 
@@ -296,7 +294,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.configurations.updateConfiguration("<value>", {
+  await honeyHive.configurations.updateConfiguration("<id>", {
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -304,33 +302,32 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "temperature": 0,
-        "max_tokens": 1000,
-        "top_p": 1,
-        "top_k": -1,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
+        "temperature": 0,
+        "top_k": -1,
+        "top_p": 1,
       },
-      responseFormat: {},
       selectedFunctions: [
         {
           id: "64e3ba90e81f9b3a3808c27f",
           name: "get_google_information",
           description: "Get information from Google when you do not have that information in your context",
           parameters: {
-            "type": "object",
             "properties": {
               "query": {
-                "type": "string",
                 "description": "The query asked by the user",
+                "type": "string",
               },
             },
             "required": [
               "query",
             ],
+            "type": "object",
           },
         },
       ],
@@ -341,12 +338,12 @@ async function run() {
       additionalProperties: {
         "template": [
           {
-            "role": "system",
             "content": "You are a web search assistant.",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{ query }}",
+            "role": "user",
           },
         ],
       },
@@ -356,14 +353,12 @@ async function run() {
     ],
     type: "LLM",
     userProperties: {
+      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
-      "user_email": "dhruv@honeyhive.ai",
     },
   });
-
-  
 }
 
 run();
@@ -384,7 +379,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await configurationsUpdateConfiguration(honeyHive, "<value>", {
+  const res = await configurationsUpdateConfiguration(honeyHive, "<id>", {
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -392,33 +387,32 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "temperature": 0,
-        "max_tokens": 1000,
-        "top_p": 1,
-        "top_k": -1,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
+        "temperature": 0,
+        "top_k": -1,
+        "top_p": 1,
       },
-      responseFormat: {},
       selectedFunctions: [
         {
           id: "64e3ba90e81f9b3a3808c27f",
           name: "get_google_information",
           description: "Get information from Google when you do not have that information in your context",
           parameters: {
-            "type": "object",
             "properties": {
               "query": {
-                "type": "string",
                 "description": "The query asked by the user",
+                "type": "string",
               },
             },
             "required": [
               "query",
             ],
+            "type": "object",
           },
         },
       ],
@@ -429,12 +423,12 @@ async function run() {
       additionalProperties: {
         "template": [
           {
-            "role": "system",
             "content": "You are a web search assistant.",
+            "role": "system",
           },
           {
-            "role": "user",
             "content": "{{ query }}",
+            "role": "user",
           },
         ],
       },
@@ -444,10 +438,10 @@ async function run() {
     ],
     type: "LLM",
     userProperties: {
+      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
-      "user_email": "dhruv@honeyhive.ai",
     },
   });
 
@@ -498,9 +492,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.configurations.deleteConfiguration("<value>");
-
-  
+  await honeyHive.configurations.deleteConfiguration("<id>");
 }
 
 run();
@@ -521,7 +513,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await configurationsDeleteConfiguration(honeyHive, "<value>");
+  const res = await configurationsDeleteConfiguration(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;
