@@ -3,10 +3,10 @@ id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
   docChecksum: ae9323799152a16ac120014496d543ff
   docVersion: 1.0.1
-  speakeasyVersion: 1.382.0
-  generationVersion: 2.404.11
-  releaseVersion: 0.5.3
-  configChecksum: 014897173ec6ec5a6474c600282e05b9
+  speakeasyVersion: 1.391.3
+  generationVersion: 2.411.5
+  releaseVersion: 0.6.1
+  configChecksum: 630541e8a03e5ed3b82fd1eecb1b35f5
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -14,7 +14,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    core: 3.14.1
+    core: 3.16.2
     defaultEnabledRetries: 0.1.0
     envVarSecurityUsage: 0.1.1
     flattening: 2.81.1
@@ -27,67 +27,198 @@ features:
     retries: 2.83.0
     sdkHooks: 0.1.0
 generatedFiles:
-  - src/funcs/sessionStartSession.ts
-  - src/funcs/sessionGetSession.ts
-  - src/funcs/eventsCreateEvent.ts
-  - src/funcs/eventsUpdateEvent.ts
-  - src/funcs/eventsGetEvents.ts
-  - src/funcs/eventsCreateModelEvent.ts
-  - src/funcs/eventsCreateEventBatch.ts
-  - src/funcs/eventsCreateModelEventBatch.ts
-  - src/funcs/metricsGetMetrics.ts
-  - src/funcs/metricsCreateMetric.ts
-  - src/funcs/metricsUpdateMetric.ts
-  - src/funcs/metricsDeleteMetric.ts
-  - src/funcs/toolsGetTools.ts
-  - src/funcs/toolsCreateTool.ts
-  - src/funcs/toolsUpdateTool.ts
-  - src/funcs/toolsDeleteTool.ts
-  - src/funcs/datapointsGetDatapoints.ts
-  - src/funcs/datapointsCreateDatapoint.ts
-  - src/funcs/datapointsGetDatapoint.ts
-  - src/funcs/datapointsUpdateDatapoint.ts
-  - src/funcs/datapointsDeleteDatapoint.ts
-  - src/funcs/datasetsGetDatasets.ts
-  - src/funcs/datasetsCreateDataset.ts
-  - src/funcs/datasetsUpdateDataset.ts
-  - src/funcs/datasetsDeleteDataset.ts
-  - src/funcs/datasetsAddDatapoints.ts
-  - src/funcs/projectsGetProjects.ts
-  - src/funcs/projectsCreateProject.ts
-  - src/funcs/projectsUpdateProject.ts
-  - src/funcs/projectsDeleteProject.ts
-  - src/funcs/runsCreateRun.ts
-  - src/funcs/runsGetRuns.ts
-  - src/funcs/runsGetRun.ts
-  - src/funcs/runsUpdateRun.ts
-  - src/funcs/runsDeleteRun.ts
-  - src/funcs/configurationsGetConfigurations.ts
-  - src/funcs/configurationsCreateConfiguration.ts
-  - src/funcs/configurationsUpdateConfiguration.ts
-  - src/funcs/configurationsDeleteConfiguration.ts
-  - src/sdk/session.ts
-  - src/sdk/events.ts
-  - src/sdk/metrics.ts
-  - src/sdk/tools.ts
-  - src/sdk/datapoints.ts
-  - src/sdk/datasets.ts
-  - src/sdk/projects.ts
-  - src/sdk/runs.ts
-  - src/sdk/configurations.ts
-  - src/sdk/sdk.ts
   - .eslintrc.cjs
+  - .gitattributes
   - .npmignore
+  - CONTRIBUTING.md
   - FUNCTIONS.md
   - RUNTIMES.md
+  - USAGE.md
+  - docs/lib/utils/retryconfig.md
+  - docs/models/components/calltype.md
+  - docs/models/components/configuration.md
+  - docs/models/components/configurationtype.md
+  - docs/models/components/createdatapointrequest.md
+  - docs/models/components/createdatasetrequest.md
+  - docs/models/components/createdatasetrequestpipelinetype.md
+  - docs/models/components/createdatasetrequesttype.md
+  - docs/models/components/createeventrequest.md
+  - docs/models/components/createeventrequesteventtype.md
+  - docs/models/components/createmodelevent.md
+  - docs/models/components/createprojectrequest.md
+  - docs/models/components/createrunrequest.md
+  - docs/models/components/createrunresponse.md
+  - docs/models/components/createtoolrequest.md
+  - docs/models/components/createtoolrequesttype.md
+  - docs/models/components/datapoint.md
+  - docs/models/components/dataset.md
+  - docs/models/components/datasettype.md
+  - docs/models/components/datasetupdate.md
+  - docs/models/components/deleterunresponse.md
+  - docs/models/components/env.md
+  - docs/models/components/evaluationrun.md
+  - docs/models/components/evaluationrunstatus.md
+  - docs/models/components/event.md
+  - docs/models/components/eventfilter.md
+  - docs/models/components/eventtype.md
+  - docs/models/components/functioncallparams.md
+  - docs/models/components/getrunresponse.md
+  - docs/models/components/getrunsresponse.md
+  - docs/models/components/metric.md
+  - docs/models/components/metricedit.md
+  - docs/models/components/metricediteventtype.md
+  - docs/models/components/metriceditreturntype.md
+  - docs/models/components/metriceditthreshold.md
+  - docs/models/components/metricedittype.md
+  - docs/models/components/metrictype.md
+  - docs/models/components/operator.md
+  - docs/models/components/parameterst.md
+  - docs/models/components/pipelinetype.md
+  - docs/models/components/postconfigurationrequest.md
+  - docs/models/components/postconfigurationrequestcalltype.md
+  - docs/models/components/postconfigurationrequestenv.md
+  - docs/models/components/postconfigurationrequestfunctioncallparams.md
+  - docs/models/components/postconfigurationrequestparameters.md
+  - docs/models/components/postconfigurationrequestresponseformat.md
+  - docs/models/components/postconfigurationrequestselectedfunctions.md
+  - docs/models/components/project.md
+  - docs/models/components/putconfigurationrequest.md
+  - docs/models/components/putconfigurationrequestcalltype.md
+  - docs/models/components/putconfigurationrequestenv.md
+  - docs/models/components/putconfigurationrequestfunctioncallparams.md
+  - docs/models/components/putconfigurationrequestparameters.md
+  - docs/models/components/putconfigurationrequestresponseformat.md
+  - docs/models/components/putconfigurationrequestselectedfunctions.md
+  - docs/models/components/putconfigurationrequesttype.md
+  - docs/models/components/responseformat.md
+  - docs/models/components/results.md
+  - docs/models/components/returntypet.md
+  - docs/models/components/security.md
+  - docs/models/components/selectedfunctions.md
+  - docs/models/components/sessionstartrequest.md
+  - docs/models/components/status.md
+  - docs/models/components/threshold.md
+  - docs/models/components/tool.md
+  - docs/models/components/tooltype.md
+  - docs/models/components/type.md
+  - docs/models/components/updatedatapointrequest.md
+  - docs/models/components/updateprojectrequest.md
+  - docs/models/components/updaterunrequest.md
+  - docs/models/components/updaterunrequeststatus.md
+  - docs/models/components/updaterunresponse.md
+  - docs/models/components/updatetoolrequest.md
+  - docs/models/errors/createeventbatchresponsebody.md
+  - docs/models/errors/createmodeleventbatchresponsebody.md
+  - docs/models/operations/adddatapointsrequest.md
+  - docs/models/operations/adddatapointsrequestbody.md
+  - docs/models/operations/adddatapointsresponsebody.md
+  - docs/models/operations/createdatapointresponsebody.md
+  - docs/models/operations/createdatapointresult.md
+  - docs/models/operations/createdatasetresponsebody.md
+  - docs/models/operations/createdatasetresult.md
+  - docs/models/operations/createeventbatchrequestbody.md
+  - docs/models/operations/createeventbatchresponsebody.md
+  - docs/models/operations/createeventrequestbody.md
+  - docs/models/operations/createeventresponsebody.md
+  - docs/models/operations/createmodeleventbatchrequestbody.md
+  - docs/models/operations/createmodeleventbatchresponsebody.md
+  - docs/models/operations/createmodeleventrequestbody.md
+  - docs/models/operations/createmodeleventresponsebody.md
+  - docs/models/operations/createtoolresponsebody.md
+  - docs/models/operations/daterange.md
+  - docs/models/operations/deleteconfigurationrequest.md
+  - docs/models/operations/deletedatapointrequest.md
+  - docs/models/operations/deletedatapointresponsebody.md
+  - docs/models/operations/deletedatasetrequest.md
+  - docs/models/operations/deletemetricrequest.md
+  - docs/models/operations/deleteprojectrequest.md
+  - docs/models/operations/deleterunrequest.md
+  - docs/models/operations/deletetoolrequest.md
+  - docs/models/operations/env.md
+  - docs/models/operations/getconfigurationsrequest.md
+  - docs/models/operations/getdatapointrequest.md
+  - docs/models/operations/getdatapointresponsebody.md
+  - docs/models/operations/getdatapointsrequest.md
+  - docs/models/operations/getdatapointsresponsebody.md
+  - docs/models/operations/getdatasetsrequest.md
+  - docs/models/operations/getdatasetsresponsebody.md
+  - docs/models/operations/geteventsrequestbody.md
+  - docs/models/operations/geteventsresponsebody.md
+  - docs/models/operations/getmetricsrequest.md
+  - docs/models/operations/getprojectsrequest.md
+  - docs/models/operations/getrunrequest.md
+  - docs/models/operations/getrunsrequest.md
+  - docs/models/operations/getsessionrequest.md
+  - docs/models/operations/mapping.md
+  - docs/models/operations/result.md
+  - docs/models/operations/startsessionrequestbody.md
+  - docs/models/operations/startsessionresponsebody.md
+  - docs/models/operations/type.md
+  - docs/models/operations/updateconfigurationrequest.md
+  - docs/models/operations/updatedatapointrequest.md
+  - docs/models/operations/updateeventrequestbody.md
+  - docs/models/operations/updaterunrequest.md
+  - docs/sdks/configurations/README.md
+  - docs/sdks/datapoints/README.md
+  - docs/sdks/datasets/README.md
+  - docs/sdks/events/README.md
+  - docs/sdks/honeyhive/README.md
+  - docs/sdks/metrics/README.md
+  - docs/sdks/projects/README.md
+  - docs/sdks/runs/README.md
+  - docs/sdks/session/README.md
+  - docs/sdks/tools/README.md
   - jsr.json
   - package.json
   - src/core.ts
+  - src/funcs/configurationsCreateConfiguration.ts
+  - src/funcs/configurationsDeleteConfiguration.ts
+  - src/funcs/configurationsGetConfigurations.ts
+  - src/funcs/configurationsUpdateConfiguration.ts
+  - src/funcs/datapointsCreateDatapoint.ts
+  - src/funcs/datapointsDeleteDatapoint.ts
+  - src/funcs/datapointsGetDatapoint.ts
+  - src/funcs/datapointsGetDatapoints.ts
+  - src/funcs/datapointsUpdateDatapoint.ts
+  - src/funcs/datasetsAddDatapoints.ts
+  - src/funcs/datasetsCreateDataset.ts
+  - src/funcs/datasetsDeleteDataset.ts
+  - src/funcs/datasetsGetDatasets.ts
+  - src/funcs/datasetsUpdateDataset.ts
+  - src/funcs/eventsCreateEvent.ts
+  - src/funcs/eventsCreateEventBatch.ts
+  - src/funcs/eventsCreateModelEvent.ts
+  - src/funcs/eventsCreateModelEventBatch.ts
+  - src/funcs/eventsGetEvents.ts
+  - src/funcs/eventsUpdateEvent.ts
+  - src/funcs/metricsCreateMetric.ts
+  - src/funcs/metricsDeleteMetric.ts
+  - src/funcs/metricsGetMetrics.ts
+  - src/funcs/metricsUpdateMetric.ts
+  - src/funcs/projectsCreateProject.ts
+  - src/funcs/projectsDeleteProject.ts
+  - src/funcs/projectsGetProjects.ts
+  - src/funcs/projectsUpdateProject.ts
+  - src/funcs/runsCreateRun.ts
+  - src/funcs/runsDeleteRun.ts
+  - src/funcs/runsGetRun.ts
+  - src/funcs/runsGetRuns.ts
+  - src/funcs/runsUpdateRun.ts
+  - src/funcs/sessionGetSession.ts
+  - src/funcs/sessionStartSession.ts
+  - src/funcs/toolsCreateTool.ts
+  - src/funcs/toolsDeleteTool.ts
+  - src/funcs/toolsGetTools.ts
+  - src/funcs/toolsUpdateTool.ts
+  - src/hooks/hooks.ts
+  - src/hooks/index.ts
+  - src/hooks/types.ts
   - src/index.ts
   - src/lib/base64.ts
   - src/lib/config.ts
   - src/lib/dlv.ts
   - src/lib/encodings.ts
+  - src/lib/files.ts
   - src/lib/http.ts
   - src/lib/is-plain-object.ts
   - src/lib/logger.ts
@@ -98,9 +229,85 @@ generatedFiles:
   - src/lib/sdks.ts
   - src/lib/security.ts
   - src/lib/url.ts
+  - src/models/components/configuration.ts
+  - src/models/components/createdatapointrequest.ts
+  - src/models/components/createdatasetrequest.ts
+  - src/models/components/createeventrequest.ts
+  - src/models/components/createmodelevent.ts
+  - src/models/components/createprojectrequest.ts
+  - src/models/components/createrunrequest.ts
+  - src/models/components/createrunresponse.ts
+  - src/models/components/createtoolrequest.ts
+  - src/models/components/datapoint.ts
+  - src/models/components/dataset.ts
+  - src/models/components/datasetupdate.ts
+  - src/models/components/deleterunresponse.ts
+  - src/models/components/evaluationrun.ts
+  - src/models/components/event.ts
+  - src/models/components/eventfilter.ts
+  - src/models/components/getrunresponse.ts
+  - src/models/components/getrunsresponse.ts
+  - src/models/components/index.ts
+  - src/models/components/metric.ts
+  - src/models/components/metricedit.ts
+  - src/models/components/postconfigurationrequest.ts
+  - src/models/components/project.ts
+  - src/models/components/putconfigurationrequest.ts
+  - src/models/components/security.ts
+  - src/models/components/sessionstartrequest.ts
+  - src/models/components/tool.ts
+  - src/models/components/updatedatapointrequest.ts
+  - src/models/components/updateprojectrequest.ts
+  - src/models/components/updaterunrequest.ts
+  - src/models/components/updaterunresponse.ts
+  - src/models/components/updatetoolrequest.ts
+  - src/models/errors/createeventbatch.ts
+  - src/models/errors/createmodeleventbatch.ts
   - src/models/errors/httpclienterrors.ts
+  - src/models/errors/index.ts
   - src/models/errors/sdkerror.ts
   - src/models/errors/sdkvalidationerror.ts
+  - src/models/operations/adddatapoints.ts
+  - src/models/operations/createdatapoint.ts
+  - src/models/operations/createdataset.ts
+  - src/models/operations/createevent.ts
+  - src/models/operations/createeventbatch.ts
+  - src/models/operations/createmodelevent.ts
+  - src/models/operations/createmodeleventbatch.ts
+  - src/models/operations/createtool.ts
+  - src/models/operations/deleteconfiguration.ts
+  - src/models/operations/deletedatapoint.ts
+  - src/models/operations/deletedataset.ts
+  - src/models/operations/deletemetric.ts
+  - src/models/operations/deleteproject.ts
+  - src/models/operations/deleterun.ts
+  - src/models/operations/deletetool.ts
+  - src/models/operations/getconfigurations.ts
+  - src/models/operations/getdatapoint.ts
+  - src/models/operations/getdatapoints.ts
+  - src/models/operations/getdatasets.ts
+  - src/models/operations/getevents.ts
+  - src/models/operations/getmetrics.ts
+  - src/models/operations/getprojects.ts
+  - src/models/operations/getrun.ts
+  - src/models/operations/getruns.ts
+  - src/models/operations/getsession.ts
+  - src/models/operations/index.ts
+  - src/models/operations/startsession.ts
+  - src/models/operations/updateconfiguration.ts
+  - src/models/operations/updatedatapoint.ts
+  - src/models/operations/updateevent.ts
+  - src/models/operations/updaterun.ts
+  - src/sdk/configurations.ts
+  - src/sdk/datapoints.ts
+  - src/sdk/datasets.ts
+  - src/sdk/events.ts
+  - src/sdk/metrics.ts
+  - src/sdk/projects.ts
+  - src/sdk/runs.ts
+  - src/sdk/sdk.ts
+  - src/sdk/session.ts
+  - src/sdk/tools.ts
   - src/types/blobs.ts
   - src/types/constdatetime.ts
   - src/types/enums.ts
@@ -108,210 +315,891 @@ generatedFiles:
   - src/types/index.ts
   - src/types/operations.ts
   - src/types/rfcdate.ts
+  - src/types/streams.ts
   - tsconfig.json
-  - src/models/operations/startsession.ts
-  - src/models/operations/getsession.ts
-  - src/models/operations/createevent.ts
-  - src/models/operations/updateevent.ts
-  - src/models/operations/getevents.ts
-  - src/models/operations/createmodelevent.ts
-  - src/models/operations/createeventbatch.ts
-  - src/models/operations/createmodeleventbatch.ts
-  - src/models/operations/getmetrics.ts
-  - src/models/operations/deletemetric.ts
-  - src/models/operations/createtool.ts
-  - src/models/operations/deletetool.ts
-  - src/models/operations/getdatapoints.ts
-  - src/models/operations/createdatapoint.ts
-  - src/models/operations/getdatapoint.ts
-  - src/models/operations/updatedatapoint.ts
-  - src/models/operations/deletedatapoint.ts
-  - src/models/operations/getdatasets.ts
-  - src/models/operations/createdataset.ts
-  - src/models/operations/deletedataset.ts
-  - src/models/operations/adddatapoints.ts
-  - src/models/operations/getprojects.ts
-  - src/models/operations/deleteproject.ts
-  - src/models/operations/getruns.ts
-  - src/models/operations/getrun.ts
-  - src/models/operations/updaterun.ts
-  - src/models/operations/deleterun.ts
-  - src/models/operations/getconfigurations.ts
-  - src/models/operations/updateconfiguration.ts
-  - src/models/operations/deleteconfiguration.ts
-  - src/models/components/sessionstartrequest.ts
-  - src/models/components/event.ts
-  - src/models/components/createeventrequest.ts
-  - src/models/components/eventfilter.ts
-  - src/models/components/createmodelevent.ts
-  - src/models/components/metric.ts
-  - src/models/components/metricedit.ts
-  - src/models/components/tool.ts
-  - src/models/components/createtoolrequest.ts
-  - src/models/components/updatetoolrequest.ts
-  - src/models/components/datapoint.ts
-  - src/models/components/createdatapointrequest.ts
-  - src/models/components/updatedatapointrequest.ts
-  - src/models/components/dataset.ts
-  - src/models/components/createdatasetrequest.ts
-  - src/models/components/datasetupdate.ts
-  - src/models/components/project.ts
-  - src/models/components/createprojectrequest.ts
-  - src/models/components/updateprojectrequest.ts
-  - src/models/components/createrunresponse.ts
-  - src/models/components/evaluationrun.ts
-  - src/models/components/createrunrequest.ts
-  - src/models/components/getrunsresponse.ts
-  - src/models/components/getrunresponse.ts
-  - src/models/components/updaterunresponse.ts
-  - src/models/components/updaterunrequest.ts
-  - src/models/components/deleterunresponse.ts
-  - src/models/components/configuration.ts
-  - src/models/components/postconfigurationrequest.ts
-  - src/models/components/putconfigurationrequest.ts
-  - src/models/components/security.ts
-  - src/models/errors/createeventbatch.ts
-  - src/models/errors/createmodeleventbatch.ts
-  - src/models/errors/index.ts
-  - src/models/operations/index.ts
-  - src/models/components/index.ts
-  - docs/models/operations/startsessionrequestbody.md
-  - docs/models/operations/startsessionresponsebody.md
-  - docs/models/operations/getsessionrequest.md
-  - docs/models/operations/createeventrequestbody.md
-  - docs/models/operations/createeventresponsebody.md
-  - docs/models/operations/updateeventrequestbody.md
-  - docs/models/operations/daterange.md
-  - docs/models/operations/geteventsrequestbody.md
-  - docs/models/operations/geteventsresponsebody.md
-  - docs/models/operations/createmodeleventrequestbody.md
-  - docs/models/operations/createmodeleventresponsebody.md
-  - docs/models/operations/createeventbatchrequestbody.md
-  - docs/models/operations/createeventbatchresponsebody.md
-  - docs/models/operations/createmodeleventbatchrequestbody.md
-  - docs/models/operations/createmodeleventbatchresponsebody.md
-  - docs/models/operations/getmetricsrequest.md
-  - docs/models/operations/deletemetricrequest.md
-  - docs/models/operations/result.md
-  - docs/models/operations/createtoolresponsebody.md
-  - docs/models/operations/deletetoolrequest.md
-  - docs/models/operations/getdatapointsrequest.md
-  - docs/models/operations/getdatapointsresponsebody.md
-  - docs/models/operations/createdatapointresult.md
-  - docs/models/operations/createdatapointresponsebody.md
-  - docs/models/operations/getdatapointrequest.md
-  - docs/models/operations/getdatapointresponsebody.md
-  - docs/models/operations/updatedatapointrequest.md
-  - docs/models/operations/deletedatapointrequest.md
-  - docs/models/operations/deletedatapointresponsebody.md
-  - docs/models/operations/type.md
-  - docs/models/operations/getdatasetsrequest.md
-  - docs/models/operations/getdatasetsresponsebody.md
-  - docs/models/operations/createdatasetresult.md
-  - docs/models/operations/createdatasetresponsebody.md
-  - docs/models/operations/deletedatasetrequest.md
-  - docs/models/operations/mapping.md
-  - docs/models/operations/adddatapointsrequestbody.md
-  - docs/models/operations/adddatapointsrequest.md
-  - docs/models/operations/adddatapointsresponsebody.md
-  - docs/models/operations/getprojectsrequest.md
-  - docs/models/operations/deleteprojectrequest.md
-  - docs/models/operations/getrunsrequest.md
-  - docs/models/operations/getrunrequest.md
-  - docs/models/operations/updaterunrequest.md
-  - docs/models/operations/deleterunrequest.md
-  - docs/models/operations/env.md
-  - docs/models/operations/getconfigurationsrequest.md
-  - docs/models/operations/updateconfigurationrequest.md
-  - docs/models/operations/deleteconfigurationrequest.md
-  - docs/models/components/sessionstartrequest.md
-  - docs/models/components/eventtype.md
-  - docs/models/components/event.md
-  - docs/models/components/createeventrequesteventtype.md
-  - docs/models/components/createeventrequest.md
-  - docs/models/components/operator.md
-  - docs/models/components/type.md
-  - docs/models/components/eventfilter.md
-  - docs/models/components/createmodelevent.md
-  - docs/models/components/metrictype.md
-  - docs/models/components/returntypet.md
-  - docs/models/components/threshold.md
-  - docs/models/components/metric.md
-  - docs/models/components/metricedittype.md
-  - docs/models/components/metriceditreturntype.md
-  - docs/models/components/metriceditthreshold.md
-  - docs/models/components/metricediteventtype.md
-  - docs/models/components/metricedit.md
-  - docs/models/components/tooltype.md
-  - docs/models/components/tool.md
-  - docs/models/components/createtoolrequesttype.md
-  - docs/models/components/createtoolrequest.md
-  - docs/models/components/updatetoolrequest.md
-  - docs/models/components/datapoint.md
-  - docs/models/components/createdatapointrequest.md
-  - docs/models/components/updatedatapointrequest.md
-  - docs/models/components/datasettype.md
-  - docs/models/components/pipelinetype.md
-  - docs/models/components/dataset.md
-  - docs/models/components/createdatasetrequesttype.md
-  - docs/models/components/createdatasetrequestpipelinetype.md
-  - docs/models/components/createdatasetrequest.md
-  - docs/models/components/datasetupdate.md
-  - docs/models/components/project.md
-  - docs/models/components/createprojectrequest.md
-  - docs/models/components/updateprojectrequest.md
-  - docs/models/components/createrunresponse.md
-  - docs/models/components/results.md
-  - docs/models/components/evaluationrunstatus.md
-  - docs/models/components/evaluationrun.md
-  - docs/models/components/status.md
-  - docs/models/components/createrunrequest.md
-  - docs/models/components/getrunsresponse.md
-  - docs/models/components/getrunresponse.md
-  - docs/models/components/updaterunresponse.md
-  - docs/models/components/updaterunrequeststatus.md
-  - docs/models/components/updaterunrequest.md
-  - docs/models/components/deleterunresponse.md
-  - docs/models/components/env.md
-  - docs/models/components/calltype.md
-  - docs/models/components/responseformat.md
-  - docs/models/components/selectedfunctions.md
-  - docs/models/components/functioncallparams.md
-  - docs/models/components/parameterst.md
-  - docs/models/components/configurationtype.md
-  - docs/models/components/configuration.md
-  - docs/models/components/postconfigurationrequestcalltype.md
-  - docs/models/components/postconfigurationrequestresponseformat.md
-  - docs/models/components/postconfigurationrequestselectedfunctions.md
-  - docs/models/components/postconfigurationrequestfunctioncallparams.md
-  - docs/models/components/postconfigurationrequestparameters.md
-  - docs/models/components/postconfigurationrequestenv.md
-  - docs/models/components/postconfigurationrequest.md
-  - docs/models/components/putconfigurationrequestcalltype.md
-  - docs/models/components/putconfigurationrequestresponseformat.md
-  - docs/models/components/putconfigurationrequestselectedfunctions.md
-  - docs/models/components/putconfigurationrequestfunctioncallparams.md
-  - docs/models/components/putconfigurationrequestparameters.md
-  - docs/models/components/putconfigurationrequestenv.md
-  - docs/models/components/putconfigurationrequesttype.md
-  - docs/models/components/putconfigurationrequest.md
-  - docs/models/components/security.md
-  - docs/models/errors/createeventbatchresponsebody.md
-  - docs/models/errors/createmodeleventbatchresponsebody.md
-  - docs/sdks/honeyhive/README.md
-  - docs/lib/utils/retryconfig.md
-  - docs/sdks/session/README.md
-  - docs/sdks/events/README.md
-  - docs/sdks/metrics/README.md
-  - docs/sdks/tools/README.md
-  - docs/sdks/datapoints/README.md
-  - docs/sdks/datasets/README.md
-  - docs/sdks/projects/README.md
-  - docs/sdks/runs/README.md
-  - docs/sdks/configurations/README.md
-  - USAGE.md
-  - .gitattributes
-  - src/hooks/hooks.ts
-  - src/hooks/types.ts
-  - src/hooks/index.ts
-  - CONTRIBUTING.md
+examples:
+  addDatapoints:
+    speakeasy-default-add-datapoints:
+      parameters:
+        path:
+          dataset_id: <value>
+      requestBody:
+        application/json:
+          data: []
+          mapping:
+            ground_truth: []
+            history: []
+            inputs: []
+          project: <value>
+  createConfiguration:
+    speakeasy-default-create-configuration:
+      requestBody:
+        application/json:
+          env:
+            - staging
+          name: function-v0
+          parameters:
+            call_type: chat
+            forceFunction: {}
+            functionCallParams: auto
+            hyperparameters:
+              frequency_penalty: 0
+              max_tokens: 1000
+              presence_penalty: 0
+              stop_sequences: []
+              temperature: 0
+              top_k: -1
+              top_p: 1
+            model: gpt-4-turbo-preview
+            selectedFunctions:
+              - description: Get information from Google when you do not have that information in your context
+                id: 64e3ba90e81f9b3a3808c27f
+                name: get_google_information
+                parameters:
+                  properties:
+                    query:
+                      description: The query asked by the user
+                      type: string
+                  required:
+                    - query
+                  type: object
+            template:
+              - content: You are a web search assistant.
+                role: system
+              - content: '{{ query }}'
+                role: user
+          project: 660d7ba7995cacccce4d299e
+          provider: openai
+          user_properties:
+            user_email: dhruv@honeyhive.ai
+            user_id: google-oauth2|108897808434934946583
+            user_name: Dhruv Singh
+            user_picture: https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c
+  createDatapoint:
+    speakeasy-default-create-datapoint:
+      requestBody:
+        application/json:
+          ground_truth:
+            content: The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.
+            role: assistant
+          history:
+            - content: You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with "I apologize but I'm not sure."
+              role: system
+            - content: what's the temperature in Iceland?\n\n\n--Google search API results below:---\n\n"snippet":"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.","snippet_highlighted_words":["Feb 4, 29 / 20 °F"]
+              role: user
+          inputs:
+            query: what's the temperature in Iceland?
+          linked_datasets: []
+          linked_event: 6bba5182-d4b1-4b29-a64a-f0a8bd964f76
+          metadata:
+            completion_tokens: 47
+            prompt_tokens: 696
+            question_type: weather
+            total_tokens: 743
+          project: New Project
+  createDataset:
+    speakeasy-default-create-dataset:
+      requestBody:
+        application/json:
+          datapoints:
+            - 66369748b5773befbdc661e2
+          description: A test dataset
+          linked_evals: []
+          metadata:
+            source: dev
+          name: test-dataset
+          pipeline_type: event
+          project: New Project
+          saved: false
+          type: evaluation
+  createEvent:
+    speakeasy-default-create-event:
+      requestBody:
+        application/json:
+          event:
+            children_ids: []
+            config:
+              hyperparameters:
+                frequency_penalty: 0
+                max_tokens: 1000
+                "n": 1
+                presence_penalty: 0
+                stop: []
+                temperature: 0
+                top_p: 1
+              model: gpt-3.5-turbo
+              provider: openai
+              template:
+                - content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+                  role: system
+                - content: '{{question}}'
+                  role: user
+              type: chat
+              version: v0.1
+            duration: 999.8056
+            end_time: 1714978765301
+            error: <value>
+            event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+            event_name: Model Completion
+            event_type: model
+            feedback: {}
+            inputs:
+              chat_history:
+                - content: 'Answer the user''s question only using provided context. Context: Hello world'
+                  role: system
+                - content: What is in the context?
+                  role: user
+              context: Hello world
+              question: What is in the context?
+            metadata:
+              completion_tokens: 23
+              cost: 8e-05
+              prompt_tokens: 35
+              total_tokens: 58
+            metrics:
+              Answer Faithfulness: 5
+              Answer Faithfulness_explanation: The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.
+              Number of words: 18
+            outputs:
+              content: Hello world
+              role: assistant
+            parent_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            project: Simple RAG
+            session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            source: playground
+            start_time: 1714978764301
+            user_properties:
+              user: google-oauth2|111840237613341303366
+      responses:
+        "200":
+          application/json:
+            event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+            success: true
+  createEventBatch:
+    speakeasy-default-create-event-batch:
+      requestBody:
+        application/json:
+          events:
+            - children_ids: []
+              config:
+                hyperparameters:
+                  frequency_penalty: 0
+                  max_tokens: 1000
+                  "n": 1
+                  presence_penalty: 0
+                  stop: []
+                  temperature: 0
+                  top_p: 1
+                model: gpt-3.5-turbo
+                provider: openai
+                template:
+                  - content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+                    role: system
+                  - content: '{{question}}'
+                    role: user
+                type: chat
+                version: v0.1
+              duration: 999.8056
+              end_time: 1714978765301
+              error: <value>
+              event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+              event_name: Model Completion
+              event_type: model
+              feedback: {}
+              inputs:
+                chat_history:
+                  - content: 'Answer the user''s question only using provided context. Context: Hello world'
+                    role: system
+                  - content: What is in the context?
+                    role: user
+                context: Hello world
+                question: What is in the context?
+              metadata:
+                completion_tokens: 23
+                cost: 8e-05
+                prompt_tokens: 35
+                total_tokens: 58
+              metrics:
+                Answer Faithfulness: 5
+                Answer Faithfulness_explanation: The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.
+                Number of words: 18
+              outputs:
+                content: Hello world
+                role: assistant
+              parent_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+              project: Simple RAG
+              session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+              source: playground
+              start_time: 1714978764301
+              user_properties:
+                user: google-oauth2|111840237613341303366
+      responses:
+        "200":
+          application/json:
+            event_ids:
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+            session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            success: true
+        "500":
+          application/json:
+            errors:
+              - Could not create event due to missing inputs
+              - Could not create event due to missing source
+            event_ids:
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+            success: true
+  createMetric:
+    speakeasy-default-create-metric:
+      requestBody:
+        application/json:
+          description: Fully-configurable neutral framework
+          name: <value>
+          return_type: string
+          task: <value>
+          type: model
+  createModelEvent:
+    speakeasy-default-create-model-event:
+      requestBody:
+        application/json:
+          model_event:
+            cost: 8e-05
+            duration: 42
+            error: <value>
+            event_name: Model Completion
+            hyperparameters:
+              frequency_penalty: 0
+              max_tokens: 1000
+              "n": 1
+              presence_penalty: 0
+              stop: []
+              temperature: 0
+              top_p: 1
+            messages:
+              - content: Hello, world!
+                role: system
+            model: gpt-4o
+            project: New Project
+            provider: openai
+            response:
+              content: Hello, world!
+              role: assistant
+            response_format:
+              type: text
+            source: playground
+            template:
+              - content: Hello, {{ name }}!
+                role: system
+            template_inputs:
+              name: world
+            tool_choice: none
+            tools:
+              - function:
+                  description: Get the current weather
+                  name: get_current_weather
+                  parameters:
+                    properties:
+                      format:
+                        description: The temperature unit to use. Infer this from the users location.
+                        enum:
+                          - celsius
+                          - fahrenheit
+                        type: string
+                      location:
+                        description: The city and state, e.g. San Francisco, CA
+                        type: string
+                    required:
+                      - location
+                      - format
+                    type: object
+                type: function
+            usage:
+              completion_tokens: 10
+              prompt_tokens: 10
+              total_tokens: 20
+      responses:
+        "200":
+          application/json:
+            event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+            success: true
+  createModelEventBatch:
+    speakeasy-default-create-model-event-batch:
+      requestBody:
+        application/json:
+          model_events:
+            - cost: 8e-05
+              duration: 42
+              error: <value>
+              event_name: Model Completion
+              hyperparameters:
+                frequency_penalty: 0
+                max_tokens: 1000
+                "n": 1
+                presence_penalty: 0
+                stop: []
+                temperature: 0
+                top_p: 1
+              messages:
+                - content: Hello, world!
+                  role: system
+              model: gpt-4o
+              project: New Project
+              provider: openai
+              response:
+                content: Hello, world!
+                role: assistant
+              response_format:
+                type: text
+              source: playground
+              template:
+                - content: Hello, {{ name }}!
+                  role: system
+              template_inputs:
+                name: world
+              tool_choice: none
+              tools:
+                - function:
+                    description: Get the current weather
+                    name: get_current_weather
+                    parameters:
+                      properties:
+                        format:
+                          description: The temperature unit to use. Infer this from the users location.
+                          enum:
+                            - celsius
+                            - fahrenheit
+                          type: string
+                        location:
+                          description: The city and state, e.g. San Francisco, CA
+                          type: string
+                      required:
+                        - location
+                        - format
+                      type: object
+                  type: function
+              usage:
+                completion_tokens: 10
+                prompt_tokens: 10
+                total_tokens: 20
+      responses:
+        "200":
+          application/json:
+            event_ids:
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+            success: true
+        "500":
+          application/json:
+            errors:
+              - Could not create event due to missing model
+              - Could not create event due to missing provider
+            event_ids:
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b67
+            success: true
+  createProject:
+    speakeasy-default-create-project:
+      requestBody:
+        application/json:
+          name: <value>
+  createRun:
+    speakeasy-default-create-run:
+      requestBody:
+        application/json:
+          event_ids: []
+          name: <value>
+          project: <value>
+  createTool:
+    speakeasy-default-create-tool:
+      requestBody:
+        application/json:
+          name: <value>
+          parameters:
+            key: <value>
+            key1: <value>
+          task: <value>
+          type: function
+  deleteConfiguration:
+    speakeasy-default-delete-configuration:
+      parameters:
+        path:
+          id: <id>
+  deleteDatapoint:
+    "":
+      parameters:
+        path:
+          id: <id>
+      responses:
+        "200":
+          application/json:
+            deleted: true
+  deleteDataset:
+    speakeasy-default-delete-dataset:
+      parameters:
+        query:
+          dataset_id: <value>
+  deleteMetric:
+    speakeasy-default-delete-metric:
+      parameters:
+        query:
+          metric_id: <value>
+  deleteProject:
+    speakeasy-default-delete-project:
+      parameters:
+        query:
+          name: <value>
+  deleteRun:
+    speakeasy-default-delete-run:
+      parameters:
+        path:
+          run_id: <value>
+  deleteTool:
+    speakeasy-default-delete-tool:
+      parameters:
+        query:
+          function_id: <value>
+  getConfigurations:
+    speakeasy-default-get-configurations:
+      parameters:
+        query:
+          project: <value>
+      responses:
+        "200":
+          application/json:
+            - _id: 6638187d505c6812e4044f24
+              env:
+                - staging
+              name: function-v0
+              parameters:
+                call_type: chat
+                forceFunction: {}
+                functionCallParams: auto
+                hyperparameters:
+                  frequency_penalty: 0
+                  max_tokens: 1000
+                  presence_penalty: 0
+                  stop_sequences: []
+                  temperature: 0
+                  top_k: -1
+                  top_p: 1
+                model: gpt-4-turbo-preview
+                selectedFunctions:
+                  - description: Get information from Google when you do not have that information in your context
+                    id: 64e3ba90e81f9b3a3808c27f
+                    name: get_google_information
+                    parameters:
+                      properties:
+                        query:
+                          description: The query asked by the user
+                          type: string
+                      required:
+                        - query
+                      type: object
+                template:
+                  - content: You are a web search assistant.
+                    role: system
+                  - content: '{{ query }}'
+                    role: user
+              project: New Project
+              provider: openai
+              type: LLM
+              user_properties:
+                user_email: dhruv@honeyhive.ai
+                user_id: google-oauth2|108897808434934946583
+                user_name: Dhruv Singh
+                user_picture: https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c
+  getDatapoint:
+    speakeasy-default-get-datapoint:
+      parameters:
+        path:
+          id: <id>
+      responses:
+        "200":
+          application/json:
+            datapoint:
+              - _id: 65c13dbbd65fb876b7886cdb
+                created_at: "2024-02-05T19:57:47.05Z"
+                ground_truth:
+                  content: The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.
+                  role: assistant
+                history:
+                  - content: You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with "I apologize but I'm not sure."
+                    role: system
+                  - content: what's the temperature in Iceland?\n\n\n--Google search API results below:---\n\n"snippet":"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.","snippet_highlighted_words":["Feb 4, 29 / 20 °F"]
+                    role: user
+                inputs:
+                  query: what's the temperature in Iceland?
+                linked_datasets: []
+                linked_evals: []
+                linked_event: 6bba5182-d4b1-4b29-a64a-f0a8bd964f76
+                metadata:
+                  completion_tokens: 47
+                  prompt_tokens: 696
+                  question_type: weather
+                  total_tokens: 743
+                project_id: 653454f3138a956964341c07
+                saved: false
+                tenant: org_XiCNIMTZzUKiY2As
+                type: event
+                updated_at: "2024-02-05T19:57:47.05Z"
+  getDatapoints:
+    speakeasy-default-get-datapoints:
+      parameters:
+        query:
+          project: <value>
+      responses:
+        "200":
+          application/json:
+            datapoints:
+              - _id: 65c13dbbd65fb876b7886cdb
+                created_at: "2024-02-05T19:57:47.05Z"
+                ground_truth:
+                  content: The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.
+                  role: assistant
+                history:
+                  - content: You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with "I apologize but I'm not sure."
+                    role: system
+                  - content: what's the temperature in Iceland?\n\n\n--Google search API results below:---\n\n"snippet":"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.","snippet_highlighted_words":["Feb 4, 29 / 20 °F"]
+                    role: user
+                inputs:
+                  query: what's the temperature in Iceland?
+                linked_datasets: []
+                linked_evals: []
+                linked_event: 6bba5182-d4b1-4b29-a64a-f0a8bd964f76
+                metadata:
+                  completion_tokens: 47
+                  prompt_tokens: 696
+                  question_type: weather
+                  total_tokens: 743
+                project_id: 653454f3138a956964341c07
+                saved: false
+                tenant: org_XiCNIMTZzUKiY2As
+                type: event
+                updated_at: "2024-02-05T19:57:47.05Z"
+  getDatasets:
+    speakeasy-default-get-datasets:
+      parameters:
+        query:
+          project: <value>
+      responses:
+        "200":
+          application/json:
+            testcases:
+              - created_at: "2024-05-04T20:15:04.124Z"
+                datapoints:
+                  - 66369748b5773befbdc661e2
+                description: A test dataset
+                linked_evals: []
+                name: test-dataset
+                num_points: 1
+                pipeline_type: event
+                project: New Project
+                saved: false
+                type: evaluation
+                updated_at: "2024-05-04T20:15:04.124Z"
+  getEvents:
+    speakeasy-default-get-events:
+      requestBody:
+        application/json:
+          filters:
+            - field: event_type
+              operator: is
+              type: string
+              value: model
+          project: <value>
+      responses:
+        "200":
+          application/json:
+            events:
+              - children_ids: []
+                config:
+                  hyperparameters:
+                    frequency_penalty: 0
+                    max_tokens: 1000
+                    "n": 1
+                    presence_penalty: 0
+                    stop: []
+                    temperature: 0
+                    top_p: 1
+                  model: gpt-3.5-turbo
+                  provider: openai
+                  template:
+                    - content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+                      role: system
+                    - content: '{{question}}'
+                      role: user
+                  type: chat
+                  version: v0.1 - Fork
+                duration: 824.8056
+                end_time: "2024-04-01 22:38:19"
+                error: <value>
+                event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+                event_name: Model Completion
+                event_type: model
+                feedback: {}
+                inputs:
+                  chat_history:
+                    - content: 'Answer the user''s question only using provided context. Context: Hello world'
+                      role: system
+                    - content: What is in the context?
+                      role: user
+                  context: Hello world
+                  question: What is in the context?
+                metadata:
+                  completion_tokens: 23
+                  cost: 8e-05
+                  prompt_tokens: 35
+                  total_tokens: 58
+                metrics:
+                  Answer Faithfulness: 5
+                  Answer Faithfulness_explanation: The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.
+                  Number of words: 18
+                outputs:
+                  content: Hello world
+                  role: assistant
+                parent_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+                project_id: New Project
+                session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+                source: playground
+                start_time: "2024-04-01 22:38:19"
+                user_properties:
+                  user: google-oauth2|111840237613341303366
+  getMetrics:
+    speakeasy-default-get-metrics:
+      parameters:
+        query:
+          project_name: <value>
+  getProjects:
+    speakeasy-default-get-projects: {}
+  getRun:
+    speakeasy-default-get-run:
+      parameters:
+        path:
+          run_id: <value>
+  getRuns:
+    speakeasy-default-get-runs: {}
+  getSession:
+    speakeasy-default-get-session:
+      parameters:
+        path:
+          session_id: <value>
+      responses:
+        "200":
+          application/json:
+            children_ids: []
+            config:
+              hyperparameters:
+                frequency_penalty: 0
+                max_tokens: 1000
+                "n": 1
+                presence_penalty: 0
+                stop: []
+                temperature: 0
+                top_p: 1
+              model: gpt-3.5-turbo
+              provider: openai
+              template:
+                - content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+                  role: system
+                - content: '{{question}}'
+                  role: user
+              type: chat
+              version: v0.1 - Fork
+            duration: 824.8056
+            end_time: "2024-04-01 22:38:19"
+            error: <value>
+            event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+            event_name: Model Completion
+            event_type: model
+            feedback: {}
+            inputs:
+              chat_history:
+                - content: 'Answer the user''s question only using provided context. Context: Hello world'
+                  role: system
+                - content: What is in the context?
+                  role: user
+              context: Hello world
+              question: What is in the context?
+            metadata:
+              completion_tokens: 23
+              cost: 8e-05
+              prompt_tokens: 35
+              total_tokens: 58
+            metrics:
+              Answer Faithfulness: 5
+              Answer Faithfulness_explanation: The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.
+              Number of words: 18
+            outputs:
+              content: Hello world
+              role: assistant
+            parent_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            project_id: New Project
+            session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            source: playground
+            start_time: "2024-04-01 22:38:19"
+            user_properties:
+              user: google-oauth2|111840237613341303366
+  getTools:
+    speakeasy-default-get-tools: {}
+  startSession:
+    speakeasy-default-start-session:
+      requestBody:
+        application/json:
+          session:
+            children_ids:
+              - 7f22137a-6911-4ed3-bc36-110f1dde6b66
+            duration: 824.8056
+            end_time: 1712025499832
+            error: <value>
+            feedback: {}
+            inputs:
+              chat_history:
+                - content: 'Answer the user''s question only using provided context. Context: Hello world'
+                  role: system
+                - content: What is in the context?
+                  role: user
+              context: Hello world
+              question: What is in the context?
+            metadata: {}
+            metrics: {}
+            outputs:
+              content: Hello world
+              role: assistant
+            project: Simple RAG Project
+            session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+            session_name: Playground Session
+            source: playground
+            start_time: 1712025501605
+            user_properties:
+              user: google-oauth2|111840237613341303366
+  updateConfiguration:
+    speakeasy-default-update-configuration:
+      parameters:
+        path:
+          id: <id>
+      requestBody:
+        application/json:
+          env:
+            - staging
+          name: function-v0
+          parameters:
+            call_type: chat
+            forceFunction: {}
+            functionCallParams: auto
+            hyperparameters:
+              frequency_penalty: 0
+              max_tokens: 1000
+              presence_penalty: 0
+              stop_sequences: []
+              temperature: 0
+              top_k: -1
+              top_p: 1
+            model: gpt-4-turbo-preview
+            selectedFunctions:
+              - description: Get information from Google when you do not have that information in your context
+                id: 64e3ba90e81f9b3a3808c27f
+                name: get_google_information
+                parameters:
+                  properties:
+                    query:
+                      description: The query asked by the user
+                      type: string
+                  required:
+                    - query
+                  type: object
+            template:
+              - content: You are a web search assistant.
+                role: system
+              - content: '{{ query }}'
+                role: user
+          project: New Project
+          provider: openai
+          type: LLM
+          user_properties:
+            user_email: dhruv@honeyhive.ai
+            user_id: google-oauth2|108897808434934946583
+            user_name: Dhruv Singh
+            user_picture: https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c
+  updateDatapoint:
+    speakeasy-default-update-datapoint:
+      parameters:
+        path:
+          id: <id>
+      requestBody:
+        application/json:
+          ground_truth:
+            content: The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.
+            role: assistant
+          history:
+            - content: You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with "I apologize but I'm not sure."
+              role: system
+            - content: what's the temperature in Reykjavik?\n\n\n--Google search API results below:---\n\n"snippet":"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.","snippet_highlighted_words":["Feb 4, 29 / 20 °F"]
+              role: user
+          inputs:
+            query: what's the temperature in Reykjavik?
+          linked_datasets: []
+          linked_evals: []
+          metadata:
+            question_type: capital-weather
+            random_field: 0
+  updateDataset:
+    speakeasy-default-update-dataset:
+      requestBody:
+        application/json:
+          datapoints:
+            - 66369748b5773befbdc661e
+          dataset_id: 663876ec4611c47f4970f0c3
+          description: An updated dataset description
+          linked_evals:
+            - 66369748b5773befbdasdk1
+          metadata:
+            source: prod
+            updated: true
+          name: new-dataset-name
+  updateEvent:
+    "":
+      requestBody:
+        application/json:
+          config:
+            template:
+              - content: Hello, {{ name }}!
+                role: system
+          duration: 42
+          event_id: 7f22137a-6911-4ed3-bc36-110f1dde6b66
+          feedback:
+            rating: 5
+          metadata:
+            completion_tokens: 23
+            cost: 8e-05
+            prompt_tokens: 35
+            total_tokens: 58
+          metrics:
+            num_words: 2
+          outputs:
+            content: Hello world
+            role: assistant
+          user_properties:
+            user_id: 691b1f94-d38c-4e92-b051-5e03fee9ff86
+  updateMetric:
+    speakeasy-default-update-metric:
+      requestBody:
+        application/json:
+          metric_id: <value>
+  updateProject:
+    speakeasy-default-update-project:
+      requestBody:
+        application/json:
+          project_id: <value>
+  updateRun:
+    speakeasy-default-update-run:
+      parameters:
+        path:
+          run_id: <value>
+  updateTool:
+    speakeasy-default-update-tool:
+      requestBody:
+        application/json:
+          id: <id>
+          name: <value>
+          parameters: {}

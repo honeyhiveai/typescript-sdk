@@ -1,7 +1,31 @@
 # HoneyHive
 
+<!-- Start Summary [summary] -->
+## Summary
+
+
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+
+* [SDK Installation](#sdk-installation)
+* [Requirements](#requirements)
+* [SDK Example Usage](#sdk-example-usage)
+* [Available Resources and Operations](#available-resources-and-operations)
+* [Standalone functions](#standalone-functions)
+* [Retries](#retries)
+* [Error Handling](#error-handling)
+* [Server Selection](#server-selection)
+* [Custom HTTP Client](#custom-http-client)
+* [Authentication](#authentication)
+* [Debugging](#debugging)
+<!-- End Table of Contents [toc] -->
+
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
+
+The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https://pnpm.io/), [bun](https://bun.sh/) or [yarn](https://classic.yarnpkg.com/en/) package managers.
 
 ### NPM
 
@@ -52,25 +76,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",
@@ -177,7 +201,7 @@ Validation errors can also occur when either method arguments or data returned f
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { SDKValidationError } from "honeyhive/models/errors";
+import { CreateEventBatchResponseBody, SDKValidationError } from "honeyhive/models/errors";
 
 const honeyHive = new HoneyHive({
     bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
@@ -198,57 +222,57 @@ async function run() {
                     parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                     childrenIds: ["<value>"],
                     config: {
-                        model: "gpt-3.5-turbo",
-                        version: "v0.1",
-                        provider: "openai",
                         hyperparameters: {
+                            frequency_penalty: 0,
+                            max_tokens: 1000,
+                            n: 1,
+                            presence_penalty: 0,
+                            stop: ["<value>"],
                             temperature: 0,
                             top_p: 1,
-                            max_tokens: 1000,
-                            presence_penalty: 0,
-                            frequency_penalty: 0,
-                            stop: ["<value>"],
-                            n: 1,
                         },
+                        model: "gpt-3.5-turbo",
+                        provider: "openai",
                         template: [
                             {
-                                role: "system",
                                 content:
                                     "Answer the user's question only using provided context. Context: {{ context }}",
+                                role: "system",
                             },
                             {
-                                role: "user",
                                 content: "{{question}}",
+                                role: "user",
                             },
                         ],
                         type: "chat",
+                        version: "v0.1",
                     },
                     inputs: {
-                        context: "Hello world",
-                        question: "What is in the context?",
                         chat_history: [
                             {
-                                role: "system",
                                 content:
                                     "Answer the user's question only using provided context. Context: Hello world",
+                                role: "system",
                             },
                             {
-                                role: "user",
                                 content: "What is in the context?",
+                                role: "user",
                             },
                         ],
+                        context: "Hello world",
+                        question: "What is in the context?",
                     },
                     outputs: {
-                        role: "assistant",
                         content: "Hello world",
+                        role: "assistant",
                     },
-                    error: null,
+                    error: "<value>",
                     startTime: 1714978764301,
                     endTime: 1714978765301,
                     duration: 999.8056,
                     metadata: {
-                        cost: 0.00008,
                         completion_tokens: 23,
+                        cost: 0.00008,
                         prompt_tokens: 35,
                         total_tokens: 58,
                     },
@@ -265,6 +289,9 @@ async function run() {
                 },
             ],
         });
+
+        // Handle the result
+        console.log(result);
     } catch (err) {
         switch (true) {
             case err instanceof SDKValidationError: {
@@ -274,8 +301,9 @@ async function run() {
                 console.error(err.rawValue);
                 return;
             }
-            case err instanceof errors.CreateEventBatchResponseBody: {
-                console.error(err); // handle exception
+            case err instanceof CreateEventBatchResponseBody: {
+                // Handle err.data$: CreateEventBatchResponseBodyData
+                console.error(err);
                 return;
             }
             default: {
@@ -283,9 +311,6 @@ async function run() {
             }
         }
     }
-
-    // Handle the result
-    console.log(result);
 }
 
 run();
@@ -321,25 +346,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",
@@ -382,25 +407,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",
@@ -499,25 +524,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",
@@ -627,25 +652,25 @@ async function run() {
                 sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                 childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
                 inputs: {
-                    context: "Hello world",
-                    question: "What is in the context?",
                     chat_history: [
                         {
-                            role: "system",
                             content:
                                 "Answer the user's question only using provided context. Context: Hello world",
+                            role: "system",
                         },
                         {
-                            role: "user",
                             content: "What is in the context?",
+                            role: "user",
                         },
                     ],
+                    context: "Hello world",
+                    question: "What is in the context?",
                 },
                 outputs: {
-                    role: "assistant",
                     content: "Hello world",
+                    role: "assistant",
                 },
-                error: null,
+                error: "<value>",
                 duration: 824.8056,
                 userProperties: {
                     user: "google-oauth2|111840237613341303366",
@@ -706,25 +731,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",
