@@ -15,8 +15,8 @@ export type Datapoint = {
      * UUID for the project where the datapoint is stored
      */
     projectId?: string | undefined;
-    createdAt?: Date | undefined;
-    updatedAt?: Date | undefined;
+    createdAt?: string | undefined;
+    updatedAt?: string | undefined;
     /**
      * Arbitrary JSON object containing the inputs for the datapoint
      */
@@ -52,16 +52,8 @@ export const Datapoint$inboundSchema: z.ZodType<Datapoint, z.ZodTypeDef, unknown
         _id: z.string().optional(),
         tenant: z.string().optional(),
         project_id: z.string().optional(),
-        created_at: z
-            .string()
-            .datetime({ offset: true })
-            .transform((v) => new Date(v))
-            .optional(),
-        updated_at: z
-            .string()
-            .datetime({ offset: true })
-            .transform((v) => new Date(v))
-            .optional(),
+        created_at: z.string().optional(),
+        updated_at: z.string().optional(),
         inputs: z.record(z.any()).optional(),
         history: z.array(z.record(z.any())).optional(),
         ground_truth: z.record(z.any()).optional(),
@@ -109,14 +101,8 @@ export const Datapoint$outboundSchema: z.ZodType<Datapoint$Outbound, z.ZodTypeDe
         id: z.string().optional(),
         tenant: z.string().optional(),
         projectId: z.string().optional(),
-        createdAt: z
-            .date()
-            .transform((v) => v.toISOString())
-            .optional(),
-        updatedAt: z
-            .date()
-            .transform((v) => v.toISOString())
-            .optional(),
+        createdAt: z.string().optional(),
+        updatedAt: z.string().optional(),
         inputs: z.record(z.any()).optional(),
         history: z.array(z.record(z.any())).optional(),
         groundTruth: z.record(z.any()).optional(),

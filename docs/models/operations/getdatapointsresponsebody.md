@@ -13,8 +13,8 @@ let value: GetDatapointsResponseBody = {
             id: "65c13dbbd65fb876b7886cdb",
             tenant: "org_XiCNIMTZzUKiY2As",
             projectId: "653454f3138a956964341c07",
-            createdAt: new Date("2024-02-05T19:57:47.05Z"),
-            updatedAt: new Date("2024-02-05T19:57:47.05Z"),
+            createdAt: "2024-02-05T19:57:47.05Z",
+            updatedAt: "2024-02-05T19:57:47.05Z",
             inputs: {
                 query: "what's the temperature in Iceland?",
             },

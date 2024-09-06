@@ -1,4 +1,4 @@
-import { HoneyHiveLangChainTracer } from "..";
+import { HoneyHiveLangChainTracer } from ".";
 import { HoneyHive } from './sdk';
 import * as Components from "../models/components/index.js";
 import * as operations from "../models/operations/index.js";
@@ -135,8 +135,6 @@ class Evaluation {
         const inputs = await this.getInputs(runIter);
         await this.initializeTracerSession();
 
-        console.log()
-
         const finalState = await callback(inputs || {}, this.tracer);
 
         const finalContent = (finalState as { content: string })?.content;
@@ -161,7 +159,7 @@ class Evaluation {
     }
 
     public run(callback: EvaluatingCallbackFunction): void {
-        // Use a self-executing async function to run the async operations
+        // Using a self-executing async function to run the async operations
         (async () => {
             try {
                 this.dataset = await this.loadDataset();

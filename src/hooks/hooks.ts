@@ -17,8 +17,6 @@ import {
     SDKInitOptions,
 } from "./types.js";
 
-import { initHooks } from "./registration.js";
-
 export class SDKHooks implements Hooks {
     sdkInitHooks: SDKInitHook[] = [];
     beforeCreateRequestHooks: BeforeCreateRequestHook[] = [];
@@ -26,9 +24,7 @@ export class SDKHooks implements Hooks {
     afterSuccessHooks: AfterSuccessHook[] = [];
     afterErrorHooks: AfterErrorHook[] = [];
 
-    constructor() {
-        initHooks(this);
-    }
+    constructor() {}
 
     registerSDKInitHook(hook: SDKInitHook) {
         this.sdkInitHooks.push(hook);

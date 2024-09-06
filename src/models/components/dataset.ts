@@ -67,11 +67,11 @@ export type Dataset = {
     /**
      * Timestamp of when the dataset was created
      */
-    createdAt?: Date | undefined;
+    createdAt?: string | undefined;
     /**
      * Timestamp of when the dataset was last updated
      */
-    updatedAt?: Date | undefined;
+    updatedAt?: string | undefined;
 };
 
 /** @internal */
@@ -124,16 +124,8 @@ export const Dataset$inboundSchema: z.ZodType<Dataset, z.ZodTypeDef, unknown> = 
         linked_evals: z.array(z.string()).optional(),
         saved: z.boolean().optional(),
         pipeline_type: PipelineType$inboundSchema.optional(),
-        created_at: z
-            .string()
-            .datetime({ offset: true })
-            .transform((v) => new Date(v))
-            .optional(),
-        updated_at: z
-            .string()
-            .datetime({ offset: true })
-            .transform((v) => new Date(v))
-            .optional(),
+        created_at: z.string().optional(),
+        updated_at: z.string().optional(),
     })
     .transform((v) => {
         return remap$(v, {
@@ -172,14 +164,8 @@ export const Dataset$outboundSchema: z.ZodType<Dataset$Outbound, z.ZodTypeDef, D
         linkedEvals: z.array(z.string()).optional(),
         saved: z.boolean().optional(),
         pipelineType: PipelineType$outboundSchema.optional(),
-        createdAt: z
-            .date()
-            .transform((v) => v.toISOString())
-            .optional(),
-        updatedAt: z
-            .date()
-            .transform((v) => v.toISOString())
-            .optional(),
+        createdAt: z.string().optional(),
+        updatedAt: z.string().optional(),
     })
     .transform((v) => {
         return remap$(v, {
