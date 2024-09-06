@@ -2,16 +2,16 @@ speakeasyVersion: 1.391.3
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:26aad3e3e49b31acee42fb56badf38f5cb6807f8763a3f845ea6e1aef692abcd
-        sourceBlobDigest: sha256:49d77d94a6328e35cbb308a73a4e35cb0ac925c15c59d3f320cbe65500c4063d
+        sourceRevisionDigest: sha256:7d00b1e17b12465db03e74d97a1695e36c70129cf236314a6255f8607bafecac
+        sourceBlobDigest: sha256:96b04af6d3953ca81a29331f39a818a02707a24a79b4c335e50b096bf8a2f5c7
         tags:
             - latest
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:26aad3e3e49b31acee42fb56badf38f5cb6807f8763a3f845ea6e1aef692abcd
-        sourceBlobDigest: sha256:49d77d94a6328e35cbb308a73a4e35cb0ac925c15c59d3f320cbe65500c4063d
+        sourceRevisionDigest: sha256:7d00b1e17b12465db03e74d97a1695e36c70129cf236314a6255f8607bafecac
+        sourceBlobDigest: sha256:96b04af6d3953ca81a29331f39a818a02707a24a79b4c335e50b096bf8a2f5c7
         outLocation: /Users/michaelacar/work/typescript-sdk
 workflow:
     workflowVersion: 1.0.0
