@@ -15,25 +15,25 @@ async function run() {
             sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
             childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
             inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
                 chat_history: [
                     {
-                        role: "system",
                         content:
                             "Answer the user's question only using provided context. Context: Hello world",
+                        role: "system",
                     },
                     {
-                        role: "user",
                         content: "What is in the context?",
+                        role: "user",
                     },
                 ],
+                context: "Hello world",
+                question: "What is in the context?",
             },
             outputs: {
-                role: "assistant",
                 content: "Hello world",
+                role: "assistant",
             },
-            error: null,
+            error: "<value>",
             duration: 824.8056,
             userProperties: {
                 user: "google-oauth2|111840237613341303366",

@@ -25,7 +25,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.projects.getProjects();
-
+  
   // Handle the result
   console.log(result)
 }
@@ -100,7 +100,7 @@ async function run() {
   const result = await honeyHive.projects.createProject({
     name: "<value>",
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -177,8 +177,6 @@ async function run() {
   await honeyHive.projects.updateProject({
     projectId: "<value>",
   });
-
-  
 }
 
 run();
@@ -250,8 +248,6 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.projects.deleteProject("<value>");
-
-  
 }
 
 run();

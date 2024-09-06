@@ -571,6 +571,9 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
   }
 
   async startNewSession(): Promise<void> {
+
+    this.sessionId = uuidv4();
+
     const sessionBody = {
       project: this.project,
       source: this.source,
@@ -603,6 +606,10 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
         console.error(error);
       }
     }
+  }
+
+  getSessionId(): string {
+    return this.sessionId
   }
 }
 

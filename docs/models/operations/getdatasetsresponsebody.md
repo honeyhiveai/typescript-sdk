@@ -19,8 +19,8 @@ let value: GetDatasetsResponseBody = {
             linkedEvals: ["<value>"],
             saved: false,
             pipelineType: "event",
-            createdAt: new Date("2024-05-04T20:15:04.124Z"),
-            updatedAt: new Date("2024-05-04T20:15:04.124Z"),
+            createdAt: "2024-05-04T20:15:04.124Z",
+            updatedAt: "2024-05-04T20:15:04.124Z",
         },
     ],
 };
