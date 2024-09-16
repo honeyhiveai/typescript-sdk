@@ -6,7 +6,7 @@
 import { DeleteToolRequest } from "honeyhive/models/operations";
 
 let value: DeleteToolRequest = {
-    functionId: "<value>",
+  functionId: "<value>",
 };
 ```
 

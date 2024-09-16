@@ -6,7 +6,7 @@
 import { GetRunRequest } from "honeyhive/models/operations";
 
 let value: GetRunRequest = {
-    runId: "<value>",
+  runId: "<value>",
 };
 ```
 

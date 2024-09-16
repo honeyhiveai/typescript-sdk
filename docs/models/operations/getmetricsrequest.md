@@ -6,7 +6,7 @@
 import { GetMetricsRequest } from "honeyhive/models/operations";
 
 let value: GetMetricsRequest = {
-    projectName: "<value>",
+  projectName: "<value>",
 };
 ```
 

@@ -5,31 +5,34 @@
 import * as z from "zod";
 
 export type DeleteRunResponse = {
-    id?: string | undefined;
-    deleted?: boolean | undefined;
+  id?: string | undefined;
+  deleted?: boolean | undefined;
 };
 
 /** @internal */
-export const DeleteRunResponse$inboundSchema: z.ZodType<DeleteRunResponse, z.ZodTypeDef, unknown> =
-    z.object({
-        id: z.string().optional(),
-        deleted: z.boolean().optional(),
-    });
+export const DeleteRunResponse$inboundSchema: z.ZodType<
+  DeleteRunResponse,
+  z.ZodTypeDef,
+  unknown
+> = z.object({
+  id: z.string().optional(),
+  deleted: z.boolean().optional(),
+});
 
 /** @internal */
 export type DeleteRunResponse$Outbound = {
-    id?: string | undefined;
-    deleted?: boolean | undefined;
+  id?: string | undefined;
+  deleted?: boolean | undefined;
 };
 
 /** @internal */
 export const DeleteRunResponse$outboundSchema: z.ZodType<
-    DeleteRunResponse$Outbound,
-    z.ZodTypeDef,
-    DeleteRunResponse
+  DeleteRunResponse$Outbound,
+  z.ZodTypeDef,
+  DeleteRunResponse
 > = z.object({
-    id: z.string().optional(),
-    deleted: z.boolean().optional(),
+  id: z.string().optional(),
+  deleted: z.boolean().optional(),
 });
 
 /**
@@ -37,10 +40,10 @@ export const DeleteRunResponse$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace DeleteRunResponse$ {
-    /** @deprecated use `DeleteRunResponse$inboundSchema` instead. */
-    export const inboundSchema = DeleteRunResponse$inboundSchema;
-    /** @deprecated use `DeleteRunResponse$outboundSchema` instead. */
-    export const outboundSchema = DeleteRunResponse$outboundSchema;
-    /** @deprecated use `DeleteRunResponse$Outbound` instead. */
-    export type Outbound = DeleteRunResponse$Outbound;
+  /** @deprecated use `DeleteRunResponse$inboundSchema` instead. */
+  export const inboundSchema = DeleteRunResponse$inboundSchema;
+  /** @deprecated use `DeleteRunResponse$outboundSchema` instead. */
+  export const outboundSchema = DeleteRunResponse$outboundSchema;
+  /** @deprecated use `DeleteRunResponse$Outbound` instead. */
+  export type Outbound = DeleteRunResponse$Outbound;
 }

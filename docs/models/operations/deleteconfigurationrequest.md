@@ -6,7 +6,7 @@
 import { DeleteConfigurationRequest } from "honeyhive/models/operations";
 
 let value: DeleteConfigurationRequest = {
-    id: "<id>",
+  id: "<id>",
 };
 ```
 

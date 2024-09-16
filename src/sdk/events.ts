@@ -13,75 +13,99 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Events extends ClientSDK {
-    /**
-     * Create a new event
-     *
-     * @remarks
-     * Please refer to our instrumentation guide for detailed information
-     */
-    async createEvent(
-        request: operations.CreateEventRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.CreateEventResponseBody> {
-        return unwrapAsync(eventsCreateEvent(this, request, options));
-    }
+  /**
+   * Create a new event
+   *
+   * @remarks
+   * Please refer to our instrumentation guide for detailed information
+   */
+  async createEvent(
+    request: operations.CreateEventRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.CreateEventResponseBody> {
+    return unwrapAsync(eventsCreateEvent(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update an event
-     */
-    async updateEvent(
-        request: operations.UpdateEventRequestBody,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(eventsUpdateEvent(this, request, options));
-    }
+  /**
+   * Update an event
+   */
+  async updateEvent(
+    request: operations.UpdateEventRequestBody,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(eventsUpdateEvent(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Retrieve events based on filters
-     */
-    async getEvents(
-        request: operations.GetEventsRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.GetEventsResponseBody> {
-        return unwrapAsync(eventsGetEvents(this, request, options));
-    }
+  /**
+   * Retrieve events based on filters
+   */
+  async getEvents(
+    request: operations.GetEventsRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.GetEventsResponseBody> {
+    return unwrapAsync(eventsGetEvents(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new model event
-     *
-     * @remarks
-     * Please refer to our instrumentation guide for detailed information
-     */
-    async createModelEvent(
-        request: operations.CreateModelEventRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.CreateModelEventResponseBody> {
-        return unwrapAsync(eventsCreateModelEvent(this, request, options));
-    }
+  /**
+   * Create a new model event
+   *
+   * @remarks
+   * Please refer to our instrumentation guide for detailed information
+   */
+  async createModelEvent(
+    request: operations.CreateModelEventRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.CreateModelEventResponseBody> {
+    return unwrapAsync(eventsCreateModelEvent(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Create a batch of events
-     *
-     * @remarks
-     * Please refer to our instrumentation guide for detailed information
-     */
-    async createEventBatch(
-        request: operations.CreateEventBatchRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.CreateEventBatchResponseBody> {
-        return unwrapAsync(eventsCreateEventBatch(this, request, options));
-    }
+  /**
+   * Create a batch of events
+   *
+   * @remarks
+   * Please refer to our instrumentation guide for detailed information
+   */
+  async createEventBatch(
+    request: operations.CreateEventBatchRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.CreateEventBatchResponseBody> {
+    return unwrapAsync(eventsCreateEventBatch(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Create a batch of model events
-     *
-     * @remarks
-     * Please refer to our instrumentation guide for detailed information
-     */
-    async createModelEventBatch(
-        request: operations.CreateModelEventBatchRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.CreateModelEventBatchResponseBody> {
-        return unwrapAsync(eventsCreateModelEventBatch(this, request, options));
-    }
+  /**
+   * Create a batch of model events
+   *
+   * @remarks
+   * Please refer to our instrumentation guide for detailed information
+   */
+  async createModelEventBatch(
+    request: operations.CreateModelEventBatchRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.CreateModelEventBatchResponseBody> {
+    return unwrapAsync(eventsCreateModelEventBatch(
+      this,
+      request,
+      options,
+    ));
+  }
 }

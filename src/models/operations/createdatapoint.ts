@@ -5,37 +5,37 @@
 import * as z from "zod";
 
 export type CreateDatapointResult = {
-    insertedId?: string | undefined;
+  insertedId?: string | undefined;
 };
 
 /**
  * Datapoint successfully created
  */
 export type CreateDatapointResponseBody = {
-    result?: CreateDatapointResult | undefined;
+  result?: CreateDatapointResult | undefined;
 };
 
 /** @internal */
 export const CreateDatapointResult$inboundSchema: z.ZodType<
-    CreateDatapointResult,
-    z.ZodTypeDef,
-    unknown
+  CreateDatapointResult,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    insertedId: z.string().optional(),
+  insertedId: z.string().optional(),
 });
 
 /** @internal */
 export type CreateDatapointResult$Outbound = {
-    insertedId?: string | undefined;
+  insertedId?: string | undefined;
 };
 
 /** @internal */
 export const CreateDatapointResult$outboundSchema: z.ZodType<
-    CreateDatapointResult$Outbound,
-    z.ZodTypeDef,
-    CreateDatapointResult
+  CreateDatapointResult$Outbound,
+  z.ZodTypeDef,
+  CreateDatapointResult
 > = z.object({
-    insertedId: z.string().optional(),
+  insertedId: z.string().optional(),
 });
 
 /**
@@ -43,35 +43,35 @@ export const CreateDatapointResult$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateDatapointResult$ {
-    /** @deprecated use `CreateDatapointResult$inboundSchema` instead. */
-    export const inboundSchema = CreateDatapointResult$inboundSchema;
-    /** @deprecated use `CreateDatapointResult$outboundSchema` instead. */
-    export const outboundSchema = CreateDatapointResult$outboundSchema;
-    /** @deprecated use `CreateDatapointResult$Outbound` instead. */
-    export type Outbound = CreateDatapointResult$Outbound;
+  /** @deprecated use `CreateDatapointResult$inboundSchema` instead. */
+  export const inboundSchema = CreateDatapointResult$inboundSchema;
+  /** @deprecated use `CreateDatapointResult$outboundSchema` instead. */
+  export const outboundSchema = CreateDatapointResult$outboundSchema;
+  /** @deprecated use `CreateDatapointResult$Outbound` instead. */
+  export type Outbound = CreateDatapointResult$Outbound;
 }
 
 /** @internal */
 export const CreateDatapointResponseBody$inboundSchema: z.ZodType<
-    CreateDatapointResponseBody,
-    z.ZodTypeDef,
-    unknown
+  CreateDatapointResponseBody,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    result: z.lazy(() => CreateDatapointResult$inboundSchema).optional(),
+  result: z.lazy(() => CreateDatapointResult$inboundSchema).optional(),
 });
 
 /** @internal */
 export type CreateDatapointResponseBody$Outbound = {
-    result?: CreateDatapointResult$Outbound | undefined;
+  result?: CreateDatapointResult$Outbound | undefined;
 };
 
 /** @internal */
 export const CreateDatapointResponseBody$outboundSchema: z.ZodType<
-    CreateDatapointResponseBody$Outbound,
-    z.ZodTypeDef,
-    CreateDatapointResponseBody
+  CreateDatapointResponseBody$Outbound,
+  z.ZodTypeDef,
+  CreateDatapointResponseBody
 > = z.object({
-    result: z.lazy(() => CreateDatapointResult$outboundSchema).optional(),
+  result: z.lazy(() => CreateDatapointResult$outboundSchema).optional(),
 });
 
 /**
@@ -79,10 +79,10 @@ export const CreateDatapointResponseBody$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateDatapointResponseBody$ {
-    /** @deprecated use `CreateDatapointResponseBody$inboundSchema` instead. */
-    export const inboundSchema = CreateDatapointResponseBody$inboundSchema;
-    /** @deprecated use `CreateDatapointResponseBody$outboundSchema` instead. */
-    export const outboundSchema = CreateDatapointResponseBody$outboundSchema;
-    /** @deprecated use `CreateDatapointResponseBody$Outbound` instead. */
-    export type Outbound = CreateDatapointResponseBody$Outbound;
+  /** @deprecated use `CreateDatapointResponseBody$inboundSchema` instead. */
+  export const inboundSchema = CreateDatapointResponseBody$inboundSchema;
+  /** @deprecated use `CreateDatapointResponseBody$outboundSchema` instead. */
+  export const outboundSchema = CreateDatapointResponseBody$outboundSchema;
+  /** @deprecated use `CreateDatapointResponseBody$Outbound` instead. */
+  export type Outbound = CreateDatapointResponseBody$Outbound;
 }

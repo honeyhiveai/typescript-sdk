@@ -6,15 +6,15 @@
 import { GetEventsRequestBody } from "honeyhive/models/operations";
 
 let value: GetEventsRequestBody = {
-    project: "<value>",
-    filters: [
-        {
-            field: "event_type",
-            value: "model",
-            operator: "is",
-            type: "string",
-        },
-    ],
+  project: "<value>",
+  filters: [
+    {
+      field: "event_type",
+      value: "model",
+      operator: "is",
+      type: "string",
+    },
+  ],
 };
 ```
 

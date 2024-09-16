@@ -83,7 +83,7 @@ async function run() {
         "role": "assistant",
         "content": "Hello world",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
@@ -106,7 +106,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -186,7 +186,7 @@ async function run() {
         "role": "assistant",
         "content": "Hello world",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
@@ -288,8 +288,6 @@ async function run() {
     },
     duration: 42,
   });
-
-  
 }
 
 run();
@@ -399,7 +397,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -503,7 +501,7 @@ async function run() {
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
@@ -562,7 +560,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -607,7 +605,7 @@ async function run() {
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
@@ -772,7 +770,7 @@ async function run() {
           "role": "assistant",
           "content": "Hello world",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
@@ -796,7 +794,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -877,7 +875,7 @@ async function run() {
           "role": "assistant",
           "content": "Hello world",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
@@ -973,7 +971,7 @@ async function run() {
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {
@@ -1033,7 +1031,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -1079,7 +1077,7 @@ async function run() {
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {

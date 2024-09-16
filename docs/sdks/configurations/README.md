@@ -25,7 +25,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.configurations.getConfigurations("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -163,8 +163,6 @@ async function run() {
       "user_email": "dhruv@honeyhive.ai",
     },
   });
-
-  
 }
 
 run();
@@ -296,7 +294,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.configurations.updateConfiguration("<value>", {
+  await honeyHive.configurations.updateConfiguration("<id>", {
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -314,7 +312,6 @@ async function run() {
           "<value>",
         ],
       },
-      responseFormat: {},
       selectedFunctions: [
         {
           id: "64e3ba90e81f9b3a3808c27f",
@@ -362,8 +359,6 @@ async function run() {
       "user_email": "dhruv@honeyhive.ai",
     },
   });
-
-  
 }
 
 run();
@@ -384,7 +379,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await configurationsUpdateConfiguration(honeyHive, "<value>", {
+  const res = await configurationsUpdateConfiguration(honeyHive, "<id>", {
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -402,7 +397,6 @@ async function run() {
           "<value>",
         ],
       },
-      responseFormat: {},
       selectedFunctions: [
         {
           id: "64e3ba90e81f9b3a3808c27f",
@@ -498,9 +492,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.configurations.deleteConfiguration("<value>");
-
-  
+  await honeyHive.configurations.deleteConfiguration("<id>");
 }
 
 run();
@@ -521,7 +513,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await configurationsDeleteConfiguration(honeyHive, "<value>");
+  const res = await configurationsDeleteConfiguration(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

@@ -49,7 +49,7 @@ async function run() {
         "role": "assistant",
         "content": "Hello world",
       },
-      error: null,
+      error: "<value>",
       duration: 824.8056,
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
@@ -67,7 +67,7 @@ async function run() {
       endTime: 1712025499832,
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -117,7 +117,7 @@ async function run() {
         "role": "assistant",
         "content": "Hello world",
       },
-      error: null,
+      error: "<value>",
       duration: 824.8056,
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
@@ -184,7 +184,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.session.getSession("<value>");
-
+  
   // Handle the result
   console.log(result)
 }

@@ -57,7 +57,7 @@ async function run() {
         "role": "assistant",
         "content": "Hello world",
       },
-      error: null,
+      error: "<value>",
       duration: 824.8056,
       userProperties: {
         "user": "google-oauth2|111840237613341303366",

@@ -6,7 +6,7 @@
 import { MetricEdit } from "honeyhive/models/components";
 
 let value: MetricEdit = {
-    metricId: "<value>",
+  metricId: "<value>",
 };
 ```
 

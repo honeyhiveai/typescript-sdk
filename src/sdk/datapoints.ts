@@ -13,58 +13,79 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Datapoints extends ClientSDK {
-    /**
-     * Retrieve a list of datapoints
-     */
-    async getDatapoints(
-        project: string,
-        datapointIds?: Array<string> | undefined,
-        datasetName?: string | undefined,
-        options?: RequestOptions
-    ): Promise<operations.GetDatapointsResponseBody> {
-        return unwrapAsync(
-            datapointsGetDatapoints(this, project, datapointIds, datasetName, options)
-        );
-    }
+  /**
+   * Retrieve a list of datapoints
+   */
+  async getDatapoints(
+    project: string,
+    datapointIds?: Array<string> | undefined,
+    datasetName?: string | undefined,
+    options?: RequestOptions,
+  ): Promise<operations.GetDatapointsResponseBody> {
+    return unwrapAsync(datapointsGetDatapoints(
+      this,
+      project,
+      datapointIds,
+      datasetName,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new datapoint
-     */
-    async createDatapoint(
-        request: components.CreateDatapointRequest,
-        options?: RequestOptions
-    ): Promise<operations.CreateDatapointResponseBody> {
-        return unwrapAsync(datapointsCreateDatapoint(this, request, options));
-    }
+  /**
+   * Create a new datapoint
+   */
+  async createDatapoint(
+    request: components.CreateDatapointRequest,
+    options?: RequestOptions,
+  ): Promise<operations.CreateDatapointResponseBody> {
+    return unwrapAsync(datapointsCreateDatapoint(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Retrieve a specific datapoint
-     */
-    async getDatapoint(
-        id: string,
-        options?: RequestOptions
-    ): Promise<operations.GetDatapointResponseBody> {
-        return unwrapAsync(datapointsGetDatapoint(this, id, options));
-    }
+  /**
+   * Retrieve a specific datapoint
+   */
+  async getDatapoint(
+    id: string,
+    options?: RequestOptions,
+  ): Promise<operations.GetDatapointResponseBody> {
+    return unwrapAsync(datapointsGetDatapoint(
+      this,
+      id,
+      options,
+    ));
+  }
 
-    /**
-     * Update a specific datapoint
-     */
-    async updateDatapoint(
-        id: string,
-        updateDatapointRequest: components.UpdateDatapointRequest,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(datapointsUpdateDatapoint(this, id, updateDatapointRequest, options));
-    }
+  /**
+   * Update a specific datapoint
+   */
+  async updateDatapoint(
+    id: string,
+    updateDatapointRequest: components.UpdateDatapointRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(datapointsUpdateDatapoint(
+      this,
+      id,
+      updateDatapointRequest,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a specific datapoint
-     */
-    async deleteDatapoint(
-        id: string,
-        options?: RequestOptions
-    ): Promise<operations.DeleteDatapointResponseBody> {
-        return unwrapAsync(datapointsDeleteDatapoint(this, id, options));
-    }
+  /**
+   * Delete a specific datapoint
+   */
+  async deleteDatapoint(
+    id: string,
+    options?: RequestOptions,
+  ): Promise<operations.DeleteDatapointResponseBody> {
+    return unwrapAsync(datapointsDeleteDatapoint(
+      this,
+      id,
+      options,
+    ));
+  }
 }

@@ -26,7 +26,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datapoints.getDatapoints("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -130,7 +130,7 @@ async function run() {
       "total_tokens": 743,
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -231,8 +231,8 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.datapoints.getDatapoint("<value>");
-
+  const result = await honeyHive.datapoints.getDatapoint("<id>");
+  
   // Handle the result
   console.log(result)
 }
@@ -255,7 +255,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsGetDatapoint(honeyHive, "<value>");
+  const res = await datapointsGetDatapoint(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;
@@ -304,7 +304,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.datapoints.updateDatapoint("<value>", {
+  await honeyHive.datapoints.updateDatapoint("<id>", {
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -333,8 +333,6 @@ async function run() {
       "random_field": 0,
     },
   });
-
-  
 }
 
 run();
@@ -355,7 +353,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsUpdateDatapoint(honeyHive, "<value>", {
+  const res = await datapointsUpdateDatapoint(honeyHive, "<id>", {
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -432,8 +430,8 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.datapoints.deleteDatapoint("<value>");
-
+  const result = await honeyHive.datapoints.deleteDatapoint("<id>");
+  
   // Handle the result
   console.log(result)
 }
@@ -456,7 +454,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsDeleteDatapoint(honeyHive, "<value>");
+  const res = await datapointsDeleteDatapoint(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

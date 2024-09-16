@@ -8,21 +8,25 @@ Successful response
 import { GetDatasetsResponseBody } from "honeyhive/models/operations";
 
 let value: GetDatasetsResponseBody = {
-    testcases: [
-        {
-            project: "New Project",
-            name: "test-dataset",
-            description: "A test dataset",
-            type: "evaluation",
-            datapoints: ["66369748b5773befbdc661e2"],
-            numPoints: 1,
-            linkedEvals: ["<value>"],
-            saved: false,
-            pipelineType: "event",
-            createdAt: new Date("2024-05-04T20:15:04.124Z"),
-            updatedAt: new Date("2024-05-04T20:15:04.124Z"),
-        },
-    ],
+  testcases: [
+    {
+      project: "New Project",
+      name: "test-dataset",
+      description: "A test dataset",
+      type: "evaluation",
+      datapoints: [
+        "66369748b5773befbdc661e2",
+      ],
+      numPoints: 1,
+      linkedEvals: [
+        "<value>",
+      ],
+      saved: false,
+      pipelineType: "event",
+      createdAt: new Date("2024-05-04T20:15:04.124Z"),
+      updatedAt: new Date("2024-05-04T20:15:04.124Z"),
+    },
+  ],
 };
 ```
 

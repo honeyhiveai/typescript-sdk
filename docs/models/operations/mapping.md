@@ -8,9 +8,15 @@ Mapping of keys in the data object to be used as inputs, ground truth, and histo
 import { Mapping } from "honeyhive/models/operations";
 
 let value: Mapping = {
-    inputs: ["<value>"],
-    groundTruth: ["<value>"],
-    history: ["<value>"],
+  inputs: [
+    "<value>",
+  ],
+  groundTruth: [
+    "<value>",
+  ],
+  history: [
+    "<value>",
+  ],
 };
 ```
 

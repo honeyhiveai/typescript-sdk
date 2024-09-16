@@ -12,37 +12,57 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Tools extends ClientSDK {
-    /**
-     * Retrieve a list of tools
-     */
-    async getTools(options?: RequestOptions): Promise<Array<components.Tool>> {
-        return unwrapAsync(toolsGetTools(this, options));
-    }
+  /**
+   * Retrieve a list of tools
+   */
+  async getTools(
+    options?: RequestOptions,
+  ): Promise<Array<components.Tool>> {
+    return unwrapAsync(toolsGetTools(
+      this,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new tool
-     */
-    async createTool(
-        request: components.CreateToolRequest,
-        options?: RequestOptions
-    ): Promise<operations.CreateToolResponseBody> {
-        return unwrapAsync(toolsCreateTool(this, request, options));
-    }
+  /**
+   * Create a new tool
+   */
+  async createTool(
+    request: components.CreateToolRequest,
+    options?: RequestOptions,
+  ): Promise<operations.CreateToolResponseBody> {
+    return unwrapAsync(toolsCreateTool(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update an existing tool
-     */
-    async updateTool(
-        request: components.UpdateToolRequest,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(toolsUpdateTool(this, request, options));
-    }
+  /**
+   * Update an existing tool
+   */
+  async updateTool(
+    request: components.UpdateToolRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(toolsUpdateTool(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a tool
-     */
-    async deleteTool(functionId: string, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(toolsDeleteTool(this, functionId, options));
-    }
+  /**
+   * Delete a tool
+   */
+  async deleteTool(
+    functionId: string,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(toolsDeleteTool(
+      this,
+      functionId,
+      options,
+    ));
+  }
 }

@@ -6,17 +6,23 @@
 import { AddDatapointsRequestBody } from "honeyhive/models/operations";
 
 let value: AddDatapointsRequestBody = {
-    project: "<value>",
-    data: [
-        {
-            key: "<value>",
-        },
-    ],
-    mapping: {
-        inputs: ["<value>"],
-        groundTruth: ["<value>"],
-        history: ["<value>"],
+  project: "<value>",
+  data: [
+    {
+      "key": "<value>",
     },
+  ],
+  mapping: {
+    inputs: [
+      "<value>",
+    ],
+    groundTruth: [
+      "<value>",
+    ],
+    history: [
+      "<value>",
+    ],
+  },
 };
 ```
 

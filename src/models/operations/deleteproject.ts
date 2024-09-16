@@ -5,30 +5,30 @@
 import * as z from "zod";
 
 export type DeleteProjectRequest = {
-    name: string;
+  name: string;
 };
 
 /** @internal */
 export const DeleteProjectRequest$inboundSchema: z.ZodType<
-    DeleteProjectRequest,
-    z.ZodTypeDef,
-    unknown
+  DeleteProjectRequest,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    name: z.string(),
+  name: z.string(),
 });
 
 /** @internal */
 export type DeleteProjectRequest$Outbound = {
-    name: string;
+  name: string;
 };
 
 /** @internal */
 export const DeleteProjectRequest$outboundSchema: z.ZodType<
-    DeleteProjectRequest$Outbound,
-    z.ZodTypeDef,
-    DeleteProjectRequest
+  DeleteProjectRequest$Outbound,
+  z.ZodTypeDef,
+  DeleteProjectRequest
 > = z.object({
-    name: z.string(),
+  name: z.string(),
 });
 
 /**
@@ -36,10 +36,10 @@ export const DeleteProjectRequest$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace DeleteProjectRequest$ {
-    /** @deprecated use `DeleteProjectRequest$inboundSchema` instead. */
-    export const inboundSchema = DeleteProjectRequest$inboundSchema;
-    /** @deprecated use `DeleteProjectRequest$outboundSchema` instead. */
-    export const outboundSchema = DeleteProjectRequest$outboundSchema;
-    /** @deprecated use `DeleteProjectRequest$Outbound` instead. */
-    export type Outbound = DeleteProjectRequest$Outbound;
+  /** @deprecated use `DeleteProjectRequest$inboundSchema` instead. */
+  export const inboundSchema = DeleteProjectRequest$inboundSchema;
+  /** @deprecated use `DeleteProjectRequest$outboundSchema` instead. */
+  export const outboundSchema = DeleteProjectRequest$outboundSchema;
+  /** @deprecated use `DeleteProjectRequest$Outbound` instead. */
+  export type Outbound = DeleteProjectRequest$Outbound;
 }

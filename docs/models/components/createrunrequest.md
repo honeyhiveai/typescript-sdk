@@ -6,9 +6,11 @@
 import { CreateRunRequest } from "honeyhive/models/components";
 
 let value: CreateRunRequest = {
-    project: "<value>",
-    name: "<value>",
-    eventIds: ["51a05dfc-2ddf-47cc-b8ca-1ba928fc8167"],
+  project: "<value>",
+  name: "<value>",
+  eventIds: [
+    "51a05dfc-2ddf-47cc-b8ca-1ba928fc8167",
+  ],
 };
 ```
 

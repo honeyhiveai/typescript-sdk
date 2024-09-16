@@ -6,7 +6,7 @@
 import { GetDatapointsRequest } from "honeyhive/models/operations";
 
 let value: GetDatapointsRequest = {
-    project: "<value>",
+  project: "<value>",
 };
 ```
 

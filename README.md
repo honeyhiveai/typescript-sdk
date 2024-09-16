@@ -1,7 +1,31 @@
 # HoneyHive
 
+<!-- Start Summary [summary] -->
+## Summary
+
+
+<!-- End Summary [summary] -->
+
+<!-- Start Table of Contents [toc] -->
+## Table of Contents
+
+* [SDK Installation](#sdk-installation)
+* [Requirements](#requirements)
+* [SDK Example Usage](#sdk-example-usage)
+* [Available Resources and Operations](#available-resources-and-operations)
+* [Standalone functions](#standalone-functions)
+* [Retries](#retries)
+* [Error Handling](#error-handling)
+* [Server Selection](#server-selection)
+* [Custom HTTP Client](#custom-http-client)
+* [Authentication](#authentication)
+* [Debugging](#debugging)
+<!-- End Table of Contents [toc] -->
+
 <!-- Start SDK Installation [installation] -->
 ## SDK Installation
+
+The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https://pnpm.io/), [bun](https://bun.sh/) or [yarn](https://classic.yarnpkg.com/en/) package managers.
 
 ### NPM
 
@@ -40,51 +64,53 @@ yarn add https://github.com/honeyhiveai/typescript-sdk zod
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: [
-                    {
-                        role: "system",
-                        content:
-                            "Answer the user's question only using provided context. Context: Hello world",
-                    },
-                    {
-                        role: "user",
-                        content: "What is in the context?",
-                    },
-                ],
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
-        },
-    });
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -95,33 +121,15 @@ run();
 <!-- Start Available Resources and Operations [operations] -->
 ## Available Resources and Operations
 
-### [session](docs/sdks/session/README.md)
+<details open>
+<summary>Available methods</summary>
 
-* [startSession](docs/sdks/session/README.md#startsession) - Start a new session
-* [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
+### [configurations](docs/sdks/configurations/README.md)
 
-### [events](docs/sdks/events/README.md)
-
-* [createEvent](docs/sdks/events/README.md#createevent) - Create a new event
-* [updateEvent](docs/sdks/events/README.md#updateevent) - Update an event
-* [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
-* [createModelEvent](docs/sdks/events/README.md#createmodelevent) - Create a new model event
-* [createEventBatch](docs/sdks/events/README.md#createeventbatch) - Create a batch of events
-* [createModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch) - Create a batch of model events
-
-### [metrics](docs/sdks/metrics/README.md)
-
-* [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
-* [createMetric](docs/sdks/metrics/README.md#createmetric) - Create a new metric
-* [updateMetric](docs/sdks/metrics/README.md#updatemetric) - Update an existing metric
-* [deleteMetric](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
-
-### [tools](docs/sdks/tools/README.md)
-
-* [getTools](docs/sdks/tools/README.md#gettools) - Retrieve a list of tools
-* [createTool](docs/sdks/tools/README.md#createtool) - Create a new tool
-* [updateTool](docs/sdks/tools/README.md#updatetool) - Update an existing tool
-* [deleteTool](docs/sdks/tools/README.md#deletetool) - Delete a tool
+* [getConfigurations](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
+* [createConfiguration](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
+* [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
+* [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
 
 ### [datapoints](docs/sdks/datapoints/README.md)
 
@@ -139,6 +147,23 @@ run();
 * [deleteDataset](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
 * [addDatapoints](docs/sdks/datasets/README.md#adddatapoints) - Add datapoints to a dataset
 
+### [events](docs/sdks/events/README.md)
+
+* [createEvent](docs/sdks/events/README.md#createevent) - Create a new event
+* [updateEvent](docs/sdks/events/README.md#updateevent) - Update an event
+* [getEvents](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
+* [createModelEvent](docs/sdks/events/README.md#createmodelevent) - Create a new model event
+* [createEventBatch](docs/sdks/events/README.md#createeventbatch) - Create a batch of events
+* [createModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch) - Create a batch of model events
+
+
+### [metrics](docs/sdks/metrics/README.md)
+
+* [getMetrics](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
+* [createMetric](docs/sdks/metrics/README.md#createmetric) - Create a new metric
+* [updateMetric](docs/sdks/metrics/README.md#updatemetric) - Update an existing metric
+* [deleteMetric](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
+
 ### [projects](docs/sdks/projects/README.md)
 
 * [getProjects](docs/sdks/projects/README.md#getprojects) - Get a list of projects
@@ -154,12 +179,19 @@ run();
 * [updateRun](docs/sdks/runs/README.md#updaterun) - Update an evaluation run
 * [deleteRun](docs/sdks/runs/README.md#deleterun) - Delete an evaluation run
 
-### [configurations](docs/sdks/configurations/README.md)
+### [session](docs/sdks/session/README.md)
 
-* [getConfigurations](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
-* [createConfiguration](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
-* [updateConfiguration](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
-* [deleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
+* [startSession](docs/sdks/session/README.md#startsession) - Start a new session
+* [getSession](docs/sdks/session/README.md#getsession) - Retrieve a session
+
+### [tools](docs/sdks/tools/README.md)
+
+* [getTools](docs/sdks/tools/README.md#gettools) - Retrieve a list of tools
+* [createTool](docs/sdks/tools/README.md#createtool) - Create a new tool
+* [updateTool](docs/sdks/tools/README.md#updatetool) - Update an existing tool
+* [deleteTool](docs/sdks/tools/README.md#deletetool) - Delete a tool
+
+</details>
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- Start Error Handling [errors] -->
@@ -177,115 +209,123 @@ Validation errors can also occur when either method arguments or data returned f
 
 ```typescript
 import { HoneyHive } from "honeyhive";
-import { SDKValidationError } from "honeyhive/models/errors";
+import {
+  CreateEventBatchResponseBody,
+  SDKValidationError,
+} from "honeyhive/models/errors";
 
 const honeyHive = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    let result;
-    try {
-        result = await honeyHive.events.createEventBatch({
-            events: [
-                {
-                    project: "Simple RAG",
-                    source: "playground",
-                    eventName: "Model Completion",
-                    eventType: "model",
-                    eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-                    sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-                    parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-                    childrenIds: ["<value>"],
-                    config: {
-                        model: "gpt-3.5-turbo",
-                        version: "v0.1",
-                        provider: "openai",
-                        hyperparameters: {
-                            temperature: 0,
-                            top_p: 1,
-                            max_tokens: 1000,
-                            presence_penalty: 0,
-                            frequency_penalty: 0,
-                            stop: ["<value>"],
-                            n: 1,
-                        },
-                        template: [
-                            {
-                                role: "system",
-                                content:
-                                    "Answer the user's question only using provided context. Context: {{ context }}",
-                            },
-                            {
-                                role: "user",
-                                content: "{{question}}",
-                            },
-                        ],
-                        type: "chat",
-                    },
-                    inputs: {
-                        context: "Hello world",
-                        question: "What is in the context?",
-                        chat_history: [
-                            {
-                                role: "system",
-                                content:
-                                    "Answer the user's question only using provided context. Context: Hello world",
-                            },
-                            {
-                                role: "user",
-                                content: "What is in the context?",
-                            },
-                        ],
-                    },
-                    outputs: {
-                        role: "assistant",
-                        content: "Hello world",
-                    },
-                    error: null,
-                    startTime: 1714978764301,
-                    endTime: 1714978765301,
-                    duration: 999.8056,
-                    metadata: {
-                        cost: 0.00008,
-                        completion_tokens: 23,
-                        prompt_tokens: 35,
-                        total_tokens: 58,
-                    },
-                    feedback: {},
-                    metrics: {
-                        "Answer Faithfulness": 5,
-                        "Answer Faithfulness_explanation":
-                            "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
-                        "Number of words": 18,
-                    },
-                    userProperties: {
-                        user: "google-oauth2|111840237613341303366",
-                    },
-                },
+  let result;
+  try {
+    result = await honeyHive.events.createEventBatch({
+      events: [
+        {
+          project: "Simple RAG",
+          source: "playground",
+          eventName: "Model Completion",
+          eventType: "model",
+          eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+          sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+          parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+          childrenIds: [
+            "<value>",
+          ],
+          config: {
+            "model": "gpt-3.5-turbo",
+            "version": "v0.1",
+            "provider": "openai",
+            "hyperparameters": {
+              "temperature": 0,
+              "top_p": 1,
+              "max_tokens": 1000,
+              "presence_penalty": 0,
+              "frequency_penalty": 0,
+              "stop": [
+                "<value>",
+              ],
+              "n": 1,
+            },
+            "template": [
+              {
+                "role": "system",
+                "content":
+                  "Answer the user's question only using provided context. Context: {{ context }}",
+              },
+              {
+                "role": "user",
+                "content": "{{question}}",
+              },
             ],
-        });
-    } catch (err) {
-        switch (true) {
-            case err instanceof SDKValidationError: {
-                // Validation errors can be pretty-printed
-                console.error(err.pretty());
-                // Raw value may also be inspected
-                console.error(err.rawValue);
-                return;
-            }
-            case err instanceof errors.CreateEventBatchResponseBody: {
-                console.error(err); // handle exception
-                return;
-            }
-            default: {
-                throw err;
-            }
-        }
-    }
+            "type": "chat",
+          },
+          inputs: {
+            "context": "Hello world",
+            "question": "What is in the context?",
+            "chat_history": [
+              {
+                "role": "system",
+                "content":
+                  "Answer the user's question only using provided context. Context: Hello world",
+              },
+              {
+                "role": "user",
+                "content": "What is in the context?",
+              },
+            ],
+          },
+          outputs: {
+            "role": "assistant",
+            "content": "Hello world",
+          },
+          error: "<value>",
+          startTime: 1714978764301,
+          endTime: 1714978765301,
+          duration: 999.8056,
+          metadata: {
+            "cost": 0.00008,
+            "completion_tokens": 23,
+            "prompt_tokens": 35,
+            "total_tokens": 58,
+          },
+          feedback: {},
+          metrics: {
+            "Answer Faithfulness": 5,
+            "Answer Faithfulness_explanation":
+              "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
+            "Number of words": 18,
+          },
+          userProperties: {
+            "user": "google-oauth2|111840237613341303366",
+          },
+        },
+      ],
+    });
 
     // Handle the result
     console.log(result);
+  } catch (err) {
+    switch (true) {
+      case (err instanceof SDKValidationError): {
+        // Validation errors can be pretty-printed
+        console.error(err.pretty());
+        // Raw value may also be inspected
+        console.error(err.rawValue);
+        return;
+      }
+      case (err instanceof CreateEventBatchResponseBody): {
+        // Handle err.data$: CreateEventBatchResponseBodyData
+        console.error(err);
+        return;
+      }
+      default: {
+        throw err;
+      }
+    }
+  }
 }
 
 run();
@@ -308,52 +348,54 @@ You can override the default server globally by passing a server index to the `s
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    serverIdx: 0,
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  serverIdx: 0,
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: [
-                    {
-                        role: "system",
-                        content:
-                            "Answer the user's question only using provided context. Context: Hello world",
-                    },
-                    {
-                        role: "user",
-                        content: "What is in the context?",
-                    },
-                ],
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
-        },
-    });
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -369,52 +411,54 @@ The default server can also be overridden globally by passing a URL to the `serv
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    serverURL: "https://api.honeyhive.ai",
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  serverURL: "https://api.honeyhive.ai",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: [
-                    {
-                        role: "system",
-                        content:
-                            "Answer the user's question only using provided context. Context: Hello world",
-                    },
-                    {
-                        role: "user",
-                        content: "What is in the context?",
-                    },
-                ],
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
-        },
-    });
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -487,51 +531,53 @@ To authenticate with the API the `bearerAuth` parameter must be set when initial
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: [
-                    {
-                        role: "system",
-                        content:
-                            "Answer the user's question only using provided context. Context: Hello world",
-                    },
-                    {
-                        role: "user",
-                        content: "What is in the context?",
-                    },
-                ],
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
-        },
-    });
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -614,65 +660,64 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession(
-        {
-            session: {
-                project: "Simple RAG Project",
-                sessionName: "Playground Session",
-                source: "playground",
-                sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-                childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-                inputs: {
-                    context: "Hello world",
-                    question: "What is in the context?",
-                    chat_history: [
-                        {
-                            role: "system",
-                            content:
-                                "Answer the user's question only using provided context. Context: Hello world",
-                        },
-                        {
-                            role: "user",
-                            content: "What is in the context?",
-                        },
-                    ],
-                },
-                outputs: {
-                    role: "assistant",
-                    content: "Hello world",
-                },
-                error: null,
-                duration: 824.8056,
-                userProperties: {
-                    user: "google-oauth2|111840237613341303366",
-                },
-                metrics: {},
-                feedback: {},
-                metadata: {},
-                startTime: 1712025501605,
-                endTime: 1712025499832,
-            },
-        },
-        {
-            retries: {
-                strategy: "backoff",
-                backoff: {
-                    initialInterval: 1,
-                    maxInterval: 50,
-                    exponent: 1.1,
-                    maxElapsedTime: 100,
-                },
-                retryConnectionErrors: false,
-            },
-        }
-    );
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  }, {
+    retries: {
+      strategy: "backoff",
+      backoff: {
+        initialInterval: 1,
+        maxInterval: 50,
+        exponent: 1.1,
+        maxElapsedTime: 100,
+      },
+      retryConnectionErrors: false,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
@@ -684,61 +729,63 @@ If you'd like to override the default retry strategy for all operations that sup
 import { HoneyHive } from "honeyhive";
 
 const honeyHive = new HoneyHive({
-    retryConfig: {
-        strategy: "backoff",
-        backoff: {
-            initialInterval: 1,
-            maxInterval: 50,
-            exponent: 1.1,
-            maxElapsedTime: 100,
-        },
-        retryConnectionErrors: false,
+  retryConfig: {
+    strategy: "backoff",
+    backoff: {
+      initialInterval: 1,
+      maxInterval: 50,
+      exponent: 1.1,
+      maxElapsedTime: 100,
     },
-    bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+    retryConnectionErrors: false,
+  },
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
 });
 
 async function run() {
-    const result = await honeyHive.session.startSession({
-        session: {
-            project: "Simple RAG Project",
-            sessionName: "Playground Session",
-            source: "playground",
-            sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-            childrenIds: ["7f22137a-6911-4ed3-bc36-110f1dde6b66"],
-            inputs: {
-                context: "Hello world",
-                question: "What is in the context?",
-                chat_history: [
-                    {
-                        role: "system",
-                        content:
-                            "Answer the user's question only using provided context. Context: Hello world",
-                    },
-                    {
-                        role: "user",
-                        content: "What is in the context?",
-                    },
-                ],
-            },
-            outputs: {
-                role: "assistant",
-                content: "Hello world",
-            },
-            error: null,
-            duration: 824.8056,
-            userProperties: {
-                user: "google-oauth2|111840237613341303366",
-            },
-            metrics: {},
-            feedback: {},
-            metadata: {},
-            startTime: 1712025501605,
-            endTime: 1712025499832,
-        },
-    });
+  const result = await honeyHive.session.startSession({
+    session: {
+      project: "Simple RAG Project",
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      childrenIds: [
+        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
+      ],
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content":
+              "Answer the user's question only using provided context. Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: "<value>",
+      duration: 824.8056,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {},
+      feedback: {},
+      metadata: {},
+      startTime: 1712025501605,
+      endTime: 1712025499832,
+    },
+  });
 
-    // Handle the result
-    console.log(result);
+  // Handle the result
+  console.log(result);
 }
 
 run();
