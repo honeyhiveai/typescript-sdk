@@ -1,5 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { Telemetry } from "./telemetry";
+import { Span, trace, Exception } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
 
 // eslint-disable-next-line import/no-named-as-default
@@ -30,6 +31,26 @@ interface InitSessionIdParams {
   apiKey: string;
   sessionId: string;
   serverUrl?: string;
+}
+
+function isPromise(obj: any): obj is Promise<any> {
+  return (
+    !!obj &&
+    (typeof obj === 'object' || typeof obj === 'function') &&
+    typeof obj.then === 'function'
+  );
+}
+
+function setSpanAttributes(span: Span, prefix: string, value: any) {
+  if (value === null || value === undefined) {
+    span.setAttribute(prefix, 'null');
+  } else if (typeof value === 'object') {
+    Object.keys(value).forEach((key) => {
+      setSpanAttributes(span, `${prefix}.${key}`, value[key]);
+    });
+  } else {
+    span.setAttribute(prefix, value.toString());
+  }
 }
 
 export class HoneyHiveTracer {
@@ -187,6 +208,59 @@ export class HoneyHiveTracer {
     } else {
       console.error("Session ID is not initialized");
     }
+  }
+
+  public traceFunction(config?: any, metadata?: any) {
+    const self = this;
+    return function <T extends (...args: any[]) => any>(func: T): T {
+      const wrappedFunction = function (...args: Parameters<T>): ReturnType<T> {
+        const tracer = trace.getTracer('traceloop.tracer');
+        const spanName = func.name || 'anonymous';
+        const span = tracer.startSpan(spanName);
+
+        try {
+          // Log function arguments
+          setSpanAttributes(span, 'traceloop.association.properties.session_id', self.sessionId);
+          args.forEach((arg, index) => {
+            setSpanAttributes(span, `honeyhive_inputs._params_.${index}`, arg);
+          });
+
+          if (config) {
+            setSpanAttributes(span, 'honeyhive_config', config);
+          }
+          if (metadata) {
+            setSpanAttributes(span, 'honeyhive_metadata', metadata);
+          }
+
+          const result = func(...args);
+
+          if (isPromise(result)) {
+            const newResult = result.then(
+              (res: any) => {
+                setSpanAttributes(span, 'honeyhive_outputs.result', res);
+                span.end();
+                return res;
+              },
+              (err: any) => {
+                span.recordException(err);
+                span.end();
+                throw err;
+              }
+            ) as ReturnType<T>;
+            return newResult;
+          } else {
+            setSpanAttributes(span, 'honeyhive_outputs.result', result);
+            span.end();
+            return result;
+          }
+        } catch (err: unknown) {
+          span.recordException(err as Exception);
+          span.end();
+          throw err;
+        }
+      };
+      return wrappedFunction as T;
+    };
   }
 
   public trace(fn: () => void): void {
