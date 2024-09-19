@@ -239,13 +239,11 @@ export class HoneyHiveTracer {
               (res: any) => {
                 setSpanAttributes(span, 'honeyhive_outputs.result', res);
                 span.end();
-                console.log(span);
                 return res;
               },
               (err: any) => {
                 span.recordException(err);
                 span.end();
-                console.log(span);
                 throw err;
               }
             ) as ReturnType<T>;
@@ -253,13 +251,11 @@ export class HoneyHiveTracer {
           } else {
             setSpanAttributes(span, 'honeyhive_outputs.result', result);
             span.end();
-            console.log(span);
             return result;
           }
         } catch (err: unknown) {
           span.recordException(err as Exception);
           span.end();
-          console.log(span);
           throw err;
         }
       };
