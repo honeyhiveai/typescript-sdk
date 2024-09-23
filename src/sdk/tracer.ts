@@ -56,6 +56,7 @@ function setSpanAttributes(span: Span, prefix: string, value: any) {
 export class HoneyHiveTracer {
   private sdk: HoneyHive;
   public sessionId: string | undefined;
+  private spanProxy: any = {};
 
   private constructor(sdk: HoneyHive) {
     this.sdk = sdk;
@@ -217,6 +218,17 @@ export class HoneyHiveTracer {
         const spanName = func.name || 'anonymous';
         const span = tracer.startSpan(spanName);
 
+        // Inject span into proxy to allow enrichment within traced function.
+        // Proxy is used to overcome self-referencing issue and is reset after span ends.
+        const oldSpanProxy = this.spanProxy || {};
+        this.spanProxy = new Proxy({
+          span: span
+        }, {
+          get: (_, prop) => {
+            return (span as any)[prop];
+          }
+        });
+
         try {
           // Log function arguments
           setSpanAttributes(span, 'traceloop.association.properties.session_id', this.sessionId);
@@ -238,11 +250,13 @@ export class HoneyHiveTracer {
               (res: any) => {
                 setSpanAttributes(span, 'honeyhive_outputs.result', res);
                 span.end();
+                this.spanProxy = oldSpanProxy; // Reset the proxy
                 return res;
               },
               (err: any) => {
                 span.recordException(err);
                 span.end();
+                this.spanProxy = oldSpanProxy; // Reset the proxy
                 throw err;
               }
             ) as ReturnType<T>;
@@ -250,11 +264,13 @@ export class HoneyHiveTracer {
           } else {
             setSpanAttributes(span, 'honeyhive_outputs.result', result);
             span.end();
+            this.spanProxy = oldSpanProxy; // Reset the proxy
             return result;
           }
         } catch (err: unknown) {
           span.recordException(err as Exception);
           span.end();
+          this.spanProxy = oldSpanProxy; // Reset the proxy
           throw err;
         }
       };
@@ -272,6 +288,51 @@ export class HoneyHiveTracer {
       );
     } else {
       console.error("Session ID is not initialized");
+    }
+  }
+
+  public enrichSpan({
+    config,
+    metadata,
+    metrics,
+    feedback,
+    inputs,
+    outputs,
+    error
+  }: {
+    config?: any;
+    metadata?: any;
+    metrics?: any;
+    feedback?: any;
+    inputs?: any;
+    outputs?: any;
+    error?: any;
+  } = {}): void {
+    if (this.spanProxy) {
+      const span = this.spanProxy;
+      if (config) {
+        setSpanAttributes(span, "honeyhive_config", config);
+      }
+      if (metadata) {
+        setSpanAttributes(span, "honeyhive_metadata", metadata);
+      }
+      if (metrics) {
+        setSpanAttributes(span, "honeyhive_metrics", metrics);
+      }
+      if (feedback) {
+        setSpanAttributes(span, "honeyhive_feedback", feedback);
+      }
+      if (inputs) {
+        setSpanAttributes(span, "honeyhive_inputs", inputs);
+      }
+      if (outputs) {
+        setSpanAttributes(span, "honeyhive_outputs", outputs);
+      }
+      if (error) {
+        setSpanAttributes(span, "honeyhive_error", error);
+      }
+    } else {
+      console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
     }
   }
 }
