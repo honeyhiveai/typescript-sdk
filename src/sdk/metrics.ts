@@ -11,46 +11,71 @@ import * as components from "../models/components/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Metrics extends ClientSDK {
-    /**
-     * Get all metrics
-     *
-     * @remarks
-     * Retrieve a list of all metrics
-     */
-    async getMetrics(
-        projectName: string,
-        options?: RequestOptions
-    ): Promise<Array<components.Metric>> {
-        return unwrapAsync(metricsGetMetrics(this, projectName, options));
-    }
+  /**
+   * Get all metrics
+   *
+   * @remarks
+   * Retrieve a list of all metrics
+   */
+  async getMetrics(
+    projectName: string,
+    options?: RequestOptions,
+  ): Promise<Array<components.Metric>> {
+    return unwrapAsync(metricsGetMetrics(
+      this,
+      projectName,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new metric
-     *
-     * @remarks
-     * Add a new metric
-     */
-    async createMetric(request: components.Metric, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(metricsCreateMetric(this, request, options));
-    }
+  /**
+   * Create a new metric
+   *
+   * @remarks
+   * Add a new metric
+   */
+  async createMetric(
+    request: components.Metric,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(metricsCreateMetric(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update an existing metric
-     *
-     * @remarks
-     * Edit a metric
-     */
-    async updateMetric(request: components.MetricEdit, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(metricsUpdateMetric(this, request, options));
-    }
+  /**
+   * Update an existing metric
+   *
+   * @remarks
+   * Edit a metric
+   */
+  async updateMetric(
+    request: components.MetricEdit,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(metricsUpdateMetric(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a metric
-     *
-     * @remarks
-     * Remove a metric
-     */
-    async deleteMetric(metricId: string, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(metricsDeleteMetric(this, metricId, options));
-    }
+  /**
+   * Delete a metric
+   *
+   * @remarks
+   * Remove a metric
+   */
+  async deleteMetric(
+    metricId: string,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(metricsDeleteMetric(
+      this,
+      metricId,
+      options,
+    ));
+  }
 }

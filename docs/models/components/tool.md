@@ -6,12 +6,12 @@
 import { Tool } from "honeyhive/models/components";
 
 let value: Tool = {
-    task: "<value>",
-    name: "<value>",
-    parameters: {
-        key: "<value>",
-    },
-    toolType: "function",
+  task: "<value>",
+  name: "<value>",
+  parameters: {
+    "key": "<value>",
+  },
+  toolType: "tool",
 };
 ```
 

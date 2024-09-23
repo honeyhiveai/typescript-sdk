@@ -6,15 +6,19 @@
 import { DatasetUpdate } from "honeyhive/models/components";
 
 let value: DatasetUpdate = {
-    datasetId: "663876ec4611c47f4970f0c3",
-    name: "new-dataset-name",
-    description: "An updated dataset description",
-    datapoints: ["66369748b5773befbdc661e"],
-    linkedEvals: ["66369748b5773befbdasdk1"],
-    metadata: {
-        updated: true,
-        source: "prod",
-    },
+  datasetId: "663876ec4611c47f4970f0c3",
+  name: "new-dataset-name",
+  description: "An updated dataset description",
+  datapoints: [
+    "66369748b5773befbdc661e",
+  ],
+  linkedEvals: [
+    "66369748b5773befbdasdk1",
+  ],
+  metadata: {
+    "updated": true,
+    "source": "prod",
+  },
 };
 ```
 

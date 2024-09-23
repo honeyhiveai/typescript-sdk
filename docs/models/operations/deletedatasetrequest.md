@@ -6,7 +6,7 @@
 import { DeleteDatasetRequest } from "honeyhive/models/operations";
 
 let value: DeleteDatasetRequest = {
-    datasetId: "<value>",
+  datasetId: "<value>",
 };
 ```
 

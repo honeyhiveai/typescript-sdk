@@ -1,6 +1,6 @@
 # MetricType
 
-Type of the metric - "custom", "model" or "human"
+Type of the metric - "custom", "model", "human" or "composite"
 
 ## Example Usage
 
@@ -13,5 +13,5 @@ let value: MetricType = "model";
 ## Values
 
 ```typescript
-"custom" | "model" | "human"
+"custom" | "model" | "human" | "composite"
 ```

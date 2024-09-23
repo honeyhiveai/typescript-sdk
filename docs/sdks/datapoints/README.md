@@ -26,7 +26,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datapoints.getDatapoints("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -116,21 +116,21 @@ async function run() {
       },
     ],
     groundTruth: {
-      "role": "assistant",
       "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+      "role": "assistant",
     },
     linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
     linkedDatasets: [
       "<value>",
     ],
     metadata: {
-      "question_type": "weather",
       "completion_tokens": 47,
       "prompt_tokens": 696,
+      "question_type": "weather",
       "total_tokens": 743,
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -169,17 +169,17 @@ async function run() {
       },
     ],
     groundTruth: {
-      "role": "assistant",
       "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+      "role": "assistant",
     },
     linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
     linkedDatasets: [
       "<value>",
     ],
     metadata: {
-      "question_type": "weather",
       "completion_tokens": 47,
       "prompt_tokens": 696,
+      "question_type": "weather",
       "total_tokens": 743,
     },
   });
@@ -231,8 +231,8 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.datapoints.getDatapoint("<value>");
-
+  const result = await honeyHive.datapoints.getDatapoint("<id>");
+  
   // Handle the result
   console.log(result)
 }
@@ -255,7 +255,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsGetDatapoint(honeyHive, "<value>");
+  const res = await datapointsGetDatapoint(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;
@@ -304,7 +304,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.datapoints.updateDatapoint("<value>", {
+  await honeyHive.datapoints.updateDatapoint("<id>", {
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -319,8 +319,8 @@ async function run() {
       },
     ],
     groundTruth: {
-      "role": "assistant",
       "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+      "role": "assistant",
     },
     linkedEvals: [
       "<value>",
@@ -333,8 +333,6 @@ async function run() {
       "random_field": 0,
     },
   });
-
-  
 }
 
 run();
@@ -355,7 +353,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsUpdateDatapoint(honeyHive, "<value>", {
+  const res = await datapointsUpdateDatapoint(honeyHive, "<id>", {
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -370,8 +368,8 @@ async function run() {
       },
     ],
     groundTruth: {
-      "role": "assistant",
       "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
+      "role": "assistant",
     },
     linkedEvals: [
       "<value>",
@@ -432,8 +430,8 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.datapoints.deleteDatapoint("<value>");
-
+  const result = await honeyHive.datapoints.deleteDatapoint("<id>");
+  
   // Handle the result
   console.log(result)
 }
@@ -456,7 +454,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsDeleteDatapoint(honeyHive, "<value>");
+  const res = await datapointsDeleteDatapoint(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

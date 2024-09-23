@@ -11,40 +11,59 @@ import * as components from "../models/components/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Projects extends ClientSDK {
-    /**
-     * Get a list of projects
-     */
-    async getProjects(
-        name?: string | undefined,
-        options?: RequestOptions
-    ): Promise<Array<components.Project>> {
-        return unwrapAsync(projectsGetProjects(this, name, options));
-    }
+  /**
+   * Get a list of projects
+   */
+  async getProjects(
+    name?: string | undefined,
+    options?: RequestOptions,
+  ): Promise<Array<components.Project>> {
+    return unwrapAsync(projectsGetProjects(
+      this,
+      name,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new project
-     */
-    async createProject(
-        request: components.CreateProjectRequest,
-        options?: RequestOptions
-    ): Promise<components.Project> {
-        return unwrapAsync(projectsCreateProject(this, request, options));
-    }
+  /**
+   * Create a new project
+   */
+  async createProject(
+    request: components.CreateProjectRequest,
+    options?: RequestOptions,
+  ): Promise<components.Project> {
+    return unwrapAsync(projectsCreateProject(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update an existing project
-     */
-    async updateProject(
-        request: components.UpdateProjectRequest,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(projectsUpdateProject(this, request, options));
-    }
+  /**
+   * Update an existing project
+   */
+  async updateProject(
+    request: components.UpdateProjectRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(projectsUpdateProject(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a project
-     */
-    async deleteProject(name: string, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(projectsDeleteProject(this, name, options));
-    }
+  /**
+   * Delete a project
+   */
+  async deleteProject(
+    name: string,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(projectsDeleteProject(
+      this,
+      name,
+      options,
+    ));
+  }
 }

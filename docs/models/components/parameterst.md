@@ -6,8 +6,8 @@
 import { ParametersT } from "honeyhive/models/components";
 
 let value: ParametersT = {
-    callType: "chat",
-    model: "Impala",
+  callType: "chat",
+  model: "Durango",
 };
 ```
 

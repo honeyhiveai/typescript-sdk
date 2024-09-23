@@ -7,7 +7,7 @@ Function calling mode - "none", "auto" or "force"
 ```typescript
 import { FunctionCallParams } from "honeyhive/models/components";
 
-let value: FunctionCallParams = "force";
+let value: FunctionCallParams = "none";
 ```
 
 ## Values

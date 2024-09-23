@@ -6,8 +6,8 @@
 import { Project } from "honeyhive/models/components";
 
 let value: Project = {
-    name: "<value>",
-    description: "Organic fault-tolerant system engine",
+  name: "<value>",
+  description: "Cross-group motivating attitude",
 };
 ```
 

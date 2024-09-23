@@ -6,7 +6,7 @@
 import { DeleteMetricRequest } from "honeyhive/models/operations";
 
 let value: DeleteMetricRequest = {
-    metricId: "<value>",
+  metricId: "<value>",
 };
 ```
 

@@ -5,40 +5,40 @@
 import * as z from "zod";
 
 export type DeleteDatapointRequest = {
-    /**
-     * Datapoint ID like `65c13dbbd65fb876b7886cdb`
-     */
-    id: string;
+  /**
+   * Datapoint ID like `65c13dbbd65fb876b7886cdb`
+   */
+  id: string;
 };
 
 /**
  * Datapoint successfully deleted
  */
 export type DeleteDatapointResponseBody = {
-    deleted?: boolean | undefined;
+  deleted?: boolean | undefined;
 };
 
 /** @internal */
 export const DeleteDatapointRequest$inboundSchema: z.ZodType<
-    DeleteDatapointRequest,
-    z.ZodTypeDef,
-    unknown
+  DeleteDatapointRequest,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    id: z.string(),
+  id: z.string(),
 });
 
 /** @internal */
 export type DeleteDatapointRequest$Outbound = {
-    id: string;
+  id: string;
 };
 
 /** @internal */
 export const DeleteDatapointRequest$outboundSchema: z.ZodType<
-    DeleteDatapointRequest$Outbound,
-    z.ZodTypeDef,
-    DeleteDatapointRequest
+  DeleteDatapointRequest$Outbound,
+  z.ZodTypeDef,
+  DeleteDatapointRequest
 > = z.object({
-    id: z.string(),
+  id: z.string(),
 });
 
 /**
@@ -46,35 +46,35 @@ export const DeleteDatapointRequest$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace DeleteDatapointRequest$ {
-    /** @deprecated use `DeleteDatapointRequest$inboundSchema` instead. */
-    export const inboundSchema = DeleteDatapointRequest$inboundSchema;
-    /** @deprecated use `DeleteDatapointRequest$outboundSchema` instead. */
-    export const outboundSchema = DeleteDatapointRequest$outboundSchema;
-    /** @deprecated use `DeleteDatapointRequest$Outbound` instead. */
-    export type Outbound = DeleteDatapointRequest$Outbound;
+  /** @deprecated use `DeleteDatapointRequest$inboundSchema` instead. */
+  export const inboundSchema = DeleteDatapointRequest$inboundSchema;
+  /** @deprecated use `DeleteDatapointRequest$outboundSchema` instead. */
+  export const outboundSchema = DeleteDatapointRequest$outboundSchema;
+  /** @deprecated use `DeleteDatapointRequest$Outbound` instead. */
+  export type Outbound = DeleteDatapointRequest$Outbound;
 }
 
 /** @internal */
 export const DeleteDatapointResponseBody$inboundSchema: z.ZodType<
-    DeleteDatapointResponseBody,
-    z.ZodTypeDef,
-    unknown
+  DeleteDatapointResponseBody,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    deleted: z.boolean().optional(),
+  deleted: z.boolean().optional(),
 });
 
 /** @internal */
 export type DeleteDatapointResponseBody$Outbound = {
-    deleted?: boolean | undefined;
+  deleted?: boolean | undefined;
 };
 
 /** @internal */
 export const DeleteDatapointResponseBody$outboundSchema: z.ZodType<
-    DeleteDatapointResponseBody$Outbound,
-    z.ZodTypeDef,
-    DeleteDatapointResponseBody
+  DeleteDatapointResponseBody$Outbound,
+  z.ZodTypeDef,
+  DeleteDatapointResponseBody
 > = z.object({
-    deleted: z.boolean().optional(),
+  deleted: z.boolean().optional(),
 });
 
 /**
@@ -82,10 +82,10 @@ export const DeleteDatapointResponseBody$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace DeleteDatapointResponseBody$ {
-    /** @deprecated use `DeleteDatapointResponseBody$inboundSchema` instead. */
-    export const inboundSchema = DeleteDatapointResponseBody$inboundSchema;
-    /** @deprecated use `DeleteDatapointResponseBody$outboundSchema` instead. */
-    export const outboundSchema = DeleteDatapointResponseBody$outboundSchema;
-    /** @deprecated use `DeleteDatapointResponseBody$Outbound` instead. */
-    export type Outbound = DeleteDatapointResponseBody$Outbound;
+  /** @deprecated use `DeleteDatapointResponseBody$inboundSchema` instead. */
+  export const inboundSchema = DeleteDatapointResponseBody$inboundSchema;
+  /** @deprecated use `DeleteDatapointResponseBody$outboundSchema` instead. */
+  export const outboundSchema = DeleteDatapointResponseBody$outboundSchema;
+  /** @deprecated use `DeleteDatapointResponseBody$Outbound` instead. */
+  export type Outbound = DeleteDatapointResponseBody$Outbound;
 }

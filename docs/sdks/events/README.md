@@ -39,24 +39,25 @@ async function run() {
         "<value>",
       ],
       config: {
-        "model": "gpt-3.5-turbo",
-        "version": "v0.1",
-        "provider": "openai",
         "hyperparameters": {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
+        "model": "gpt-3.5-turbo",
+        "provider": "openai",
         "template": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: {{ context }}",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: {{ context }}",
           },
           {
             "role": "user",
@@ -64,32 +65,35 @@ async function run() {
           },
         ],
         "type": "chat",
+        "version": "v0.1",
       },
       inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: Hello world",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: Hello world",
           },
           {
             "role": "user",
             "content": "What is in the context?",
           },
         ],
+        "context": "Hello world",
+        "question": "What is in the context?",
       },
       outputs: {
-        "role": "assistant",
         "content": "Hello world",
+        "role": "assistant",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "cost": 0.00008,
         "completion_tokens": 23,
+        "cost": 0.00008,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -106,7 +110,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -142,24 +146,25 @@ async function run() {
         "<value>",
       ],
       config: {
-        "model": "gpt-3.5-turbo",
-        "version": "v0.1",
-        "provider": "openai",
         "hyperparameters": {
-          "temperature": 0,
-          "top_p": 1,
-          "max_tokens": 1000,
-          "presence_penalty": 0,
           "frequency_penalty": 0,
+          "max_tokens": 1000,
+          "n": 1,
+          "presence_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "n": 1,
+          "temperature": 0,
+          "top_p": 1,
         },
+        "model": "gpt-3.5-turbo",
+        "provider": "openai",
         "template": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: {{ context }}",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: {{ context }}",
           },
           {
             "role": "user",
@@ -167,32 +172,35 @@ async function run() {
           },
         ],
         "type": "chat",
+        "version": "v0.1",
       },
       inputs: {
-        "context": "Hello world",
-        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: Hello world",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: Hello world",
           },
           {
             "role": "user",
             "content": "What is in the context?",
           },
         ],
+        "context": "Hello world",
+        "question": "What is in the context?",
       },
       outputs: {
-        "role": "assistant",
         "content": "Hello world",
+        "role": "assistant",
       },
-      error: null,
+      error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "cost": 0.00008,
         "completion_tokens": 23,
+        "cost": 0.00008,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -260,8 +268,8 @@ async function run() {
   await honeyHive.events.updateEvent({
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "cost": 0.00008,
       "completion_tokens": 23,
+      "cost": 0.00008,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -272,8 +280,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "role": "assistant",
       "content": "Hello world",
+      "role": "assistant",
     },
     config: {
       "template": [
@@ -288,8 +296,6 @@ async function run() {
     },
     duration: 42,
   });
-
-  
 }
 
 run();
@@ -313,8 +319,8 @@ async function run() {
   const res = await eventsUpdateEvent(honeyHive, {
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "cost": 0.00008,
       "completion_tokens": 23,
+      "cost": 0.00008,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -325,8 +331,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "role": "assistant",
       "content": "Hello world",
+      "role": "assistant",
     },
     config: {
       "template": [
@@ -399,7 +405,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -493,29 +499,29 @@ async function run() {
         },
       ],
       response: {
-        "role": "assistant",
         "content": "Hello, world!",
+        "role": "assistant",
       },
       duration: 42,
       usage: {
-        "prompt_tokens": 10,
         "completion_tokens": 10,
+        "prompt_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "temperature": 0,
-        "top_p": 1,
-        "max_tokens": 1000,
-        "presence_penalty": 0,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
+        "n": 1,
+        "presence_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "n": 1,
+        "temperature": 0,
+        "top_p": 1,
       },
       template: [
         {
@@ -562,7 +568,7 @@ async function run() {
       },
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -597,29 +603,29 @@ async function run() {
         },
       ],
       response: {
-        "role": "assistant",
         "content": "Hello, world!",
+        "role": "assistant",
       },
       duration: 42,
       usage: {
-        "prompt_tokens": 10,
         "completion_tokens": 10,
+        "prompt_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
-      error: null,
+      error: "<value>",
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "temperature": 0,
-        "top_p": 1,
-        "max_tokens": 1000,
-        "presence_penalty": 0,
         "frequency_penalty": 0,
+        "max_tokens": 1000,
+        "n": 1,
+        "presence_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "n": 1,
+        "temperature": 0,
+        "top_p": 1,
       },
       template: [
         {
@@ -745,7 +751,9 @@ async function run() {
           "template": [
             {
               "role": "system",
-              "content": "Answer the user's question only using provided context. Context: {{ context }}",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: {{ context }}",
             },
             {
               "role": "user",
@@ -760,7 +768,9 @@ async function run() {
           "chat_history": [
             {
               "role": "system",
-              "content": "Answer the user's question only using provided context. Context: Hello world",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
             },
             {
               "role": "user",
@@ -772,7 +782,7 @@ async function run() {
           "role": "assistant",
           "content": "Hello world",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
@@ -796,7 +806,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -850,7 +860,9 @@ async function run() {
           "template": [
             {
               "role": "system",
-              "content": "Answer the user's question only using provided context. Context: {{ context }}",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: {{ context }}",
             },
             {
               "role": "user",
@@ -865,7 +877,9 @@ async function run() {
           "chat_history": [
             {
               "role": "system",
-              "content": "Answer the user's question only using provided context. Context: Hello world",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
             },
             {
               "role": "user",
@@ -877,7 +891,7 @@ async function run() {
           "role": "assistant",
           "content": "Hello world",
         },
-        error: null,
+        error: "<value>",
         startTime: 1714978764301,
         endTime: 1714978765301,
         duration: 999.8056,
@@ -973,7 +987,7 @@ async function run() {
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {
@@ -1033,7 +1047,7 @@ async function run() {
       },
     ],
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -1079,7 +1093,7 @@ async function run() {
           "total_tokens": 20,
         },
         cost: 0.00008,
-        error: null,
+        error: "<value>",
         source: "playground",
         eventName: "Model Completion",
         hyperparameters: {

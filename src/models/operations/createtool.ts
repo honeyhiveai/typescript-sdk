@@ -5,29 +5,34 @@
 import * as z from "zod";
 
 export type Result = {
-    insertedId?: string | undefined;
+  insertedId?: string | undefined;
 };
 
 /**
  * Tool successfully created
  */
 export type CreateToolResponseBody = {
-    result?: Result | undefined;
+  result?: Result | undefined;
 };
 
 /** @internal */
-export const Result$inboundSchema: z.ZodType<Result, z.ZodTypeDef, unknown> = z.object({
+export const Result$inboundSchema: z.ZodType<Result, z.ZodTypeDef, unknown> = z
+  .object({
     insertedId: z.string().optional(),
-});
+  });
 
 /** @internal */
 export type Result$Outbound = {
-    insertedId?: string | undefined;
+  insertedId?: string | undefined;
 };
 
 /** @internal */
-export const Result$outboundSchema: z.ZodType<Result$Outbound, z.ZodTypeDef, Result> = z.object({
-    insertedId: z.string().optional(),
+export const Result$outboundSchema: z.ZodType<
+  Result$Outbound,
+  z.ZodTypeDef,
+  Result
+> = z.object({
+  insertedId: z.string().optional(),
 });
 
 /**
@@ -35,35 +40,35 @@ export const Result$outboundSchema: z.ZodType<Result$Outbound, z.ZodTypeDef, Res
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace Result$ {
-    /** @deprecated use `Result$inboundSchema` instead. */
-    export const inboundSchema = Result$inboundSchema;
-    /** @deprecated use `Result$outboundSchema` instead. */
-    export const outboundSchema = Result$outboundSchema;
-    /** @deprecated use `Result$Outbound` instead. */
-    export type Outbound = Result$Outbound;
+  /** @deprecated use `Result$inboundSchema` instead. */
+  export const inboundSchema = Result$inboundSchema;
+  /** @deprecated use `Result$outboundSchema` instead. */
+  export const outboundSchema = Result$outboundSchema;
+  /** @deprecated use `Result$Outbound` instead. */
+  export type Outbound = Result$Outbound;
 }
 
 /** @internal */
 export const CreateToolResponseBody$inboundSchema: z.ZodType<
-    CreateToolResponseBody,
-    z.ZodTypeDef,
-    unknown
+  CreateToolResponseBody,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    result: z.lazy(() => Result$inboundSchema).optional(),
+  result: z.lazy(() => Result$inboundSchema).optional(),
 });
 
 /** @internal */
 export type CreateToolResponseBody$Outbound = {
-    result?: Result$Outbound | undefined;
+  result?: Result$Outbound | undefined;
 };
 
 /** @internal */
 export const CreateToolResponseBody$outboundSchema: z.ZodType<
-    CreateToolResponseBody$Outbound,
-    z.ZodTypeDef,
-    CreateToolResponseBody
+  CreateToolResponseBody$Outbound,
+  z.ZodTypeDef,
+  CreateToolResponseBody
 > = z.object({
-    result: z.lazy(() => Result$outboundSchema).optional(),
+  result: z.lazy(() => Result$outboundSchema).optional(),
 });
 
 /**
@@ -71,10 +76,10 @@ export const CreateToolResponseBody$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateToolResponseBody$ {
-    /** @deprecated use `CreateToolResponseBody$inboundSchema` instead. */
-    export const inboundSchema = CreateToolResponseBody$inboundSchema;
-    /** @deprecated use `CreateToolResponseBody$outboundSchema` instead. */
-    export const outboundSchema = CreateToolResponseBody$outboundSchema;
-    /** @deprecated use `CreateToolResponseBody$Outbound` instead. */
-    export type Outbound = CreateToolResponseBody$Outbound;
+  /** @deprecated use `CreateToolResponseBody$inboundSchema` instead. */
+  export const inboundSchema = CreateToolResponseBody$inboundSchema;
+  /** @deprecated use `CreateToolResponseBody$outboundSchema` instead. */
+  export const outboundSchema = CreateToolResponseBody$outboundSchema;
+  /** @deprecated use `CreateToolResponseBody$Outbound` instead. */
+  export type Outbound = CreateToolResponseBody$Outbound;
 }

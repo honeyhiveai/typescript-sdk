@@ -6,7 +6,7 @@
 import { CreateProjectRequest } from "honeyhive/models/components";
 
 let value: CreateProjectRequest = {
-    name: "<value>",
+  name: "<value>",
 };
 ```
 

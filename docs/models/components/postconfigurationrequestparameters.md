@@ -6,8 +6,8 @@
 import { PostConfigurationRequestParameters } from "honeyhive/models/components";
 
 let value: PostConfigurationRequestParameters = {
-    callType: "completion",
-    model: "Ranchero",
+  callType: "completion",
+  model: "F-150",
 };
 ```
 

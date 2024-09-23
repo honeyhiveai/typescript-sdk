@@ -6,7 +6,7 @@
 import { Security } from "honeyhive/models/components";
 
 let value: Security = {
-    bearerAuth: "<value>",
+  bearerAuth: "<value>",
 };
 ```
 

@@ -5,30 +5,35 @@
 import * as z from "zod";
 
 export type Project = {
-    id?: string | undefined;
-    name: string;
-    description: string;
+  id?: string | undefined;
+  name: string;
+  description: string;
 };
 
 /** @internal */
-export const Project$inboundSchema: z.ZodType<Project, z.ZodTypeDef, unknown> = z.object({
+export const Project$inboundSchema: z.ZodType<Project, z.ZodTypeDef, unknown> =
+  z.object({
     id: z.string().optional(),
     name: z.string(),
     description: z.string(),
-});
+  });
 
 /** @internal */
 export type Project$Outbound = {
-    id?: string | undefined;
-    name: string;
-    description: string;
+  id?: string | undefined;
+  name: string;
+  description: string;
 };
 
 /** @internal */
-export const Project$outboundSchema: z.ZodType<Project$Outbound, z.ZodTypeDef, Project> = z.object({
-    id: z.string().optional(),
-    name: z.string(),
-    description: z.string(),
+export const Project$outboundSchema: z.ZodType<
+  Project$Outbound,
+  z.ZodTypeDef,
+  Project
+> = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  description: z.string(),
 });
 
 /**
@@ -36,10 +41,10 @@ export const Project$outboundSchema: z.ZodType<Project$Outbound, z.ZodTypeDef, P
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace Project$ {
-    /** @deprecated use `Project$inboundSchema` instead. */
-    export const inboundSchema = Project$inboundSchema;
-    /** @deprecated use `Project$outboundSchema` instead. */
-    export const outboundSchema = Project$outboundSchema;
-    /** @deprecated use `Project$Outbound` instead. */
-    export type Outbound = Project$Outbound;
+  /** @deprecated use `Project$inboundSchema` instead. */
+  export const inboundSchema = Project$inboundSchema;
+  /** @deprecated use `Project$outboundSchema` instead. */
+  export const outboundSchema = Project$outboundSchema;
+  /** @deprecated use `Project$Outbound` instead. */
+  export type Outbound = Project$Outbound;
 }

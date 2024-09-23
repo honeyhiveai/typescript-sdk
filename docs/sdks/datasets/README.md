@@ -26,7 +26,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datasets.getDatasets("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -117,7 +117,7 @@ async function run() {
       "source": "dev",
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -216,12 +216,10 @@ async function run() {
       "66369748b5773befbdasdk1",
     ],
     metadata: {
-      "updated": true,
       "source": "prod",
+      "updated": true,
     },
   });
-
-  
 }
 
 run();
@@ -253,8 +251,8 @@ async function run() {
       "66369748b5773befbdasdk1",
     ],
     metadata: {
-      "updated": true,
       "source": "prod",
+      "updated": true,
     },
   });
 
@@ -305,8 +303,6 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.datasets.deleteDataset("<value>");
-
-  
 }
 
 run();
@@ -380,6 +376,8 @@ async function run() {
     data: [
       {
         "key": "<value>",
+        "key1": "<value>",
+        "key2": "<value>",
       },
     ],
     mapping: {
@@ -388,13 +386,14 @@ async function run() {
       ],
       groundTruth: [
         "<value>",
+        "<value>",
       ],
       history: [
         "<value>",
       ],
     },
   });
-
+  
   // Handle the result
   console.log(result)
 }
@@ -422,6 +421,8 @@ async function run() {
     data: [
       {
         "key": "<value>",
+        "key1": "<value>",
+        "key2": "<value>",
       },
     ],
     mapping: {
@@ -429,6 +430,7 @@ async function run() {
         "<value>",
       ],
       groundTruth: [
+        "<value>",
         "<value>",
       ],
       history: [

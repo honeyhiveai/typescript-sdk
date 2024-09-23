@@ -3,19 +3,19 @@
  */
 
 import { HoneyHiveCore } from "../core.js";
-import { encodeJSON as encodeJSON$, encodeSimple as encodeSimple$ } from "../lib/encodings.js";
-import * as m$ from "../lib/matchers.js";
-import * as schemas$ from "../lib/schemas.js";
+import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import * as M from "../lib/matchers.js";
+import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
 import { pathToFunc } from "../lib/url.js";
 import * as components from "../models/components/index.js";
 import {
-    ConnectionError,
-    InvalidRequestError,
-    RequestAbortedError,
-    RequestTimeoutError,
-    UnexpectedClientError,
+  ConnectionError,
+  InvalidRequestError,
+  RequestAbortedError,
+  RequestTimeoutError,
+  UnexpectedClientError,
 } from "../models/errors/httpclienterrors.js";
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
@@ -26,105 +26,102 @@ import { Result } from "../types/fp.js";
  * Update an evaluation run
  */
 export async function runsUpdateRun(
-    client$: HoneyHiveCore,
-    runId: string,
-    updateRunRequest: components.UpdateRunRequest,
-    options?: RequestOptions
+  client: HoneyHiveCore,
+  runId: string,
+  updateRunRequest: components.UpdateRunRequest,
+  options?: RequestOptions,
 ): Promise<
-    Result<
-        components.UpdateRunResponse,
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >
+  Result<
+    components.UpdateRunResponse,
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >
 > {
-    const input$: operations.UpdateRunRequest = {
-        runId: runId,
-        updateRunRequest: updateRunRequest,
-    };
+  const input: operations.UpdateRunRequest = {
+    runId: runId,
+    updateRunRequest: updateRunRequest,
+  };
 
-    const parsed$ = schemas$.safeParse(
-        input$,
-        (value$) => operations.UpdateRunRequest$outboundSchema.parse(value$),
-        "Input validation failed"
-    );
-    if (!parsed$.ok) {
-        return parsed$;
-    }
-    const payload$ = parsed$.value;
-    const body$ = encodeJSON$("body", payload$.UpdateRunRequest, { explode: true });
+  const parsed = safeParse(
+    input,
+    (value) => operations.UpdateRunRequest$outboundSchema.parse(value),
+    "Input validation failed",
+  );
+  if (!parsed.ok) {
+    return parsed;
+  }
+  const payload = parsed.value;
+  const body = encodeJSON("body", payload.UpdateRunRequest, { explode: true });
 
-    const pathParams$ = {
-        run_id: encodeSimple$("run_id", payload$.run_id, {
-            explode: false,
-            charEncoding: "percent",
-        }),
-    };
+  const pathParams = {
+    run_id: encodeSimple("run_id", payload.run_id, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+  };
 
-    const path$ = pathToFunc("/runs/{run_id}")(pathParams$);
+  const path = pathToFunc("/runs/{run_id}")(pathParams);
 
-    const headers$ = new Headers({
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    });
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  });
 
-    const bearerAuth$ = await extractSecurity(client$.options$.bearerAuth);
-    const security$ = bearerAuth$ == null ? {} : { bearerAuth: bearerAuth$ };
-    const context = {
-        operationID: "updateRun",
-        oAuth2Scopes: [],
-        securitySource: client$.options$.bearerAuth,
-    };
-    const securitySettings$ = resolveGlobalSecurity(security$);
+  const secConfig = await extractSecurity(client._options.bearerAuth);
+  const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
+  const context = {
+    operationID: "updateRun",
+    oAuth2Scopes: [],
+    securitySource: client._options.bearerAuth,
+  };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
-    const requestRes = client$.createRequest$(
-        context,
-        {
-            security: securitySettings$,
-            method: "PUT",
-            path: path$,
-            headers: headers$,
-            body: body$,
-            timeoutMs: options?.timeoutMs || client$.options$.timeoutMs || -1,
-        },
-        options
-    );
-    if (!requestRes.ok) {
-        return requestRes;
-    }
-    const request$ = requestRes.value;
+  const requestRes = client._createRequest(context, {
+    security: requestSecurity,
+    method: "PUT",
+    path: path,
+    headers: headers,
+    body: body,
+    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+  }, options);
+  if (!requestRes.ok) {
+    return requestRes;
+  }
+  const req = requestRes.value;
 
-    const doResult = await client$.do$(request$, {
-        context,
-        errorCodes: ["400", "4XX", "5XX"],
-        retryConfig: options?.retries || client$.options$.retryConfig,
-        retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
-    });
-    if (!doResult.ok) {
-        return doResult;
-    }
-    const response = doResult.value;
+  const doResult = await client._do(req, {
+    context,
+    errorCodes: ["400", "4XX", "5XX"],
+    retryConfig: options?.retries
+      || client._options.retryConfig,
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  });
+  if (!doResult.ok) {
+    return doResult;
+  }
+  const response = doResult.value;
 
-    const [result$] = await m$.match<
-        components.UpdateRunResponse,
-        | SDKError
-        | SDKValidationError
-        | UnexpectedClientError
-        | InvalidRequestError
-        | RequestAbortedError
-        | RequestTimeoutError
-        | ConnectionError
-    >(
-        m$.json(200, components.UpdateRunResponse$inboundSchema),
-        m$.fail([400, "4XX", "5XX"])
-    )(response);
-    if (!result$.ok) {
-        return result$;
-    }
+  const [result] = await M.match<
+    components.UpdateRunResponse,
+    | SDKError
+    | SDKValidationError
+    | UnexpectedClientError
+    | InvalidRequestError
+    | RequestAbortedError
+    | RequestTimeoutError
+    | ConnectionError
+  >(
+    M.json(200, components.UpdateRunResponse$inboundSchema),
+    M.fail([400, "4XX", "5XX"]),
+  )(response);
+  if (!result.ok) {
+    return result;
+  }
 
-    return result$;
+  return result;
 }
