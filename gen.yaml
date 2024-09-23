@@ -12,7 +12,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 0.14.0
+  version: 1.0.7
   additionalDependencies:
     dependencies:
       '@anthropic-ai/sdk': ^0.21.0
@@ -25,7 +25,9 @@ typescript:
       cohere-ai: ^7.10.0
       langchain: ^0.2.0
       llamaindex: ^0.3.12
+      openai: ^4.47.1
       posthog-node: ^4.2.0
+      reflect-metadata: ^0.1.13
     devDependencies: {}
     peerDependencies: {}
   additionalPackageJSON: {}
