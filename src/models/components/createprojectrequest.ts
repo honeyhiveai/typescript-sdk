@@ -5,34 +5,34 @@
 import * as z from "zod";
 
 export type CreateProjectRequest = {
-    name: string;
-    description?: string | undefined;
+  name: string;
+  description?: string | undefined;
 };
 
 /** @internal */
 export const CreateProjectRequest$inboundSchema: z.ZodType<
-    CreateProjectRequest,
-    z.ZodTypeDef,
-    unknown
+  CreateProjectRequest,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    name: z.string(),
-    description: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional(),
 });
 
 /** @internal */
 export type CreateProjectRequest$Outbound = {
-    name: string;
-    description?: string | undefined;
+  name: string;
+  description?: string | undefined;
 };
 
 /** @internal */
 export const CreateProjectRequest$outboundSchema: z.ZodType<
-    CreateProjectRequest$Outbound,
-    z.ZodTypeDef,
-    CreateProjectRequest
+  CreateProjectRequest$Outbound,
+  z.ZodTypeDef,
+  CreateProjectRequest
 > = z.object({
-    name: z.string(),
-    description: z.string().optional(),
+  name: z.string(),
+  description: z.string().optional(),
 });
 
 /**
@@ -40,10 +40,10 @@ export const CreateProjectRequest$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateProjectRequest$ {
-    /** @deprecated use `CreateProjectRequest$inboundSchema` instead. */
-    export const inboundSchema = CreateProjectRequest$inboundSchema;
-    /** @deprecated use `CreateProjectRequest$outboundSchema` instead. */
-    export const outboundSchema = CreateProjectRequest$outboundSchema;
-    /** @deprecated use `CreateProjectRequest$Outbound` instead. */
-    export type Outbound = CreateProjectRequest$Outbound;
+  /** @deprecated use `CreateProjectRequest$inboundSchema` instead. */
+  export const inboundSchema = CreateProjectRequest$inboundSchema;
+  /** @deprecated use `CreateProjectRequest$outboundSchema` instead. */
+  export const outboundSchema = CreateProjectRequest$outboundSchema;
+  /** @deprecated use `CreateProjectRequest$Outbound` instead. */
+  export type Outbound = CreateProjectRequest$Outbound;
 }

@@ -211,16 +211,15 @@ export class HoneyHiveTracer {
   }
 
   public traceFunction(config?: any, metadata?: any) {
-    const self = this;
-    return function <T extends (...args: any[]) => any>(func: T): T {
-      const wrappedFunction = function (...args: Parameters<T>): ReturnType<T> {
+    return <T extends (...args: any[]) => any>(func: T): T => {
+      const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
         const tracer = trace.getTracer('traceloop.tracer');
         const spanName = func.name || 'anonymous';
         const span = tracer.startSpan(spanName);
 
         try {
           // Log function arguments
-          setSpanAttributes(span, 'traceloop.association.properties.session_id', self.sessionId);
+          setSpanAttributes(span, 'traceloop.association.properties.session_id', this.sessionId);
           args.forEach((arg, index) => {
             setSpanAttributes(span, `honeyhive_inputs._params_.${index}`, arg);
           });

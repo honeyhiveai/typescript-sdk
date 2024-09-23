@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: HoneyHive API
-  version: 1.0.1
+  version: 1.0.2
 servers:
 - url: https://api.honeyhive.ai
 paths:
@@ -172,6 +172,11 @@ paths:
                     $lte:
                       type: string
                       description: ISO String for end of date time filter like `2024-04-01T22:38:19.000Z`
+                projections:
+                  type: array
+                  items:
+                    type: string
+                  description: Fields to include in the response
                 limit:
                   type: number
                   description: Limit number of results to speed up query (default
@@ -1154,7 +1159,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:
@@ -1268,7 +1276,10 @@ components:
             n: 1
           template:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: {{ context }}'
           - role: user
             content: '{{question}}'
           type: chat
@@ -1278,7 +1289,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:
@@ -1445,7 +1459,10 @@ components:
             n: 1
           template:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: {{ context }}'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: {{ context }}'
           - role: user
             content: '{{question}}'
           type: chat
@@ -1454,7 +1471,10 @@ components:
           question: What is in the context?
           chat_history:
           - role: system
-            content: 'Answer the user''s question only using provided context. Context: Hello world'
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
           - role: user
             content: What is in the context?
         outputs:
@@ -1620,7 +1640,7 @@ components:
           description: Name of the metric
         criteria:
           type: string
-          description: Criteria for human metrics
+          description: Criteria for human or composite metrics
         code_snippet:
           type: string
           description: Associated code block for the metric
@@ -1636,7 +1656,8 @@ components:
           - custom
           - model
           - human
-          description: Type of the metric - "custom", "model" or "human"
+          - composite
+          description: Type of the metric - "custom", "model", "human" or "composite"
         description:
           type: string
           description: Short description of what the metric does
@@ -1676,6 +1697,12 @@ components:
         event_type:
           type: string
           description: Type of event that the metric is set to be computed on
+        child_metrics:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Child metrics added under composite events
       required:
       - name
       - task
@@ -1690,7 +1717,7 @@ components:
           description: Unique identifier of the metric
         criteria:
           type: string
-          description: Criteria for human metrics
+          description: Criteria for human or composite metrics
         name:
           type: string
           description: Updated name of the metric
@@ -1709,7 +1736,8 @@ components:
           - custom
           - model
           - human
-          description: Type of the metric - "custom", "model" or "human"
+          - composite
+          description: Type of the metric - "custom", "model", "human" or "composite"
         enabled_in_prod:
           type: boolean
           description: Whether to compute on all production events automatically
@@ -1748,6 +1776,12 @@ components:
           - chain
           - session
           description: Type of event that the metric is set to be computed on
+        child_metrics:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+          description: Child metrics added under composite events
       required:
       - metric_id
     Tool:

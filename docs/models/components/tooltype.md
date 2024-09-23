@@ -5,7 +5,7 @@
 ```typescript
 import { ToolType } from "honeyhive/models/components";
 
-let value: ToolType = "tool";
+let value: ToolType = "function";
 ```
 
 ## Values

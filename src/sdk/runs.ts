@@ -12,51 +12,75 @@ import * as components from "../models/components/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Runs extends ClientSDK {
-    /**
-     * Create a new evaluation run
-     */
-    async createRun(
-        request: components.CreateRunRequest,
-        options?: RequestOptions
-    ): Promise<components.CreateRunResponse> {
-        return unwrapAsync(runsCreateRun(this, request, options));
-    }
+  /**
+   * Create a new evaluation run
+   */
+  async createRun(
+    request: components.CreateRunRequest,
+    options?: RequestOptions,
+  ): Promise<components.CreateRunResponse> {
+    return unwrapAsync(runsCreateRun(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Get a list of evaluation runs
-     */
-    async getRuns(
-        project?: string | undefined,
-        options?: RequestOptions
-    ): Promise<components.GetRunsResponse> {
-        return unwrapAsync(runsGetRuns(this, project, options));
-    }
+  /**
+   * Get a list of evaluation runs
+   */
+  async getRuns(
+    project?: string | undefined,
+    options?: RequestOptions,
+  ): Promise<components.GetRunsResponse> {
+    return unwrapAsync(runsGetRuns(
+      this,
+      project,
+      options,
+    ));
+  }
 
-    /**
-     * Get details of an evaluation run
-     */
-    async getRun(runId: string, options?: RequestOptions): Promise<components.GetRunResponse> {
-        return unwrapAsync(runsGetRun(this, runId, options));
-    }
+  /**
+   * Get details of an evaluation run
+   */
+  async getRun(
+    runId: string,
+    options?: RequestOptions,
+  ): Promise<components.GetRunResponse> {
+    return unwrapAsync(runsGetRun(
+      this,
+      runId,
+      options,
+    ));
+  }
 
-    /**
-     * Update an evaluation run
-     */
-    async updateRun(
-        runId: string,
-        updateRunRequest: components.UpdateRunRequest,
-        options?: RequestOptions
-    ): Promise<components.UpdateRunResponse> {
-        return unwrapAsync(runsUpdateRun(this, runId, updateRunRequest, options));
-    }
+  /**
+   * Update an evaluation run
+   */
+  async updateRun(
+    runId: string,
+    updateRunRequest: components.UpdateRunRequest,
+    options?: RequestOptions,
+  ): Promise<components.UpdateRunResponse> {
+    return unwrapAsync(runsUpdateRun(
+      this,
+      runId,
+      updateRunRequest,
+      options,
+    ));
+  }
 
-    /**
-     * Delete an evaluation run
-     */
-    async deleteRun(
-        runId: string,
-        options?: RequestOptions
-    ): Promise<components.DeleteRunResponse> {
-        return unwrapAsync(runsDeleteRun(this, runId, options));
-    }
+  /**
+   * Delete an evaluation run
+   */
+  async deleteRun(
+    runId: string,
+    options?: RequestOptions,
+  ): Promise<components.DeleteRunResponse> {
+    return unwrapAsync(runsDeleteRun(
+      this,
+      runId,
+      options,
+    ));
+  }
 }

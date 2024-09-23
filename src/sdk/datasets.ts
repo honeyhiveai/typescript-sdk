@@ -13,53 +13,79 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Datasets extends ClientSDK {
-    /**
-     * Get datasets
-     */
-    async getDatasets(
-        project: string,
-        type?: operations.Type | undefined,
-        datasetId?: string | undefined,
-        options?: RequestOptions
-    ): Promise<operations.GetDatasetsResponseBody> {
-        return unwrapAsync(datasetsGetDatasets(this, project, type, datasetId, options));
-    }
+  /**
+   * Get datasets
+   */
+  async getDatasets(
+    project: string,
+    type?: operations.Type | undefined,
+    datasetId?: string | undefined,
+    options?: RequestOptions,
+  ): Promise<operations.GetDatasetsResponseBody> {
+    return unwrapAsync(datasetsGetDatasets(
+      this,
+      project,
+      type,
+      datasetId,
+      options,
+    ));
+  }
 
-    /**
-     * Create a dataset
-     */
-    async createDataset(
-        request: components.CreateDatasetRequest,
-        options?: RequestOptions
-    ): Promise<operations.CreateDatasetResponseBody> {
-        return unwrapAsync(datasetsCreateDataset(this, request, options));
-    }
+  /**
+   * Create a dataset
+   */
+  async createDataset(
+    request: components.CreateDatasetRequest,
+    options?: RequestOptions,
+  ): Promise<operations.CreateDatasetResponseBody> {
+    return unwrapAsync(datasetsCreateDataset(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update a dataset
-     */
-    async updateDataset(
-        request: components.DatasetUpdate,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(datasetsUpdateDataset(this, request, options));
-    }
+  /**
+   * Update a dataset
+   */
+  async updateDataset(
+    request: components.DatasetUpdate,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(datasetsUpdateDataset(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a dataset
-     */
-    async deleteDataset(datasetId: string, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(datasetsDeleteDataset(this, datasetId, options));
-    }
+  /**
+   * Delete a dataset
+   */
+  async deleteDataset(
+    datasetId: string,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(datasetsDeleteDataset(
+      this,
+      datasetId,
+      options,
+    ));
+  }
 
-    /**
-     * Add datapoints to a dataset
-     */
-    async addDatapoints(
-        datasetId: string,
-        requestBody: operations.AddDatapointsRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.AddDatapointsResponseBody> {
-        return unwrapAsync(datasetsAddDatapoints(this, datasetId, requestBody, options));
-    }
+  /**
+   * Add datapoints to a dataset
+   */
+  async addDatapoints(
+    datasetId: string,
+    requestBody: operations.AddDatapointsRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.AddDatapointsResponseBody> {
+    return unwrapAsync(datasetsAddDatapoints(
+      this,
+      datasetId,
+      requestBody,
+      options,
+    ));
+  }
 }

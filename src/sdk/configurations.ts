@@ -12,45 +12,65 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Configurations extends ClientSDK {
-    /**
-     * Retrieve a list of configurations
-     */
-    async getConfigurations(
-        project: string,
-        env?: operations.Env | undefined,
-        name?: string | undefined,
-        options?: RequestOptions
-    ): Promise<Array<components.Configuration>> {
-        return unwrapAsync(configurationsGetConfigurations(this, project, env, name, options));
-    }
+  /**
+   * Retrieve a list of configurations
+   */
+  async getConfigurations(
+    project: string,
+    env?: operations.Env | undefined,
+    name?: string | undefined,
+    options?: RequestOptions,
+  ): Promise<Array<components.Configuration>> {
+    return unwrapAsync(configurationsGetConfigurations(
+      this,
+      project,
+      env,
+      name,
+      options,
+    ));
+  }
 
-    /**
-     * Create a new configuration
-     */
-    async createConfiguration(
-        request: components.PostConfigurationRequest,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(configurationsCreateConfiguration(this, request, options));
-    }
+  /**
+   * Create a new configuration
+   */
+  async createConfiguration(
+    request: components.PostConfigurationRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(configurationsCreateConfiguration(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Update an existing configuration
-     */
-    async updateConfiguration(
-        id: string,
-        putConfigurationRequest: components.PutConfigurationRequest,
-        options?: RequestOptions
-    ): Promise<void> {
-        return unwrapAsync(
-            configurationsUpdateConfiguration(this, id, putConfigurationRequest, options)
-        );
-    }
+  /**
+   * Update an existing configuration
+   */
+  async updateConfiguration(
+    id: string,
+    putConfigurationRequest: components.PutConfigurationRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(configurationsUpdateConfiguration(
+      this,
+      id,
+      putConfigurationRequest,
+      options,
+    ));
+  }
 
-    /**
-     * Delete a configuration
-     */
-    async deleteConfiguration(id: string, options?: RequestOptions): Promise<void> {
-        return unwrapAsync(configurationsDeleteConfiguration(this, id, options));
-    }
+  /**
+   * Delete a configuration
+   */
+  async deleteConfiguration(
+    id: string,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(configurationsDeleteConfiguration(
+      this,
+      id,
+      options,
+    ));
+  }
 }

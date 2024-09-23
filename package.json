@@ -1,6 +1,6 @@
 {
   "name": "honeyhive",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "HoneyHive",
   "main": "./index.js",
   "sideEffects": false,
@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
     "build": "tsc",
-    "prepare": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "zod": ">= 3"
@@ -38,7 +38,7 @@
     "langchain": "^0.2.0",
     "llamaindex": "^0.3.12",
     "openai": "^4.47.1",
-    "posthog-node": "^4.1.1",
+    "posthog-node": "^4.2.0",
     "reflect-metadata": "^0.1.13"
   }
 }

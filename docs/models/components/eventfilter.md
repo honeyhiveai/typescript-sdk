@@ -6,10 +6,10 @@
 import { EventFilter } from "honeyhive/models/components";
 
 let value: EventFilter = {
-    field: "event_type",
-    value: "model",
-    operator: "is",
-    type: "string",
+  field: "event_type",
+  value: "model",
+  operator: "is",
+  type: "string",
 };
 ```
 

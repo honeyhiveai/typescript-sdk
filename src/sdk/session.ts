@@ -10,20 +10,31 @@ import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Session extends ClientSDK {
-    /**
-     * Start a new session
-     */
-    async startSession(
-        request: operations.StartSessionRequestBody,
-        options?: RequestOptions
-    ): Promise<operations.StartSessionResponseBody> {
-        return unwrapAsync(sessionStartSession(this, request, options));
-    }
+  /**
+   * Start a new session
+   */
+  async startSession(
+    request: operations.StartSessionRequestBody,
+    options?: RequestOptions,
+  ): Promise<operations.StartSessionResponseBody> {
+    return unwrapAsync(sessionStartSession(
+      this,
+      request,
+      options,
+    ));
+  }
 
-    /**
-     * Retrieve a session
-     */
-    async getSession(sessionId: string, options?: RequestOptions): Promise<components.Event> {
-        return unwrapAsync(sessionGetSession(this, sessionId, options));
-    }
+  /**
+   * Retrieve a session
+   */
+  async getSession(
+    sessionId: string,
+    options?: RequestOptions,
+  ): Promise<components.Event> {
+    return unwrapAsync(sessionGetSession(
+      this,
+      sessionId,
+      options,
+    ));
+  }
 }

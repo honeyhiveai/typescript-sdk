@@ -7,7 +7,7 @@ The type of filter you are performing - "is", "is not", "contains", "not contain
 ```typescript
 import { Operator } from "honeyhive/models/components";
 
-let value: Operator = "not contains";
+let value: Operator = "contains";
 ```
 
 ## Values

@@ -5,41 +5,41 @@
 import * as z from "zod";
 
 export type CreateDatasetResult = {
-    /**
-     * UUID for the created dataset
-     */
-    insertedId?: string | undefined;
+  /**
+   * UUID for the created dataset
+   */
+  insertedId?: string | undefined;
 };
 
 /**
  * Successful creation
  */
 export type CreateDatasetResponseBody = {
-    inserted?: boolean | undefined;
-    result?: CreateDatasetResult | undefined;
+  inserted?: boolean | undefined;
+  result?: CreateDatasetResult | undefined;
 };
 
 /** @internal */
 export const CreateDatasetResult$inboundSchema: z.ZodType<
-    CreateDatasetResult,
-    z.ZodTypeDef,
-    unknown
+  CreateDatasetResult,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    insertedId: z.string().optional(),
+  insertedId: z.string().optional(),
 });
 
 /** @internal */
 export type CreateDatasetResult$Outbound = {
-    insertedId?: string | undefined;
+  insertedId?: string | undefined;
 };
 
 /** @internal */
 export const CreateDatasetResult$outboundSchema: z.ZodType<
-    CreateDatasetResult$Outbound,
-    z.ZodTypeDef,
-    CreateDatasetResult
+  CreateDatasetResult$Outbound,
+  z.ZodTypeDef,
+  CreateDatasetResult
 > = z.object({
-    insertedId: z.string().optional(),
+  insertedId: z.string().optional(),
 });
 
 /**
@@ -47,38 +47,38 @@ export const CreateDatasetResult$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateDatasetResult$ {
-    /** @deprecated use `CreateDatasetResult$inboundSchema` instead. */
-    export const inboundSchema = CreateDatasetResult$inboundSchema;
-    /** @deprecated use `CreateDatasetResult$outboundSchema` instead. */
-    export const outboundSchema = CreateDatasetResult$outboundSchema;
-    /** @deprecated use `CreateDatasetResult$Outbound` instead. */
-    export type Outbound = CreateDatasetResult$Outbound;
+  /** @deprecated use `CreateDatasetResult$inboundSchema` instead. */
+  export const inboundSchema = CreateDatasetResult$inboundSchema;
+  /** @deprecated use `CreateDatasetResult$outboundSchema` instead. */
+  export const outboundSchema = CreateDatasetResult$outboundSchema;
+  /** @deprecated use `CreateDatasetResult$Outbound` instead. */
+  export type Outbound = CreateDatasetResult$Outbound;
 }
 
 /** @internal */
 export const CreateDatasetResponseBody$inboundSchema: z.ZodType<
-    CreateDatasetResponseBody,
-    z.ZodTypeDef,
-    unknown
+  CreateDatasetResponseBody,
+  z.ZodTypeDef,
+  unknown
 > = z.object({
-    inserted: z.boolean().optional(),
-    result: z.lazy(() => CreateDatasetResult$inboundSchema).optional(),
+  inserted: z.boolean().optional(),
+  result: z.lazy(() => CreateDatasetResult$inboundSchema).optional(),
 });
 
 /** @internal */
 export type CreateDatasetResponseBody$Outbound = {
-    inserted?: boolean | undefined;
-    result?: CreateDatasetResult$Outbound | undefined;
+  inserted?: boolean | undefined;
+  result?: CreateDatasetResult$Outbound | undefined;
 };
 
 /** @internal */
 export const CreateDatasetResponseBody$outboundSchema: z.ZodType<
-    CreateDatasetResponseBody$Outbound,
-    z.ZodTypeDef,
-    CreateDatasetResponseBody
+  CreateDatasetResponseBody$Outbound,
+  z.ZodTypeDef,
+  CreateDatasetResponseBody
 > = z.object({
-    inserted: z.boolean().optional(),
-    result: z.lazy(() => CreateDatasetResult$outboundSchema).optional(),
+  inserted: z.boolean().optional(),
+  result: z.lazy(() => CreateDatasetResult$outboundSchema).optional(),
 });
 
 /**
@@ -86,10 +86,10 @@ export const CreateDatasetResponseBody$outboundSchema: z.ZodType<
  * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
  */
 export namespace CreateDatasetResponseBody$ {
-    /** @deprecated use `CreateDatasetResponseBody$inboundSchema` instead. */
-    export const inboundSchema = CreateDatasetResponseBody$inboundSchema;
-    /** @deprecated use `CreateDatasetResponseBody$outboundSchema` instead. */
-    export const outboundSchema = CreateDatasetResponseBody$outboundSchema;
-    /** @deprecated use `CreateDatasetResponseBody$Outbound` instead. */
-    export type Outbound = CreateDatasetResponseBody$Outbound;
+  /** @deprecated use `CreateDatasetResponseBody$inboundSchema` instead. */
+  export const inboundSchema = CreateDatasetResponseBody$inboundSchema;
+  /** @deprecated use `CreateDatasetResponseBody$outboundSchema` instead. */
+  export const outboundSchema = CreateDatasetResponseBody$outboundSchema;
+  /** @deprecated use `CreateDatasetResponseBody$Outbound` instead. */
+  export type Outbound = CreateDatasetResponseBody$Outbound;
 }

@@ -25,7 +25,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.metrics.getMetrics("<value>");
-
+  
   // Handle the result
   console.log(result)
 }
@@ -101,11 +101,9 @@ async function run() {
     name: "<value>",
     task: "<value>",
     type: "model",
-    description: "Fully-configurable neutral framework",
-    returnType: "string",
+    description: "Quality-focused next generation focus group",
+    returnType: "boolean",
   });
-
-  
 }
 
 run();
@@ -129,9 +127,9 @@ async function run() {
   const res = await metricsCreateMetric(honeyHive, {
     name: "<value>",
     task: "<value>",
-    type: "custom",
-    description: "Reverse-engineered foreground artificial intelligence",
-    returnType: "string",
+    type: "model",
+    description: "Quality-focused next generation focus group",
+    returnType: "boolean",
   });
 
   if (!res.ok) {
@@ -183,8 +181,6 @@ async function run() {
   await honeyHive.metrics.updateMetric({
     metricId: "<value>",
   });
-
-  
 }
 
 run();
@@ -256,8 +252,6 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.metrics.deleteMetric("<value>");
-
-  
 }
 
 run();

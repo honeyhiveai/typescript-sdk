@@ -6,7 +6,7 @@
 import { DeleteDatapointRequest } from "honeyhive/models/operations";
 
 let value: DeleteDatapointRequest = {
-    id: "<id>",
+  id: "<id>",
 };
 ```
 

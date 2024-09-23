@@ -36,7 +36,9 @@ let value: CreateEventBatchRequestBody = {
         "template": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: {{ context }}",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: {{ context }}",
           },
           {
             "role": "user",
@@ -51,7 +53,9 @@ let value: CreateEventBatchRequestBody = {
         "chat_history": [
           {
             "role": "system",
-            "content": "Answer the user's question only using provided context. Context: Hello world",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: Hello world",
           },
           {
             "role": "user",

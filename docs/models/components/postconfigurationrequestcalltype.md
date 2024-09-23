@@ -7,7 +7,7 @@ Type of API calling - "chat" or "completion"
 ```typescript
 import { PostConfigurationRequestCallType } from "honeyhive/models/components";
 
-let value: PostConfigurationRequestCallType = "chat";
+let value: PostConfigurationRequestCallType = "completion";
 ```
 
 ## Values

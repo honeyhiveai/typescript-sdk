@@ -6,7 +6,7 @@
 import { GetDatasetsRequest } from "honeyhive/models/operations";
 
 let value: GetDatasetsRequest = {
-    project: "<value>",
+  project: "<value>",
 };
 ```
 

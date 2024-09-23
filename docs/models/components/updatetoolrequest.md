@@ -6,11 +6,11 @@
 import { UpdateToolRequest } from "honeyhive/models/components";
 
 let value: UpdateToolRequest = {
-    id: "<id>",
-    name: "<value>",
-    parameters: {
-        key: "<value>",
-    },
+  id: "<id>",
+  name: "<value>",
+  parameters: {
+    "key": "<value>",
+  },
 };
 ```
 
