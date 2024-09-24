@@ -110,13 +110,13 @@ export async function ReActPipeline(question: string, tracer?: HoneyHiveTracer):
   // Output the final summary if satisfactory, or indicate failure
   if (satisfactory && summary) {
     if (tracer) {
-      tracer.setMetric({ satisfactorySummaryFound: true });
+      tracer.enrichSession({ metrics: { satisfactorySummaryFound: true } });
     }
 
     console.log("Satisfactory Summary Found:", summary);
   } else {
     if (tracer) {
-      tracer.setMetric({ satisfactorySummaryFound: false });
+      tracer.enrichSession({ metrics: { satisfactorySummaryFound: false } });
     }
 
     console.log(
