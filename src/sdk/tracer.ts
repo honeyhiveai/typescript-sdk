@@ -1,4 +1,7 @@
+import path from "path";
+
 import { HoneyHive } from "./sdk";
+import { UpdateEventRequestBody } from "../models/operations/updateevent";
 import { Telemetry } from "./telemetry";
 import { Span, trace, Exception } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
@@ -22,8 +25,8 @@ import * as azureOpenAI from "@azure/openai";
 interface InitParams {
   apiKey: string;
   project: string;
-  sessionName: string;
-  source: string;
+  sessionName?: string;
+  source?: string;
   serverUrl?: string;
 }
 
@@ -45,11 +48,31 @@ function setSpanAttributes(span: Span, prefix: string, value: any) {
   if (value === null || value === undefined) {
     span.setAttribute(prefix, 'null');
   } else if (typeof value === 'object') {
-    Object.keys(value).forEach((key) => {
-      setSpanAttributes(span, `${prefix}.${key}`, value[key]);
-    });
-  } else {
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        setSpanAttributes(span, `${prefix}.${index}`, item);
+      });
+    } else if (value instanceof Date) {
+      span.setAttribute(prefix, value.toISOString());
+    } else {
+      Object.keys(value).forEach((key) => {
+        setSpanAttributes(span, `${prefix}.${key}`, value[key]);
+      });
+    }
+  } else if (typeof value === 'string') {
+    span.setAttribute(prefix, value);
+  } else if (typeof value === 'number') {
+    span.setAttribute(prefix, value);
+  } else if (typeof value === 'boolean') {
+    span.setAttribute(prefix, value);
+  } else if (typeof value === 'bigint') {
     span.setAttribute(prefix, value.toString());
+  } else if (typeof value === 'symbol') {
+    span.setAttribute(prefix, value.toString());
+  } else if (typeof value === 'function') {
+    span.setAttribute(prefix, value.name || 'anonymous');
+  } else {
+    span.setAttribute(prefix, String(value));
   }
 }
 
@@ -139,7 +162,7 @@ export class HoneyHiveTracer {
     apiKey,
     project,
     sessionName,
-    source,
+    source = "dev",
     serverUrl = "https://api.honeyhive.ai",
   }: InitParams): Promise<HoneyHiveTracer> {
     const sdk = new HoneyHive({
@@ -147,6 +170,18 @@ export class HoneyHiveTracer {
       serverURL: serverUrl,
     });
     const tracer = new HoneyHiveTracer(sdk);
+    if (!sessionName) {
+      try {
+        const mainModule = require.main;
+        if (mainModule) {
+          sessionName = path.basename(mainModule.filename);
+        } else {
+          sessionName = 'unknown';
+        }
+      } catch (error) {
+        sessionName = 'unknown';
+      }
+    }
     await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
@@ -166,52 +201,49 @@ export class HoneyHiveTracer {
     return tracer;
   }
 
-  public async setFeedback(feedback: Record<string, any>): Promise<void> {
+  public async enrichSession({
+    metadata,
+    feedback,
+    metrics,
+    config,
+    inputs,
+    outputs,
+    userProperties
+  }: {
+    metadata?: Record<string, any>;
+    feedback?: Record<string, any>;
+    metrics?: Record<string, any>;
+    config?: Record<string, any>;
+    inputs?: Record<string, any>;
+    outputs?: Record<string, any>;
+    userProperties?: Record<string, any>;
+  } = {}): Promise<void> {
     if (this.sessionId) {
+      const updateData: UpdateEventRequestBody = { eventId: this.sessionId };
+
+      if (metadata) updateData['metadata'] = metadata;
+      if (feedback) updateData['feedback'] = feedback;
+      if (metrics) updateData['metrics'] = metrics;
+      if (config) updateData['config'] = config;
+      if (outputs) updateData['outputs'] = outputs;
+      if (userProperties) updateData['userProperties'] = userProperties;
+
+      // TODO support by adding type to UpdateEventRequestBody
+      if (inputs) {
+        console.warn("inputs are not yet supported in enrichSession");
+      }
+
       try {
-        await this.sdk.events.updateEvent({
-          eventId: this.sessionId,
-          feedback: feedback,
-        });
+        await this.sdk.events.updateEvent(updateData);
       } catch (error) {
-        console.error("Failed to set feedback:", error);
+        console.error("Failed to update event:", error);
       }
     } else {
       console.error("Session ID is not initialized");
     }
   }
 
-  public async setMetric(metrics: Record<string, any>): Promise<void> {
-    if (this.sessionId) {
-      try {
-        await this.sdk.events.updateEvent({
-          eventId: this.sessionId,
-          metrics: metrics,
-        });
-      } catch (error) {
-        console.error("Failed to set metric:", error);
-      }
-    } else {
-      console.error("Session ID is not initialized");
-    }
-  }
-
-  public async setMetadata(metadata: Record<string, any>): Promise<void> {
-    if (this.sessionId) {
-      try {
-        await this.sdk.events.updateEvent({
-          eventId: this.sessionId,
-          metadata: metadata,
-        });
-      } catch (error) {
-        console.error("Failed to set metadata:", error);
-      }
-    } else {
-      console.error("Session ID is not initialized");
-    }
-  }
-
-  public traceFunction(config?: any, metadata?: any) {
+  public traceFunction({ eventType, config, metadata }: { eventType?: string; config?: any; metadata?: any } = {}) {
     return <T extends (...args: any[]) => any>(func: T): T => {
       const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
         const tracer = trace.getTracer('traceloop.tracer');
@@ -236,6 +268,13 @@ export class HoneyHiveTracer {
             setSpanAttributes(span, `honeyhive_inputs._params_.${index}`, arg);
           });
 
+          if (eventType) {
+            if (typeof eventType === 'string' && ['tool', 'model', 'chain'].includes(eventType.toLowerCase())) {
+              setSpanAttributes(span, 'honeyhive_event_type', eventType.toLowerCase());
+            } else {
+              console.warn("event_type could not be set. Must be 'tool', 'model', or 'chain'.");
+            }
+          }
           if (config) {
             setSpanAttributes(span, 'honeyhive_config', config);
           }
@@ -250,13 +289,13 @@ export class HoneyHiveTracer {
               (res: any) => {
                 setSpanAttributes(span, 'honeyhive_outputs.result', res);
                 span.end();
-                this.spanProxy = oldSpanProxy; // Reset the proxy
+                this.spanProxy = oldSpanProxy;
                 return res;
               },
               (err: any) => {
                 span.recordException(err);
                 span.end();
-                this.spanProxy = oldSpanProxy; // Reset the proxy
+                this.spanProxy = oldSpanProxy;
                 throw err;
               }
             ) as ReturnType<T>;
@@ -264,13 +303,13 @@ export class HoneyHiveTracer {
           } else {
             setSpanAttributes(span, 'honeyhive_outputs.result', result);
             span.end();
-            this.spanProxy = oldSpanProxy; // Reset the proxy
+            this.spanProxy = oldSpanProxy;
             return result;
           }
         } catch (err: unknown) {
           span.recordException(err as Exception);
           span.end();
-          this.spanProxy = oldSpanProxy; // Reset the proxy
+          this.spanProxy = oldSpanProxy;
           throw err;
         }
       };
