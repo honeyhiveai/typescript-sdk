@@ -374,4 +374,8 @@ export class HoneyHiveTracer {
       console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
     }
   }
+
+  public async flush(): Promise<void> {
+    return await traceloop.forceFlush();
+  }
 }
