@@ -9,6 +9,7 @@ COPY . .
 
 # Install the root package dependencies first (if necessary)
 RUN npm install
+RUN npm run build
 
 # Now, set up the test environment
 # Navigate to the test directory inside the container

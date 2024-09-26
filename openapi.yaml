@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: HoneyHive API
-  version: 1.0.2
+  version: 1.0.3
 servers:
 - url: https://api.honeyhive.ai
 paths:
@@ -1208,6 +1208,7 @@ components:
         parent_id:
           type: string
           description: Id of the parent event if nested
+          nullable: true
         children_ids:
           type: array
           items:
@@ -1229,6 +1230,7 @@ components:
         error:
           type: string
           description: Any error description if event failed
+          nullable: true
         start_time:
           type: number
           description: UTC timestamp (in milliseconds) for the event start
