@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: 714ec026991e0584a98369e584037fbe
-  docVersion: 1.0.2
-  speakeasyVersion: 1.402.0
-  generationVersion: 2.422.6
-  releaseVersion: 1.0.7
-  configChecksum: ccfca89d7283500ae666994e15232ee0
+  docChecksum: bb34150e27760fdb2b1c4bc7d85f39f9
+  docVersion: 1.0.3
+  speakeasyVersion: 1.402.14
+  generationVersion: 2.422.22
+  releaseVersion: 1.0.8
+  configChecksum: 60a6b97e73a3e3e58c6a9f93753ab7f0
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -14,7 +14,7 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    core: 3.17.6
+    core: 3.17.7
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.1
@@ -465,7 +465,7 @@ examples:
         application/json: {"project": "<value>", "filters": [{"field": "event_type", "value": "model", "operator": "is", "type": "string"}]}
       responses:
         "200":
-          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
+          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
   getMetrics:
     speakeasy-default-get-metrics:
       parameters:
@@ -492,7 +492,7 @@ examples:
           session_id: "<value>"
       responses:
         "200":
-          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "n": 1, "presence_penalty": 0, "stop": [], "temperature": 0, "top_p": 1}, "model": "gpt-3.5-turbo", "provider": "openai", "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat", "version": "v0.1 - Fork"}, "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": "<value>", "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"completion_tokens": 23, "cost": 0.00008, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
+          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "n": 1, "presence_penalty": 0, "stop": [], "temperature": 0, "top_p": 1}, "model": "gpt-3.5-turbo", "provider": "openai", "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat", "version": "v0.1 - Fork"}, "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"completion_tokens": 23, "cost": 0.00008, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
   getTools:
     speakeasy-default-get-tools:
       responses:

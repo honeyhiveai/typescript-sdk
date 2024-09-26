@@ -98,7 +98,7 @@ async function run() {
         "total_tokens": 58,
       },
       feedback: {
-  
+
       },
       metrics: {
         "Answer Faithfulness": 5,
@@ -110,9 +110,9 @@ async function run() {
       },
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -225,7 +225,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -296,6 +296,8 @@ async function run() {
     },
     duration: 42,
   });
+
+
 }
 
 run();
@@ -405,9 +407,9 @@ async function run() {
       },
     ],
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -447,7 +449,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -568,9 +570,9 @@ async function run() {
       },
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -680,7 +682,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -793,7 +795,7 @@ async function run() {
           "total_tokens": 58,
         },
         feedback: {
-  
+
         },
         metrics: {
           "Answer Faithfulness": 5,
@@ -806,9 +808,9 @@ async function run() {
       },
     ],
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -923,7 +925,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -1047,9 +1049,9 @@ async function run() {
       },
     ],
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -1161,7 +1163,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();

@@ -25,9 +25,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.metrics.getMetrics("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -57,7 +57,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -104,6 +104,8 @@ async function run() {
     description: "Quality-focused next generation focus group",
     returnType: "boolean",
   });
+
+
 }
 
 run();
@@ -181,6 +183,8 @@ async function run() {
   await honeyHive.metrics.updateMetric({
     metricId: "<value>",
   });
+
+
 }
 
 run();
@@ -252,6 +256,8 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.metrics.deleteMetric("<value>");
+
+
 }
 
 run();
