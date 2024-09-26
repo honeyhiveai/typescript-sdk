@@ -25,9 +25,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.configurations.getConfigurations("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -57,7 +57,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -138,7 +138,7 @@ async function run() {
       ],
       functionCallParams: "auto",
       forceFunction: {
-  
+
       },
       additionalProperties: {
         "template": [
@@ -163,6 +163,8 @@ async function run() {
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
     },
   });
+
+
 }
 
 run();
@@ -333,7 +335,7 @@ async function run() {
       ],
       functionCallParams: "auto",
       forceFunction: {
-  
+
       },
       additionalProperties: {
         "template": [
@@ -359,6 +361,8 @@ async function run() {
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
     },
   });
+
+
 }
 
 run();
@@ -493,6 +497,8 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.configurations.deleteConfiguration("<id>");
+
+
 }
 
 run();

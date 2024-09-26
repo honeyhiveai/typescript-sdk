@@ -32,9 +32,9 @@ async function run() {
       "1504f40b-8865-40f9-b343-513d7da481bd",
     ],
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -70,7 +70,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -111,9 +111,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.runs.getRuns();
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -143,7 +143,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -184,9 +184,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.runs.getRun("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -216,7 +216,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -257,9 +257,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.runs.updateRun("<value>", {});
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -289,7 +289,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -331,9 +331,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.runs.deleteRun("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -363,7 +363,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();

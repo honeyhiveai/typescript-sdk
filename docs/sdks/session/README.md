@@ -57,21 +57,21 @@ async function run() {
         "user": "google-oauth2|111840237613341303366",
       },
       metrics: {
-  
+
       },
       feedback: {
-  
+
       },
       metadata: {
-  
+
       },
       startTime: 1712025501605,
       endTime: 1712025499832,
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -147,7 +147,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -188,9 +188,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.session.getSession("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -220,7 +220,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();

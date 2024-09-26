@@ -26,9 +26,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datasets.getDatasets("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -58,7 +58,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -117,9 +117,9 @@ async function run() {
       "source": "dev",
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -165,7 +165,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -220,6 +220,8 @@ async function run() {
       "updated": true,
     },
   });
+
+
 }
 
 run();
@@ -303,6 +305,8 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.datasets.deleteDataset("<value>");
+
+
 }
 
 run();
@@ -393,9 +397,9 @@ async function run() {
       ],
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -446,7 +450,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();

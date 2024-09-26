@@ -1,5 +1,4 @@
 import { HoneyHive } from "honeyhive";
-import { Operator } from "honeyhive/dist/models/components";
 const fs = require("fs");
 const path = require("path");
 import assert from "assert";
@@ -40,20 +39,19 @@ describe("TypeScript Tracer", () => {
         {
           field: "event_type",
           value: "session",
-          operator: Operator.Is,
+          operator: "is",
         },
         {
           field: "event_name",
           value: sessionName,
-          operator: Operator.Is,
+          operator: "is",
         },
       ],
     });
-    expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toEqual(1);
-    expect(res.object?.events?.length).toEqual(1);
+    expect(res.totalEvents).toEqual(1);
+    expect(res.events?.length).toEqual(1);
 
-    const events = res.object?.events;
+    const events = res.events;
     assert(events, "Expected 'events' to be defined");
 
     for (const event of events) {
@@ -67,11 +65,10 @@ describe("TypeScript Tracer", () => {
         {
           field: "session_id",
           value: sessionId,
-          operator: Operator.Is,
+          operator: "is",
         },
       ],
     });
-    expect(res.statusCode).toEqual(200);
-    expect(res.object?.totalEvents).toBeGreaterThan(1);
+    expect(res.totalEvents).toBeGreaterThan(1);
   });
 });

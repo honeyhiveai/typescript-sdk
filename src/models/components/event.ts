@@ -48,7 +48,7 @@ export type Event = {
   /**
    * Id of the parent event if nested
    */
-  parentId?: string | undefined;
+  parentId?: string | null | undefined;
   /**
    * Id of events that are nested within the event
    */
@@ -68,7 +68,7 @@ export type Event = {
   /**
    * Any error description if event failed
    */
-  error?: string | undefined;
+  error?: string | null | undefined;
   /**
    * UTC timestamp (in milliseconds) for the event start
    */
@@ -127,12 +127,12 @@ export const Event$inboundSchema: z.ZodType<Event, z.ZodTypeDef, unknown> = z
     event_type: EventType$inboundSchema.optional(),
     event_id: z.string().optional(),
     session_id: z.string().optional(),
-    parent_id: z.string().optional(),
+    parent_id: z.nullable(z.string()).optional(),
     children_ids: z.array(z.string()).optional(),
     config: z.record(z.any()).optional(),
     inputs: z.record(z.any()).optional(),
     outputs: z.record(z.any()).optional(),
-    error: z.string().optional(),
+    error: z.nullable(z.string()).optional(),
     start_time: z.number().optional(),
     end_time: z.number().int().optional(),
     duration: z.number().optional(),
@@ -163,12 +163,12 @@ export type Event$Outbound = {
   event_type?: string | undefined;
   event_id?: string | undefined;
   session_id?: string | undefined;
-  parent_id?: string | undefined;
+  parent_id?: string | null | undefined;
   children_ids?: Array<string> | undefined;
   config?: { [k: string]: any } | undefined;
   inputs?: { [k: string]: any } | undefined;
   outputs?: { [k: string]: any } | undefined;
-  error?: string | undefined;
+  error?: string | null | undefined;
   start_time?: number | undefined;
   end_time?: number | undefined;
   duration?: number | undefined;
@@ -190,12 +190,12 @@ export const Event$outboundSchema: z.ZodType<
   eventType: EventType$outboundSchema.optional(),
   eventId: z.string().optional(),
   sessionId: z.string().optional(),
-  parentId: z.string().optional(),
+  parentId: z.nullable(z.string()).optional(),
   childrenIds: z.array(z.string()).optional(),
   config: z.record(z.any()).optional(),
   inputs: z.record(z.any()).optional(),
   outputs: z.record(z.any()).optional(),
-  error: z.string().optional(),
+  error: z.nullable(z.string()).optional(),
   startTime: z.number().optional(),
   endTime: z.number().int().optional(),
   duration: z.number().optional(),

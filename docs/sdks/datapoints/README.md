@@ -26,9 +26,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datapoints.getDatapoints("<value>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -58,7 +58,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -130,9 +130,9 @@ async function run() {
       "total_tokens": 743,
     },
   });
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -191,7 +191,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -232,9 +232,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datapoints.getDatapoint("<id>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -264,7 +264,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -333,6 +333,8 @@ async function run() {
       "random_field": 0,
     },
   });
+
+
 }
 
 run();
@@ -431,9 +433,9 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   const result = await honeyHive.datapoints.deleteDatapoint("<id>");
-  
+
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
@@ -463,7 +465,7 @@ async function run() {
   const { value: result } = res;
 
   // Handle the result
-  console.log(result)
+  console.log(result);
 }
 
 run();
