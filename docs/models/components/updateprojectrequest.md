@@ -6,7 +6,7 @@
 import { UpdateProjectRequest } from "honeyhive/models/components";
 
 let value: UpdateProjectRequest = {
-  projectId: "<value>",
+  projectId: "<id>",
 };
 ```
 

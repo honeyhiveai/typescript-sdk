@@ -9,7 +9,7 @@ let value: CreateRunRequest = {
   project: "<value>",
   name: "<value>",
   eventIds: [
-    "64c79099-9fa5-46b0-8aa3-25597f132a47",
+    "290d0a4b-f399-493f-a7db-4d6e9ebb8fa6",
   ],
 };
 ```

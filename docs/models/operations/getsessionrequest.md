@@ -6,7 +6,7 @@
 import { GetSessionRequest } from "honeyhive/models/operations";
 
 let value: GetSessionRequest = {
-  sessionId: "<value>",
+  sessionId: "<id>",
 };
 ```
 

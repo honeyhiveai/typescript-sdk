@@ -90,6 +90,46 @@ let value: CreateEventBatchRequestBody = {
       },
     },
   ],
+  sessionProperties: {
+    modelEvent: {
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: null,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {
+
+      },
+      feedback: {
+
+      },
+      metadata: {
+
+      },
+    },
+  },
 };
 ```
 
@@ -99,3 +139,4 @@ let value: CreateEventBatchRequestBody = {
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `events`                                                                         | [components.CreateEventRequest](../../models/components/createeventrequest.md)[] | :heavy_check_mark:                                                               | N/A                                                                              |
 | `isSingleSession`                                                                | *boolean*                                                                        | :heavy_minus_sign:                                                               | Default is false. If true, all events will be associated with the same session   |
+| `sessionProperties`                                                              | [operations.SessionProperties](../../models/operations/sessionproperties.md)     | :heavy_minus_sign:                                                               | N/A                                                                              |

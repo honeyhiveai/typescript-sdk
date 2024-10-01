@@ -7,7 +7,7 @@ What the dataset is to be used for - "evaluation" (default) or "fine-tuning"
 ```typescript
 import { CreateDatasetRequestType } from "honeyhive/models/components";
 
-let value: CreateDatasetRequestType = "evaluation";
+let value: CreateDatasetRequestType = "fine-tuning";
 ```
 
 ## Values

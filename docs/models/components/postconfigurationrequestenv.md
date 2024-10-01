@@ -5,7 +5,7 @@
 ```typescript
 import { PostConfigurationRequestEnv } from "honeyhive/models/components";
 
-let value: PostConfigurationRequestEnv = "prod";
+let value: PostConfigurationRequestEnv = "staging";
 ```
 
 ## Values

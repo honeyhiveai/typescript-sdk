@@ -6,7 +6,7 @@
 import { UpdateRunRequest } from "honeyhive/models/operations";
 
 let value: UpdateRunRequest = {
-  runId: "<value>",
+  runId: "<id>",
   updateRunRequest: {},
 };
 ```

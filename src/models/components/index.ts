@@ -26,6 +26,7 @@ export * from "./postconfigurationrequest.js";
 export * from "./project.js";
 export * from "./putconfigurationrequest.js";
 export * from "./security.js";
+export * from "./sessionpropertiesbatch.js";
 export * from "./sessionstartrequest.js";
 export * from "./tool.js";
 export * from "./updatedatapointrequest.js";
