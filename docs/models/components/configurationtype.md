@@ -7,7 +7,7 @@ Type of the configuration - "LLM" or "pipeline" - "LLM" by default
 ```typescript
 import { ConfigurationType } from "honeyhive/models/components";
 
-let value: ConfigurationType = "pipeline";
+let value: ConfigurationType = "LLM";
 ```
 
 ## Values

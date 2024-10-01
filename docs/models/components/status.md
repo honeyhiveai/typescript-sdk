@@ -7,7 +7,7 @@ The status of the run
 ```typescript
 import { Status } from "honeyhive/models/components";
 
-let value: Status = "completed";
+let value: Status = "pending";
 ```
 
 ## Values

@@ -246,10 +246,9 @@ run();
 
 ### Errors
 
-| Error Object    | Status Code     | Content Type    |
+| Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## updateEvent
 
@@ -377,10 +376,9 @@ run();
 
 ### Errors
 
-| Error Object    | Status Code     | Content Type    |
+| Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## getEvents
 
@@ -470,10 +468,9 @@ run();
 
 ### Errors
 
-| Error Object    | Status Code     | Content Type    |
+| Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createModelEvent
 
@@ -703,10 +700,9 @@ run();
 
 ### Errors
 
-| Error Object    | Status Code     | Content Type    |
+| Error Type      | Status Code     | Content Type    |
 | --------------- | --------------- | --------------- |
-| errors.SDKError | 4xx-5xx         | */*             |
-
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
 
 ## createEventBatch
 
@@ -807,6 +803,46 @@ async function run() {
         },
       },
     ],
+    sessionProperties: {
+      modelEvent: {
+        sessionName: "Playground Session",
+        source: "playground",
+        sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+        inputs: {
+          "context": "Hello world",
+          "question": "What is in the context?",
+          "chat_history": [
+            {
+              "role": "system",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
+            },
+            {
+              "role": "user",
+              "content": "What is in the context?",
+            },
+          ],
+        },
+        outputs: {
+          "role": "assistant",
+          "content": "Hello world",
+        },
+        error: "<value>",
+        userProperties: {
+          "user": "google-oauth2|111840237613341303366",
+        },
+        metrics: {
+
+        },
+        feedback: {
+
+        },
+        metadata: {
+
+        },
+      },
+    },
   });
 
   // Handle the result
@@ -916,6 +952,46 @@ async function run() {
         },
       },
     ],
+    sessionProperties: {
+      modelEvent: {
+        sessionName: "Playground Session",
+        source: "playground",
+        sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+        inputs: {
+          "context": "Hello world",
+          "question": "What is in the context?",
+          "chat_history": [
+            {
+              "role": "system",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
+            },
+            {
+              "role": "user",
+              "content": "What is in the context?",
+            },
+          ],
+        },
+        outputs: {
+          "role": "assistant",
+          "content": "Hello world",
+        },
+        error: "<value>",
+        userProperties: {
+          "user": "google-oauth2|111840237613341303366",
+        },
+        metrics: {
+  
+        },
+        feedback: {
+  
+        },
+        metadata: {
+  
+        },
+      },
+    },
   });
 
   if (!res.ok) {
@@ -946,11 +1022,10 @@ run();
 
 ### Errors
 
-| Error Object                        | Status Code                         | Content Type                        |
+| Error Type                          | Status Code                         | Content Type                        |
 | ----------------------------------- | ----------------------------------- | ----------------------------------- |
 | errors.CreateEventBatchResponseBody | 500                                 | application/json                    |
-| errors.SDKError                     | 4xx-5xx                             | */*                                 |
-
+| errors.SDKError                     | 4XX, 5XX                            | \*/\*                               |
 
 ## createModelEventBatch
 
@@ -1048,6 +1123,46 @@ async function run() {
         },
       },
     ],
+    sessionProperties: {
+      modelEvent: {
+        sessionName: "Playground Session",
+        source: "playground",
+        sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+        inputs: {
+          "context": "Hello world",
+          "question": "What is in the context?",
+          "chat_history": [
+            {
+              "role": "system",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
+            },
+            {
+              "role": "user",
+              "content": "What is in the context?",
+            },
+          ],
+        },
+        outputs: {
+          "role": "assistant",
+          "content": "Hello world",
+        },
+        error: "<value>",
+        userProperties: {
+          "user": "google-oauth2|111840237613341303366",
+        },
+        metrics: {
+
+        },
+        feedback: {
+
+        },
+        metadata: {
+
+        },
+      },
+    },
   });
 
   // Handle the result
@@ -1154,6 +1269,46 @@ async function run() {
         },
       },
     ],
+    sessionProperties: {
+      modelEvent: {
+        sessionName: "Playground Session",
+        source: "playground",
+        sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+        inputs: {
+          "context": "Hello world",
+          "question": "What is in the context?",
+          "chat_history": [
+            {
+              "role": "system",
+              "content": "Answer the user's question only using provided context.\n" +
+              "\n" +
+              "Context: Hello world",
+            },
+            {
+              "role": "user",
+              "content": "What is in the context?",
+            },
+          ],
+        },
+        outputs: {
+          "role": "assistant",
+          "content": "Hello world",
+        },
+        error: "<value>",
+        userProperties: {
+          "user": "google-oauth2|111840237613341303366",
+        },
+        metrics: {
+  
+        },
+        feedback: {
+  
+        },
+        metadata: {
+  
+        },
+      },
+    },
   });
 
   if (!res.ok) {
@@ -1184,7 +1339,7 @@ run();
 
 ### Errors
 
-| Error Object                             | Status Code                              | Content Type                             |
+| Error Type                               | Status Code                              | Content Type                             |
 | ---------------------------------------- | ---------------------------------------- | ---------------------------------------- |
 | errors.CreateModelEventBatchResponseBody | 500                                      | application/json                         |
-| errors.SDKError                          | 4xx-5xx                                  | */*                                      |
+| errors.SDKError                          | 4XX, 5XX                                 | \*/\*                                    |

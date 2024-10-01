@@ -376,7 +376,7 @@ actions:
             });
 
             async function run() {
-              await honeyHive.datasets.deleteDataset("<value>");
+              await honeyHive.datasets.deleteDataset("<id>");
 
 
             }
@@ -484,7 +484,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.datasets.addDatapoints("<value>", {
+              const result = await honeyHive.datasets.addDatapoints("<id>", {
                 project: "<value>",
                 data: [
                   {
@@ -762,6 +762,46 @@ actions:
                     },
                   },
                 ],
+                sessionProperties: {
+                  modelEvent: {
+                    sessionName: "Playground Session",
+                    source: "playground",
+                    sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    inputs: {
+                      "context": "Hello world",
+                      "question": "What is in the context?",
+                      "chat_history": [
+                        {
+                          "role": "system",
+                          "content": "Answer the user's question only using provided context.\n" +
+                          "\n" +
+                          "Context: Hello world",
+                        },
+                        {
+                          "role": "user",
+                          "content": "What is in the context?",
+                        },
+                      ],
+                    },
+                    outputs: {
+                      "role": "assistant",
+                      "content": "Hello world",
+                    },
+                    error: "<value>",
+                    userProperties: {
+                      "user": "google-oauth2|111840237613341303366",
+                    },
+                    metrics: {
+
+                    },
+                    feedback: {
+
+                    },
+                    metadata: {
+
+                    },
+                  },
+                },
               });
 
               // Handle the result
@@ -994,6 +1034,46 @@ actions:
                     },
                   },
                 ],
+                sessionProperties: {
+                  modelEvent: {
+                    sessionName: "Playground Session",
+                    source: "playground",
+                    sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+                    inputs: {
+                      "context": "Hello world",
+                      "question": "What is in the context?",
+                      "chat_history": [
+                        {
+                          "role": "system",
+                          "content": "Answer the user's question only using provided context.\n" +
+                          "\n" +
+                          "Context: Hello world",
+                        },
+                        {
+                          "role": "user",
+                          "content": "What is in the context?",
+                        },
+                      ],
+                    },
+                    outputs: {
+                      "role": "assistant",
+                      "content": "Hello world",
+                    },
+                    error: "<value>",
+                    userProperties: {
+                      "user": "google-oauth2|111840237613341303366",
+                    },
+                    metrics: {
+
+                    },
+                    feedback: {
+
+                    },
+                    metadata: {
+
+                    },
+                  },
+                },
               });
 
               // Handle the result
@@ -1014,7 +1094,7 @@ actions:
             });
 
             async function run() {
-              await honeyHive.metrics.deleteMetric("<value>");
+              await honeyHive.metrics.deleteMetric("<id>");
 
 
             }
@@ -1057,7 +1137,7 @@ actions:
                 name: "<value>",
                 task: "<value>",
                 type: "model",
-                description: "Quality-focused next generation focus group",
+                description: "ack oh faithfully annually bloom ha because instead",
                 returnType: "boolean",
               });
 
@@ -1079,7 +1159,7 @@ actions:
 
             async function run() {
               await honeyHive.metrics.updateMetric({
-                metricId: "<value>",
+                metricId: "<id>",
               });
 
 
@@ -1161,7 +1241,7 @@ actions:
 
             async function run() {
               await honeyHive.projects.updateProject({
-                projectId: "<value>",
+                projectId: "<id>",
               });
 
 
@@ -1227,7 +1307,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.deleteRun("<value>");
+              const result = await honeyHive.runs.deleteRun("<id>");
 
               // Handle the result
               console.log(result);
@@ -1247,7 +1327,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.getRun("<value>");
+              const result = await honeyHive.runs.getRun("<id>");
 
               // Handle the result
               console.log(result);
@@ -1267,7 +1347,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.updateRun("<value>", {});
+              const result = await honeyHive.runs.updateRun("<id>", {});
 
               // Handle the result
               console.log(result);
@@ -1353,7 +1433,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.session.getSession("<value>");
+              const result = await honeyHive.session.getSession("<id>");
 
               // Handle the result
               console.log(result);
@@ -1373,7 +1453,7 @@ actions:
             });
 
             async function run() {
-              await honeyHive.tools.deleteTool("<value>");
+              await honeyHive.tools.deleteTool("<id>");
 
 
             }

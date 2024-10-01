@@ -6,7 +6,7 @@
 import { AddDatapointsRequest } from "honeyhive/models/operations";
 
 let value: AddDatapointsRequest = {
-  datasetId: "<value>",
+  datasetId: "<id>",
   requestBody: {
     project: "<value>",
     data: [

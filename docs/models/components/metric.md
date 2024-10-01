@@ -9,8 +9,8 @@ let value: Metric = {
   name: "<value>",
   task: "<value>",
   type: "composite",
-  description: "Innovative regional internet solution",
-  returnType: "float",
+  description: "afterwards successfully how gee gadzooks insert",
+  returnType: "string",
 };
 ```
 

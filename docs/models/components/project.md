@@ -7,7 +7,7 @@ import { Project } from "honeyhive/models/components";
 
 let value: Project = {
   name: "<value>",
-  description: "Cross-group motivating attitude",
+  description: "know gleefully ew ceramic",
 };
 ```
 

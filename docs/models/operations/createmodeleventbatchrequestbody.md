@@ -87,11 +87,53 @@ let value: CreateModelEventBatchRequestBody = {
       },
     },
   ],
+  sessionProperties: {
+    modelEvent: {
+      sessionName: "Playground Session",
+      source: "playground",
+      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
+      inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
+        "chat_history": [
+          {
+            "role": "system",
+            "content": "Answer the user's question only using provided context.\n" +
+            "\n" +
+            "Context: Hello world",
+          },
+          {
+            "role": "user",
+            "content": "What is in the context?",
+          },
+        ],
+      },
+      outputs: {
+        "role": "assistant",
+        "content": "Hello world",
+      },
+      error: null,
+      userProperties: {
+        "user": "google-oauth2|111840237613341303366",
+      },
+      metrics: {
+
+      },
+      feedback: {
+
+      },
+      metadata: {
+
+      },
+    },
+  },
 };
 ```
 
 ## Fields
 
-| Field                                                                        | Type                                                                         | Required                                                                     | Description                                                                  |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `modelEvents`                                                                | [components.CreateModelEvent](../../models/components/createmodelevent.md)[] | :heavy_minus_sign:                                                           | N/A                                                                          |
+| Field                                                                                                                  | Type                                                                                                                   | Required                                                                                                               | Description                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `modelEvents`                                                                                                          | [components.CreateModelEvent](../../models/components/createmodelevent.md)[]                                           | :heavy_minus_sign:                                                                                                     | N/A                                                                                                                    |
+| `isSingleSession`                                                                                                      | *boolean*                                                                                                              | :heavy_minus_sign:                                                                                                     | Default is false. If true, all events will be associated with the same session                                         |
+| `sessionProperties`                                                                                                    | [operations.CreateModelEventBatchSessionProperties](../../models/operations/createmodeleventbatchsessionproperties.md) | :heavy_minus_sign:                                                                                                     | N/A                                                                                                                    |

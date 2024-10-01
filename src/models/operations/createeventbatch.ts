@@ -6,12 +6,17 @@ import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
+export type SessionProperties = {
+  modelEvent?: components.SessionPropertiesBatch | undefined;
+};
+
 export type CreateEventBatchRequestBody = {
   events: Array<components.CreateEventRequest>;
   /**
    * Default is false. If true, all events will be associated with the same session
    */
   isSingleSession?: boolean | undefined;
+  sessionProperties?: SessionProperties | undefined;
 };
 
 /**
@@ -24,6 +29,50 @@ export type CreateEventBatchResponseBody = {
 };
 
 /** @internal */
+export const SessionProperties$inboundSchema: z.ZodType<
+  SessionProperties,
+  z.ZodTypeDef,
+  unknown
+> = z.object({
+  model_event: components.SessionPropertiesBatch$inboundSchema.optional(),
+}).transform((v) => {
+  return remap$(v, {
+    "model_event": "modelEvent",
+  });
+});
+
+/** @internal */
+export type SessionProperties$Outbound = {
+  model_event?: components.SessionPropertiesBatch$Outbound | undefined;
+};
+
+/** @internal */
+export const SessionProperties$outboundSchema: z.ZodType<
+  SessionProperties$Outbound,
+  z.ZodTypeDef,
+  SessionProperties
+> = z.object({
+  modelEvent: components.SessionPropertiesBatch$outboundSchema.optional(),
+}).transform((v) => {
+  return remap$(v, {
+    modelEvent: "model_event",
+  });
+});
+
+/**
+ * @internal
+ * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
+ */
+export namespace SessionProperties$ {
+  /** @deprecated use `SessionProperties$inboundSchema` instead. */
+  export const inboundSchema = SessionProperties$inboundSchema;
+  /** @deprecated use `SessionProperties$outboundSchema` instead. */
+  export const outboundSchema = SessionProperties$outboundSchema;
+  /** @deprecated use `SessionProperties$Outbound` instead. */
+  export type Outbound = SessionProperties$Outbound;
+}
+
+/** @internal */
 export const CreateEventBatchRequestBody$inboundSchema: z.ZodType<
   CreateEventBatchRequestBody,
   z.ZodTypeDef,
@@ -31,9 +80,11 @@ export const CreateEventBatchRequestBody$inboundSchema: z.ZodType<
 > = z.object({
   events: z.array(components.CreateEventRequest$inboundSchema),
   is_single_session: z.boolean().optional(),
+  session_properties: z.lazy(() => SessionProperties$inboundSchema).optional(),
 }).transform((v) => {
   return remap$(v, {
     "is_single_session": "isSingleSession",
+    "session_properties": "sessionProperties",
   });
 });
 
@@ -41,6 +92,7 @@ export const CreateEventBatchRequestBody$inboundSchema: z.ZodType<
 export type CreateEventBatchRequestBody$Outbound = {
   events: Array<components.CreateEventRequest$Outbound>;
   is_single_session?: boolean | undefined;
+  session_properties?: SessionProperties$Outbound | undefined;
 };
 
 /** @internal */
@@ -51,9 +103,11 @@ export const CreateEventBatchRequestBody$outboundSchema: z.ZodType<
 > = z.object({
   events: z.array(components.CreateEventRequest$outboundSchema),
   isSingleSession: z.boolean().optional(),
+  sessionProperties: z.lazy(() => SessionProperties$outboundSchema).optional(),
 }).transform((v) => {
   return remap$(v, {
     isSingleSession: "is_single_session",
+    sessionProperties: "session_properties",
   });
 });
 

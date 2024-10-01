@@ -7,7 +7,7 @@ import { PutConfigurationRequestParameters } from "honeyhive/models/components";
 
 let value: PutConfigurationRequestParameters = {
   callType: "chat",
-  model: "Charger",
+  model: "Expedition",
 };
 ```
 

@@ -255,6 +255,11 @@ paths:
                   type: boolean
                   description: Default is false. If true, all events will be associated
                     with the same session
+                session_properties:
+                  type: object
+                  properties:
+                    model_event:
+                      $ref: '#/components/schemas/SessionPropertiesBatch'
               required:
               - events
       responses:
@@ -324,6 +329,15 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/CreateModelEvent'
+                is_single_session:
+                  type: boolean
+                  description: Default is false. If true, all events will be associated
+                    with the same session
+                session_properties:
+                  type: object
+                  properties:
+                    model_event:
+                      $ref: '#/components/schemas/SessionPropertiesBatch'
       responses:
         '200':
           description: Model events created
@@ -1172,6 +1186,74 @@ components:
         start_time: 1712025501605
         end_time: 1712025499832
         duration: 824.8056
+        metrics: {}
+        feedback: {}
+        metadata: {}
+        user_properties:
+          user: google-oauth2|111840237613341303366
+    SessionPropertiesBatch:
+      type: object
+      properties:
+        session_name:
+          type: string
+          description: Name of the session
+        source:
+          type: string
+          description: Source of the session - production, staging, etc
+        session_id:
+          type: string
+          description: Unique id of the session, if not set, it will be auto-generated
+        config:
+          type: object
+          additionalProperties: true
+          description: Associated configuration for the session
+        inputs:
+          type: object
+          additionalProperties: true
+          description: Input object passed to the session - user query, text blob,
+            etc
+        outputs:
+          type: object
+          additionalProperties: true
+          description: Final output of the session - completion, chunks, etc
+        error:
+          type: string
+          description: Any error description if session failed
+        user_properties:
+          type: object
+          additionalProperties: true
+          description: Any user properties associated with the session
+        metrics:
+          type: object
+          additionalProperties: true
+          description: Any values computed over the output of the session
+        feedback:
+          type: object
+          additionalProperties: true
+          description: Any user feedback provided for the session output
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Any system or application metadata associated with the session
+      example:
+        source: playground
+        session_name: Playground Session
+        session_id: caf77ace-3417-4da4-944d-f4a0688f3c23
+        inputs:
+          context: Hello world
+          question: What is in the context?
+          chat_history:
+          - role: system
+            content: 'Answer the user''s question only using provided context.
+
+
+              Context: Hello world'
+          - role: user
+            content: What is in the context?
+        outputs:
+          role: assistant
+          content: Hello world
+        error: null
         metrics: {}
         feedback: {}
         metadata: {}

@@ -6,7 +6,7 @@
 import { UpdateEventRequestBody } from "honeyhive/models/operations";
 
 let value: UpdateEventRequestBody = {
-  eventId: "<value>",
+  eventId: "<id>",
 };
 ```
 
