@@ -28,8 +28,8 @@ import { Result } from "../types/fp.js";
  */
 export async function configurationsUpdateConfiguration(
   client: HoneyHiveCore,
-  id: string,
   putConfigurationRequest: components.PutConfigurationRequest,
+  id: string,
   options?: RequestOptions,
 ): Promise<
   Result<
@@ -44,8 +44,8 @@ export async function configurationsUpdateConfiguration(
   >
 > {
   const input: operations.UpdateConfigurationRequest = {
-    id: id,
     putConfigurationRequest: putConfigurationRequest,
+    id: id,
   };
 
   const parsed = safeParse(

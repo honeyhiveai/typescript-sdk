@@ -301,7 +301,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.datapoints.updateDatapoint("<id>", {
+  await honeyHive.datapoints.updateDatapoint({
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -329,7 +329,7 @@ async function run() {
       "question_type": "capital-weather",
       "random_field": 0,
     },
-  });
+  }, "<id>");
 
 
 }
@@ -352,7 +352,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datapointsUpdateDatapoint(honeyHive, "<id>", {
+  const res = await datapointsUpdateDatapoint(honeyHive, {
     inputs: {
       "query": "what's the temperature in Reykjavik?",
     },
@@ -380,7 +380,7 @@ async function run() {
       "question_type": "capital-weather",
       "random_field": 0,
     },
-  });
+  }, "<id>");
 
   if (!res.ok) {
     throw res.error;

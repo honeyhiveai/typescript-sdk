@@ -77,14 +77,14 @@ export class Datasets extends ClientSDK {
    * Add datapoints to a dataset
    */
   async addDatapoints(
-    datasetId: string,
     requestBody: operations.AddDatapointsRequestBody,
+    datasetId: string,
     options?: RequestOptions,
   ): Promise<operations.AddDatapointsResponseBody> {
     return unwrapAsync(datasetsAddDatapoints(
       this,
-      datasetId,
       requestBody,
+      datasetId,
       options,
     ));
   }

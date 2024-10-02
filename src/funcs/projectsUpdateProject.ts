@@ -41,10 +41,8 @@ export async function projectsUpdateProject(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.UpdateProjectRequest$outboundSchema.parse(value),
     "Input validation failed",
   );

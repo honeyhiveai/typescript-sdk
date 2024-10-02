@@ -28,8 +28,8 @@ import { Result } from "../types/fp.js";
  */
 export async function datapointsUpdateDatapoint(
   client: HoneyHiveCore,
-  id: string,
   updateDatapointRequest: components.UpdateDatapointRequest,
+  id: string,
   options?: RequestOptions,
 ): Promise<
   Result<
@@ -44,8 +44,8 @@ export async function datapointsUpdateDatapoint(
   >
 > {
   const input: operations.UpdateDatapointRequest = {
-    id: id,
     updateDatapointRequest: updateDatapointRequest,
+    id: id,
   };
 
   const parsed = safeParse(

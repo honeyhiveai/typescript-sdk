@@ -26,8 +26,8 @@ import { Result } from "../types/fp.js";
  */
 export async function datasetsAddDatapoints(
   client: HoneyHiveCore,
-  datasetId: string,
   requestBody: operations.AddDatapointsRequestBody,
+  datasetId: string,
   options?: RequestOptions,
 ): Promise<
   Result<
@@ -42,8 +42,8 @@ export async function datasetsAddDatapoints(
   >
 > {
   const input: operations.AddDatapointsRequest = {
-    datasetId: datasetId,
     requestBody: requestBody,
+    datasetId: datasetId,
   };
 
   const parsed = safeParse(

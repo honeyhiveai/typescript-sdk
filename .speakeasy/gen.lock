@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: b892a14c7010d3834a15b26288f574aa
-  docVersion: 1.0.2
-  speakeasyVersion: 1.405.6
-  generationVersion: 2.428.1
-  releaseVersion: 1.1.1
-  configChecksum: 9eb15a64ac952d97c8978d52a4b5abb5
+  docChecksum: f524fa6c55cb99f551011c1cfb77d501
+  docVersion: 1.0.4
+  speakeasyVersion: 1.405.10
+  generationVersion: 2.429.0
+  releaseVersion: 1.2.1
+  configChecksum: 1187254bb4ba5f72ea51b6d060efc6c4
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -14,11 +14,11 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    core: 3.18.1
+    core: 3.18.2
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
     envVarSecurityUsage: 0.1.1
-    flattening: 2.81.1
+    flattening: 2.82.0
     globalSecurity: 2.82.11
     globalSecurityCallbacks: 0.1.0
     globalSecurityFlattening: 0.1.0

@@ -40,10 +40,8 @@ export async function sessionStartSession(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => operations.StartSessionRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );

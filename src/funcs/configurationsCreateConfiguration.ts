@@ -41,10 +41,8 @@ export async function configurationsCreateConfiguration(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.PostConfigurationRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
