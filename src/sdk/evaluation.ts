@@ -1,7 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, } from '../models/components';
 import { HoneyHiveTracer } from './tracer';
-// import { ReActPipeline } from "./agent_script";
 
 type Dict<T> = { [key: string]: T };
 type Any = any;
@@ -80,8 +79,7 @@ async function initializeTracer(config: EvaluationConfig): Promise<HoneyHiveTrac
             apiKey: config.hh_api_key,
             project: config.hh_project,
             source: 'evaluation',
-            sessionName: config.name,
-            serverUrl: 'http://localhost:4785'
+            sessionName: config.name
         });
     } catch (error) {
         throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
@@ -100,7 +98,6 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
             (async () => {
                 try {
                     const agentResponse = await evalconfig.evaluationFunction(inputs);
-                    console.log(typeof agentResponse);
                     if (agentResponse && typeof agentResponse === 'object')
                         output = agentResponse;
                     console.log(agentResponse);
@@ -111,16 +108,7 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
         });
 
         await promise;
-
         await tracer.flush();
-
-        // await tracer.trace(async () => {
-        //     const agentResponse = await ReActPipeline(
-        //       "What is the effect of climate change on the polar bear population?",
-        //       tracer,
-        //     );
-        //     console.log(agentResponse);
-        //   });
 
         return output;
     } catch (error) {
@@ -136,16 +124,13 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
                 run_id: state.eval_run.runId,
                 inputs: inputs
             };
-            console.log(state.hh_dataset);
             if (state.hh_dataset) {
                 tracing_metadata['datapoint_id'] = state.hh_dataset.datapoints[run_id];
                 tracing_metadata['dataset_id'] = config.dataset_id;
             }
-            console.log(evaluation_output);
             if (evaluation_output) {
                 tracing_metadata['outputs'] = evaluation_output;
             }
-            console.log(tracing_metadata);
             await tracer.enrichSession({
                 metadata: tracing_metadata,
                 outputs: evaluation_output
@@ -190,7 +175,7 @@ async function evaluate(
     validateRequirements(config);
 
     const state: EvaluationState = {
-        hhai: new HoneyHive({ bearerAuth: config.hh_api_key, serverURL: 'http://localhost:4785' }),
+        hhai: new HoneyHive({ bearerAuth: config.hh_api_key }),
         hh_dataset: null,
         evaluation_session_ids: [],
         eval_run: null
@@ -202,6 +187,7 @@ async function evaluate(
     await setupEvaluation(state, config);
 
     for (let run_id = 0; run_id < runs; run_id++) {
+        console.log(`---------- RUN ${run_id +1} ----------`)
         const inputs = await getInputs(state, config, run_id);
         const tracer = await initializeTracer(config);
 

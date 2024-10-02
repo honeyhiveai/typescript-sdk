@@ -165,7 +165,6 @@ export class HoneyHiveTracer {
     source = "dev",
     serverUrl = "https://api.honeyhive.ai",
   }: InitParams): Promise<HoneyHiveTracer> {
-    console.log(serverUrl);
     const sdk = new HoneyHive({
       bearerAuth: apiKey,
       serverURL: serverUrl,
