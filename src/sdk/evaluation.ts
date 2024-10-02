@@ -91,13 +91,26 @@ async function initializeTracer(config: EvaluationConfig): Promise<HoneyHiveTrac
 async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConfig, inputs: any): Promise<Any> {
     try {
         let output = {};
-        await tracer.trace(async () => {
-            const agentResponse = await evalconfig.evaluationFunction(inputs);
-            console.log(typeof agentResponse);
-            if (agentResponse && typeof agentResponse === 'object')
-                output = agentResponse;
-            console.log(agentResponse);
+        let promiseResolve: () => void;
+        const promise = new Promise<void>((resolve) => {
+            promiseResolve = resolve;
         });
+
+        tracer.trace(() => {
+            (async () => {
+                try {
+                    const agentResponse = await evalconfig.evaluationFunction(inputs);
+                    console.log(typeof agentResponse);
+                    if (agentResponse && typeof agentResponse === 'object')
+                        output = agentResponse;
+                    console.log(agentResponse);
+                } finally {
+                    promiseResolve();
+                }
+            })();
+        });
+
+        await promise;
 
         await tracer.flush();
 
@@ -116,7 +129,7 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
     }
 }
 
-async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState, config: EvaluationConfig, inputs: any, evaluation_output: any, run_id: number): Promise<void>{
+async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState, config: EvaluationConfig, inputs: any, evaluation_output: any, run_id: number): Promise<void> {
     try {
         if (state.eval_run && state.eval_run?.runId) {
             const tracing_metadata: Dict<Any> = {
