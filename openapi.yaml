@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: HoneyHive API
-  version: 1.0.2
+  version: 1.0.4
 servers:
 - url: https://api.honeyhive.ai
 paths:
