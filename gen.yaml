@@ -12,7 +12,7 @@ generation:
   auth:
     oAuth2ClientCredentialsEnabled: false
 typescript:
-  version: 1.1.0
+  version: 1.1.1
   additionalDependencies:
     dependencies:
       '@anthropic-ai/sdk': ^0.21.0

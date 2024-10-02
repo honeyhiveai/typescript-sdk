@@ -6,17 +6,13 @@ import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
 import * as components from "../components/index.js";
 
-export type CreateModelEventBatchSessionProperties = {
-  modelEvent?: components.SessionPropertiesBatch | undefined;
-};
-
 export type CreateModelEventBatchRequestBody = {
   modelEvents?: Array<components.CreateModelEvent> | undefined;
   /**
    * Default is false. If true, all events will be associated with the same session
    */
   isSingleSession?: boolean | undefined;
-  sessionProperties?: CreateModelEventBatchSessionProperties | undefined;
+  sessionProperties?: components.SessionPropertiesBatch | undefined;
 };
 
 /**
@@ -28,52 +24,6 @@ export type CreateModelEventBatchResponseBody = {
 };
 
 /** @internal */
-export const CreateModelEventBatchSessionProperties$inboundSchema: z.ZodType<
-  CreateModelEventBatchSessionProperties,
-  z.ZodTypeDef,
-  unknown
-> = z.object({
-  model_event: components.SessionPropertiesBatch$inboundSchema.optional(),
-}).transform((v) => {
-  return remap$(v, {
-    "model_event": "modelEvent",
-  });
-});
-
-/** @internal */
-export type CreateModelEventBatchSessionProperties$Outbound = {
-  model_event?: components.SessionPropertiesBatch$Outbound | undefined;
-};
-
-/** @internal */
-export const CreateModelEventBatchSessionProperties$outboundSchema: z.ZodType<
-  CreateModelEventBatchSessionProperties$Outbound,
-  z.ZodTypeDef,
-  CreateModelEventBatchSessionProperties
-> = z.object({
-  modelEvent: components.SessionPropertiesBatch$outboundSchema.optional(),
-}).transform((v) => {
-  return remap$(v, {
-    modelEvent: "model_event",
-  });
-});
-
-/**
- * @internal
- * @deprecated This namespace will be removed in future versions. Use schemas and types that are exported directly from this module.
- */
-export namespace CreateModelEventBatchSessionProperties$ {
-  /** @deprecated use `CreateModelEventBatchSessionProperties$inboundSchema` instead. */
-  export const inboundSchema =
-    CreateModelEventBatchSessionProperties$inboundSchema;
-  /** @deprecated use `CreateModelEventBatchSessionProperties$outboundSchema` instead. */
-  export const outboundSchema =
-    CreateModelEventBatchSessionProperties$outboundSchema;
-  /** @deprecated use `CreateModelEventBatchSessionProperties$Outbound` instead. */
-  export type Outbound = CreateModelEventBatchSessionProperties$Outbound;
-}
-
-/** @internal */
 export const CreateModelEventBatchRequestBody$inboundSchema: z.ZodType<
   CreateModelEventBatchRequestBody,
   z.ZodTypeDef,
@@ -81,9 +31,8 @@ export const CreateModelEventBatchRequestBody$inboundSchema: z.ZodType<
 > = z.object({
   model_events: z.array(components.CreateModelEvent$inboundSchema).optional(),
   is_single_session: z.boolean().optional(),
-  session_properties: z.lazy(() =>
-    CreateModelEventBatchSessionProperties$inboundSchema
-  ).optional(),
+  session_properties: components.SessionPropertiesBatch$inboundSchema
+    .optional(),
 }).transform((v) => {
   return remap$(v, {
     "model_events": "modelEvents",
@@ -96,9 +45,7 @@ export const CreateModelEventBatchRequestBody$inboundSchema: z.ZodType<
 export type CreateModelEventBatchRequestBody$Outbound = {
   model_events?: Array<components.CreateModelEvent$Outbound> | undefined;
   is_single_session?: boolean | undefined;
-  session_properties?:
-    | CreateModelEventBatchSessionProperties$Outbound
-    | undefined;
+  session_properties?: components.SessionPropertiesBatch$Outbound | undefined;
 };
 
 /** @internal */
@@ -109,9 +56,8 @@ export const CreateModelEventBatchRequestBody$outboundSchema: z.ZodType<
 > = z.object({
   modelEvents: z.array(components.CreateModelEvent$outboundSchema).optional(),
   isSingleSession: z.boolean().optional(),
-  sessionProperties: z.lazy(() =>
-    CreateModelEventBatchSessionProperties$outboundSchema
-  ).optional(),
+  sessionProperties: components.SessionPropertiesBatch$outboundSchema
+    .optional(),
 }).transform((v) => {
   return remap$(v, {
     modelEvents: "model_events",
