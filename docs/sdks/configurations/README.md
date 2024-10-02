@@ -294,7 +294,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.configurations.updateConfiguration("<id>", {
+  await honeyHive.configurations.updateConfiguration({
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -358,7 +358,7 @@ async function run() {
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
     },
-  });
+  }, "<id>");
 
 
 }
@@ -381,7 +381,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await configurationsUpdateConfiguration(honeyHive, "<id>", {
+  const res = await configurationsUpdateConfiguration(honeyHive, {
     project: "New Project",
     name: "function-v0",
     provider: "openai",
@@ -445,7 +445,7 @@ async function run() {
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
     },
-  });
+  }, "<id>");
 
   if (!res.ok) {
     throw res.error;

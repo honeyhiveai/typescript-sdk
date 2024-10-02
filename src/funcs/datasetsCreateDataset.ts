@@ -41,10 +41,8 @@ export async function datasetsCreateDataset(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.CreateDatasetRequest$outboundSchema.parse(value),
     "Input validation failed",
   );

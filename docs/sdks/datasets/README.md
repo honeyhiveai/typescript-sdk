@@ -371,7 +371,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.datasets.addDatapoints("<value>", {
+  const result = await honeyHive.datasets.addDatapoints({
     project: "<value>",
     data: [
       {
@@ -392,7 +392,7 @@ async function run() {
         "<value>",
       ],
     },
-  });
+  }, "<value>");
 
   // Handle the result
   console.log(result);
@@ -416,7 +416,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datasetsAddDatapoints(honeyHive, "<value>", {
+  const res = await datasetsAddDatapoints(honeyHive, {
     project: "<value>",
     data: [
       {
@@ -437,7 +437,7 @@ async function run() {
         "<value>",
       ],
     },
-  });
+  }, "<value>");
 
   if (!res.ok) {
     throw res.error;

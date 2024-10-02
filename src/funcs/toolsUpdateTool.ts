@@ -41,10 +41,8 @@ export async function toolsUpdateTool(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.UpdateToolRequest$outboundSchema.parse(value),
     "Input validation failed",
   );

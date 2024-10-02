@@ -58,14 +58,14 @@ export class Runs extends ClientSDK {
    * Update an evaluation run
    */
   async updateRun(
-    runId: string,
     updateRunRequest: components.UpdateRunRequest,
+    runId: string,
     options?: RequestOptions,
   ): Promise<components.UpdateRunResponse> {
     return unwrapAsync(runsUpdateRun(
       this,
-      runId,
       updateRunRequest,
+      runId,
       options,
     ));
   }

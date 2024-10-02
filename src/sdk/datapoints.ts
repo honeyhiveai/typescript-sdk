@@ -63,14 +63,14 @@ export class Datapoints extends ClientSDK {
    * Update a specific datapoint
    */
   async updateDatapoint(
-    id: string,
     updateDatapointRequest: components.UpdateDatapointRequest,
+    id: string,
     options?: RequestOptions,
   ): Promise<void> {
     return unwrapAsync(datapointsUpdateDatapoint(
       this,
-      id,
       updateDatapointRequest,
+      id,
       options,
     ));
   }

@@ -43,10 +43,8 @@ export async function eventsCreateEvent(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => operations.CreateEventRequestBody$outboundSchema.parse(value),
     "Input validation failed",
   );

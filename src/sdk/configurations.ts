@@ -48,14 +48,14 @@ export class Configurations extends ClientSDK {
    * Update an existing configuration
    */
   async updateConfiguration(
-    id: string,
     putConfigurationRequest: components.PutConfigurationRequest,
+    id: string,
     options?: RequestOptions,
   ): Promise<void> {
     return unwrapAsync(configurationsUpdateConfiguration(
       this,
-      id,
       putConfigurationRequest,
+      id,
       options,
     ));
   }

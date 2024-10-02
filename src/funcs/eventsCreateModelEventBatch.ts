@@ -45,10 +45,8 @@ export async function eventsCreateModelEventBatch(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) =>
       operations.CreateModelEventBatchRequestBody$outboundSchema.parse(value),
     "Input validation failed",

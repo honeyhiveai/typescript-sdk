@@ -27,8 +27,8 @@ import { Result } from "../types/fp.js";
  */
 export async function runsUpdateRun(
   client: HoneyHiveCore,
-  runId: string,
   updateRunRequest: components.UpdateRunRequest,
+  runId: string,
   options?: RequestOptions,
 ): Promise<
   Result<
@@ -43,8 +43,8 @@ export async function runsUpdateRun(
   >
 > {
   const input: operations.UpdateRunRequest = {
-    runId: runId,
     updateRunRequest: updateRunRequest,
+    runId: runId,
   };
 
   const parsed = safeParse(

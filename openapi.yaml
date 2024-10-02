@@ -1941,10 +1941,8 @@ components:
           description: UUID for the project where the datapoint is stored
         created_at:
           type: string
-          format: date-time
         updated_at:
           type: string
-          format: date-time
         inputs:
           type: object
           description: Arbitrary JSON object containing the inputs for the datapoint
@@ -2239,11 +2237,9 @@ components:
             or "session"
         created_at:
           type: string
-          format: date-time
           description: Timestamp of when the dataset was created
         updated_at:
           type: string
-          format: date-time
           description: Timestamp of when the dataset was last updated
       example:
         project: New Project

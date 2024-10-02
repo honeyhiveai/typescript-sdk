@@ -40,10 +40,8 @@ export async function runsCreateRun(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.CreateRunRequest$outboundSchema.parse(value),
     "Input validation failed",
   );

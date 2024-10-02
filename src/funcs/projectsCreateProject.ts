@@ -40,10 +40,8 @@ export async function projectsCreateProject(
     | ConnectionError
   >
 > {
-  const input = request;
-
   const parsed = safeParse(
-    input,
+    request,
     (value) => components.CreateProjectRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
