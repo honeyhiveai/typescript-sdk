@@ -245,6 +245,24 @@ export class HoneyHiveTracer {
   }
 
   public traceFunction({ eventType, config, metadata }: { eventType?: string; config?: any; metadata?: any } = {}) {
+    // Helper function to extract argument names from the function
+    function getArgs(func: Function): string[] | null {
+      try {
+        const funcStr = func.toString()
+          .replace(/\/\/.*$/mg, '') // Remove single-line comments
+          .replace(/\s+/g, '')      // Remove whitespace
+          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+          .replace(/=[^,]+/g, '');  // Remove default values
+  
+        const argsMatch = funcStr.match(/(?:function[\w\s]*\(|\()([^)]*)\)/);
+        if (argsMatch && argsMatch[1]) {
+          return argsMatch[1].split(',').filter(Boolean);
+        }
+      } catch (error) {
+        console.warn('Failed to parse function arguments:', error);
+      }
+      return null; // Return null if parsing fails
+    }
     return <T extends (...args: any[]) => any>(func: T): T => {
       const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
         const tracer = trace.getTracer('traceloop.tracer');
@@ -263,10 +281,15 @@ export class HoneyHiveTracer {
         });
 
         try {
+          // Get argument names
+          const argNames = getArgs(func);
+
           // Log function arguments
           setSpanAttributes(span, 'traceloop.association.properties.session_id', this.sessionId);
+
           args.forEach((arg, index) => {
-            setSpanAttributes(span, `honeyhive_inputs._params_.${index}`, arg);
+            const argName = (argNames && argNames[index]) ? argNames[index] : index.toString();
+            setSpanAttributes(span, `honeyhive_inputs._params_.${argName}`, arg);
           });
 
           if (eventType) {
