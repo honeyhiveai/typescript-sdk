@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: HoneyHive API
-  version: 1.0.3
+  version: 1.0.4
 servers:
 - url: https://api.honeyhive.ai
 paths:
@@ -256,10 +256,7 @@ paths:
                   description: Default is false. If true, all events will be associated
                     with the same session
                 session_properties:
-                  type: object
-                  properties:
-                    model_event:
-                      $ref: '#/components/schemas/SessionPropertiesBatch'
+                  $ref: '#/components/schemas/SessionPropertiesBatch'
               required:
               - events
       responses:
@@ -334,10 +331,7 @@ paths:
                   description: Default is false. If true, all events will be associated
                     with the same session
                 session_properties:
-                  type: object
-                  properties:
-                    model_event:
-                      $ref: '#/components/schemas/SessionPropertiesBatch'
+                  $ref: '#/components/schemas/SessionPropertiesBatch'
       responses:
         '200':
           description: Model events created
