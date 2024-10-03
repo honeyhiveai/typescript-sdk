@@ -11,7 +11,6 @@ import OpenAI from "openai";
 import * as anthropic from "@anthropic-ai/sdk";
 import * as cohere from "cohere-ai";
 import * as bedrock from "@aws-sdk/client-bedrock-runtime";
-import * as google_aiplatform from "@google-cloud/aiplatform";
 import * as pinecone from "@pinecone-database/pinecone";
 import * as ChainsModule from "langchain/chains";
 import * as AgentsModule from "langchain/agents";
@@ -114,7 +113,6 @@ export class HoneyHiveTracer {
             azureOpenAI: azureOpenAI,
             cohere: cohere,
             bedrock: bedrock,
-            google_aiplatform: google_aiplatform,
             pinecone: pinecone,
             langchain: {
               chainsModule: ChainsModule,
@@ -146,7 +144,6 @@ export class HoneyHiveTracer {
         azureOpenAI: azureOpenAI,
         cohere: cohere,
         bedrock: bedrock,
-        google_aiplatform: google_aiplatform,
         pinecone: pinecone,
         langchain: {
           chainsModule: ChainsModule,
