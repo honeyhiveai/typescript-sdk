@@ -155,6 +155,33 @@ export class HoneyHiveTracer {
     });
   }
 
+  public getTracer() {
+    if (this.sessionId) {
+      const tracer = trace.getTracer('traceloop.tracer');
+      const wrappedTracer = new Proxy(tracer, {
+        get: (target, propKey, _) => {
+          // Use Reflect.get to safely access the property
+          const originalMethod = Reflect.get(target, propKey);
+          if (typeof originalMethod === 'function') {
+            // Use an arrow function to retain 'this' context and type 'args' explicitly
+            return (...args: any[]) => {
+              const sessionId = this.sessionId || "";
+              return traceloop.withAssociationProperties(
+                { session_id: sessionId },
+                originalMethod.bind(target, ...args), // Bind 'target' and spread 'args'
+                target
+              );
+            };
+          }
+          return originalMethod;
+        },
+      });
+      return wrappedTracer;
+    } else {
+      return trace.getTracer('traceloop.tracer');
+    }
+  }
+
   public static async init({
     apiKey,
     project,
