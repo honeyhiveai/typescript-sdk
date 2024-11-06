@@ -27,6 +27,7 @@ interface InitParams {
   sessionName?: string;
   source?: string;
   serverUrl?: string;
+  inputs?: Record<string, any>;
 }
 
 interface InitSessionIdParams {
@@ -90,6 +91,7 @@ export class HoneyHiveTracer {
     source: string,
     apiKey: string,
     serverUrl: string,
+    inputs?: Record<string, any>,
   ): Promise<void> {
     try {
       const requestBody = {
@@ -97,6 +99,7 @@ export class HoneyHiveTracer {
           project: project,
           sessionName: sessionName,
           source: source,
+          inputs: inputs || {}
         },
       };
       const res = await this.sdk.session.startSession(requestBody);
@@ -188,6 +191,7 @@ export class HoneyHiveTracer {
     sessionName,
     source = "dev",
     serverUrl = "https://api.honeyhive.ai",
+    inputs,
   }: InitParams): Promise<HoneyHiveTracer> {
     const sdk = new HoneyHive({
       bearerAuth: apiKey,
@@ -206,7 +210,7 @@ export class HoneyHiveTracer {
         sessionName = 'unknown';
       }
     }
-    await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    await tracer.initSession(project, sessionName, source, apiKey, serverUrl, inputs);
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
   }
