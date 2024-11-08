@@ -13,6 +13,7 @@ interface EvaluationConfig {
     dataset_id?: string;
     query_list?: Dict<Any>[];
     runs?: number;
+    evaluators?: Function[];
 }
 
 interface EvaluationState {
@@ -73,13 +74,15 @@ async function getInputs(state: EvaluationState, config: EvaluationConfig, run_i
     return null;
 }
 
-async function initializeTracer(config: EvaluationConfig): Promise<HoneyHiveTracer> {
+async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<HoneyHiveTracer> {
     try {
         return await HoneyHiveTracer.init({
             apiKey: config.hh_api_key,
             project: config.hh_project,
             source: 'evaluation',
-            sessionName: config.name
+            sessionName: config.name,
+            inputs: inputs ? inputs : {},
+            isEvaluation: true
         });
     } catch (error) {
         throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
@@ -117,23 +120,43 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
     }
 }
 
-async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState, config: EvaluationConfig, inputs: any, evaluation_output: any, run_id: number): Promise<void> {
+async function runEvaluators(inputs: any, evaluation_output: any, evaluators?: Function[]): Promise<Dict<Any>> {
+    const metrics: Dict<Any> = {};
+    if (evaluators) {
+        for (let index = 0; index < evaluators.length; index++) {
+            try {
+                const evaluator = evaluators[index];
+                if (evaluator) {
+                    const evaluator_result = await evaluator(inputs, evaluation_output);
+                    if (evaluator_result && typeof evaluator_result === 'object') {
+                        Object.assign(metrics, evaluator_result);
+                        continue;
+                    }
+                    const evaluator_name = evaluator.name || `evaluator_${index}`;
+                    metrics[evaluator_name] = evaluator_result;
+                }
+            } catch (error) {
+                console.error(`Error in evaluator: ${error}`);
+            }
+        }
+    }
+    return metrics;
+}
+
+async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState, config: EvaluationConfig, evaluation_output: any, metrics: Dict<Any>, run_id: number): Promise<void> {
     try {
         if (state.eval_run && state.eval_run?.runId) {
             const tracing_metadata: Dict<Any> = {
                 run_id: state.eval_run.runId,
-                inputs: inputs
             };
             if (state.hh_dataset) {
                 tracing_metadata['datapoint_id'] = state.hh_dataset.datapoints[run_id];
                 tracing_metadata['dataset_id'] = config.dataset_id;
             }
-            if (evaluation_output) {
-                tracing_metadata['outputs'] = evaluation_output;
-            }
             await tracer.enrichSession({
                 metadata: tracing_metadata,
-                outputs: evaluation_output
+                outputs: evaluation_output,
+                metrics: metrics
             });
         }
 
@@ -187,13 +210,14 @@ async function evaluate(
     await setupEvaluation(state, config);
 
     for (let run_id = 0; run_id < runs; run_id++) {
-        console.log(`---------- RUN ${run_id +1} ----------`)
+        console.log(`---------- RUN ${run_id + 1} ----------`)
         const inputs = await getInputs(state, config, run_id);
-        const tracer = await initializeTracer(config);
+        const tracer = await initializeTracer(config, inputs);
 
         const output = await runEvaluation(tracer, config, inputs);
+        const metrics = await runEvaluators(inputs, output, config.evaluators);
 
-        await addTraceMetadata(tracer, state, config, inputs, output, run_id);
+        await addTraceMetadata(tracer, state, config, output, metrics, run_id);
 
         if (tracer.sessionId)
             state.evaluation_session_ids.push(tracer.sessionId);

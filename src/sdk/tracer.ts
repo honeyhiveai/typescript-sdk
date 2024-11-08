@@ -27,6 +27,8 @@ interface InitParams {
   sessionName?: string;
   source?: string;
   serverUrl?: string;
+  inputs?: Record<string, any>;
+  isEvaluation?: boolean;
 }
 
 interface InitSessionIdParams {
@@ -79,6 +81,7 @@ export class HoneyHiveTracer {
   private sdk: HoneyHive;
   public sessionId: string | undefined;
   private spanProxy: any = {};
+  private static isEvaluationModeActive: boolean = false;
 
   private constructor(sdk: HoneyHive) {
     this.sdk = sdk;
@@ -90,6 +93,7 @@ export class HoneyHiveTracer {
     source: string,
     apiKey: string,
     serverUrl: string,
+    inputs?: Record<string, any>,
   ): Promise<void> {
     try {
       const requestBody = {
@@ -97,6 +101,7 @@ export class HoneyHiveTracer {
           project: project,
           sessionName: sessionName,
           source: source,
+          inputs: inputs || {}
         },
       };
       const res = await this.sdk.session.startSession(requestBody);
@@ -188,12 +193,21 @@ export class HoneyHiveTracer {
     sessionName,
     source = "dev",
     serverUrl = "https://api.honeyhive.ai",
+    inputs,
+    isEvaluation = false
   }: InitParams): Promise<HoneyHiveTracer> {
     const sdk = new HoneyHive({
       bearerAuth: apiKey,
       serverURL: serverUrl,
     });
     const tracer = new HoneyHiveTracer(sdk);
+
+    if (HoneyHiveTracer.isEvaluationModeActive && !isEvaluation) {
+      return tracer;
+    }
+    if (isEvaluation) {
+      HoneyHiveTracer.isEvaluationModeActive = true;
+    }
     if (!sessionName) {
       try {
         const mainModule = require.main;
@@ -206,7 +220,7 @@ export class HoneyHiveTracer {
         sessionName = 'unknown';
       }
     }
-    await tracer.initSession(project, sessionName, source, apiKey, serverUrl);
+    await tracer.initSession(project, sessionName, source, apiKey, serverUrl, inputs);
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
   }
