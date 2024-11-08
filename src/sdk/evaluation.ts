@@ -81,7 +81,8 @@ async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<
             project: config.hh_project,
             source: 'evaluation',
             sessionName: config.name,
-            inputs: inputs ? inputs : {}
+            inputs: inputs ? inputs : {},
+            isEvaluation: true
         });
     } catch (error) {
         throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
