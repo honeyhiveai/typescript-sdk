@@ -1,0 +1,21 @@
+# Details
+
+## Example Usage
+
+```typescript
+import { Details } from "honeyhive/models/components";
+
+let value: Details = {};
+```
+
+## Fields
+
+| Field                                                                                                          | Type                                                                                                           | Required                                                                                                       | Description                                                                                                    |
+| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `metricName`                                                                                                   | *string*                                                                                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `metricType`                                                                                                   | *string*                                                                                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `eventName`                                                                                                    | *string*                                                                                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `eventType`                                                                                                    | *string*                                                                                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `aggregate`                                                                                                    | *number*                                                                                                       | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `values`                                                                                                       | *components.Values*[]                                                                                          | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |
+| `datapoints`                                                                                                   | [components.ExperimentResultResponseDatapoints](../../models/components/experimentresultresponsedatapoints.md) | :heavy_minus_sign:                                                                                             | N/A                                                                                                            |

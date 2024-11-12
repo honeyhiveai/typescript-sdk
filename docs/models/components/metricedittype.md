@@ -7,7 +7,7 @@ Type of the metric - "custom", "model", "human" or "composite"
 ```typescript
 import { MetricEditType } from "honeyhive/models/components";
 
-let value: MetricEditType = "custom";
+let value: MetricEditType = "human";
 ```
 
 ## Values

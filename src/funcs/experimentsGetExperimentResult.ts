@@ -3,7 +3,7 @@
  */
 
 import { HoneyHiveCore } from "../core.js";
-import { encodeFormQuery } from "../lib/encodings.js";
+import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -23,15 +23,17 @@ import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Get a list of evaluation runs
+ * Retrieve experiment result
  */
-export async function runsGetRuns(
+export async function experimentsGetExperimentResult(
   client: HoneyHiveCore,
-  project?: string | undefined,
+  runId: string,
+  projectId: string,
+  aggregateFunction?: operations.AggregateFunction | undefined,
   options?: RequestOptions,
 ): Promise<
   Result<
-    components.GetRunsResponse,
+    components.ExperimentResultResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -41,13 +43,16 @@ export async function runsGetRuns(
     | ConnectionError
   >
 > {
-  const input: operations.GetRunsRequest = {
-    project: project,
+  const input: operations.GetExperimentResultRequest = {
+    runId: runId,
+    projectId: projectId,
+    aggregateFunction: aggregateFunction,
   };
 
   const parsed = safeParse(
     input,
-    (value) => operations.GetRunsRequest$outboundSchema.parse(value),
+    (value) =>
+      operations.GetExperimentResultRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -56,10 +61,18 @@ export async function runsGetRuns(
   const payload = parsed.value;
   const body = null;
 
-  const path = pathToFunc("/runs")();
+  const pathParams = {
+    run_id: encodeSimple("run_id", payload.run_id, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+  };
+
+  const path = pathToFunc("/runs/{run_id}/result")(pathParams);
 
   const query = encodeFormQuery({
-    "project": payload.project,
+    "aggregate_function": payload.aggregate_function,
+    "project_id": payload.project_id,
   });
 
   const headers = new Headers({
@@ -68,12 +81,20 @@ export async function runsGetRuns(
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
   const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
-  const context = {
-    operationID: "getRuns",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearerAuth,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
+
+  const context = {
+    operationID: "getExperimentResult",
+    oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearerAuth,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  };
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
@@ -92,9 +113,8 @@ export async function runsGetRuns(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["400", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig,
-    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -102,7 +122,7 @@ export async function runsGetRuns(
   const response = doResult.value;
 
   const [result] = await M.match<
-    components.GetRunsResponse,
+    components.ExperimentResultResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -111,7 +131,7 @@ export async function runsGetRuns(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, components.GetRunsResponse$inboundSchema),
+    M.json(200, components.ExperimentResultResponse$inboundSchema),
     M.fail([400, "4XX", "5XX"]),
   )(response);
   if (!result.ok) {

@@ -7,7 +7,7 @@ Specify whether the event is of "session", "model", "tool" or "chain" type
 ```typescript
 import { EventType } from "honeyhive/models/components";
 
-let value: EventType = "tool";
+let value: EventType = "model";
 ```
 
 ## Values

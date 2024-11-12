@@ -18,6 +18,8 @@ export * from "./deleterunresponse.js";
 export * from "./evaluationrun.js";
 export * from "./event.js";
 export * from "./eventfilter.js";
+export * from "./experimentcomparisonresponse.js";
+export * from "./experimentresultresponse.js";
 export * from "./getrunresponse.js";
 export * from "./getrunsresponse.js";
 export * from "./metric.js";

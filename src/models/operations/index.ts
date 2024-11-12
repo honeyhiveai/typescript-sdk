@@ -22,6 +22,8 @@ export * from "./getdatapoint.js";
 export * from "./getdatapoints.js";
 export * from "./getdatasets.js";
 export * from "./getevents.js";
+export * from "./getexperimentcomparison.js";
+export * from "./getexperimentresult.js";
 export * from "./getmetrics.js";
 export * from "./getprojects.js";
 export * from "./getrun.js";

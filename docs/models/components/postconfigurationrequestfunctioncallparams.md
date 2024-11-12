@@ -7,7 +7,7 @@ Function calling mode - "none", "auto" or "force"
 ```typescript
 import { PostConfigurationRequestFunctionCallParams } from "honeyhive/models/components";
 
-let value: PostConfigurationRequestFunctionCallParams = "auto";
+let value: PostConfigurationRequestFunctionCallParams = "none";
 ```
 
 ## Values

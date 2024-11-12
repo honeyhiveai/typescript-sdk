@@ -7,7 +7,7 @@ The data type you are using - "string", "number", "boolean", "id" (for object id
 ```typescript
 import { Type } from "honeyhive/models/components";
 
-let value: Type = "boolean";
+let value: Type = "id";
 ```
 
 ## Values

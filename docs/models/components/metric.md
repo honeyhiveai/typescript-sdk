@@ -9,8 +9,8 @@ let value: Metric = {
   name: "<value>",
   task: "<value>",
   type: "composite",
-  description: "afterwards successfully how gee gadzooks insert",
-  returnType: "string",
+  description: "whenever paintwork import over cuckoo canter even",
+  returnType: "boolean",
 };
 ```
 

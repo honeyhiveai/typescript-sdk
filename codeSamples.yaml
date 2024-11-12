@@ -1257,7 +1257,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.getRuns();
+              const result = await honeyHive.experiments.getRuns();
 
               // Handle the result
               console.log(result);
@@ -1277,13 +1277,33 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.createRun({
+              const result = await honeyHive.experiments.createRun({
                 project: "<value>",
                 name: "<value>",
                 eventIds: [
                   "1504f40b-8865-40f9-b343-513d7da481bd",
                 ],
               });
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/runs/{run_id_1}/compare-with/{run_id_2}"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getExperimentComparison
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.experiments.getExperimentComparison("<value>", "<value>", "<id>");
 
               // Handle the result
               console.log(result);
@@ -1303,7 +1323,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.deleteRun("<id>");
+              const result = await honeyHive.experiments.deleteRun("<id>");
 
               // Handle the result
               console.log(result);
@@ -1323,7 +1343,7 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.getRun("<id>");
+              const result = await honeyHive.experiments.getRun("<id>");
 
               // Handle the result
               console.log(result);
@@ -1343,7 +1363,27 @@ actions:
             });
 
             async function run() {
-              const result = await honeyHive.runs.updateRun({}, "<id>");
+              const result = await honeyHive.experiments.updateRun({}, "<id>");
+
+              // Handle the result
+              console.log(result);
+            }
+
+            run();
+  - target: $["paths"]["/runs/{run_id}/result"]["get"]
+    update:
+      x-codeSamples:
+        - lang: typescript
+          label: getExperimentResult
+          source: |-
+            import { HoneyHive } from "honeyhive";
+
+            const honeyHive = new HoneyHive({
+              bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+            });
+
+            async function run() {
+              const result = await honeyHive.experiments.getExperimentResult("<id>", "<id>");
 
               // Handle the result
               console.log(result);
