@@ -5,7 +5,7 @@
 ```typescript
 import { Env } from "honeyhive/models/components";
 
-let value: Env = "dev";
+let value: Env = "staging";
 ```
 
 ## Values

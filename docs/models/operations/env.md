@@ -7,7 +7,7 @@ Environment - "dev", "staging" or "prod"
 ```typescript
 import { Env } from "honeyhive/models/operations";
 
-let value: Env = "prod";
+let value: Env = "staging";
 ```
 
 ## Values

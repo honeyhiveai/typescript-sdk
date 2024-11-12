@@ -5,7 +5,7 @@
 ```typescript
 import { UpdateRunRequestStatus } from "honeyhive/models/components";
 
-let value: UpdateRunRequestStatus = "pending";
+let value: UpdateRunRequestStatus = "completed";
 ```
 
 ## Values

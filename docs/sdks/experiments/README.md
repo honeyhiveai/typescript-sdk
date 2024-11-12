@@ -1,5 +1,5 @@
-# Runs
-(*runs*)
+# Experiments
+(*experiments*)
 
 ## Overview
 
@@ -10,6 +10,8 @@
 * [getRun](#getrun) - Get details of an evaluation run
 * [updateRun](#updaterun) - Update an evaluation run
 * [deleteRun](#deleterun) - Delete an evaluation run
+* [getExperimentResult](#getexperimentresult) - Retrieve experiment result
+* [getExperimentComparison](#getexperimentcomparison) - Retrieve experiment comparison
 
 ## createRun
 
@@ -25,7 +27,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.runs.createRun({
+  const result = await honeyHive.experiments.createRun({
     project: "<value>",
     name: "<value>",
     eventIds: [
@@ -46,7 +48,7 @@ The standalone function version of this method:
 
 ```typescript
 import { HoneyHiveCore } from "honeyhive/core.js";
-import { runsCreateRun } from "honeyhive/funcs/runsCreateRun.js";
+import { experimentsCreateRun } from "honeyhive/funcs/experimentsCreateRun.js";
 
 // Use `HoneyHiveCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -55,7 +57,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await runsCreateRun(honeyHive, {
+  const res = await experimentsCreateRun(honeyHive, {
     project: "<value>",
     name: "<value>",
     eventIds: [
@@ -109,7 +111,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.runs.getRuns();
+  const result = await honeyHive.experiments.getRuns();
 
   // Handle the result
   console.log(result);
@@ -124,7 +126,7 @@ The standalone function version of this method:
 
 ```typescript
 import { HoneyHiveCore } from "honeyhive/core.js";
-import { runsGetRuns } from "honeyhive/funcs/runsGetRuns.js";
+import { experimentsGetRuns } from "honeyhive/funcs/experimentsGetRuns.js";
 
 // Use `HoneyHiveCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -133,7 +135,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await runsGetRuns(honeyHive);
+  const res = await experimentsGetRuns(honeyHive);
 
   if (!res.ok) {
     throw res.error;
@@ -181,7 +183,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.runs.getRun("<value>");
+  const result = await honeyHive.experiments.getRun("<value>");
 
   // Handle the result
   console.log(result);
@@ -196,7 +198,7 @@ The standalone function version of this method:
 
 ```typescript
 import { HoneyHiveCore } from "honeyhive/core.js";
-import { runsGetRun } from "honeyhive/funcs/runsGetRun.js";
+import { experimentsGetRun } from "honeyhive/funcs/experimentsGetRun.js";
 
 // Use `HoneyHiveCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -205,7 +207,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await runsGetRun(honeyHive, "<value>");
+  const res = await experimentsGetRun(honeyHive, "<value>");
 
   if (!res.ok) {
     throw res.error;
@@ -253,7 +255,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.runs.updateRun({}, "<value>");
+  const result = await honeyHive.experiments.updateRun({}, "<value>");
 
   // Handle the result
   console.log(result);
@@ -268,7 +270,7 @@ The standalone function version of this method:
 
 ```typescript
 import { HoneyHiveCore } from "honeyhive/core.js";
-import { runsUpdateRun } from "honeyhive/funcs/runsUpdateRun.js";
+import { experimentsUpdateRun } from "honeyhive/funcs/experimentsUpdateRun.js";
 
 // Use `HoneyHiveCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -277,7 +279,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await runsUpdateRun(honeyHive, {}, "<value>");
+  const res = await experimentsUpdateRun(honeyHive, {}, "<value>");
 
   if (!res.ok) {
     throw res.error;
@@ -326,7 +328,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.runs.deleteRun("<value>");
+  const result = await honeyHive.experiments.deleteRun("<value>");
 
   // Handle the result
   console.log(result);
@@ -341,7 +343,7 @@ The standalone function version of this method:
 
 ```typescript
 import { HoneyHiveCore } from "honeyhive/core.js";
-import { runsDeleteRun } from "honeyhive/funcs/runsDeleteRun.js";
+import { experimentsDeleteRun } from "honeyhive/funcs/experimentsDeleteRun.js";
 
 // Use `HoneyHiveCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -350,7 +352,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await runsDeleteRun(honeyHive, "<value>");
+  const res = await experimentsDeleteRun(honeyHive, "<value>");
 
   if (!res.ok) {
     throw res.error;
@@ -377,6 +379,155 @@ run();
 ### Response
 
 **Promise\<[components.DeleteRunResponse](../../models/components/deleterunresponse.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getExperimentResult
+
+Retrieve experiment result
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await honeyHive.experiments.getExperimentResult("<id>", "<id>");
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { experimentsGetExperimentResult } from "honeyhive/funcs/experimentsGetExperimentResult.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await experimentsGetExperimentResult(honeyHive, "<id>", "<id>");
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `runId`                                                                                                                                                                        | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `projectId`                                                                                                                                                                    | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `aggregateFunction`                                                                                                                                                            | [operations.AggregateFunction](../../models/operations/aggregatefunction.md)                                                                                                   | :heavy_minus_sign:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[components.ExperimentResultResponse](../../models/components/experimentresultresponse.md)\>**
+
+### Errors
+
+| Error Type      | Status Code     | Content Type    |
+| --------------- | --------------- | --------------- |
+| errors.SDKError | 4XX, 5XX        | \*/\*           |
+
+## getExperimentComparison
+
+Retrieve experiment comparison
+
+### Example Usage
+
+```typescript
+import { HoneyHive } from "honeyhive";
+
+const honeyHive = new HoneyHive({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const result = await honeyHive.experiments.getExperimentComparison("<value>", "<value>", "<id>");
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { HoneyHiveCore } from "honeyhive/core.js";
+import { experimentsGetExperimentComparison } from "honeyhive/funcs/experimentsGetExperimentComparison.js";
+
+// Use `HoneyHiveCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const honeyHive = new HoneyHiveCore({
+  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
+});
+
+async function run() {
+  const res = await experimentsGetExperimentComparison(honeyHive, "<value>", "<value>", "<id>");
+
+  if (!res.ok) {
+    throw res.error;
+  }
+
+  const { value: result } = res;
+
+  // Handle the result
+  console.log(result);
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `runId1`                                                                                                                                                                       | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `runId2`                                                                                                                                                                       | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `projectId`                                                                                                                                                                    | *string*                                                                                                                                                                       | :heavy_check_mark:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `aggregateFunction`                                                                                                                                                            | [operations.QueryParamAggregateFunction](../../models/operations/queryparamaggregatefunction.md)                                                                               | :heavy_minus_sign:                                                                                                                                                             | N/A                                                                                                                                                                            |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[components.ExperimentComparisonResponse](../../models/components/experimentcomparisonresponse.md)\>**
 
 ### Errors
 

@@ -7,7 +7,7 @@ import { ParametersT } from "honeyhive/models/components";
 
 let value: ParametersT = {
   callType: "completion",
-  model: "Escalade",
+  model: "Sentra",
 };
 ```
 

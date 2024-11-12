@@ -166,7 +166,7 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
 }
 
 async function setupEvaluation(state: EvaluationState, config: EvaluationConfig): Promise<void> {
-    const eval_run = await state.hhai.runs.createRun({
+    const eval_run = await state.hhai.experiments.createRun({
         project: config.hh_project,
         name: config.name,
         datasetId: config.dataset_id,
@@ -179,7 +179,7 @@ async function setupEvaluation(state: EvaluationState, config: EvaluationConfig)
 async function windupEvaluation(state: EvaluationState): Promise<void> {
     try {
         if (state.eval_run && state.eval_run.runId) {
-            await state.hhai.runs.updateRun(
+            await state.hhai.experiments.updateRun(
                 {
                     eventIds: state.evaluation_session_ids,
                     status: "completed"

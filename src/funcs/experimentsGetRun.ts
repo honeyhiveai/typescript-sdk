@@ -23,15 +23,15 @@ import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Delete an evaluation run
+ * Get details of an evaluation run
  */
-export async function runsDeleteRun(
+export async function experimentsGetRun(
   client: HoneyHiveCore,
   runId: string,
   options?: RequestOptions,
 ): Promise<
   Result<
-    components.DeleteRunResponse,
+    components.GetRunResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -41,13 +41,13 @@ export async function runsDeleteRun(
     | ConnectionError
   >
 > {
-  const input: operations.DeleteRunRequest = {
+  const input: operations.GetRunRequest = {
     runId: runId,
   };
 
   const parsed = safeParse(
     input,
-    (value) => operations.DeleteRunRequest$outboundSchema.parse(value),
+    (value) => operations.GetRunRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -71,16 +71,24 @@ export async function runsDeleteRun(
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
   const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
-  const context = {
-    operationID: "deleteRun",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearerAuth,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
+
+  const context = {
+    operationID: "getRun",
+    oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearerAuth,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  };
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "DELETE",
+    method: "GET",
     path: path,
     headers: headers,
     body: body,
@@ -94,9 +102,8 @@ export async function runsDeleteRun(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["400", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig,
-    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -104,7 +111,7 @@ export async function runsDeleteRun(
   const response = doResult.value;
 
   const [result] = await M.match<
-    components.DeleteRunResponse,
+    components.GetRunResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -113,7 +120,7 @@ export async function runsDeleteRun(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, components.DeleteRunResponse$inboundSchema),
+    M.json(200, components.GetRunResponse$inboundSchema),
     M.fail([400, "4XX", "5XX"]),
   )(response);
   if (!result.ok) {

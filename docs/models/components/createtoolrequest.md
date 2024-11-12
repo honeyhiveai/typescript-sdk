@@ -11,7 +11,7 @@ let value: CreateToolRequest = {
   parameters: {
     "key": "<value>",
   },
-  type: "function",
+  type: "tool",
 };
 ```
 

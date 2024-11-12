@@ -7,9 +7,9 @@ import { Configurations } from "./configurations.js";
 import { Datapoints } from "./datapoints.js";
 import { Datasets } from "./datasets.js";
 import { Events } from "./events.js";
+import { Experiments } from "./experiments.js";
 import { Metrics } from "./metrics.js";
 import { Projects } from "./projects.js";
-import { Runs } from "./runs.js";
 import { Session } from "./session.js";
 import { Tools } from "./tools.js";
 
@@ -49,9 +49,9 @@ export class HoneyHive extends ClientSDK {
     return (this._projects ??= new Projects(this._options));
   }
 
-  private _runs?: Runs;
-  get runs(): Runs {
-    return (this._runs ??= new Runs(this._options));
+  private _experiments?: Experiments;
+  get experiments(): Experiments {
+    return (this._experiments ??= new Experiments(this._options));
   }
 
   private _configurations?: Configurations;

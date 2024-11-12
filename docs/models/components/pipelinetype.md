@@ -7,7 +7,7 @@ The type of data included in the dataset - "event" (default) or "session"
 ```typescript
 import { PipelineType } from "honeyhive/models/components";
 
-let value: PipelineType = "event";
+let value: PipelineType = "session";
 ```
 
 ## Values

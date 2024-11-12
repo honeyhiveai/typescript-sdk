@@ -3,7 +3,7 @@
  */
 
 import { HoneyHiveCore } from "../core.js";
-import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { encodeFormQuery } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -23,16 +23,15 @@ import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Update an evaluation run
+ * Get a list of evaluation runs
  */
-export async function runsUpdateRun(
+export async function experimentsGetRuns(
   client: HoneyHiveCore,
-  updateRunRequest: components.UpdateRunRequest,
-  runId: string,
+  project?: string | undefined,
   options?: RequestOptions,
 ): Promise<
   Result<
-    components.UpdateRunResponse,
+    components.GetRunsResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -42,50 +41,54 @@ export async function runsUpdateRun(
     | ConnectionError
   >
 > {
-  const input: operations.UpdateRunRequest = {
-    updateRunRequest: updateRunRequest,
-    runId: runId,
+  const input: operations.GetRunsRequest = {
+    project: project,
   };
 
   const parsed = safeParse(
     input,
-    (value) => operations.UpdateRunRequest$outboundSchema.parse(value),
+    (value) => operations.GetRunsRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return parsed;
   }
   const payload = parsed.value;
-  const body = encodeJSON("body", payload.UpdateRunRequest, { explode: true });
+  const body = null;
 
-  const pathParams = {
-    run_id: encodeSimple("run_id", payload.run_id, {
-      explode: false,
-      charEncoding: "percent",
-    }),
-  };
+  const path = pathToFunc("/runs")();
 
-  const path = pathToFunc("/runs/{run_id}")(pathParams);
+  const query = encodeFormQuery({
+    "project": payload.project,
+  });
 
   const headers = new Headers({
-    "Content-Type": "application/json",
     Accept: "application/json",
   });
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
   const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
-  const context = {
-    operationID: "updateRun",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearerAuth,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
+
+  const context = {
+    operationID: "getRuns",
+    oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearerAuth,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  };
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "PUT",
+    method: "GET",
     path: path,
     headers: headers,
+    query: query,
     body: body,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
@@ -97,9 +100,8 @@ export async function runsUpdateRun(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["400", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig,
-    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -107,7 +109,7 @@ export async function runsUpdateRun(
   const response = doResult.value;
 
   const [result] = await M.match<
-    components.UpdateRunResponse,
+    components.GetRunsResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -116,7 +118,7 @@ export async function runsUpdateRun(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, components.UpdateRunResponse$inboundSchema),
+    M.json(200, components.GetRunsResponse$inboundSchema),
     M.fail([400, "4XX", "5XX"]),
   )(response);
   if (!result.ok) {

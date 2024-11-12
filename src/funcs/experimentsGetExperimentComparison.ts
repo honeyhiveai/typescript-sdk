@@ -3,7 +3,7 @@
  */
 
 import { HoneyHiveCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
+import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -19,18 +19,22 @@ import {
 } from "../models/errors/httpclienterrors.js";
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
+import * as operations from "../models/operations/index.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Create a new evaluation run
+ * Retrieve experiment comparison
  */
-export async function runsCreateRun(
+export async function experimentsGetExperimentComparison(
   client: HoneyHiveCore,
-  request: components.CreateRunRequest,
+  runId1: string,
+  runId2: string,
+  projectId: string,
+  aggregateFunction?: operations.QueryParamAggregateFunction | undefined,
   options?: RequestOptions,
 ): Promise<
   Result<
-    components.CreateRunResponse,
+    components.ExperimentComparisonResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -40,38 +44,72 @@ export async function runsCreateRun(
     | ConnectionError
   >
 > {
+  const input: operations.GetExperimentComparisonRequest = {
+    runId1: runId1,
+    runId2: runId2,
+    projectId: projectId,
+    aggregateFunction: aggregateFunction,
+  };
+
   const parsed = safeParse(
-    request,
-    (value) => components.CreateRunRequest$outboundSchema.parse(value),
+    input,
+    (value) =>
+      operations.GetExperimentComparisonRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return parsed;
   }
   const payload = parsed.value;
-  const body = encodeJSON("body", payload, { explode: true });
+  const body = null;
 
-  const path = pathToFunc("/runs")();
+  const pathParams = {
+    run_id_1: encodeSimple("run_id_1", payload.run_id_1, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+    run_id_2: encodeSimple("run_id_2", payload.run_id_2, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+  };
+
+  const path = pathToFunc("/runs/{run_id_1}/compare-with/{run_id_2}")(
+    pathParams,
+  );
+
+  const query = encodeFormQuery({
+    "aggregate_function": payload.aggregate_function,
+    "project_id": payload.project_id,
+  });
 
   const headers = new Headers({
-    "Content-Type": "application/json",
     Accept: "application/json",
   });
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
   const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
-  const context = {
-    operationID: "createRun",
-    oAuth2Scopes: [],
-    securitySource: client._options.bearerAuth,
-  };
   const requestSecurity = resolveGlobalSecurity(securityInput);
+
+  const context = {
+    operationID: "getExperimentComparison",
+    oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
+    securitySource: client._options.bearerAuth,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+  };
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "POST",
+    method: "GET",
     path: path,
     headers: headers,
+    query: query,
     body: body,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
@@ -83,9 +121,8 @@ export async function runsCreateRun(
   const doResult = await client._do(req, {
     context,
     errorCodes: ["400", "4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig,
-    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
     return doResult;
@@ -93,7 +130,7 @@ export async function runsCreateRun(
   const response = doResult.value;
 
   const [result] = await M.match<
-    components.CreateRunResponse,
+    components.ExperimentComparisonResponse,
     | SDKError
     | SDKValidationError
     | UnexpectedClientError
@@ -102,7 +139,7 @@ export async function runsCreateRun(
     | RequestTimeoutError
     | ConnectionError
   >(
-    M.json(200, components.CreateRunResponse$inboundSchema),
+    M.json(200, components.ExperimentComparisonResponse$inboundSchema),
     M.fail([400, "4XX", "5XX"]),
   )(response);
   if (!result.ok) {

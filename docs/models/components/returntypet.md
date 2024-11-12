@@ -7,7 +7,7 @@ The data type of the metric value - "boolean", "float", "string"
 ```typescript
 import { ReturnTypeT } from "honeyhive/models/components";
 
-let value: ReturnTypeT = "string";
+let value: ReturnTypeT = "float";
 ```
 
 ## Values

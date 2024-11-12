@@ -158,6 +158,16 @@ run();
 * [createEventBatch](docs/sdks/events/README.md#createeventbatch) - Create a batch of events
 * [createModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch) - Create a batch of model events
 
+### [experiments](docs/sdks/experiments/README.md)
+
+* [createRun](docs/sdks/experiments/README.md#createrun) - Create a new evaluation run
+* [getRuns](docs/sdks/experiments/README.md#getruns) - Get a list of evaluation runs
+* [getRun](docs/sdks/experiments/README.md#getrun) - Get details of an evaluation run
+* [updateRun](docs/sdks/experiments/README.md#updaterun) - Update an evaluation run
+* [deleteRun](docs/sdks/experiments/README.md#deleterun) - Delete an evaluation run
+* [getExperimentResult](docs/sdks/experiments/README.md#getexperimentresult) - Retrieve experiment result
+* [getExperimentComparison](docs/sdks/experiments/README.md#getexperimentcomparison) - Retrieve experiment comparison
+
 
 ### [metrics](docs/sdks/metrics/README.md)
 
@@ -172,14 +182,6 @@ run();
 * [createProject](docs/sdks/projects/README.md#createproject) - Create a new project
 * [updateProject](docs/sdks/projects/README.md#updateproject) - Update an existing project
 * [deleteProject](docs/sdks/projects/README.md#deleteproject) - Delete a project
-
-### [runs](docs/sdks/runs/README.md)
-
-* [createRun](docs/sdks/runs/README.md#createrun) - Create a new evaluation run
-* [getRuns](docs/sdks/runs/README.md#getruns) - Get a list of evaluation runs
-* [getRun](docs/sdks/runs/README.md#getrun) - Get details of an evaluation run
-* [updateRun](docs/sdks/runs/README.md#updaterun) - Update an evaluation run
-* [deleteRun](docs/sdks/runs/README.md#deleterun) - Delete an evaluation run
 
 ### [session](docs/sdks/session/README.md)
 
@@ -213,10 +215,10 @@ If a HTTP request fails, an operation my also throw an error from the `models/er
 
 In addition, when custom error responses are specified for an operation, the SDK may throw their associated Error type. You can refer to respective *Errors* tables in SDK docs for more details on possible error types for each operation. For example, the `createEventBatch` method may throw the following errors:
 
-| Error Type                          | Status Code                         | Content Type                        |
-| ----------------------------------- | ----------------------------------- | ----------------------------------- |
-| errors.CreateEventBatchResponseBody | 500                                 | application/json                    |
-| errors.SDKError                     | 4XX, 5XX                            | \*/\*                               |
+| Error Type                          | Status Code | Content Type     |
+| ----------------------------------- | ----------- | ---------------- |
+| errors.CreateEventBatchResponseBody | 500         | application/json |
+| errors.SDKError                     | 4XX, 5XX    | \*/\*            |
 
 ```typescript
 import { HoneyHive } from "honeyhive";
@@ -386,79 +388,9 @@ Validation errors can also occur when either method arguments or data returned f
 <!-- Start Server Selection [server] -->
 ## Server Selection
 
-### Select Server by Index
-
-You can override the default server globally by passing a server index to the `serverIdx` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the indexes associated with the available servers:
-
-| # | Server | Variables |
-| - | ------ | --------- |
-| 0 | `https://api.honeyhive.ai` | None |
-
-```typescript
-import { HoneyHive } from "honeyhive";
-
-const honeyHive = new HoneyHive({
-  serverIdx: 0,
-  bearerAuth: "<YOUR_BEARER_TOKEN_HERE>",
-});
-
-async function run() {
-  const result = await honeyHive.session.startSession({
-    session: {
-      project: "Simple RAG Project",
-      sessionName: "Playground Session",
-      source: "playground",
-      sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
-      childrenIds: [
-        "7f22137a-6911-4ed3-bc36-110f1dde6b66",
-      ],
-      inputs: {
-        "chat_history": [
-          {
-            "role": "system",
-            "content":
-              "Answer the user's question only using provided context.\n"
-              + "\n"
-              + "Context: Hello world",
-          },
-          {
-            "role": "user",
-            "content": "What is in the context?",
-          },
-        ],
-        "context": "Hello world",
-        "question": "What is in the context?",
-      },
-      outputs: {
-        "content": "Hello world",
-        "role": "assistant",
-      },
-      error: "<value>",
-      duration: 824.8056,
-      userProperties: {
-        "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {},
-      feedback: {},
-      metadata: {},
-      startTime: 1712025501605,
-      endTime: 1712025499832,
-    },
-  });
-
-  // Handle the result
-  console.log(result);
-}
-
-run();
-
-```
-
-
 ### Override Server URL Per-Client
 
-The default server can also be overridden globally by passing a URL to the `serverURL` optional parameter when initializing the SDK client instance. For example:
-
+The default server can also be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { HoneyHive } from "honeyhive";
 
@@ -576,9 +508,9 @@ const sdk = new HoneyHive({ httpClient });
 
 This SDK supports the following security scheme globally:
 
-| Name         | Type         | Scheme       |
-| ------------ | ------------ | ------------ |
-| `bearerAuth` | http         | HTTP Bearer  |
+| Name         | Type | Scheme      |
+| ------------ | ---- | ----------- |
+| `bearerAuth` | http | HTTP Bearer |
 
 To authenticate with the API the `bearerAuth` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
@@ -662,46 +594,47 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [configurationsCreateConfiguration](docs/sdks/configurations/README.md#createconfiguration)
-- [configurationsDeleteConfiguration](docs/sdks/configurations/README.md#deleteconfiguration)
-- [configurationsGetConfigurations](docs/sdks/configurations/README.md#getconfigurations)
-- [configurationsUpdateConfiguration](docs/sdks/configurations/README.md#updateconfiguration)
-- [datapointsCreateDatapoint](docs/sdks/datapoints/README.md#createdatapoint)
-- [datapointsDeleteDatapoint](docs/sdks/datapoints/README.md#deletedatapoint)
-- [datapointsGetDatapoint](docs/sdks/datapoints/README.md#getdatapoint)
-- [datapointsGetDatapoints](docs/sdks/datapoints/README.md#getdatapoints)
-- [datapointsUpdateDatapoint](docs/sdks/datapoints/README.md#updatedatapoint)
-- [datasetsAddDatapoints](docs/sdks/datasets/README.md#adddatapoints)
-- [datasetsCreateDataset](docs/sdks/datasets/README.md#createdataset)
-- [datasetsDeleteDataset](docs/sdks/datasets/README.md#deletedataset)
-- [datasetsGetDatasets](docs/sdks/datasets/README.md#getdatasets)
-- [datasetsUpdateDataset](docs/sdks/datasets/README.md#updatedataset)
-- [eventsCreateEventBatch](docs/sdks/events/README.md#createeventbatch)
-- [eventsCreateEvent](docs/sdks/events/README.md#createevent)
-- [eventsCreateModelEventBatch](docs/sdks/events/README.md#createmodeleventbatch)
-- [eventsCreateModelEvent](docs/sdks/events/README.md#createmodelevent)
-- [eventsGetEvents](docs/sdks/events/README.md#getevents)
-- [eventsUpdateEvent](docs/sdks/events/README.md#updateevent)
-- [metricsCreateMetric](docs/sdks/metrics/README.md#createmetric)
-- [metricsDeleteMetric](docs/sdks/metrics/README.md#deletemetric)
-- [metricsGetMetrics](docs/sdks/metrics/README.md#getmetrics)
-- [metricsUpdateMetric](docs/sdks/metrics/README.md#updatemetric)
-- [projectsCreateProject](docs/sdks/projects/README.md#createproject)
-- [projectsDeleteProject](docs/sdks/projects/README.md#deleteproject)
-- [projectsGetProjects](docs/sdks/projects/README.md#getprojects)
-- [projectsUpdateProject](docs/sdks/projects/README.md#updateproject)
-- [runsCreateRun](docs/sdks/runs/README.md#createrun)
-- [runsDeleteRun](docs/sdks/runs/README.md#deleterun)
-- [runsGetRun](docs/sdks/runs/README.md#getrun)
-- [runsGetRuns](docs/sdks/runs/README.md#getruns)
-- [runsUpdateRun](docs/sdks/runs/README.md#updaterun)
-- [sessionGetSession](docs/sdks/session/README.md#getsession)
-- [sessionStartSession](docs/sdks/session/README.md#startsession)
-- [toolsCreateTool](docs/sdks/tools/README.md#createtool)
-- [toolsDeleteTool](docs/sdks/tools/README.md#deletetool)
-- [toolsGetTools](docs/sdks/tools/README.md#gettools)
-- [toolsUpdateTool](docs/sdks/tools/README.md#updatetool)
-
+- [`configurationsCreateConfiguration`](docs/sdks/configurations/README.md#createconfiguration) - Create a new configuration
+- [`configurationsDeleteConfiguration`](docs/sdks/configurations/README.md#deleteconfiguration) - Delete a configuration
+- [`configurationsGetConfigurations`](docs/sdks/configurations/README.md#getconfigurations) - Retrieve a list of configurations
+- [`configurationsUpdateConfiguration`](docs/sdks/configurations/README.md#updateconfiguration) - Update an existing configuration
+- [`datapointsCreateDatapoint`](docs/sdks/datapoints/README.md#createdatapoint) - Create a new datapoint
+- [`datapointsDeleteDatapoint`](docs/sdks/datapoints/README.md#deletedatapoint) - Delete a specific datapoint
+- [`datapointsGetDatapoint`](docs/sdks/datapoints/README.md#getdatapoint) - Retrieve a specific datapoint
+- [`datapointsGetDatapoints`](docs/sdks/datapoints/README.md#getdatapoints) - Retrieve a list of datapoints
+- [`datapointsUpdateDatapoint`](docs/sdks/datapoints/README.md#updatedatapoint) - Update a specific datapoint
+- [`datasetsAddDatapoints`](docs/sdks/datasets/README.md#adddatapoints) - Add datapoints to a dataset
+- [`datasetsCreateDataset`](docs/sdks/datasets/README.md#createdataset) - Create a dataset
+- [`datasetsDeleteDataset`](docs/sdks/datasets/README.md#deletedataset) - Delete a dataset
+- [`datasetsGetDatasets`](docs/sdks/datasets/README.md#getdatasets) - Get datasets
+- [`datasetsUpdateDataset`](docs/sdks/datasets/README.md#updatedataset) - Update a dataset
+- [`eventsCreateEvent`](docs/sdks/events/README.md#createevent) - Create a new event
+- [`eventsCreateEventBatch`](docs/sdks/events/README.md#createeventbatch) - Create a batch of events
+- [`eventsCreateModelEvent`](docs/sdks/events/README.md#createmodelevent) - Create a new model event
+- [`eventsCreateModelEventBatch`](docs/sdks/events/README.md#createmodeleventbatch) - Create a batch of model events
+- [`eventsGetEvents`](docs/sdks/events/README.md#getevents) - Retrieve events based on filters
+- [`eventsUpdateEvent`](docs/sdks/events/README.md#updateevent) - Update an event
+- [`experimentsCreateRun`](docs/sdks/experiments/README.md#createrun) - Create a new evaluation run
+- [`experimentsDeleteRun`](docs/sdks/experiments/README.md#deleterun) - Delete an evaluation run
+- [`experimentsGetExperimentComparison`](docs/sdks/experiments/README.md#getexperimentcomparison) - Retrieve experiment comparison
+- [`experimentsGetExperimentResult`](docs/sdks/experiments/README.md#getexperimentresult) - Retrieve experiment result
+- [`experimentsGetRun`](docs/sdks/experiments/README.md#getrun) - Get details of an evaluation run
+- [`experimentsGetRuns`](docs/sdks/experiments/README.md#getruns) - Get a list of evaluation runs
+- [`experimentsUpdateRun`](docs/sdks/experiments/README.md#updaterun) - Update an evaluation run
+- [`metricsCreateMetric`](docs/sdks/metrics/README.md#createmetric) - Create a new metric
+- [`metricsDeleteMetric`](docs/sdks/metrics/README.md#deletemetric) - Delete a metric
+- [`metricsGetMetrics`](docs/sdks/metrics/README.md#getmetrics) - Get all metrics
+- [`metricsUpdateMetric`](docs/sdks/metrics/README.md#updatemetric) - Update an existing metric
+- [`projectsCreateProject`](docs/sdks/projects/README.md#createproject) - Create a new project
+- [`projectsDeleteProject`](docs/sdks/projects/README.md#deleteproject) - Delete a project
+- [`projectsGetProjects`](docs/sdks/projects/README.md#getprojects) - Get a list of projects
+- [`projectsUpdateProject`](docs/sdks/projects/README.md#updateproject) - Update an existing project
+- [`sessionGetSession`](docs/sdks/session/README.md#getsession) - Retrieve a session
+- [`sessionStartSession`](docs/sdks/session/README.md#startsession) - Start a new session
+- [`toolsCreateTool`](docs/sdks/tools/README.md#createtool) - Create a new tool
+- [`toolsDeleteTool`](docs/sdks/tools/README.md#deletetool) - Delete a tool
+- [`toolsGetTools`](docs/sdks/tools/README.md#gettools) - Retrieve a list of tools
+- [`toolsUpdateTool`](docs/sdks/tools/README.md#updatetool) - Update an existing tool
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->

@@ -11,7 +11,7 @@ let value: Tool = {
   parameters: {
     "key": "<value>",
   },
-  toolType: "function",
+  toolType: "tool",
 };
 ```
 
