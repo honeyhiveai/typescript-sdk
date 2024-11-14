@@ -1,6 +1,7 @@
 import { HoneyHive } from "./sdk";
-import { CreateRunResponse, } from '../models/components';
+import { CreateRunResponse, Status } from '../models/components';
 import { HoneyHiveTracer } from './tracer';
+import * as crypto from 'crypto';
 
 type Dict<T> = { [key: string]: T };
 type Any = any;
@@ -19,8 +20,10 @@ interface EvaluationConfig {
 interface EvaluationState {
     hhai: HoneyHive;
     hh_dataset: Any;
+    external_dataset_id: string | undefined;
     evaluation_session_ids: string[];
     eval_run: CreateRunResponse | null;
+    state: Status;
 }
 
 function validateRequirements(config: EvaluationConfig): void {
@@ -36,6 +39,12 @@ function validateRequirements(config: EvaluationConfig): void {
     if (!config.dataset_id && !config.query_list) {
         throw new Error("No valid 'dataset_id' or 'query_list' found. Please provide one to iterate the evaluation over.");
     }
+}
+
+function _generateHash(inputString: string): string {
+    const hashObject = crypto.createHash('md5');
+    hashObject.update(inputString, 'utf-8');
+    return `EXT-${hashObject.digest('hex').slice(0, 24)}`;
 }
 
 async function loadDataset(hhai: HoneyHive, config: EvaluationConfig): Promise<any> {
@@ -153,6 +162,10 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
                 tracing_metadata['datapoint_id'] = state.hh_dataset.datapoints[run_id];
                 tracing_metadata['dataset_id'] = config.dataset_id;
             }
+            if (state.external_dataset_id && config.query_list) {
+                tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.query_list[run_id]));
+                tracing_metadata['dataset_id'] = state.external_dataset_id;
+            }
             await tracer.enrichSession({
                 metadata: tracing_metadata,
                 outputs: evaluation_output,
@@ -169,20 +182,21 @@ async function setupEvaluation(state: EvaluationState, config: EvaluationConfig)
     const eval_run = await state.hhai.experiments.createRun({
         project: config.hh_project,
         name: config.name,
-        datasetId: config.dataset_id,
+        datasetId: config.dataset_id || state.external_dataset_id,
         eventIds: [],
-
+        status: state.state,
     });
     state.eval_run = eval_run;
 }
 
 async function windupEvaluation(state: EvaluationState): Promise<void> {
     try {
+        state.state = Status.Completed;
         if (state.eval_run && state.eval_run.runId) {
             await state.hhai.experiments.updateRun(
                 {
                     eventIds: state.evaluation_session_ids,
-                    status: "completed"
+                    status: state.state
                 },
                 state.eval_run.runId,
             );
@@ -194,14 +208,21 @@ async function windupEvaluation(state: EvaluationState): Promise<void> {
 
 async function evaluate(
     config: EvaluationConfig
-): Promise<void> {
+): Promise<{
+    run_id: string;
+    dataset_id: string | undefined;
+    session_ids: string[];
+    status: Status;
+}> {
     validateRequirements(config);
 
     const state: EvaluationState = {
         hhai: new HoneyHive({ bearerAuth: config.hh_api_key }),
         hh_dataset: null,
+        external_dataset_id: config.query_list ? _generateHash(JSON.stringify(config.query_list)) : undefined,
         evaluation_session_ids: [],
-        eval_run: null
+        eval_run: null,
+        state: Status.Pending
     };
 
     state.hh_dataset = await loadDataset(state.hhai, config);
@@ -224,6 +245,13 @@ async function evaluate(
     }
 
     await windupEvaluation(state);
+
+    return {
+        run_id: state.eval_run?.runId || '',
+        dataset_id: config.dataset_id || state.external_dataset_id,
+        session_ids: state.evaluation_session_ids,
+        status: state.state
+    };
 }
 
 export { evaluate };
