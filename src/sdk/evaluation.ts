@@ -110,8 +110,7 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
             (async () => {
                 try {
                     const agentResponse = await evalconfig.evaluationFunction(inputs);
-                    if (agentResponse && typeof agentResponse === 'object')
-                        output = agentResponse;
+                    output = agentResponse;
                     console.log(agentResponse);
                 } finally {
                     promiseResolve();
@@ -165,6 +164,9 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
             if (state.external_dataset_id && config.query_list) {
                 tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.query_list[run_id]));
                 tracing_metadata['dataset_id'] = state.external_dataset_id;
+            }
+            if (typeof evaluation_output !== 'object') {
+                evaluation_output = { output: evaluation_output };
             }
             await tracer.enrichSession({
                 metadata: tracing_metadata,
