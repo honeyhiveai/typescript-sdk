@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DatasetUpdate = {
   /**
@@ -91,4 +94,18 @@ export namespace DatasetUpdate$ {
   export const outboundSchema = DatasetUpdate$outboundSchema;
   /** @deprecated use `DatasetUpdate$Outbound` instead. */
   export type Outbound = DatasetUpdate$Outbound;
+}
+
+export function datasetUpdateToJSON(datasetUpdate: DatasetUpdate): string {
+  return JSON.stringify(DatasetUpdate$outboundSchema.parse(datasetUpdate));
+}
+
+export function datasetUpdateFromJSON(
+  jsonString: string,
+): SafeParseResult<DatasetUpdate, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DatasetUpdate$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DatasetUpdate' from JSON`,
+  );
 }

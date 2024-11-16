@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteProjectRequest = {
   name: string;
@@ -42,4 +45,22 @@ export namespace DeleteProjectRequest$ {
   export const outboundSchema = DeleteProjectRequest$outboundSchema;
   /** @deprecated use `DeleteProjectRequest$Outbound` instead. */
   export type Outbound = DeleteProjectRequest$Outbound;
+}
+
+export function deleteProjectRequestToJSON(
+  deleteProjectRequest: DeleteProjectRequest,
+): string {
+  return JSON.stringify(
+    DeleteProjectRequest$outboundSchema.parse(deleteProjectRequest),
+  );
+}
+
+export function deleteProjectRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteProjectRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteProjectRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteProjectRequest' from JSON`,
+  );
 }

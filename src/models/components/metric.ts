@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Type of the metric - "custom", "model", "human" or "composite"
@@ -185,6 +188,20 @@ export namespace Threshold$ {
   export type Outbound = Threshold$Outbound;
 }
 
+export function thresholdToJSON(threshold: Threshold): string {
+  return JSON.stringify(Threshold$outboundSchema.parse(threshold));
+}
+
+export function thresholdFromJSON(
+  jsonString: string,
+): SafeParseResult<Threshold, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Threshold$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Threshold' from JSON`,
+  );
+}
+
 /** @internal */
 export const Metric$inboundSchema: z.ZodType<Metric, z.ZodTypeDef, unknown> = z
   .object({
@@ -285,4 +302,18 @@ export namespace Metric$ {
   export const outboundSchema = Metric$outboundSchema;
   /** @deprecated use `Metric$Outbound` instead. */
   export type Outbound = Metric$Outbound;
+}
+
+export function metricToJSON(metric: Metric): string {
+  return JSON.stringify(Metric$outboundSchema.parse(metric));
+}
+
+export function metricFromJSON(
+  jsonString: string,
+): SafeParseResult<Metric, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Metric$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Metric' from JSON`,
+  );
 }
