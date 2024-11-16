@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetRunsRequest = {
   project?: string | undefined;
@@ -42,4 +45,18 @@ export namespace GetRunsRequest$ {
   export const outboundSchema = GetRunsRequest$outboundSchema;
   /** @deprecated use `GetRunsRequest$Outbound` instead. */
   export type Outbound = GetRunsRequest$Outbound;
+}
+
+export function getRunsRequestToJSON(getRunsRequest: GetRunsRequest): string {
+  return JSON.stringify(GetRunsRequest$outboundSchema.parse(getRunsRequest));
+}
+
+export function getRunsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetRunsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetRunsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetRunsRequest' from JSON`,
+  );
 }

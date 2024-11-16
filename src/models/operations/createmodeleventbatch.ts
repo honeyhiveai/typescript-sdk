@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateModelEventBatchRequestBody = {
   modelEvents?: Array<components.CreateModelEvent> | undefined;
@@ -79,6 +82,26 @@ export namespace CreateModelEventBatchRequestBody$ {
   export type Outbound = CreateModelEventBatchRequestBody$Outbound;
 }
 
+export function createModelEventBatchRequestBodyToJSON(
+  createModelEventBatchRequestBody: CreateModelEventBatchRequestBody,
+): string {
+  return JSON.stringify(
+    CreateModelEventBatchRequestBody$outboundSchema.parse(
+      createModelEventBatchRequestBody,
+    ),
+  );
+}
+
+export function createModelEventBatchRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateModelEventBatchRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateModelEventBatchRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateModelEventBatchRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateModelEventBatchResponseBody$inboundSchema: z.ZodType<
   CreateModelEventBatchResponseBody,
@@ -125,4 +148,24 @@ export namespace CreateModelEventBatchResponseBody$ {
     CreateModelEventBatchResponseBody$outboundSchema;
   /** @deprecated use `CreateModelEventBatchResponseBody$Outbound` instead. */
   export type Outbound = CreateModelEventBatchResponseBody$Outbound;
+}
+
+export function createModelEventBatchResponseBodyToJSON(
+  createModelEventBatchResponseBody: CreateModelEventBatchResponseBody,
+): string {
+  return JSON.stringify(
+    CreateModelEventBatchResponseBody$outboundSchema.parse(
+      createModelEventBatchResponseBody,
+    ),
+  );
+}
+
+export function createModelEventBatchResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateModelEventBatchResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateModelEventBatchResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateModelEventBatchResponseBody' from JSON`,
+  );
 }

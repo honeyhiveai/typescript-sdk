@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export const AggregateFunction = {
   Average: "average",
@@ -98,4 +101,22 @@ export namespace GetExperimentResultRequest$ {
   export const outboundSchema = GetExperimentResultRequest$outboundSchema;
   /** @deprecated use `GetExperimentResultRequest$Outbound` instead. */
   export type Outbound = GetExperimentResultRequest$Outbound;
+}
+
+export function getExperimentResultRequestToJSON(
+  getExperimentResultRequest: GetExperimentResultRequest,
+): string {
+  return JSON.stringify(
+    GetExperimentResultRequest$outboundSchema.parse(getExperimentResultRequest),
+  );
+}
+
+export function getExperimentResultRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetExperimentResultRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetExperimentResultRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetExperimentResultRequest' from JSON`,
+  );
 }

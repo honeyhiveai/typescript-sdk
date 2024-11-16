@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetDatapointsRequest = {
   /**
@@ -80,6 +83,24 @@ export namespace GetDatapointsRequest$ {
   export type Outbound = GetDatapointsRequest$Outbound;
 }
 
+export function getDatapointsRequestToJSON(
+  getDatapointsRequest: GetDatapointsRequest,
+): string {
+  return JSON.stringify(
+    GetDatapointsRequest$outboundSchema.parse(getDatapointsRequest),
+  );
+}
+
+export function getDatapointsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetDatapointsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetDatapointsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetDatapointsRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetDatapointsResponseBody$inboundSchema: z.ZodType<
   GetDatapointsResponseBody,
@@ -114,4 +135,22 @@ export namespace GetDatapointsResponseBody$ {
   export const outboundSchema = GetDatapointsResponseBody$outboundSchema;
   /** @deprecated use `GetDatapointsResponseBody$Outbound` instead. */
   export type Outbound = GetDatapointsResponseBody$Outbound;
+}
+
+export function getDatapointsResponseBodyToJSON(
+  getDatapointsResponseBody: GetDatapointsResponseBody,
+): string {
+  return JSON.stringify(
+    GetDatapointsResponseBody$outboundSchema.parse(getDatapointsResponseBody),
+  );
+}
+
+export function getDatapointsResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<GetDatapointsResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetDatapointsResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetDatapointsResponseBody' from JSON`,
+  );
 }
