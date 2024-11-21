@@ -22,8 +22,8 @@ import * as chromadb from "chromadb";
 import * as azureOpenAI from "@azure/openai";
 
 interface InitParams {
-  apiKey: string;
-  project: string;
+  apiKey?: string;
+  project?: string;
   sessionName?: string;
   source?: string;
   serverUrl?: string;
@@ -35,6 +35,198 @@ interface InitSessionIdParams {
   apiKey: string;
   sessionId: string;
   serverUrl?: string;
+}
+
+interface BetaLike {
+  chat: {
+    completions: {
+      stream: any;
+    };
+  };
+  embeddings: any;
+}
+
+interface ChatLike {
+  completions: any;
+}
+
+interface OpenAILike {
+  chat: ChatLike;
+  embeddings: any;
+  beta?: BetaLike;
+}
+
+type ChatParams = {
+  messages: unknown;
+  stream?: boolean | null;
+};
+
+interface NonStreamingChatResponse {
+  choices: any[];
+  usage:
+    | {
+        total_tokens: number;
+        prompt_tokens: number;
+        completion_tokens: number;
+      }
+    | undefined;
+}
+
+type StreamingChatResponse = any;
+type EnhancedResponse = {
+  response: Response;
+  data: any;
+};
+interface APIPromise<T> extends Promise<T> {
+  withResponse(): Promise<EnhancedResponse>;
+}
+
+function traceOpenAIv4<T extends OpenAILike>(openai: T, sessionId: string | undefined): T {
+  const completionProxy = new Proxy(openai.chat.completions, {
+    get(target, name, receiver) {
+      const baseVal = Reflect.get(target, name, receiver);
+      if (name === "create") {
+          return wrapChatCompletion(baseVal.bind(target), sessionId);
+      }
+      return baseVal;
+    },
+  });
+  const chatProxy = new Proxy(openai.chat, {
+    get(target, name, receiver) {
+      if (name === "completions") {
+        return completionProxy;
+      }
+      return Reflect.get(target, name, receiver);
+    },
+  });
+
+  const embeddingProxy = new Proxy(openai.embeddings, {
+    get(target, name, receiver) {
+      const baseVal = Reflect.get(target, name, receiver);
+      if (name === "create") {
+        //   return wrapEmbeddings(baseVal.bind(target));
+        return baseVal;
+      }
+      return baseVal;
+    },
+  });
+
+  let betaProxy: OpenAILike;
+  if (openai.beta?.chat?.completions?.stream) {
+    const betaChatCompletionProxy = new Proxy(openai?.beta?.chat.completions, {
+      get(target, name, receiver) {
+        const baseVal = Reflect.get(target, name, receiver);
+        if (name === "parse") {
+          //   return wrapBetaChatCompletionParse(baseVal.bind(target));
+          return baseVal;
+        } else if (name === "stream") {
+          //   return wrapBetaChatCompletionStream(baseVal.bind(target));
+          return baseVal;
+        }
+        return baseVal;
+      },
+    });
+    const betaChatProxy = new Proxy(openai.beta.chat, {
+      get(target, name, receiver) {
+        if (name === "completions") {
+          return betaChatCompletionProxy;
+        }
+        return Reflect.get(target, name, receiver);
+      },
+    });
+    betaProxy = new Proxy(openai.beta, {
+      get(target, name, receiver) {
+        if (name === "chat") {
+          return betaChatProxy;
+        }
+        return Reflect.get(target, name, receiver);
+      },
+    });
+  }
+  const proxy = new Proxy(openai, {
+    get(target, name, receiver) {
+      if (name === "chat") {
+        return chatProxy;
+      }
+      // TODO: support embeddings
+      if (name === "embeddings") {
+        return embeddingProxy;
+      }
+      // TODO: support beta
+      if (name === "beta" && betaProxy) {
+        return betaProxy;
+      }
+      return Reflect.get(target, name, receiver);
+    },
+  });
+
+  return proxy;
+}
+
+function wrapChatCompletion<
+  P extends ChatParams,
+  C extends NonStreamingChatResponse | StreamingChatResponse,
+>(
+  completion: (params: P, options?: unknown) => APIPromise<C>,
+  sessionId: string | undefined,
+): (params: P, options?: unknown) => Promise<any> {
+  return async (allParams: P, options?: unknown) => {
+    const { ...params } = allParams;
+
+    const tracer = trace.getTracer('traceloop.tracer');
+    const spanName = 'openai.chat';
+    const span = tracer.startSpan(spanName);
+    setSpanAttributes(span, 'honeyhive_event_type', 'model');
+    setSpanAttributes(span, 'traceloop.association.properties.session_id', sessionId);
+
+    const { messages, ...rest } = params;
+    setSpanAttributes(span, 'honeyhive_inputs.chat_history', messages);
+    setSpanAttributes(span, 'honeyhive_metadata', rest);
+
+    // For some reason, CJS and ESM behave differently here.
+    // CJS returns a streaming iterator or non-streaming response directly, but ESM returns a wrapped iterator or non-streaming response.
+    if (params.stream) {
+      const completionResponse = completion(params as P, options);
+      let ret: StreamingChatResponse;
+      const startTime = Math.floor(Date.now() / 1000);
+      let wrapperStream: WrapperStream<any>;
+      if (completionResponse.withResponse) {
+        ({ data: ret } = await completionResponse.withResponse());
+        wrapperStream = new WrapperStream(span, startTime, ret.iterator());
+        ret.iterator = () => wrapperStream[Symbol.asyncIterator]();
+      } else {
+        ret = (await completionResponse) as StreamingChatResponse;
+        wrapperStream = new WrapperStream(span, startTime, ret);
+        ret = wrapperStream[Symbol.asyncIterator]();
+      }
+      
+      return ret;
+    } else {
+      try {
+        const completionResponse = completion(params as P, options);
+        let ret: NonStreamingChatResponse;
+        if (completionResponse.withResponse) {
+          ({ data: ret } = await completionResponse.withResponse());
+        } else {
+          ret = (await completionResponse) as NonStreamingChatResponse;
+        }
+
+        const outputs = ret.choices && ret.choices[0] ? {
+          finish_reason: ret.choices[0].finish_reason,
+          role: ret.choices[0].message.role,
+          content: ret.choices[0].message.content,
+        } : {};
+        setSpanAttributes(span, 'honeyhive_outputs', outputs);
+
+        span.end();
+        return ret;
+      } catch (err: unknown) {
+        span.recordException(err as Exception);
+        span.end();
+        throw err;
+      }
+    }
+  };
 }
 
 function isPromise(obj: any): obj is Promise<any> {
@@ -74,6 +266,106 @@ function setSpanAttributes(span: Span, prefix: string, value: any) {
     span.setAttribute(prefix, value.name || 'anonymous');
   } else {
     span.setAttribute(prefix, String(value));
+  }
+}
+
+function postprocessStreamingResults(allResults: any[]): {
+  output: {
+    role: string;
+    content: string;
+    finish_reason?: string;
+  },
+  // metrics: Record<string, number>;
+} {
+  let role = undefined;
+  let content = undefined;
+  let tool_calls = undefined;
+  let finish_reason = undefined;
+  let metrics = {};
+  for (const result of allResults) {
+    if (result.usage) {
+      metrics = {
+        ...metrics,
+        tokens: result.usage.total_tokens,
+        prompt_tokens: result.usage.prompt_tokens,
+        completion_tokens: result.usage.completion_tokens,
+      };
+    }
+
+    const delta = result.choices?.[0]?.delta;
+    if (!delta) {
+      continue;
+    }
+
+    if (!role && delta.role) {
+      role = delta.role;
+    }
+
+    if (delta.finish_reason) {
+      finish_reason = delta.finish_reason;
+    }
+
+    if (delta.content) {
+      content = (content || "") + delta.content;
+    }
+
+    if (delta.tool_calls) {
+      if (!tool_calls) {
+        tool_calls = [
+          {
+            id: delta.tool_calls[0].id,
+            type: delta.tool_calls[0].type,
+            function: delta.tool_calls[0].function,
+          },
+        ];
+      } else {
+        tool_calls[0]!.function.arguments +=
+          delta.tool_calls[0].function.arguments;
+      }
+    }
+  }
+
+  return {
+    output: {
+      role: role || "unknown",
+      content: content || "",
+      finish_reason: finish_reason || "unknown",
+    },
+    // metrics: metrics,
+  };
+}
+
+class WrapperStream<Item> implements AsyncIterable<Item> {
+  private span: Span;
+  private iter: AsyncIterable<Item>;
+  private startTime: number;
+
+  constructor(span: Span, startTime: number, iter: AsyncIterable<Item>) {
+    this.span = span;
+    this.iter = iter;
+    this.startTime = startTime;
+  }
+
+  async *[Symbol.asyncIterator](): AsyncIterator<Item, any, undefined> {
+    let first = true;
+    const allResults: any[] = [];
+    try {
+      for await (const item of this.iter) {
+        if (first) {
+          const now = Math.floor(Date.now() / 1000);
+          setSpanAttributes(this.span, 'metrics.time_to_first_token', now - this.startTime);
+          first = false;
+        }
+
+        allResults.push(item);
+        yield item;
+      }
+
+      const { output } = postprocessStreamingResults(allResults);
+      setSpanAttributes(this.span, 'honeyhive_outputs', output);
+    } finally {
+      this.span.end();
+    }
   }
 }
 
@@ -195,7 +487,19 @@ export class HoneyHiveTracer {
     serverUrl = "https://api.honeyhive.ai",
     inputs,
     isEvaluation = false
-  }: InitParams): Promise<HoneyHiveTracer> {
+  }: InitParams = {}): Promise<HoneyHiveTracer> {
+    if (!apiKey) {
+      apiKey = process.env['HH_API_KEY'];
+      if (!apiKey) {
+        throw new Error("apiKey must be specified or set in environment variable HH_API_KEY.");
+      }
+    }
+    if (!project) {
+      project = process.env['HH_PROJECT'];
+      if (!project) {
+        throw new Error("project name must be specified or set in environment variable HH_PROJECT.");
+      }
+    }
     const sdk = new HoneyHive({
       bearerAuth: apiKey,
       serverURL: serverUrl,
@@ -210,9 +514,12 @@ export class HoneyHiveTracer {
     }
     if (!sessionName) {
       try {
-        const mainModule = require.main;
-        if (mainModule) {
-          sessionName = path.basename(mainModule.filename);
+        // Check for CommonJS module
+        if (typeof require !== 'undefined' && require.main) {
+          sessionName = path.basename(require.main.filename);
+        } else if (typeof process !== 'undefined' && process.argv && process.argv[1]) {
+          // Check for ES Module by using process.argv
+          sessionName = path.basename(process.argv[1]);
         } else {
           sessionName = 'unknown';
         }
@@ -378,6 +685,27 @@ export class HoneyHiveTracer {
     };
   }
 
+  public traceModel<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "model", config, metadata })(func);
+  }
+
+  public traceTool<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "tool", config, metadata })(func);
+  } 
+
+  public traceChain<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "chain", config, metadata })(func);
+  }
+
   public trace(fn: () => void): void {
     if (this.sessionId) {
       traceloop.withAssociationProperties(
@@ -433,6 +761,15 @@ export class HoneyHiveTracer {
       }
     } else {
       console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
+    }
+  }
+
+  public traceOpenAI<T extends object>(openai: T): T {
+    if ((openai as any)?.chat?.completions?.create) {
+      return traceOpenAIv4(openai as any, this.sessionId) as T;
+    } else {
+      console.warn("Cannot trace unsupported OpenAI library, please upgrade to OpenAI v4");
+      return openai;
     }
   }
 

@@ -1,9 +1,10 @@
 {
+  "type": "module",
   "dependencies": {
     "@traceloop/node-server-sdk": "^0.8.4",
     "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
-    "honeyhive": "file:../.",
+    "honeyhive": "file:..",
     "jest": "^29.7.0",
     "openai": "^4.28.4",
     "ts-jest": "^29.1.2",
@@ -11,11 +12,13 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "npx tsx enrich_span_esm.ts"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.27"
+    "@types/node": "^20.11.27",
+    "typescript": "^5.0.0"
   }
 }

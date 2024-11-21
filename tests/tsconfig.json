@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "lib": ["es2021"],
     "baseUrl": "src",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
     "allowJs": true,
     "downlevelIteration": true,
@@ -21,6 +21,15 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "declaration": true,
-    "types": ["reflect-metadata", "jest", "node"]
+    "types": ["reflect-metadata", "jest", "node"],
+    "noImplicitAny": true
   },
+  "include": [
+    "*.ts",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
