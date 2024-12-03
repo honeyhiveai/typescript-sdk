@@ -64,7 +64,7 @@ const HH_PROJECT = process.env.HH_PROJECT || "";
         return `Result with ${param1}`;
     })
 
-    const myFunction = hive.traceFunction()(async function (param1, param2) {
+    const myFunction = hive.traceFunction()(async function (param1: string, param2: number) {
 
         hive.enrichSpan({
             inputs: {

@@ -22,4 +22,4 @@ COPY ./tests/package.json ./tests/* ./
 RUN npm install
 
 # CMD to run the tests can be specified here
-CMD ["sh", "-c", "SESSION_NAME=$(npx ts-node tracer_script.ts) && npm test"]
+CMD ["sh", "-c", "SESSION_NAME=$(npx ts-node enrich_span_cjs.ts) && npm test"]

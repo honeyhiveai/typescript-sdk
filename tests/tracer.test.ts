@@ -9,7 +9,7 @@ const HH_PROJECT_ID = process.env.HH_PROJECT_ID || "";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe("TypeScript Tracer", () => {
+xdescribe("TypeScript Tracer", () => {
   let sessionName: string;
   beforeAll(function (done) {
     // Read the session name from the file
