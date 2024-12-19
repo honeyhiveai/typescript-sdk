@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteMetricRequest = {
   metricId: string;
@@ -51,4 +54,22 @@ export namespace DeleteMetricRequest$ {
   export const outboundSchema = DeleteMetricRequest$outboundSchema;
   /** @deprecated use `DeleteMetricRequest$Outbound` instead. */
   export type Outbound = DeleteMetricRequest$Outbound;
+}
+
+export function deleteMetricRequestToJSON(
+  deleteMetricRequest: DeleteMetricRequest,
+): string {
+  return JSON.stringify(
+    DeleteMetricRequest$outboundSchema.parse(deleteMetricRequest),
+  );
+}
+
+export function deleteMetricRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteMetricRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteMetricRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteMetricRequest' from JSON`,
+  );
 }
