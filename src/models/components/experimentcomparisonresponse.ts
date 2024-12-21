@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type OldValues = number | boolean;
 
@@ -129,6 +132,20 @@ export namespace OldValues$ {
   export type Outbound = OldValues$Outbound;
 }
 
+export function oldValuesToJSON(oldValues: OldValues): string {
+  return JSON.stringify(OldValues$outboundSchema.parse(oldValues));
+}
+
+export function oldValuesFromJSON(
+  jsonString: string,
+): SafeParseResult<OldValues, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => OldValues$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'OldValues' from JSON`,
+  );
+}
+
 /** @internal */
 export const NewValues$inboundSchema: z.ZodType<
   NewValues,
@@ -157,6 +174,20 @@ export namespace NewValues$ {
   export const outboundSchema = NewValues$outboundSchema;
   /** @deprecated use `NewValues$Outbound` instead. */
   export type Outbound = NewValues$Outbound;
+}
+
+export function newValuesToJSON(newValues: NewValues): string {
+  return JSON.stringify(NewValues$outboundSchema.parse(newValues));
+}
+
+export function newValuesFromJSON(
+  jsonString: string,
+): SafeParseResult<NewValues, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => NewValues$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'NewValues' from JSON`,
+  );
 }
 
 /** @internal */
@@ -269,6 +300,27 @@ export namespace ExperimentComparisonResponseMetrics$ {
   export type Outbound = ExperimentComparisonResponseMetrics$Outbound;
 }
 
+export function experimentComparisonResponseMetricsToJSON(
+  experimentComparisonResponseMetrics: ExperimentComparisonResponseMetrics,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseMetrics$outboundSchema.parse(
+      experimentComparisonResponseMetrics,
+    ),
+  );
+}
+
+export function experimentComparisonResponseMetricsFromJSON(
+  jsonString: string,
+): SafeParseResult<ExperimentComparisonResponseMetrics, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseMetrics$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExperimentComparisonResponseMetrics' from JSON`,
+  );
+}
+
 /** @internal */
 export const EventDetails$inboundSchema: z.ZodType<
   EventDetails,
@@ -321,6 +373,20 @@ export namespace EventDetails$ {
   export type Outbound = EventDetails$Outbound;
 }
 
+export function eventDetailsToJSON(eventDetails: EventDetails): string {
+  return JSON.stringify(EventDetails$outboundSchema.parse(eventDetails));
+}
+
+export function eventDetailsFromJSON(
+  jsonString: string,
+): SafeParseResult<EventDetails, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => EventDetails$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'EventDetails' from JSON`,
+  );
+}
+
 /** @internal */
 export const Evaluators$inboundSchema: z.ZodType<
   Evaluators,
@@ -349,6 +415,20 @@ export namespace Evaluators$ {
   export const outboundSchema = Evaluators$outboundSchema;
   /** @deprecated use `Evaluators$Outbound` instead. */
   export type Outbound = Evaluators$Outbound;
+}
+
+export function evaluatorsToJSON(evaluators: Evaluators): string {
+  return JSON.stringify(Evaluators$outboundSchema.parse(evaluators));
+}
+
+export function evaluatorsFromJSON(
+  jsonString: string,
+): SafeParseResult<Evaluators, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Evaluators$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Evaluators' from JSON`,
+  );
 }
 
 /** @internal */
@@ -381,6 +461,27 @@ export namespace ExperimentComparisonResponseResults$ {
     ExperimentComparisonResponseResults$outboundSchema;
   /** @deprecated use `ExperimentComparisonResponseResults$Outbound` instead. */
   export type Outbound = ExperimentComparisonResponseResults$Outbound;
+}
+
+export function experimentComparisonResponseResultsToJSON(
+  experimentComparisonResponseResults: ExperimentComparisonResponseResults,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseResults$outboundSchema.parse(
+      experimentComparisonResponseResults,
+    ),
+  );
+}
+
+export function experimentComparisonResponseResultsFromJSON(
+  jsonString: string,
+): SafeParseResult<ExperimentComparisonResponseResults, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseResults$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExperimentComparisonResponseResults' from JSON`,
+  );
 }
 
 /** @internal */
@@ -418,6 +519,33 @@ export namespace ExperimentComparisonResponseSchemasConfiguration$ {
     ExperimentComparisonResponseSchemasConfiguration$Outbound;
 }
 
+export function experimentComparisonResponseSchemasConfigurationToJSON(
+  experimentComparisonResponseSchemasConfiguration:
+    ExperimentComparisonResponseSchemasConfiguration,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseSchemasConfiguration$outboundSchema.parse(
+      experimentComparisonResponseSchemasConfiguration,
+    ),
+  );
+}
+
+export function experimentComparisonResponseSchemasConfigurationFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  ExperimentComparisonResponseSchemasConfiguration,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseSchemasConfiguration$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'ExperimentComparisonResponseSchemasConfiguration' from JSON`,
+  );
+}
+
 /** @internal */
 export const Metadata$inboundSchema: z.ZodType<
   Metadata,
@@ -448,6 +576,20 @@ export namespace Metadata$ {
   export type Outbound = Metadata$Outbound;
 }
 
+export function metadataToJSON(metadata: Metadata): string {
+  return JSON.stringify(Metadata$outboundSchema.parse(metadata));
+}
+
+export function metadataFromJSON(
+  jsonString: string,
+): SafeParseResult<Metadata, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Metadata$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Metadata' from JSON`,
+  );
+}
+
 /** @internal */
 export const PassingRanges$inboundSchema: z.ZodType<
   PassingRanges,
@@ -476,6 +618,20 @@ export namespace PassingRanges$ {
   export const outboundSchema = PassingRanges$outboundSchema;
   /** @deprecated use `PassingRanges$Outbound` instead. */
   export type Outbound = PassingRanges$Outbound;
+}
+
+export function passingRangesToJSON(passingRanges: PassingRanges): string {
+  return JSON.stringify(PassingRanges$outboundSchema.parse(passingRanges));
+}
+
+export function passingRangesFromJSON(
+  jsonString: string,
+): SafeParseResult<PassingRanges, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PassingRanges$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PassingRanges' from JSON`,
+  );
 }
 
 /** @internal */
@@ -588,6 +744,20 @@ export namespace OldRun$ {
   export type Outbound = OldRun$Outbound;
 }
 
+export function oldRunToJSON(oldRun: OldRun): string {
+  return JSON.stringify(OldRun$outboundSchema.parse(oldRun));
+}
+
+export function oldRunFromJSON(
+  jsonString: string,
+): SafeParseResult<OldRun, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => OldRun$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'OldRun' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExperimentComparisonResponseEvaluators$inboundSchema: z.ZodType<
   ExperimentComparisonResponseEvaluators,
@@ -620,6 +790,28 @@ export namespace ExperimentComparisonResponseEvaluators$ {
   export type Outbound = ExperimentComparisonResponseEvaluators$Outbound;
 }
 
+export function experimentComparisonResponseEvaluatorsToJSON(
+  experimentComparisonResponseEvaluators:
+    ExperimentComparisonResponseEvaluators,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseEvaluators$outboundSchema.parse(
+      experimentComparisonResponseEvaluators,
+    ),
+  );
+}
+
+export function experimentComparisonResponseEvaluatorsFromJSON(
+  jsonString: string,
+): SafeParseResult<ExperimentComparisonResponseEvaluators, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseEvaluators$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExperimentComparisonResponseEvaluators' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExperimentComparisonResponseSchemasResults$inboundSchema:
   z.ZodType<ExperimentComparisonResponseSchemasResults, z.ZodTypeDef, unknown> =
@@ -649,6 +841,33 @@ export namespace ExperimentComparisonResponseSchemasResults$ {
     ExperimentComparisonResponseSchemasResults$outboundSchema;
   /** @deprecated use `ExperimentComparisonResponseSchemasResults$Outbound` instead. */
   export type Outbound = ExperimentComparisonResponseSchemasResults$Outbound;
+}
+
+export function experimentComparisonResponseSchemasResultsToJSON(
+  experimentComparisonResponseSchemasResults:
+    ExperimentComparisonResponseSchemasResults,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseSchemasResults$outboundSchema.parse(
+      experimentComparisonResponseSchemasResults,
+    ),
+  );
+}
+
+export function experimentComparisonResponseSchemasResultsFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  ExperimentComparisonResponseSchemasResults,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseSchemasResults$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'ExperimentComparisonResponseSchemasResults' from JSON`,
+  );
 }
 
 /** @internal */
@@ -684,6 +903,33 @@ export namespace ExperimentComparisonResponseConfiguration$ {
   export type Outbound = ExperimentComparisonResponseConfiguration$Outbound;
 }
 
+export function experimentComparisonResponseConfigurationToJSON(
+  experimentComparisonResponseConfiguration:
+    ExperimentComparisonResponseConfiguration,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseConfiguration$outboundSchema.parse(
+      experimentComparisonResponseConfiguration,
+    ),
+  );
+}
+
+export function experimentComparisonResponseConfigurationFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  ExperimentComparisonResponseConfiguration,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseConfiguration$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'ExperimentComparisonResponseConfiguration' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExperimentComparisonResponseMetadata$inboundSchema: z.ZodType<
   ExperimentComparisonResponseMetadata,
@@ -714,6 +960,27 @@ export namespace ExperimentComparisonResponseMetadata$ {
     ExperimentComparisonResponseMetadata$outboundSchema;
   /** @deprecated use `ExperimentComparisonResponseMetadata$Outbound` instead. */
   export type Outbound = ExperimentComparisonResponseMetadata$Outbound;
+}
+
+export function experimentComparisonResponseMetadataToJSON(
+  experimentComparisonResponseMetadata: ExperimentComparisonResponseMetadata,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponseMetadata$outboundSchema.parse(
+      experimentComparisonResponseMetadata,
+    ),
+  );
+}
+
+export function experimentComparisonResponseMetadataFromJSON(
+  jsonString: string,
+): SafeParseResult<ExperimentComparisonResponseMetadata, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponseMetadata$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExperimentComparisonResponseMetadata' from JSON`,
+  );
 }
 
 /** @internal */
@@ -747,6 +1014,33 @@ export namespace ExperimentComparisonResponsePassingRanges$ {
     ExperimentComparisonResponsePassingRanges$outboundSchema;
   /** @deprecated use `ExperimentComparisonResponsePassingRanges$Outbound` instead. */
   export type Outbound = ExperimentComparisonResponsePassingRanges$Outbound;
+}
+
+export function experimentComparisonResponsePassingRangesToJSON(
+  experimentComparisonResponsePassingRanges:
+    ExperimentComparisonResponsePassingRanges,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponsePassingRanges$outboundSchema.parse(
+      experimentComparisonResponsePassingRanges,
+    ),
+  );
+}
+
+export function experimentComparisonResponsePassingRangesFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  ExperimentComparisonResponsePassingRanges,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      ExperimentComparisonResponsePassingRanges$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'ExperimentComparisonResponsePassingRanges' from JSON`,
+  );
 }
 
 /** @internal */
@@ -875,6 +1169,20 @@ export namespace NewRun$ {
   export type Outbound = NewRun$Outbound;
 }
 
+export function newRunToJSON(newRun: NewRun): string {
+  return JSON.stringify(NewRun$outboundSchema.parse(newRun));
+}
+
+export function newRunFromJSON(
+  jsonString: string,
+): SafeParseResult<NewRun, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => NewRun$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'NewRun' from JSON`,
+  );
+}
+
 /** @internal */
 export const ExperimentComparisonResponse$inboundSchema: z.ZodType<
   ExperimentComparisonResponse,
@@ -937,4 +1245,24 @@ export namespace ExperimentComparisonResponse$ {
   export const outboundSchema = ExperimentComparisonResponse$outboundSchema;
   /** @deprecated use `ExperimentComparisonResponse$Outbound` instead. */
   export type Outbound = ExperimentComparisonResponse$Outbound;
+}
+
+export function experimentComparisonResponseToJSON(
+  experimentComparisonResponse: ExperimentComparisonResponse,
+): string {
+  return JSON.stringify(
+    ExperimentComparisonResponse$outboundSchema.parse(
+      experimentComparisonResponse,
+    ),
+  );
+}
+
+export function experimentComparisonResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<ExperimentComparisonResponse, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ExperimentComparisonResponse$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ExperimentComparisonResponse' from JSON`,
+  );
 }

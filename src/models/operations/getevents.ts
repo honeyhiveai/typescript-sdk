@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DateRange = {
   /**
@@ -98,6 +101,20 @@ export namespace DateRange$ {
   export type Outbound = DateRange$Outbound;
 }
 
+export function dateRangeToJSON(dateRange: DateRange): string {
+  return JSON.stringify(DateRange$outboundSchema.parse(dateRange));
+}
+
+export function dateRangeFromJSON(
+  jsonString: string,
+): SafeParseResult<DateRange, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DateRange$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DateRange' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetEventsRequestBody$inboundSchema: z.ZodType<
   GetEventsRequestBody,
@@ -149,6 +166,24 @@ export namespace GetEventsRequestBody$ {
   export type Outbound = GetEventsRequestBody$Outbound;
 }
 
+export function getEventsRequestBodyToJSON(
+  getEventsRequestBody: GetEventsRequestBody,
+): string {
+  return JSON.stringify(
+    GetEventsRequestBody$outboundSchema.parse(getEventsRequestBody),
+  );
+}
+
+export function getEventsRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<GetEventsRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetEventsRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetEventsRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetEventsResponseBody$inboundSchema: z.ZodType<
   GetEventsResponseBody,
@@ -186,4 +221,22 @@ export namespace GetEventsResponseBody$ {
   export const outboundSchema = GetEventsResponseBody$outboundSchema;
   /** @deprecated use `GetEventsResponseBody$Outbound` instead. */
   export type Outbound = GetEventsResponseBody$Outbound;
+}
+
+export function getEventsResponseBodyToJSON(
+  getEventsResponseBody: GetEventsResponseBody,
+): string {
+  return JSON.stringify(
+    GetEventsResponseBody$outboundSchema.parse(getEventsResponseBody),
+  );
+}
+
+export function getEventsResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<GetEventsResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetEventsResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetEventsResponseBody' from JSON`,
+  );
 }
