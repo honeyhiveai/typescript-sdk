@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteConfigurationRequest = {
   /**
@@ -45,4 +48,22 @@ export namespace DeleteConfigurationRequest$ {
   export const outboundSchema = DeleteConfigurationRequest$outboundSchema;
   /** @deprecated use `DeleteConfigurationRequest$Outbound` instead. */
   export type Outbound = DeleteConfigurationRequest$Outbound;
+}
+
+export function deleteConfigurationRequestToJSON(
+  deleteConfigurationRequest: DeleteConfigurationRequest,
+): string {
+  return JSON.stringify(
+    DeleteConfigurationRequest$outboundSchema.parse(deleteConfigurationRequest),
+  );
+}
+
+export function deleteConfigurationRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteConfigurationRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteConfigurationRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteConfigurationRequest' from JSON`,
+  );
 }

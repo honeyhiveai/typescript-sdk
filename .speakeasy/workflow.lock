@@ -1,17 +1,21 @@
-speakeasyVersion: 1.405.10
+speakeasyVersion: 1.459.2
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:a5ee065f823ce1a7167632f53bb538fddf4e1975570fc03b4eee497222612410
-        sourceBlobDigest: sha256:44bdb65874a420b6fdb226457b492f8db68158403d8cdbdc255344c9dea712cf
+        sourceRevisionDigest: sha256:d1dbadc367022c1c77b1aeaaf45ce625245005a9603feba603dffd1d21f01589
+        sourceBlobDigest: sha256:a3e5b7a87e759aebb28c69d0cbfe1b21eeee57f84b56b047b83b65622e8fec2f
         tags:
             - latest
+            - speakeasy-sdk-regen-1731456681
+            - 1.0.4
 targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:a5ee065f823ce1a7167632f53bb538fddf4e1975570fc03b4eee497222612410
-        sourceBlobDigest: sha256:44bdb65874a420b6fdb226457b492f8db68158403d8cdbdc255344c9dea712cf
+        sourceRevisionDigest: sha256:d1dbadc367022c1c77b1aeaaf45ce625245005a9603feba603dffd1d21f01589
+        sourceBlobDigest: sha256:a3e5b7a87e759aebb28c69d0cbfe1b21eeee57f84b56b047b83b65622e8fec2f
+        codeSamplesNamespace: my-source-typescript-code-samples
+        codeSamplesRevisionDigest: sha256:2d87ed00038953ee0d4d16faf318d1b102e0c4804f4fec1361893780c063df1b
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -27,3 +31,5 @@ workflow:
             source: my-source
             codeSamples:
                 output: codeSamples.yaml
+                registry:
+                    location: registry.speakeasyapi.dev/honey-hive/honeyhive-jxo/my-source-typescript-code-samples
