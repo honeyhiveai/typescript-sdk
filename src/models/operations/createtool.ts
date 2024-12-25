@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type Result = {
   insertedId?: string | undefined;
@@ -48,6 +51,20 @@ export namespace Result$ {
   export type Outbound = Result$Outbound;
 }
 
+export function resultToJSON(result: Result): string {
+  return JSON.stringify(Result$outboundSchema.parse(result));
+}
+
+export function resultFromJSON(
+  jsonString: string,
+): SafeParseResult<Result, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Result$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Result' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateToolResponseBody$inboundSchema: z.ZodType<
   CreateToolResponseBody,
@@ -82,4 +99,22 @@ export namespace CreateToolResponseBody$ {
   export const outboundSchema = CreateToolResponseBody$outboundSchema;
   /** @deprecated use `CreateToolResponseBody$Outbound` instead. */
   export type Outbound = CreateToolResponseBody$Outbound;
+}
+
+export function createToolResponseBodyToJSON(
+  createToolResponseBody: CreateToolResponseBody,
+): string {
+  return JSON.stringify(
+    CreateToolResponseBody$outboundSchema.parse(createToolResponseBody),
+  );
+}
+
+export function createToolResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateToolResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateToolResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateToolResponseBody' from JSON`,
+  );
 }
