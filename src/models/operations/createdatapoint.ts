@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateDatapointResult = {
   insertedId?: string | undefined;
@@ -51,6 +54,24 @@ export namespace CreateDatapointResult$ {
   export type Outbound = CreateDatapointResult$Outbound;
 }
 
+export function createDatapointResultToJSON(
+  createDatapointResult: CreateDatapointResult,
+): string {
+  return JSON.stringify(
+    CreateDatapointResult$outboundSchema.parse(createDatapointResult),
+  );
+}
+
+export function createDatapointResultFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateDatapointResult, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateDatapointResult$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateDatapointResult' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateDatapointResponseBody$inboundSchema: z.ZodType<
   CreateDatapointResponseBody,
@@ -85,4 +106,24 @@ export namespace CreateDatapointResponseBody$ {
   export const outboundSchema = CreateDatapointResponseBody$outboundSchema;
   /** @deprecated use `CreateDatapointResponseBody$Outbound` instead. */
   export type Outbound = CreateDatapointResponseBody$Outbound;
+}
+
+export function createDatapointResponseBodyToJSON(
+  createDatapointResponseBody: CreateDatapointResponseBody,
+): string {
+  return JSON.stringify(
+    CreateDatapointResponseBody$outboundSchema.parse(
+      createDatapointResponseBody,
+    ),
+  );
+}
+
+export function createDatapointResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateDatapointResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateDatapointResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateDatapointResponseBody' from JSON`,
+  );
 }

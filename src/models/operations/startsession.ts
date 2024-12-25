@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type StartSessionRequestBody = {
   session?: components.SessionStartRequest | undefined;
@@ -53,6 +56,24 @@ export namespace StartSessionRequestBody$ {
   export type Outbound = StartSessionRequestBody$Outbound;
 }
 
+export function startSessionRequestBodyToJSON(
+  startSessionRequestBody: StartSessionRequestBody,
+): string {
+  return JSON.stringify(
+    StartSessionRequestBody$outboundSchema.parse(startSessionRequestBody),
+  );
+}
+
+export function startSessionRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<StartSessionRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => StartSessionRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'StartSessionRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const StartSessionResponseBody$inboundSchema: z.ZodType<
   StartSessionResponseBody,
@@ -95,4 +116,22 @@ export namespace StartSessionResponseBody$ {
   export const outboundSchema = StartSessionResponseBody$outboundSchema;
   /** @deprecated use `StartSessionResponseBody$Outbound` instead. */
   export type Outbound = StartSessionResponseBody$Outbound;
+}
+
+export function startSessionResponseBodyToJSON(
+  startSessionResponseBody: StartSessionResponseBody,
+): string {
+  return JSON.stringify(
+    StartSessionResponseBody$outboundSchema.parse(startSessionResponseBody),
+  );
+}
+
+export function startSessionResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<StartSessionResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => StartSessionResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'StartSessionResponseBody' from JSON`,
+  );
 }

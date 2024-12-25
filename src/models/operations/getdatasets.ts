@@ -4,8 +4,11 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Type of the dataset - "evaluation" or "fine-tuning"
@@ -111,6 +114,24 @@ export namespace GetDatasetsRequest$ {
   export type Outbound = GetDatasetsRequest$Outbound;
 }
 
+export function getDatasetsRequestToJSON(
+  getDatasetsRequest: GetDatasetsRequest,
+): string {
+  return JSON.stringify(
+    GetDatasetsRequest$outboundSchema.parse(getDatasetsRequest),
+  );
+}
+
+export function getDatasetsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetDatasetsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetDatasetsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetDatasetsRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const GetDatasetsResponseBody$inboundSchema: z.ZodType<
   GetDatasetsResponseBody,
@@ -145,4 +166,22 @@ export namespace GetDatasetsResponseBody$ {
   export const outboundSchema = GetDatasetsResponseBody$outboundSchema;
   /** @deprecated use `GetDatasetsResponseBody$Outbound` instead. */
   export type Outbound = GetDatasetsResponseBody$Outbound;
+}
+
+export function getDatasetsResponseBodyToJSON(
+  getDatasetsResponseBody: GetDatasetsResponseBody,
+): string {
+  return JSON.stringify(
+    GetDatasetsResponseBody$outboundSchema.parse(getDatasetsResponseBody),
+  );
+}
+
+export function getDatasetsResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<GetDatasetsResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetDatasetsResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetDatasetsResponseBody' from JSON`,
+  );
 }

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetRunRequest = {
   runId: string;
@@ -51,4 +54,18 @@ export namespace GetRunRequest$ {
   export const outboundSchema = GetRunRequest$outboundSchema;
   /** @deprecated use `GetRunRequest$Outbound` instead. */
   export type Outbound = GetRunRequest$Outbound;
+}
+
+export function getRunRequestToJSON(getRunRequest: GetRunRequest): string {
+  return JSON.stringify(GetRunRequest$outboundSchema.parse(getRunRequest));
+}
+
+export function getRunRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetRunRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetRunRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetRunRequest' from JSON`,
+  );
 }

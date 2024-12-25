@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Type of the metric - "custom", "model", "human" or "composite"
@@ -199,6 +202,24 @@ export namespace MetricEditThreshold$ {
   export type Outbound = MetricEditThreshold$Outbound;
 }
 
+export function metricEditThresholdToJSON(
+  metricEditThreshold: MetricEditThreshold,
+): string {
+  return JSON.stringify(
+    MetricEditThreshold$outboundSchema.parse(metricEditThreshold),
+  );
+}
+
+export function metricEditThresholdFromJSON(
+  jsonString: string,
+): SafeParseResult<MetricEditThreshold, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => MetricEditThreshold$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'MetricEditThreshold' from JSON`,
+  );
+}
+
 /** @internal */
 export const MetricEditEventType$inboundSchema: z.ZodNativeEnum<
   typeof MetricEditEventType
@@ -320,4 +341,18 @@ export namespace MetricEdit$ {
   export const outboundSchema = MetricEdit$outboundSchema;
   /** @deprecated use `MetricEdit$Outbound` instead. */
   export type Outbound = MetricEdit$Outbound;
+}
+
+export function metricEditToJSON(metricEdit: MetricEdit): string {
+  return JSON.stringify(MetricEdit$outboundSchema.parse(metricEdit));
+}
+
+export function metricEditFromJSON(
+  jsonString: string,
+): SafeParseResult<MetricEdit, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => MetricEdit$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'MetricEdit' from JSON`,
+  );
 }
