@@ -7,14 +7,39 @@ const HH_API_URL = process.env.HH_API_URL || "https://api.honeyhive.ai";
 const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
 
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+async function initializeTracer(sessionName: string): Promise<typeof HoneyHiveTracer> {
+    const tracer = await HoneyHiveTracer.init({
+        apiKey: HH_API_KEY,
+        project: HH_PROJECT_NAME,
+        serverUrl: HH_API_URL,
+        sessionName: sessionName,
+    });
+
+    return tracer;
+}
+
 (async () => {
-    console.log("ESM Script started");
+    console.log("CJS Script started");
+    const sessionName = `HoneyHive TS tracer Test ${uuidv4()}`;
+    console.log(`Generated session name: ${sessionName}`);
+
+    console.log(`HH_API_KEY: ${HH_API_KEY}`);
+    console.log(`HH_API_URL: ${HH_API_URL}`);
     console.log(`HH_PROJECT_NAME: ${HH_PROJECT_NAME}`);
 
-    const hive = await HoneyHiveTracer.init();
-    const openai = hive.traceOpenAI(new OpenAI());
+        /*
+    Expected Trace:
+    - enrich session
+    - chain
+    -- tool
+    */
 
-    await hive.enrichSession({
+    const tracer = await initializeTracer(sessionName);
+
+    await tracer.enrichSession({
         metadata: {
             session_metadata: "meta",
         },
@@ -35,11 +60,13 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
         },
     });
 
-    const func3 = hive.traceFunction({
+    const openai = new OpenAI();
+
+    const func3 = tracer.traceFunction({
         eventType: "model"
     })(
         async function getRelevantDocuments(queryVector: string) {
-            hive.enrichSpan({
+            tracer.enrichSpan({
                 inputs: {
                     queryVector: 'embedding',
                 },
@@ -48,8 +75,8 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
         }
     );
 
-    const func2 = hive.traceFunction({config: {some_config: "some_value"}})(async (param1: string) => {
-        hive.enrichSpan({
+    const func2 = tracer.traceFunction({config: {some_config: "some_value"}})(async (param1: string) => {
+        tracer.enrichSpan({
             feedback: {
                 human_mood: "grumpy",
             },
@@ -64,9 +91,9 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
         return `Result with ${param1}`;
     })
 
-    const myFunction = hive.traceFunction()(async function (param1: string, param2: number) {
+    const myFunction = tracer.traceFunction()(async function (param1: string, param2: number) {
 
-        hive.enrichSpan({
+        tracer.enrichSpan({
             inputs: {
                 param1: 'abc',
                 param2: 'def',
@@ -76,7 +103,7 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
             },
         });
 
-        hive.enrichSpan({
+        tracer.enrichSpan({
             metadata: {
                 meta_1: "meta 2",
             },
@@ -84,7 +111,7 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
 
         await func2('test');
 
-        hive.enrichSpan({
+        tracer.enrichSpan({
             metrics: {
                 metric_1: "metric 1",
             },
@@ -98,12 +125,12 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
     // Call the traced function
     await myFunction('test', 42);
     
-    const toolFunction = hive.traceTool(async function tool(param1: string) {
+    const toolFunction = tracer.traceTool(async function tool(param1: string) {
         return `Result with ${param1}`;
     });
 
 
-    const chainFunction = hive.traceChain(async function chain(param1: string) {
+    const chainFunction = tracer.traceChain(async function chain(param1: string) {
         // non-streaming response
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",
@@ -125,7 +152,7 @@ const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
         
         await toolFunction('test');
 
-        hive.enrichSpan({
+        tracer.enrichSpan({
             outputs: {
                 output_1: "output 1",
             },

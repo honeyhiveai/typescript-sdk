@@ -37,6 +37,16 @@ interface InitSessionIdParams {
   serverUrl?: string;
 }
 
+interface EnrichSpanParams {
+  config?: any;
+  metadata?: any;
+  metrics?: any;
+  feedback?: any;
+  inputs?: any;
+  outputs?: any;
+  error?: any;
+}
+
 function isPromise(obj: any): obj is Promise<any> {
   return (
     !!obj &&
@@ -318,7 +328,7 @@ export class HoneyHiveTracer {
     return <T extends (...args: any[]) => any>(func: T): T => {
       const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
         const tracer = trace.getTracer('traceloop.tracer');
-        const spanName = func.name || 'anonymous';
+        const spanName = func.name || ((func as any).hh_name) || 'anonymous';
         const span = tracer.startSpan(spanName);
 
         // Inject span into proxy to allow enrichment within traced function.
@@ -412,6 +422,15 @@ export class HoneyHiveTracer {
     { config, metadata }: { config?: any; metadata?: any } = {}
   ): F {
     return this.traceFunction({ eventType: "chain", config, metadata })(func);
+  }
+
+  public logModel(params: EnrichSpanParams = {}) {
+    const func = () => {
+      this.enrichSpan(params);
+    };
+    // Object.assign(func, { hh_name: logKey });
+    const tracedFunction = this.traceFunction({ eventType: "model" })(func);
+    tracedFunction();
   }
 
   public trace(fn: () => void): void {
