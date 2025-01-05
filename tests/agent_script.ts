@@ -5,7 +5,7 @@ import { HoneyHiveTracer } from "honeyhive";
 // Configure your API keys here
 const OPENAI_KEY = process.env.OPENAI_KEY;
 const SERP_API_KEY = process.env.SERP_API_KEY;
-const HH_PROJECT = process.env.HH_PROJECT;
+const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME;
 const HH_API_KEY = process.env.HH_API_KEY;
 const openai = new OpenAI({ apiKey: OPENAI_KEY });
 

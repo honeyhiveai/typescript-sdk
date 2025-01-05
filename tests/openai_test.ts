@@ -4,13 +4,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 const HH_API_KEY = process.env.HH_API_KEY || "";
 const HH_API_URL = process.env.HH_API_URL;
-const HH_PROJECT = process.env.HH_PROJECT || "";
+const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
 
 // log all env variables
 console.log("HH_API_KEY:", HH_API_KEY);
 console.log("HH_API_URL:", HH_API_URL);
-console.log("HH_PROJECT:", HH_PROJECT);
+console.log("HH_PROJECT_NAME:", HH_PROJECT_NAME);
 console.log("OPENAI_API_KEY:", OPENAI_API_KEY);
 
 const openai = new OpenAI({
@@ -20,7 +20,7 @@ const openai = new OpenAI({
 async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
   const tracer = await HoneyHiveTracer.init({
     apiKey: HH_API_KEY,
-    project: HH_PROJECT,
+    project: HH_PROJECT_NAME,
     sessionName: sessionName,
     source: "OpenAI Test",
     serverUrl: HH_API_URL,
