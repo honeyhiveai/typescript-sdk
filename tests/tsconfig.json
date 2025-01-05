@@ -21,6 +21,17 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "declaration": true,
-    "types": ["reflect-metadata", "jest", "node"]
+    "types": ["reflect-metadata", "jest", "node"],
+    "noImplicitAny": true
   },
+  "include": [
+    "*.ts",
+    "**/*.ts",
+    "**/*.mts",
+    "**/*.cts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

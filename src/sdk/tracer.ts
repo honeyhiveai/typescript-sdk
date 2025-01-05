@@ -22,8 +22,8 @@ import * as chromadb from "chromadb";
 import * as azureOpenAI from "@azure/openai";
 
 interface InitParams {
-  apiKey: string;
-  project: string;
+  apiKey?: string;
+  project?: string;
   sessionName?: string;
   source?: string;
   serverUrl?: string;
@@ -195,7 +195,19 @@ export class HoneyHiveTracer {
     serverUrl = "https://api.honeyhive.ai",
     inputs,
     isEvaluation = false
-  }: InitParams): Promise<HoneyHiveTracer> {
+  }: InitParams = {}): Promise<HoneyHiveTracer> {
+    if (!apiKey) {
+      apiKey = process.env['HH_API_KEY'];
+      if (!apiKey) {
+        throw new Error("apiKey must be specified or set in environment variable HH_API_KEY.");
+      }
+    }
+    if (!project) {
+      project = process.env['HH_PROJECT_NAME'];
+      if (!project) {
+        throw new Error("project name must be specified or set in environment variable HH_PROJECT_NAME.");
+      }
+    }
     const sdk = new HoneyHive({
       bearerAuth: apiKey,
       serverURL: serverUrl,
@@ -210,9 +222,12 @@ export class HoneyHiveTracer {
     }
     if (!sessionName) {
       try {
-        const mainModule = require.main;
-        if (mainModule) {
-          sessionName = path.basename(mainModule.filename);
+        // Check for CommonJS module
+        if (typeof require !== 'undefined' && require.main) {
+          sessionName = path.basename(require.main.filename);
+        } else if (typeof process !== 'undefined' && process.argv && process.argv[1]) {
+          // Check for ES Module by using process.argv
+          sessionName = path.basename(process.argv[1]);
         } else {
           sessionName = 'unknown';
         }
@@ -376,6 +391,27 @@ export class HoneyHiveTracer {
       };
       return wrappedFunction as T;
     };
+  }
+
+  public traceModel<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "model", config, metadata })(func);
+  }
+
+  public traceTool<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "tool", config, metadata })(func);
+  } 
+
+  public traceChain<F extends (...args: any[]) => any>(
+    func: F,
+    { config, metadata }: { config?: any; metadata?: any } = {}
+  ): F {
+    return this.traceFunction({ eventType: "chain", config, metadata })(func);
   }
 
   public trace(fn: () => void): void {
