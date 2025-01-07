@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * What the dataset is to be used for - "evaluation" (default) or "fine-tuning"
@@ -180,4 +183,22 @@ export namespace CreateDatasetRequest$ {
   export const outboundSchema = CreateDatasetRequest$outboundSchema;
   /** @deprecated use `CreateDatasetRequest$Outbound` instead. */
   export type Outbound = CreateDatasetRequest$Outbound;
+}
+
+export function createDatasetRequestToJSON(
+  createDatasetRequest: CreateDatasetRequest,
+): string {
+  return JSON.stringify(
+    CreateDatasetRequest$outboundSchema.parse(createDatasetRequest),
+  );
+}
+
+export function createDatasetRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateDatasetRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateDatasetRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateDatasetRequest' from JSON`,
+  );
 }

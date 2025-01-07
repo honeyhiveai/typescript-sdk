@@ -4,8 +4,13 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
-import { collectExtraKeys as collectExtraKeys$ } from "../../lib/schemas.js";
+import {
+  collectExtraKeys as collectExtraKeys$,
+  safeParse,
+} from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export const Env = {
   Dev: "dev",
@@ -206,6 +211,20 @@ export namespace ResponseFormat$ {
   export type Outbound = ResponseFormat$Outbound;
 }
 
+export function responseFormatToJSON(responseFormat: ResponseFormat): string {
+  return JSON.stringify(ResponseFormat$outboundSchema.parse(responseFormat));
+}
+
+export function responseFormatFromJSON(
+  jsonString: string,
+): SafeParseResult<ResponseFormat, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ResponseFormat$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ResponseFormat' from JSON`,
+  );
+}
+
 /** @internal */
 export const SelectedFunctions$inboundSchema: z.ZodType<
   SelectedFunctions,
@@ -249,6 +268,24 @@ export namespace SelectedFunctions$ {
   export const outboundSchema = SelectedFunctions$outboundSchema;
   /** @deprecated use `SelectedFunctions$Outbound` instead. */
   export type Outbound = SelectedFunctions$Outbound;
+}
+
+export function selectedFunctionsToJSON(
+  selectedFunctions: SelectedFunctions,
+): string {
+  return JSON.stringify(
+    SelectedFunctions$outboundSchema.parse(selectedFunctions),
+  );
+}
+
+export function selectedFunctionsFromJSON(
+  jsonString: string,
+): SafeParseResult<SelectedFunctions, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SelectedFunctions$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SelectedFunctions' from JSON`,
+  );
 }
 
 /** @internal */
@@ -345,6 +382,20 @@ export namespace ParametersT$ {
   export type Outbound = ParametersT$Outbound;
 }
 
+export function parametersToJSON(parametersT: ParametersT): string {
+  return JSON.stringify(ParametersT$outboundSchema.parse(parametersT));
+}
+
+export function parametersFromJSON(
+  jsonString: string,
+): SafeParseResult<ParametersT, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => ParametersT$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ParametersT' from JSON`,
+  );
+}
+
 /** @internal */
 export const ConfigurationType$inboundSchema: z.ZodNativeEnum<
   typeof ConfigurationType
@@ -431,4 +482,18 @@ export namespace Configuration$ {
   export const outboundSchema = Configuration$outboundSchema;
   /** @deprecated use `Configuration$Outbound` instead. */
   export type Outbound = Configuration$Outbound;
+}
+
+export function configurationToJSON(configuration: Configuration): string {
+  return JSON.stringify(Configuration$outboundSchema.parse(configuration));
+}
+
+export function configurationFromJSON(
+  jsonString: string,
+): SafeParseResult<Configuration, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Configuration$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Configuration' from JSON`,
+  );
 }

@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * What the dataset is to be used for - "evaluation" or "fine-tuning"
@@ -189,4 +192,18 @@ export namespace Dataset$ {
   export const outboundSchema = Dataset$outboundSchema;
   /** @deprecated use `Dataset$Outbound` instead. */
   export type Outbound = Dataset$Outbound;
+}
+
+export function datasetToJSON(dataset: Dataset): string {
+  return JSON.stringify(Dataset$outboundSchema.parse(dataset));
+}
+
+export function datasetFromJSON(
+  jsonString: string,
+): SafeParseResult<Dataset, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Dataset$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Dataset' from JSON`,
+  );
 }

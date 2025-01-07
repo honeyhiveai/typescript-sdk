@@ -4,8 +4,13 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
-import { collectExtraKeys as collectExtraKeys$ } from "../../lib/schemas.js";
+import {
+  collectExtraKeys as collectExtraKeys$,
+  safeParse,
+} from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Type of API calling - "chat" or "completion"
@@ -198,6 +203,27 @@ export namespace PutConfigurationRequestResponseFormat$ {
   export type Outbound = PutConfigurationRequestResponseFormat$Outbound;
 }
 
+export function putConfigurationRequestResponseFormatToJSON(
+  putConfigurationRequestResponseFormat: PutConfigurationRequestResponseFormat,
+): string {
+  return JSON.stringify(
+    PutConfigurationRequestResponseFormat$outboundSchema.parse(
+      putConfigurationRequestResponseFormat,
+    ),
+  );
+}
+
+export function putConfigurationRequestResponseFormatFromJSON(
+  jsonString: string,
+): SafeParseResult<PutConfigurationRequestResponseFormat, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PutConfigurationRequestResponseFormat$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PutConfigurationRequestResponseFormat' from JSON`,
+  );
+}
+
 /** @internal */
 export const PutConfigurationRequestSelectedFunctions$inboundSchema: z.ZodType<
   PutConfigurationRequestSelectedFunctions,
@@ -243,6 +269,33 @@ export namespace PutConfigurationRequestSelectedFunctions$ {
     PutConfigurationRequestSelectedFunctions$outboundSchema;
   /** @deprecated use `PutConfigurationRequestSelectedFunctions$Outbound` instead. */
   export type Outbound = PutConfigurationRequestSelectedFunctions$Outbound;
+}
+
+export function putConfigurationRequestSelectedFunctionsToJSON(
+  putConfigurationRequestSelectedFunctions:
+    PutConfigurationRequestSelectedFunctions,
+): string {
+  return JSON.stringify(
+    PutConfigurationRequestSelectedFunctions$outboundSchema.parse(
+      putConfigurationRequestSelectedFunctions,
+    ),
+  );
+}
+
+export function putConfigurationRequestSelectedFunctionsFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PutConfigurationRequestSelectedFunctions,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PutConfigurationRequestSelectedFunctions$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PutConfigurationRequestSelectedFunctions' from JSON`,
+  );
 }
 
 /** @internal */
@@ -352,6 +405,26 @@ export namespace PutConfigurationRequestParameters$ {
   export type Outbound = PutConfigurationRequestParameters$Outbound;
 }
 
+export function putConfigurationRequestParametersToJSON(
+  putConfigurationRequestParameters: PutConfigurationRequestParameters,
+): string {
+  return JSON.stringify(
+    PutConfigurationRequestParameters$outboundSchema.parse(
+      putConfigurationRequestParameters,
+    ),
+  );
+}
+
+export function putConfigurationRequestParametersFromJSON(
+  jsonString: string,
+): SafeParseResult<PutConfigurationRequestParameters, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PutConfigurationRequestParameters$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PutConfigurationRequestParameters' from JSON`,
+  );
+}
+
 /** @internal */
 export const PutConfigurationRequestEnv$inboundSchema: z.ZodNativeEnum<
   typeof PutConfigurationRequestEnv
@@ -454,4 +527,22 @@ export namespace PutConfigurationRequest$ {
   export const outboundSchema = PutConfigurationRequest$outboundSchema;
   /** @deprecated use `PutConfigurationRequest$Outbound` instead. */
   export type Outbound = PutConfigurationRequest$Outbound;
+}
+
+export function putConfigurationRequestToJSON(
+  putConfigurationRequest: PutConfigurationRequest,
+): string {
+  return JSON.stringify(
+    PutConfigurationRequest$outboundSchema.parse(putConfigurationRequest),
+  );
+}
+
+export function putConfigurationRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<PutConfigurationRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PutConfigurationRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PutConfigurationRequest' from JSON`,
+  );
 }

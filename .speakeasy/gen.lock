@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: f524fa6c55cb99f551011c1cfb77d501
+  docChecksum: 29fc2817f8f93615a1cb49e37377f6bc
   docVersion: 1.0.4
-  speakeasyVersion: 1.405.10
-  generationVersion: 2.429.0
-  releaseVersion: 1.2.1
-  configChecksum: 1187254bb4ba5f72ea51b6d060efc6c4
+  speakeasyVersion: 1.463.1
+  generationVersion: 2.486.6
+  releaseVersion: 1.4.3
+  configChecksum: 20619dc8173799bd762f30792dfe7d83
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -14,19 +14,20 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    core: 3.18.2
+    core: 3.18.12
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
-    envVarSecurityUsage: 0.1.1
-    flattening: 2.82.0
-    globalSecurity: 2.82.11
+    envVarSecurityUsage: 0.1.2
+    flattening: 2.82.1
+    globalSecurity: 2.82.12
     globalSecurityCallbacks: 0.1.0
     globalSecurityFlattening: 0.1.0
     globalServerURLs: 2.82.4
     nullables: 0.1.0
     responseFormat: 0.2.3
     retries: 2.83.0
-    sdkHooks: 0.1.0
+    sdkHooks: 0.2.0
+    unions: 2.85.8
 generatedFiles:
   - .eslintrc.cjs
   - .gitattributes
@@ -52,28 +53,51 @@ generatedFiles:
   - docs/models/components/createtoolrequest.md
   - docs/models/components/createtoolrequesttype.md
   - docs/models/components/datapoint.md
+  - docs/models/components/datapoints.md
   - docs/models/components/dataset.md
   - docs/models/components/datasettype.md
   - docs/models/components/datasetupdate.md
   - docs/models/components/deleterunresponse.md
+  - docs/models/components/details.md
   - docs/models/components/env.md
   - docs/models/components/evaluationrun.md
   - docs/models/components/evaluationrunstatus.md
+  - docs/models/components/evaluators.md
   - docs/models/components/event.md
+  - docs/models/components/eventdetails.md
   - docs/models/components/eventfilter.md
   - docs/models/components/eventtype.md
+  - docs/models/components/experimentcomparisonresponse.md
+  - docs/models/components/experimentcomparisonresponseconfiguration.md
+  - docs/models/components/experimentcomparisonresponseevaluators.md
+  - docs/models/components/experimentcomparisonresponsemetadata.md
+  - docs/models/components/experimentcomparisonresponsemetrics.md
+  - docs/models/components/experimentcomparisonresponsepassingranges.md
+  - docs/models/components/experimentcomparisonresponseresults.md
+  - docs/models/components/experimentcomparisonresponseschemasconfiguration.md
+  - docs/models/components/experimentcomparisonresponseschemasresults.md
+  - docs/models/components/experimentresultresponse.md
+  - docs/models/components/experimentresultresponsedatapoints.md
+  - docs/models/components/experimentresultresponsemetrics.md
   - docs/models/components/functioncallparams.md
   - docs/models/components/getrunresponse.md
   - docs/models/components/getrunsresponse.md
+  - docs/models/components/metadata.md
   - docs/models/components/metric.md
   - docs/models/components/metricedit.md
   - docs/models/components/metricediteventtype.md
   - docs/models/components/metriceditreturntype.md
   - docs/models/components/metriceditthreshold.md
   - docs/models/components/metricedittype.md
+  - docs/models/components/metrics.md
   - docs/models/components/metrictype.md
+  - docs/models/components/newrun.md
+  - docs/models/components/newvalues.md
+  - docs/models/components/oldrun.md
+  - docs/models/components/oldvalues.md
   - docs/models/components/operator.md
   - docs/models/components/parameterst.md
+  - docs/models/components/passingranges.md
   - docs/models/components/pipelinetype.md
   - docs/models/components/postconfigurationrequest.md
   - docs/models/components/postconfigurationrequestcalltype.md
@@ -109,11 +133,14 @@ generatedFiles:
   - docs/models/components/updaterunrequeststatus.md
   - docs/models/components/updaterunresponse.md
   - docs/models/components/updatetoolrequest.md
+  - docs/models/components/value.md
+  - docs/models/components/values.md
   - docs/models/errors/createeventbatchresponsebody.md
   - docs/models/errors/createmodeleventbatchresponsebody.md
   - docs/models/operations/adddatapointsrequest.md
   - docs/models/operations/adddatapointsrequestbody.md
   - docs/models/operations/adddatapointsresponsebody.md
+  - docs/models/operations/aggregatefunction.md
   - docs/models/operations/createdatapointresponsebody.md
   - docs/models/operations/createdatapointresult.md
   - docs/models/operations/createdatasetresponsebody.md
@@ -146,12 +173,15 @@ generatedFiles:
   - docs/models/operations/getdatasetsresponsebody.md
   - docs/models/operations/geteventsrequestbody.md
   - docs/models/operations/geteventsresponsebody.md
+  - docs/models/operations/getexperimentcomparisonrequest.md
+  - docs/models/operations/getexperimentresultrequest.md
   - docs/models/operations/getmetricsrequest.md
   - docs/models/operations/getprojectsrequest.md
   - docs/models/operations/getrunrequest.md
   - docs/models/operations/getrunsrequest.md
   - docs/models/operations/getsessionrequest.md
   - docs/models/operations/mapping.md
+  - docs/models/operations/queryparamaggregatefunction.md
   - docs/models/operations/result.md
   - docs/models/operations/startsessionrequestbody.md
   - docs/models/operations/startsessionresponsebody.md
@@ -164,10 +194,10 @@ generatedFiles:
   - docs/sdks/datapoints/README.md
   - docs/sdks/datasets/README.md
   - docs/sdks/events/README.md
+  - docs/sdks/experiments/README.md
   - docs/sdks/honeyhive/README.md
   - docs/sdks/metrics/README.md
   - docs/sdks/projects/README.md
-  - docs/sdks/runs/README.md
   - docs/sdks/session/README.md
   - docs/sdks/tools/README.md
   - jsr.json
@@ -193,6 +223,13 @@ generatedFiles:
   - src/funcs/eventsCreateModelEventBatch.ts
   - src/funcs/eventsGetEvents.ts
   - src/funcs/eventsUpdateEvent.ts
+  - src/funcs/experimentsCreateRun.ts
+  - src/funcs/experimentsDeleteRun.ts
+  - src/funcs/experimentsGetExperimentComparison.ts
+  - src/funcs/experimentsGetExperimentResult.ts
+  - src/funcs/experimentsGetRun.ts
+  - src/funcs/experimentsGetRuns.ts
+  - src/funcs/experimentsUpdateRun.ts
   - src/funcs/metricsCreateMetric.ts
   - src/funcs/metricsDeleteMetric.ts
   - src/funcs/metricsGetMetrics.ts
@@ -201,11 +238,6 @@ generatedFiles:
   - src/funcs/projectsDeleteProject.ts
   - src/funcs/projectsGetProjects.ts
   - src/funcs/projectsUpdateProject.ts
-  - src/funcs/runsCreateRun.ts
-  - src/funcs/runsDeleteRun.ts
-  - src/funcs/runsGetRun.ts
-  - src/funcs/runsGetRuns.ts
-  - src/funcs/runsUpdateRun.ts
   - src/funcs/sessionGetSession.ts
   - src/funcs/sessionStartSession.ts
   - src/funcs/toolsCreateTool.ts
@@ -247,6 +279,8 @@ generatedFiles:
   - src/models/components/evaluationrun.ts
   - src/models/components/event.ts
   - src/models/components/eventfilter.ts
+  - src/models/components/experimentcomparisonresponse.ts
+  - src/models/components/experimentresultresponse.ts
   - src/models/components/getrunresponse.ts
   - src/models/components/getrunsresponse.ts
   - src/models/components/index.ts
@@ -290,6 +324,8 @@ generatedFiles:
   - src/models/operations/getdatapoints.ts
   - src/models/operations/getdatasets.ts
   - src/models/operations/getevents.ts
+  - src/models/operations/getexperimentcomparison.ts
+  - src/models/operations/getexperimentresult.ts
   - src/models/operations/getmetrics.ts
   - src/models/operations/getprojects.ts
   - src/models/operations/getrun.ts
@@ -305,9 +341,9 @@ generatedFiles:
   - src/sdk/datapoints.ts
   - src/sdk/datasets.ts
   - src/sdk/events.ts
+  - src/sdk/experiments.ts
   - src/sdk/metrics.ts
   - src/sdk/projects.ts
-  - src/sdk/runs.ts
   - src/sdk/sdk.ts
   - src/sdk/session.ts
   - src/sdk/tools.ts
@@ -328,6 +364,9 @@ examples:
           dataset_id: "<value>"
       requestBody:
         application/json: {"project": "<value>", "data": [{"key": "<value>", "key1": "<value>", "key2": "<value>"}], "mapping": {"inputs": [], "ground_truth": ["<value>", "<value>"], "history": []}}
+      responses:
+        "200":
+          application/json: {}
   createConfiguration:
     speakeasy-default-create-configuration:
       requestBody:
@@ -336,10 +375,16 @@ examples:
     speakeasy-default-create-datapoint:
       requestBody:
         application/json: {"project": "New Project", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.", "role": "assistant"}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_datasets": [], "metadata": {"completion_tokens": 47, "prompt_tokens": 696, "question_type": "weather", "total_tokens": 743}}
+      responses:
+        "200":
+          application/json: {}
   createDataset:
     speakeasy-default-create-dataset:
       requestBody:
         application/json: {"project": "New Project", "name": "test-dataset", "description": "A test dataset", "type": "evaluation", "datapoints": ["66369748b5773befbdc661e2"], "linked_evals": [], "saved": false, "pipeline_type": "event", "metadata": {"source": "dev"}}
+      responses:
+        "200":
+          application/json: {}
   createEvent:
     speakeasy-default-create-event:
       requestBody:
@@ -387,10 +432,16 @@ examples:
     speakeasy-default-create-run:
       requestBody:
         application/json: {"project": "<value>", "name": "<value>", "event_ids": []}
+      responses:
+        "200":
+          application/json: {}
   createTool:
     speakeasy-default-create-tool:
       requestBody:
         application/json: {"task": "<value>", "name": "<value>", "parameters": {"key": "<value>", "key1": "<value>"}, "type": "function"}
+      responses:
+        "200":
+          application/json: {}
   deleteConfiguration:
     speakeasy-default-delete-configuration:
       parameters:
@@ -424,6 +475,9 @@ examples:
       parameters:
         path:
           run_id: "<value>"
+      responses:
+        "200":
+          application/json: {}
   deleteTool:
     speakeasy-default-delete-tool:
       parameters:
@@ -486,7 +540,14 @@ examples:
       parameters:
         path:
           run_id: "<value>"
-  getRuns: {}
+      responses:
+        "200":
+          application/json: {}
+  getRuns:
+    speakeasy-default-get-runs:
+      responses:
+        "200":
+          application/json: {}
   getSession:
     speakeasy-default-get-session:
       parameters:
@@ -504,6 +565,9 @@ examples:
     speakeasy-default-start-session:
       requestBody:
         application/json: {"session": {"project": "Simple RAG Project", "session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66"], "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": "<value>", "duration": 824.8056, "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}, "start_time": 1712025501605, "end_time": 1712025499832}}
+      responses:
+        "200":
+          application/json: {}
   updateConfiguration:
     speakeasy-default-update-configuration:
       parameters:
@@ -539,7 +603,32 @@ examples:
       parameters:
         path:
           run_id: "<value>"
+      responses:
+        "200":
+          application/json: {}
   updateTool:
     speakeasy-default-update-tool:
       requestBody:
         application/json: {"id": "<id>", "name": "<value>", "parameters": {}}
+  getExperimentResult:
+    speakeasy-default-get-experiment-result:
+      parameters:
+        path:
+          run_id: "<id>"
+        query:
+          project_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+  getExperimentComparison:
+    speakeasy-default-get-experiment-comparison:
+      parameters:
+        path:
+          run_id_1: "<value>"
+          run_id_2: "<value>"
+        query:
+          project_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+generatedTests: {}

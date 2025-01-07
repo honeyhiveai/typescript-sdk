@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type SessionStartRequest = {
   /**
@@ -169,4 +172,22 @@ export namespace SessionStartRequest$ {
   export const outboundSchema = SessionStartRequest$outboundSchema;
   /** @deprecated use `SessionStartRequest$Outbound` instead. */
   export type Outbound = SessionStartRequest$Outbound;
+}
+
+export function sessionStartRequestToJSON(
+  sessionStartRequest: SessionStartRequest,
+): string {
+  return JSON.stringify(
+    SessionStartRequest$outboundSchema.parse(sessionStartRequest),
+  );
+}
+
+export function sessionStartRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<SessionStartRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SessionStartRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SessionStartRequest' from JSON`,
+  );
 }
