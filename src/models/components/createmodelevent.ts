@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateModelEvent = {
   /**
@@ -172,4 +175,22 @@ export namespace CreateModelEvent$ {
   export const outboundSchema = CreateModelEvent$outboundSchema;
   /** @deprecated use `CreateModelEvent$Outbound` instead. */
   export type Outbound = CreateModelEvent$Outbound;
+}
+
+export function createModelEventToJSON(
+  createModelEvent: CreateModelEvent,
+): string {
+  return JSON.stringify(
+    CreateModelEvent$outboundSchema.parse(createModelEvent),
+  );
+}
+
+export function createModelEventFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateModelEvent, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateModelEvent$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateModelEvent' from JSON`,
+  );
 }

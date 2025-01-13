@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export const UpdateRunRequestStatus = {
   Pending: "pending",
@@ -125,4 +128,22 @@ export namespace UpdateRunRequest$ {
   export const outboundSchema = UpdateRunRequest$outboundSchema;
   /** @deprecated use `UpdateRunRequest$Outbound` instead. */
   export type Outbound = UpdateRunRequest$Outbound;
+}
+
+export function updateRunRequestToJSON(
+  updateRunRequest: UpdateRunRequest,
+): string {
+  return JSON.stringify(
+    UpdateRunRequest$outboundSchema.parse(updateRunRequest),
+  );
+}
+
+export function updateRunRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<UpdateRunRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => UpdateRunRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'UpdateRunRequest' from JSON`,
+  );
 }

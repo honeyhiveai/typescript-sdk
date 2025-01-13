@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export const ToolType = {
   Function: "function",
@@ -99,4 +102,18 @@ export namespace Tool$ {
   export const outboundSchema = Tool$outboundSchema;
   /** @deprecated use `Tool$Outbound` instead. */
   export type Outbound = Tool$Outbound;
+}
+
+export function toolToJSON(tool: Tool): string {
+  return JSON.stringify(Tool$outboundSchema.parse(tool));
+}
+
+export function toolFromJSON(
+  jsonString: string,
+): SafeParseResult<Tool, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Tool$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Tool' from JSON`,
+  );
 }
