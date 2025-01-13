@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The results of the evaluation (including pass/fails and metric aggregations)
@@ -83,6 +86,20 @@ export namespace Results$ {
   export const outboundSchema = Results$outboundSchema;
   /** @deprecated use `Results$Outbound` instead. */
   export type Outbound = Results$Outbound;
+}
+
+export function resultsToJSON(results: Results): string {
+  return JSON.stringify(Results$outboundSchema.parse(results));
+}
+
+export function resultsFromJSON(
+  jsonString: string,
+): SafeParseResult<Results, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Results$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Results' from JSON`,
+  );
 }
 
 /** @internal */
@@ -187,4 +204,18 @@ export namespace EvaluationRun$ {
   export const outboundSchema = EvaluationRun$outboundSchema;
   /** @deprecated use `EvaluationRun$Outbound` instead. */
   export type Outbound = EvaluationRun$Outbound;
+}
+
+export function evaluationRunToJSON(evaluationRun: EvaluationRun): string {
+  return JSON.stringify(EvaluationRun$outboundSchema.parse(evaluationRun));
+}
+
+export function evaluationRunFromJSON(
+  jsonString: string,
+): SafeParseResult<EvaluationRun, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => EvaluationRun$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'EvaluationRun' from JSON`,
+  );
 }

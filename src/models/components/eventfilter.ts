@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The type of filter you are performing - "is", "is not", "contains", "not contains", "greater than"
@@ -135,4 +138,18 @@ export namespace EventFilter$ {
   export const outboundSchema = EventFilter$outboundSchema;
   /** @deprecated use `EventFilter$Outbound` instead. */
   export type Outbound = EventFilter$Outbound;
+}
+
+export function eventFilterToJSON(eventFilter: EventFilter): string {
+  return JSON.stringify(EventFilter$outboundSchema.parse(eventFilter));
+}
+
+export function eventFilterFromJSON(
+  jsonString: string,
+): SafeParseResult<EventFilter, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => EventFilter$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'EventFilter' from JSON`,
+  );
 }
