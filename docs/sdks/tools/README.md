@@ -265,7 +265,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.tools.deleteTool("<value>");
+  await honeyHive.tools.deleteTool("<id>");
 
 
 }
@@ -288,7 +288,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await toolsDeleteTool(honeyHive, "<value>");
+  const res = await toolsDeleteTool(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

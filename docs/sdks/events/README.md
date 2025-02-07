@@ -39,19 +39,20 @@ async function run() {
         "<value>",
       ],
       config: {
+        "model": "gpt-3.5-turbo",
+        "version": "v0.1",
+        "provider": "openai",
         "hyperparameters": {
-          "frequency_penalty": 0,
+          "temperature": 0,
+          "top_p": 1,
           "max_tokens": 1000,
-          "n": 1,
           "presence_penalty": 0,
+          "frequency_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "temperature": 0,
-          "top_p": 1,
+          "n": 1,
         },
-        "model": "gpt-3.5-turbo",
-        "provider": "openai",
         "template": [
           {
             "role": "system",
@@ -65,9 +66,10 @@ async function run() {
           },
         ],
         "type": "chat",
-        "version": "v0.1",
       },
       inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
@@ -80,20 +82,18 @@ async function run() {
             "content": "What is in the context?",
           },
         ],
-        "context": "Hello world",
-        "question": "What is in the context?",
       },
       outputs: {
-        "content": "Hello world",
         "role": "assistant",
+        "content": "Hello world",
       },
       error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "completion_tokens": 23,
         "cost": 0.00008,
+        "completion_tokens": 23,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -146,19 +146,20 @@ async function run() {
         "<value>",
       ],
       config: {
+        "model": "gpt-3.5-turbo",
+        "version": "v0.1",
+        "provider": "openai",
         "hyperparameters": {
-          "frequency_penalty": 0,
+          "temperature": 0,
+          "top_p": 1,
           "max_tokens": 1000,
-          "n": 1,
           "presence_penalty": 0,
+          "frequency_penalty": 0,
           "stop": [
             "<value>",
           ],
-          "temperature": 0,
-          "top_p": 1,
+          "n": 1,
         },
-        "model": "gpt-3.5-turbo",
-        "provider": "openai",
         "template": [
           {
             "role": "system",
@@ -172,9 +173,10 @@ async function run() {
           },
         ],
         "type": "chat",
-        "version": "v0.1",
       },
       inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
@@ -187,20 +189,18 @@ async function run() {
             "content": "What is in the context?",
           },
         ],
-        "context": "Hello world",
-        "question": "What is in the context?",
       },
       outputs: {
-        "content": "Hello world",
         "role": "assistant",
+        "content": "Hello world",
       },
       error: "<value>",
       startTime: 1714978764301,
       endTime: 1714978765301,
       duration: 999.8056,
       metadata: {
-        "completion_tokens": 23,
         "cost": 0.00008,
+        "completion_tokens": 23,
         "prompt_tokens": 35,
         "total_tokens": 58,
       },
@@ -267,8 +267,8 @@ async function run() {
   await honeyHive.events.updateEvent({
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "completion_tokens": 23,
       "cost": 0.00008,
+      "completion_tokens": 23,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -279,8 +279,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "content": "Hello world",
       "role": "assistant",
+      "content": "Hello world",
     },
     config: {
       "template": [
@@ -320,8 +320,8 @@ async function run() {
   const res = await eventsUpdateEvent(honeyHive, {
     eventId: "7f22137a-6911-4ed3-bc36-110f1dde6b66",
     metadata: {
-      "completion_tokens": 23,
       "cost": 0.00008,
+      "completion_tokens": 23,
       "prompt_tokens": 35,
       "total_tokens": 58,
     },
@@ -332,8 +332,8 @@ async function run() {
       "num_words": 2,
     },
     outputs: {
-      "content": "Hello world",
       "role": "assistant",
+      "content": "Hello world",
     },
     config: {
       "template": [
@@ -498,13 +498,13 @@ async function run() {
         },
       ],
       response: {
-        "content": "Hello, world!",
         "role": "assistant",
+        "content": "Hello, world!",
       },
       duration: 42,
       usage: {
-        "completion_tokens": 10,
         "prompt_tokens": 10,
+        "completion_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
@@ -512,15 +512,15 @@ async function run() {
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
+        "top_p": 1,
         "max_tokens": 1000,
-        "n": 1,
         "presence_penalty": 0,
+        "frequency_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_p": 1,
+        "n": 1,
       },
       template: [
         {
@@ -602,13 +602,13 @@ async function run() {
         },
       ],
       response: {
-        "content": "Hello, world!",
         "role": "assistant",
+        "content": "Hello, world!",
       },
       duration: 42,
       usage: {
-        "completion_tokens": 10,
         "prompt_tokens": 10,
+        "completion_tokens": 10,
         "total_tokens": 20,
       },
       cost: 0.00008,
@@ -616,15 +616,15 @@ async function run() {
       source: "playground",
       eventName: "Model Completion",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
+        "top_p": 1,
         "max_tokens": 1000,
-        "n": 1,
         "presence_penalty": 0,
+        "frequency_penalty": 0,
         "stop": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_p": 1,
+        "n": 1,
       },
       template: [
         {

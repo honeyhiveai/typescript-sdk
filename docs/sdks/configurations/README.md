@@ -106,15 +106,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
         "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_k": -1,
-        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -156,10 +156,10 @@ async function run() {
       "staging",
     ],
     userProperties: {
-      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
     },
   });
 
@@ -192,15 +192,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
         "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_k": -1,
-        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -242,10 +242,10 @@ async function run() {
       "staging",
     ],
     userProperties: {
-      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
     },
   });
 
@@ -302,15 +302,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
         "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_k": -1,
-        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -353,10 +353,10 @@ async function run() {
     ],
     type: "LLM",
     userProperties: {
-      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
     },
   }, "<id>");
 
@@ -389,15 +389,15 @@ async function run() {
       callType: "chat",
       model: "gpt-4-turbo-preview",
       hyperparameters: {
-        "frequency_penalty": 0,
+        "temperature": 0,
         "max_tokens": 1000,
+        "top_p": 1,
+        "top_k": -1,
+        "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
           "<value>",
         ],
-        "temperature": 0,
-        "top_k": -1,
-        "top_p": 1,
       },
       selectedFunctions: [
         {
@@ -440,10 +440,10 @@ async function run() {
     ],
     type: "LLM",
     userProperties: {
-      "user_email": "dhruv@honeyhive.ai",
       "user_id": "google-oauth2|108897808434934946583",
       "user_name": "Dhruv Singh",
       "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c",
+      "user_email": "dhruv@honeyhive.ai",
     },
   }, "<id>");
 

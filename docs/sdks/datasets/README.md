@@ -214,8 +214,8 @@ async function run() {
       "66369748b5773befbdasdk1",
     ],
     metadata: {
-      "source": "prod",
       "updated": true,
+      "source": "prod",
     },
   });
 
@@ -251,8 +251,8 @@ async function run() {
       "66369748b5773befbdasdk1",
     ],
     metadata: {
-      "source": "prod",
       "updated": true,
+      "source": "prod",
     },
   });
 
@@ -301,7 +301,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.datasets.deleteDataset("<value>");
+  await honeyHive.datasets.deleteDataset("<id>");
 
 
 }
@@ -324,7 +324,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await datasetsDeleteDataset(honeyHive, "<value>");
+  const res = await datasetsDeleteDataset(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;
@@ -392,7 +392,7 @@ async function run() {
         "<value>",
       ],
     },
-  }, "<value>");
+  }, "<id>");
 
   // Handle the result
   console.log(result);
@@ -437,7 +437,7 @@ async function run() {
         "<value>",
       ],
     },
-  }, "<value>");
+  }, "<id>");
 
   if (!res.ok) {
     throw res.error;

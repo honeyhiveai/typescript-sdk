@@ -1,12 +1,12 @@
 lockVersion: 2.0.0
 id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
-  docChecksum: f524fa6c55cb99f551011c1cfb77d501
+  docChecksum: 29fc2817f8f93615a1cb49e37377f6bc
   docVersion: 1.0.4
   speakeasyVersion: 1.405.10
   generationVersion: 2.429.0
-  releaseVersion: 1.2.1
-  configChecksum: 1187254bb4ba5f72ea51b6d060efc6c4
+  releaseVersion: 1.4.4
+  configChecksum: 8e6fa7b222840be85e6eb3e66271941f
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -27,11 +27,11 @@ features:
     responseFormat: 0.2.3
     retries: 2.83.0
     sdkHooks: 0.1.0
+    unions: 2.85.7
 generatedFiles:
   - .eslintrc.cjs
   - .gitattributes
   - .npmignore
-  - CONTRIBUTING.md
   - FUNCTIONS.md
   - RUNTIMES.md
   - USAGE.md
@@ -52,28 +52,51 @@ generatedFiles:
   - docs/models/components/createtoolrequest.md
   - docs/models/components/createtoolrequesttype.md
   - docs/models/components/datapoint.md
+  - docs/models/components/datapoints.md
   - docs/models/components/dataset.md
   - docs/models/components/datasettype.md
   - docs/models/components/datasetupdate.md
   - docs/models/components/deleterunresponse.md
+  - docs/models/components/details.md
   - docs/models/components/env.md
   - docs/models/components/evaluationrun.md
   - docs/models/components/evaluationrunstatus.md
+  - docs/models/components/evaluators.md
   - docs/models/components/event.md
+  - docs/models/components/eventdetails.md
   - docs/models/components/eventfilter.md
   - docs/models/components/eventtype.md
+  - docs/models/components/experimentcomparisonresponse.md
+  - docs/models/components/experimentcomparisonresponseconfiguration.md
+  - docs/models/components/experimentcomparisonresponseevaluators.md
+  - docs/models/components/experimentcomparisonresponsemetadata.md
+  - docs/models/components/experimentcomparisonresponsemetrics.md
+  - docs/models/components/experimentcomparisonresponsepassingranges.md
+  - docs/models/components/experimentcomparisonresponseresults.md
+  - docs/models/components/experimentcomparisonresponseschemasconfiguration.md
+  - docs/models/components/experimentcomparisonresponseschemasresults.md
+  - docs/models/components/experimentresultresponse.md
+  - docs/models/components/experimentresultresponsedatapoints.md
+  - docs/models/components/experimentresultresponsemetrics.md
   - docs/models/components/functioncallparams.md
   - docs/models/components/getrunresponse.md
   - docs/models/components/getrunsresponse.md
+  - docs/models/components/metadata.md
   - docs/models/components/metric.md
   - docs/models/components/metricedit.md
   - docs/models/components/metricediteventtype.md
   - docs/models/components/metriceditreturntype.md
   - docs/models/components/metriceditthreshold.md
   - docs/models/components/metricedittype.md
+  - docs/models/components/metrics.md
   - docs/models/components/metrictype.md
+  - docs/models/components/newrun.md
+  - docs/models/components/newvalues.md
+  - docs/models/components/oldrun.md
+  - docs/models/components/oldvalues.md
   - docs/models/components/operator.md
   - docs/models/components/parameterst.md
+  - docs/models/components/passingranges.md
   - docs/models/components/pipelinetype.md
   - docs/models/components/postconfigurationrequest.md
   - docs/models/components/postconfigurationrequestcalltype.md
@@ -109,11 +132,14 @@ generatedFiles:
   - docs/models/components/updaterunrequeststatus.md
   - docs/models/components/updaterunresponse.md
   - docs/models/components/updatetoolrequest.md
+  - docs/models/components/value.md
+  - docs/models/components/values.md
   - docs/models/errors/createeventbatchresponsebody.md
   - docs/models/errors/createmodeleventbatchresponsebody.md
   - docs/models/operations/adddatapointsrequest.md
   - docs/models/operations/adddatapointsrequestbody.md
   - docs/models/operations/adddatapointsresponsebody.md
+  - docs/models/operations/aggregatefunction.md
   - docs/models/operations/createdatapointresponsebody.md
   - docs/models/operations/createdatapointresult.md
   - docs/models/operations/createdatasetresponsebody.md
@@ -146,12 +172,15 @@ generatedFiles:
   - docs/models/operations/getdatasetsresponsebody.md
   - docs/models/operations/geteventsrequestbody.md
   - docs/models/operations/geteventsresponsebody.md
+  - docs/models/operations/getexperimentcomparisonrequest.md
+  - docs/models/operations/getexperimentresultrequest.md
   - docs/models/operations/getmetricsrequest.md
   - docs/models/operations/getprojectsrequest.md
   - docs/models/operations/getrunrequest.md
   - docs/models/operations/getrunsrequest.md
   - docs/models/operations/getsessionrequest.md
   - docs/models/operations/mapping.md
+  - docs/models/operations/queryparamaggregatefunction.md
   - docs/models/operations/result.md
   - docs/models/operations/startsessionrequestbody.md
   - docs/models/operations/startsessionresponsebody.md
@@ -164,10 +193,10 @@ generatedFiles:
   - docs/sdks/datapoints/README.md
   - docs/sdks/datasets/README.md
   - docs/sdks/events/README.md
+  - docs/sdks/experiments/README.md
   - docs/sdks/honeyhive/README.md
   - docs/sdks/metrics/README.md
   - docs/sdks/projects/README.md
-  - docs/sdks/runs/README.md
   - docs/sdks/session/README.md
   - docs/sdks/tools/README.md
   - jsr.json
@@ -193,6 +222,13 @@ generatedFiles:
   - src/funcs/eventsCreateModelEventBatch.ts
   - src/funcs/eventsGetEvents.ts
   - src/funcs/eventsUpdateEvent.ts
+  - src/funcs/experimentsCreateRun.ts
+  - src/funcs/experimentsDeleteRun.ts
+  - src/funcs/experimentsGetExperimentComparison.ts
+  - src/funcs/experimentsGetExperimentResult.ts
+  - src/funcs/experimentsGetRun.ts
+  - src/funcs/experimentsGetRuns.ts
+  - src/funcs/experimentsUpdateRun.ts
   - src/funcs/metricsCreateMetric.ts
   - src/funcs/metricsDeleteMetric.ts
   - src/funcs/metricsGetMetrics.ts
@@ -201,11 +237,6 @@ generatedFiles:
   - src/funcs/projectsDeleteProject.ts
   - src/funcs/projectsGetProjects.ts
   - src/funcs/projectsUpdateProject.ts
-  - src/funcs/runsCreateRun.ts
-  - src/funcs/runsDeleteRun.ts
-  - src/funcs/runsGetRun.ts
-  - src/funcs/runsGetRuns.ts
-  - src/funcs/runsUpdateRun.ts
   - src/funcs/sessionGetSession.ts
   - src/funcs/sessionStartSession.ts
   - src/funcs/toolsCreateTool.ts
@@ -247,6 +278,8 @@ generatedFiles:
   - src/models/components/evaluationrun.ts
   - src/models/components/event.ts
   - src/models/components/eventfilter.ts
+  - src/models/components/experimentcomparisonresponse.ts
+  - src/models/components/experimentresultresponse.ts
   - src/models/components/getrunresponse.ts
   - src/models/components/getrunsresponse.ts
   - src/models/components/index.ts
@@ -290,6 +323,8 @@ generatedFiles:
   - src/models/operations/getdatapoints.ts
   - src/models/operations/getdatasets.ts
   - src/models/operations/getevents.ts
+  - src/models/operations/getexperimentcomparison.ts
+  - src/models/operations/getexperimentresult.ts
   - src/models/operations/getmetrics.ts
   - src/models/operations/getprojects.ts
   - src/models/operations/getrun.ts
@@ -305,9 +340,9 @@ generatedFiles:
   - src/sdk/datapoints.ts
   - src/sdk/datasets.ts
   - src/sdk/events.ts
+  - src/sdk/experiments.ts
   - src/sdk/metrics.ts
   - src/sdk/projects.ts
-  - src/sdk/runs.ts
   - src/sdk/sdk.ts
   - src/sdk/session.ts
   - src/sdk/tools.ts
@@ -321,29 +356,43 @@ generatedFiles:
   - src/types/streams.ts
   - tsconfig.json
 examples:
-  addDatapoints:
-    speakeasy-default-add-datapoints:
+  startSession:
+    speakeasy-default-start-session:
+      requestBody:
+        application/json: {"session": {"project": "Simple RAG Project", "session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66"], "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "duration": 824.8056, "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}, "start_time": 1712025501605, "end_time": 1712025499832}}
+      responses:
+        "200":
+          application/json: {}
+  getSession:
+    speakeasy-default-get-session:
       parameters:
         path:
-          dataset_id: "<value>"
-      requestBody:
-        application/json: {"project": "<value>", "data": [{"key": "<value>", "key1": "<value>", "key2": "<value>"}], "mapping": {"inputs": [], "ground_truth": ["<value>", "<value>"], "history": []}}
-  createConfiguration:
-    speakeasy-default-create-configuration:
-      requestBody:
-        application/json: {"project": "660d7ba7995cacccce4d299e", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "presence_penalty": 0, "stop_sequences": [], "temperature": 0, "top_k": -1, "top_p": 1}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "user_properties": {"user_email": "dhruv@honeyhive.ai", "user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c"}}
-  createDatapoint:
-    speakeasy-default-create-datapoint:
-      requestBody:
-        application/json: {"project": "New Project", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.", "role": "assistant"}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_datasets": [], "metadata": {"completion_tokens": 47, "prompt_tokens": 696, "question_type": "weather", "total_tokens": 743}}
-  createDataset:
-    speakeasy-default-create-dataset:
-      requestBody:
-        application/json: {"project": "New Project", "name": "test-dataset", "description": "A test dataset", "type": "evaluation", "datapoints": ["66369748b5773befbdc661e2"], "linked_evals": [], "saved": false, "pipeline_type": "event", "metadata": {"source": "dev"}}
+          session_id: "<id>"
+      responses:
+        "200":
+          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
   createEvent:
     speakeasy-default-create-event:
       requestBody:
-        application/json: {"event": {"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "n": 1, "presence_penalty": 0, "stop": [], "temperature": 0, "top_p": 1}, "model": "gpt-3.5-turbo", "provider": "openai", "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat", "version": "v0.1"}, "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"completion_tokens": 23, "cost": 0.00008, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
+        application/json: {"event": {"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
+      responses:
+        "200":
+          application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "success": true}
+  updateEvent:
+    "":
+      requestBody:
+        application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {"rating": 5}, "metrics": {"num_words": 2}, "outputs": {"role": "assistant", "content": "Hello world"}, "config": {"template": [{"role": "system", "content": "Hello, {{ name }}!"}]}, "user_properties": {"user_id": "691b1f94-d38c-4e92-b051-5e03fee9ff86"}, "duration": 42}
+  getEvents:
+    speakeasy-default-get-events:
+      requestBody:
+        application/json: {"project": "<value>", "filters": [{"field": "event_type", "value": "model", "operator": "is", "type": "string"}]}
+      responses:
+        "200":
+          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
+  createModelEvent:
+    speakeasy-default-create-model-event:
+      requestBody:
+        application/json: {"model_event": {"project": "New Project", "model": "gpt-4o", "provider": "openai", "messages": [{"role": "system", "content": "Hello, world!"}], "response": {"role": "assistant", "content": "Hello, world!"}, "duration": 42, "usage": {"prompt_tokens": 10, "completion_tokens": 10, "total_tokens": 20}, "cost": 0.00008, "error": "<value>", "source": "playground", "event_name": "Model Completion", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Hello, {{ name }}!"}], "template_inputs": {"name": "world"}, "tools": [{"type": "function", "function": {"name": "get_current_weather", "description": "Get the current weather", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"}, "format": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The temperature unit to use. Infer this from the users location."}}, "required": ["location", "format"]}}}], "tool_choice": "none", "response_format": {"type": "text"}}}
       responses:
         "200":
           application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "success": true}
@@ -356,17 +405,6 @@ examples:
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "success": true}
         "500":
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "errors": ["Could not create event due to missing inputs", "Could not create event due to missing source"], "success": true}
-  createMetric:
-    speakeasy-default-create-metric:
-      requestBody:
-        application/json: {"name": "<value>", "task": "<value>", "type": "model", "description": "Quality-focused next generation focus group", "return_type": "boolean"}
-  createModelEvent:
-    speakeasy-default-create-model-event:
-      requestBody:
-        application/json: {"model_event": {"project": "New Project", "model": "gpt-4o", "provider": "openai", "messages": [{"role": "system", "content": "Hello, world!"}], "response": {"content": "Hello, world!", "role": "assistant"}, "duration": 42, "usage": {"completion_tokens": 10, "prompt_tokens": 10, "total_tokens": 20}, "cost": 0.00008, "error": "<value>", "source": "playground", "event_name": "Model Completion", "hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "n": 1, "presence_penalty": 0, "stop": [], "temperature": 0, "top_p": 1}, "template": [{"role": "system", "content": "Hello, {{ name }}!"}], "template_inputs": {"name": "world"}, "tools": [{"type": "function", "function": {"name": "get_current_weather", "description": "Get the current weather", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"}, "format": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The temperature unit to use. Infer this from the users location."}}, "required": ["location", "format"]}}}], "tool_choice": "none", "response_format": {"type": "text"}}}
-      responses:
-        "200":
-          application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "success": true}
   createModelEventBatch:
     speakeasy-default-create-model-event-batch:
       requestBody:
@@ -376,75 +414,48 @@ examples:
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "success": true}
         "500":
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "errors": ["Could not create event due to missing model", "Could not create event due to missing provider"], "success": true}
-  createProject:
-    speakeasy-default-create-project:
-      requestBody:
-        application/json: {"name": "<value>"}
-      responses:
-        "200":
-          application/json: {"name": "<value>", "description": "Optional reciprocal hardware"}
-  createRun:
-    speakeasy-default-create-run:
-      requestBody:
-        application/json: {"project": "<value>", "name": "<value>", "event_ids": []}
-  createTool:
-    speakeasy-default-create-tool:
-      requestBody:
-        application/json: {"task": "<value>", "name": "<value>", "parameters": {"key": "<value>", "key1": "<value>"}, "type": "function"}
-  deleteConfiguration:
-    speakeasy-default-delete-configuration:
-      parameters:
-        path:
-          id: "<id>"
-  deleteDatapoint:
-    "":
-      parameters:
-        path:
-          id: "<id>"
-      responses:
-        "200":
-          application/json: {"deleted": true}
-  deleteDataset:
-    speakeasy-default-delete-dataset:
+  getMetrics:
+    speakeasy-default-get-metrics:
       parameters:
         query:
-          dataset_id: "<value>"
+          project_name: "<value>"
+      responses:
+        "200":
+          application/json: [{"name": "<value>", "task": "<value>", "type": "composite", "description": "incinerate creative juicy guilty spherical ravel wetly around", "return_type": "string"}]
+  createMetric:
+    speakeasy-default-create-metric:
+      requestBody:
+        application/json: {"name": "<value>", "task": "<value>", "type": "model", "description": "ack oh faithfully annually bloom ha because instead", "return_type": "boolean"}
+  updateMetric:
+    speakeasy-default-update-metric:
+      requestBody:
+        application/json: {"metric_id": "<id>"}
   deleteMetric:
     speakeasy-default-delete-metric:
       parameters:
         query:
-          metric_id: "<value>"
-  deleteProject:
-    speakeasy-default-delete-project:
-      parameters:
-        query:
-          name: "<value>"
-  deleteRun:
-    speakeasy-default-delete-run:
-      parameters:
-        path:
-          run_id: "<value>"
+          metric_id: "<id>"
+  getTools:
+    speakeasy-default-get-tools:
+      responses:
+        "200":
+          application/json: [{"task": "<value>", "name": "<value>", "parameters": {}, "tool_type": "tool"}]
+  createTool:
+    speakeasy-default-create-tool:
+      requestBody:
+        application/json: {"task": "<value>", "name": "<value>", "parameters": {"key": "<value>", "key1": "<value>"}, "type": "function"}
+      responses:
+        "200":
+          application/json: {}
+  updateTool:
+    speakeasy-default-update-tool:
+      requestBody:
+        application/json: {"id": "<id>", "name": "<value>", "parameters": {}}
   deleteTool:
     speakeasy-default-delete-tool:
       parameters:
         query:
-          function_id: "<value>"
-  getConfigurations:
-    speakeasy-default-get-configurations:
-      parameters:
-        query:
-          project: "<value>"
-      responses:
-        "200":
-          application/json: [{"_id": "6638187d505c6812e4044f24", "project": "New Project", "name": "function-v0", "env": ["staging"], "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}]
-  getDatapoint:
-    speakeasy-default-get-datapoint:
-      parameters:
-        path:
-          id: "<id>"
-      responses:
-        "200":
-          application/json: {"datapoint": [{"_id": "65c13dbbd65fb876b7886cdb", "tenant": "org_XiCNIMTZzUKiY2As", "project_id": "653454f3138a956964341c07", "created_at": "2024-02-05T19:57:47.05Z", "updated_at": "2024-02-05T19:57:47.05Z", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"role": "assistant", "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_evals": [], "linked_datasets": [], "saved": false, "type": "event", "metadata": {"question_type": "weather", "completion_tokens": 47, "prompt_tokens": 696, "total_tokens": 743}}]}
+          function_id: "<id>"
   getDatapoints:
     speakeasy-default-get-datapoints:
       parameters:
@@ -453,6 +464,36 @@ examples:
       responses:
         "200":
           application/json: {"datapoints": [{"_id": "65c13dbbd65fb876b7886cdb", "tenant": "org_XiCNIMTZzUKiY2As", "project_id": "653454f3138a956964341c07", "created_at": "2024-02-05T19:57:47.05Z", "updated_at": "2024-02-05T19:57:47.05Z", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"role": "assistant", "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_evals": [], "linked_datasets": [], "saved": false, "type": "event", "metadata": {"question_type": "weather", "completion_tokens": 47, "prompt_tokens": 696, "total_tokens": 743}}]}
+  createDatapoint:
+    speakeasy-default-create-datapoint:
+      requestBody:
+        application/json: {"project": "New Project", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"role": "assistant", "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_datasets": [], "metadata": {"question_type": "weather", "completion_tokens": 47, "prompt_tokens": 696, "total_tokens": 743}}
+      responses:
+        "200":
+          application/json: {}
+  getDatapoint:
+    speakeasy-default-get-datapoint:
+      parameters:
+        path:
+          id: "<id>"
+      responses:
+        "200":
+          application/json: {"datapoint": [{"_id": "65c13dbbd65fb876b7886cdb", "tenant": "org_XiCNIMTZzUKiY2As", "project_id": "653454f3138a956964341c07", "created_at": "2024-02-05T19:57:47.05Z", "updated_at": "2024-02-05T19:57:47.05Z", "inputs": {"query": "what's the temperature in Iceland?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Iceland?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"role": "assistant", "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."}, "linked_event": "6bba5182-d4b1-4b29-a64a-f0a8bd964f76", "linked_evals": [], "linked_datasets": [], "saved": false, "type": "event", "metadata": {"question_type": "weather", "completion_tokens": 47, "prompt_tokens": 696, "total_tokens": 743}}]}
+  updateDatapoint:
+    speakeasy-default-update-datapoint:
+      parameters:
+        path:
+          id: "<id>"
+      requestBody:
+        application/json: {"inputs": {"query": "what's the temperature in Reykjavik?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Reykjavik?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"role": "assistant", "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information."}, "linked_evals": [], "linked_datasets": [], "metadata": {"question_type": "capital-weather", "random_field": 0}}
+  deleteDatapoint:
+    "":
+      parameters:
+        path:
+          id: "<id>"
+      responses:
+        "200":
+          application/json: {"deleted": true}
   getDatasets:
     speakeasy-default-get-datasets:
       parameters:
@@ -461,85 +502,135 @@ examples:
       responses:
         "200":
           application/json: {"testcases": [{"project": "New Project", "name": "test-dataset", "description": "A test dataset", "type": "evaluation", "datapoints": ["66369748b5773befbdc661e2"], "num_points": 1, "linked_evals": [], "saved": false, "pipeline_type": "event", "created_at": "2024-05-04T20:15:04.124Z", "updated_at": "2024-05-04T20:15:04.124Z"}]}
-  getEvents:
-    speakeasy-default-get-events:
+  createDataset:
+    speakeasy-default-create-dataset:
       requestBody:
-        application/json: {"project": "<value>", "filters": [{"field": "event_type", "value": "model", "operator": "is", "type": "string"}]}
+        application/json: {"project": "New Project", "name": "test-dataset", "description": "A test dataset", "type": "evaluation", "datapoints": ["66369748b5773befbdc661e2"], "linked_evals": [], "saved": false, "pipeline_type": "event", "metadata": {"source": "dev"}}
       responses:
         "200":
-          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
-  getMetrics:
-    speakeasy-default-get-metrics:
+          application/json: {}
+  updateDataset:
+    speakeasy-default-update-dataset:
+      requestBody:
+        application/json: {"dataset_id": "663876ec4611c47f4970f0c3", "name": "new-dataset-name", "description": "An updated dataset description", "datapoints": ["66369748b5773befbdc661e"], "linked_evals": ["66369748b5773befbdasdk1"], "metadata": {"updated": true, "source": "prod"}}
+  deleteDataset:
+    speakeasy-default-delete-dataset:
       parameters:
         query:
-          project_name: "<value>"
+          dataset_id: "<id>"
+  addDatapoints:
+    speakeasy-default-add-datapoints:
+      parameters:
+        path:
+          dataset_id: "<id>"
+      requestBody:
+        application/json: {"project": "<value>", "data": [{"key": "<value>", "key1": "<value>", "key2": "<value>"}], "mapping": {"inputs": [], "ground_truth": ["<value>", "<value>"], "history": []}}
       responses:
         "200":
-          application/json: []
+          application/json: {}
   getProjects:
     speakeasy-default-get-projects:
       responses:
         "200":
-          application/json: []
+          application/json: [{"name": "<value>", "description": "adventurously frightfully tensely majority yet"}]
+  createProject:
+    speakeasy-default-create-project:
+      requestBody:
+        application/json: {"name": "<value>"}
+      responses:
+        "200":
+          application/json: {"name": "<value>", "description": "properly whose outsource actually jealous harangue formal"}
+  updateProject:
+    speakeasy-default-update-project:
+      requestBody:
+        application/json: {"project_id": "<id>"}
+  deleteProject:
+    speakeasy-default-delete-project:
+      parameters:
+        query:
+          name: "<value>"
+  createRun:
+    speakeasy-default-create-run:
+      requestBody:
+        application/json: {"project": "<value>", "name": "<value>", "event_ids": []}
+      responses:
+        "200":
+          application/json: {}
+  getRuns:
+    speakeasy-default-get-runs:
+      responses:
+        "200":
+          application/json: {}
   getRun:
     speakeasy-default-get-run:
       parameters:
         path:
-          run_id: "<value>"
-  getRuns: {}
-  getSession:
-    speakeasy-default-get-session:
+          run_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+  updateRun:
+    speakeasy-default-update-run:
       parameters:
         path:
-          session_id: "<value>"
-      responses:
-        "200":
-          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "n": 1, "presence_penalty": 0, "stop": [], "temperature": 0, "top_p": 1}, "model": "gpt-3.5-turbo", "provider": "openai", "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat", "version": "v0.1 - Fork"}, "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"completion_tokens": 23, "cost": 0.00008, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
-  getTools:
-    speakeasy-default-get-tools:
-      responses:
-        "200":
-          application/json: [{"task": "<value>", "name": "<value>", "parameters": {}, "tool_type": "tool"}]
-  startSession:
-    speakeasy-default-start-session:
+          run_id: "<id>"
       requestBody:
-        application/json: {"session": {"project": "Simple RAG Project", "session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66"], "inputs": {"chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}], "context": "Hello world", "question": "What is in the context?"}, "outputs": {"content": "Hello world", "role": "assistant"}, "error": "<value>", "duration": 824.8056, "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}, "start_time": 1712025501605, "end_time": 1712025499832}}
+        application/json: {}
+      responses:
+        "200":
+          application/json: {}
+  deleteRun:
+    speakeasy-default-delete-run:
+      parameters:
+        path:
+          run_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+  getExperimentResult:
+    speakeasy-default-get-experiment-result:
+      parameters:
+        path:
+          run_id: "<id>"
+        query:
+          project_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+  getExperimentComparison:
+    speakeasy-default-get-experiment-comparison:
+      parameters:
+        path:
+          run_id_1: "<value>"
+          run_id_2: "<value>"
+        query:
+          project_id: "<id>"
+      responses:
+        "200":
+          application/json: {}
+  getConfigurations:
+    speakeasy-default-get-configurations:
+      parameters:
+        query:
+          project: "<value>"
+      responses:
+        "200":
+          application/json: [{"_id": "6638187d505c6812e4044f24", "project": "New Project", "name": "function-v0", "env": ["staging"], "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}]
+  createConfiguration:
+    speakeasy-default-create-configuration:
+      requestBody:
+        application/json: {"project": "660d7ba7995cacccce4d299e", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
   updateConfiguration:
     speakeasy-default-update-configuration:
       parameters:
         path:
           id: "<id>"
       requestBody:
-        application/json: {"project": "New Project", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"frequency_penalty": 0, "max_tokens": 1000, "presence_penalty": 0, "stop_sequences": [], "temperature": 0, "top_k": -1, "top_p": 1}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "type": "LLM", "user_properties": {"user_email": "dhruv@honeyhive.ai", "user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c"}}
-  updateDatapoint:
-    speakeasy-default-update-datapoint:
+        application/json: {"project": "New Project", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
+  deleteConfiguration:
+    speakeasy-default-delete-configuration:
       parameters:
         path:
           id: "<id>"
-      requestBody:
-        application/json: {"inputs": {"query": "what's the temperature in Reykjavik?"}, "history": [{"role": "system", "content": "You are a helpful web assistant that helps users answer questions about the world based on the information provided to you by Google's search API. Answer the questions as truthfully as you can. In case you are unsure about the correct answer, please respond with \"I apologize but I'm not sure.\""}, {"role": "user", "content": "what's the temperature in Reykjavik?\\n\\n\\n--Google search API results below:---\\n\\n\"snippet\":\"2 Week Extended Forecast in Reykjavik, Iceland ; Feb 4, 29 / 20 °F · Snow showers early. Broken clouds. ; Feb 5, 27 / 16 °F · Light snow. Decreasing cloudiness.\",\"snippet_highlighted_words\":[\"Feb 4, 29 / 20 °F\"]"}], "ground_truth": {"content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.", "role": "assistant"}, "linked_evals": [], "linked_datasets": [], "metadata": {"question_type": "capital-weather", "random_field": 0}}
-  updateDataset:
-    speakeasy-default-update-dataset:
-      requestBody:
-        application/json: {"dataset_id": "663876ec4611c47f4970f0c3", "name": "new-dataset-name", "description": "An updated dataset description", "datapoints": ["66369748b5773befbdc661e"], "linked_evals": ["66369748b5773befbdasdk1"], "metadata": {"source": "prod", "updated": true}}
-  updateEvent:
-    "":
-      requestBody:
-        application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "metadata": {"completion_tokens": 23, "cost": 0.00008, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {"rating": 5}, "metrics": {"num_words": 2}, "outputs": {"content": "Hello world", "role": "assistant"}, "config": {"template": [{"role": "system", "content": "Hello, {{ name }}!"}]}, "user_properties": {"user_id": "691b1f94-d38c-4e92-b051-5e03fee9ff86"}, "duration": 42}
-  updateMetric:
-    speakeasy-default-update-metric:
-      requestBody:
-        application/json: {"metric_id": "<value>"}
-  updateProject:
-    speakeasy-default-update-project:
-      requestBody:
-        application/json: {"project_id": "<value>"}
-  updateRun:
-    speakeasy-default-update-run:
-      parameters:
-        path:
-          run_id: "<value>"
-  updateTool:
-    speakeasy-default-update-tool:
-      requestBody:
-        application/json: {"id": "<id>", "name": "<value>", "parameters": {}}
+examplesVersion: 1.0.0
+generatedTests: {}

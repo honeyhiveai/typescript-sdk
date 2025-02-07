@@ -183,7 +183,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.experiments.getRun("<value>");
+  const result = await honeyHive.experiments.getRun("<id>");
 
   // Handle the result
   console.log(result);
@@ -207,7 +207,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await experimentsGetRun(honeyHive, "<value>");
+  const res = await experimentsGetRun(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;
@@ -255,7 +255,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.experiments.updateRun({}, "<value>");
+  const result = await honeyHive.experiments.updateRun({}, "<id>");
 
   // Handle the result
   console.log(result);
@@ -279,7 +279,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await experimentsUpdateRun(honeyHive, {}, "<value>");
+  const res = await experimentsUpdateRun(honeyHive, {}, "<id>");
 
   if (!res.ok) {
     throw res.error;
@@ -328,7 +328,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.experiments.deleteRun("<value>");
+  const result = await honeyHive.experiments.deleteRun("<id>");
 
   // Handle the result
   console.log(result);
@@ -352,7 +352,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await experimentsDeleteRun(honeyHive, "<value>");
+  const res = await experimentsDeleteRun(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

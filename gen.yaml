@@ -11,9 +11,8 @@ generation:
     requestResponseComponentNamesFeb2024: false
   auth:
     oAuth2ClientCredentialsEnabled: false
-    oAuth2PasswordEnabled: false
 typescript:
-  version: 1.4.3
+  version: 1.4.4
   additionalDependencies:
     dependencies:
       '@anthropic-ai/sdk': ^0.21.0
@@ -34,6 +33,8 @@ typescript:
   author: HoneyHive
   clientServerStatusCodesAsErrors: true
   defaultErrorName: SDKError
+  enableCustomCodeRegions: false
+  enableReactQuery: false
   enumFormat: union
   flattenGlobalSecurity: true
   flatteningOrder: body-first

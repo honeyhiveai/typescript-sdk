@@ -173,7 +173,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.projects.updateProject({
-    projectId: "<value>",
+    projectId: "<id>",
   });
 
 
@@ -198,7 +198,7 @@ const honeyHive = new HoneyHiveCore({
 
 async function run() {
   const res = await projectsUpdateProject(honeyHive, {
-    projectId: "<value>",
+    projectId: "<id>",
   });
 
   if (!res.ok) {

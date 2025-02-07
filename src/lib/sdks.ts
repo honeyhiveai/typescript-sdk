@@ -220,8 +220,8 @@ export class ClientSDK {
     options: {
       context: HookContext;
       errorCodes: number | string | (number | string)[];
-      retryConfig: RetryConfig;
-      retryCodes: string[];
+      retryConfig?: RetryConfig | undefined;
+      retryCodes?: string[] | undefined;
     },
   ): Promise<
     Result<
@@ -233,6 +233,8 @@ export class ClientSDK {
     >
   > {
     const { context, errorCodes } = options;
+    const retryConfig = options.retryConfig || { strategy: "none" };
+    const retryCodes = options.retryCodes || [];
 
     return retry(
       async () => {
@@ -243,28 +245,22 @@ export class ClientSDK {
 
         let response = await this.#httpClient.request(req);
 
-        try {
-          if (matchStatusCode(response, errorCodes)) {
-            const result = await this.#hooks.afterError(
-              context,
-              response,
-              null,
-            );
-            if (result.error) {
-              throw result.error;
-            }
-            response = result.response || response;
-          } else {
-            response = await this.#hooks.afterSuccess(context, response);
+        if (matchStatusCode(response, errorCodes)) {
+          const result = await this.#hooks.afterError(context, response, null);
+          if (result.error) {
+            throw result.error;
           }
-        } finally {
-          await logResponse(this.#logger, response, req)
-            .catch(e => this.#logger?.log("Failed to log response:", e));
+          response = result.response || response;
+        } else {
+          response = await this.#hooks.afterSuccess(context, response);
         }
+
+        await logResponse(this.#logger, response, req)
+          .catch(e => this.#logger?.log("Failed to log response:", e));
 
         return response;
       },
-      { config: options.retryConfig, statusCodes: options.retryCodes },
+      { config: retryConfig, statusCodes: retryCodes },
     ).then(
       (r) => OK(r),
       (err) => {
