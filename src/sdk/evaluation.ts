@@ -12,8 +12,7 @@ interface EvaluationConfig {
     hh_project: string;
     name: string;
     dataset_id?: string;
-    query_list?: Dict<Any>[];
-    runs?: number;
+    dataset?: Dict<Any>[];
     evaluators?: Function[];
 }
 
@@ -36,8 +35,8 @@ function validateRequirements(config: EvaluationConfig): void {
     if (!config.name) {
         throw new Error("Evaluation name not found. Please set 'name' to initiate Honeyhive Evaluation.");
     }
-    if (!config.dataset_id && !config.query_list) {
-        throw new Error("No valid 'dataset_id' or 'query_list' found. Please provide one to iterate the evaluation over.");
+    if (!config.dataset_id && !config.dataset) {
+        throw new Error("No valid 'dataset_id' or 'dataset' found. Please provide one to iterate the evaluation over.");
     }
 }
 
@@ -77,8 +76,8 @@ async function getInputs(state: EvaluationState, config: EvaluationConfig, run_i
         } catch (error) {
             console.error(`Error getting datapoint: ${error}`);
         }
-    } else if (config.query_list) {
-        return config.query_list[run_id];
+    } else if (config.dataset) {
+        return config.dataset[run_id];
     }
     return null;
 }
@@ -161,8 +160,8 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
                 tracing_metadata['datapoint_id'] = state.hh_dataset.datapoints[run_id];
                 tracing_metadata['dataset_id'] = config.dataset_id;
             }
-            if (state.external_dataset_id && config.query_list) {
-                tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.query_list[run_id]));
+            if (state.external_dataset_id && config.dataset) {
+                tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.dataset[run_id]));
                 tracing_metadata['dataset_id'] = state.external_dataset_id;
             }
             if (typeof evaluation_output !== 'object') {
@@ -221,14 +220,14 @@ async function evaluate(
     const state: EvaluationState = {
         hhai: new HoneyHive({ bearerAuth: config.hh_api_key }),
         hh_dataset: null,
-        external_dataset_id: config.query_list ? _generateHash(JSON.stringify(config.query_list)) : undefined,
+        external_dataset_id: config.dataset ? _generateHash(JSON.stringify(config.dataset)) : undefined,
         evaluation_session_ids: [],
         eval_run: null,
         state: Status.Pending
     };
 
     state.hh_dataset = await loadDataset(state.hhai, config);
-    const runs = config.runs || (state.hh_dataset ? state.hh_dataset.datapoints.length : (config.query_list ? config.query_list.length : 0));
+    const runs = state.hh_dataset ? state.hh_dataset.datapoints.length : (config.dataset ? config.dataset.length : 0);
 
     await setupEvaluation(state, config);
 
