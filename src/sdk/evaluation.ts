@@ -1,6 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, Status } from '../models/components';
-import { HoneyHiveTracer } from './tracer';
+import { HoneyHiveTracer} from './tracer';
 import * as crypto from 'crypto';
 
 type Dict<T> = { [key: string]: T };
@@ -11,9 +11,23 @@ interface EvaluationConfig {
     hh_api_key: string;
     hh_project: string;
     name: string;
+    suite?: string;
     dataset_id?: string;
     dataset?: Dict<Any>[];
     evaluators?: Function[];
+    server_url?: string;
+}
+
+interface EvaluationData {
+    run_id: string;
+    dataset_id: string | undefined;
+    session_ids: string[];
+    status: Status;
+}
+
+interface EvaluationResult extends EvaluationData {
+    toJson(): void;
+    suite: string;
 }
 
 interface EvaluationState {
@@ -90,7 +104,8 @@ async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<
             source: 'evaluation',
             sessionName: config.name,
             inputs: inputs ? inputs : {},
-            isEvaluation: true
+            isEvaluation: true,
+            ...(config.server_url && { serverUrl: config.server_url })
         });
     } catch (error) {
         throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
@@ -209,13 +224,10 @@ async function windupEvaluation(state: EvaluationState): Promise<void> {
 
 async function evaluate(
     config: EvaluationConfig
-): Promise<{
-    run_id: string;
-    dataset_id: string | undefined;
-    session_ids: string[];
-    status: Status;
-}> {
+): Promise<EvaluationResult> {
     validateRequirements(config);
+
+    const suite = config.suite || "default";
 
     const state: EvaluationState = {
         hhai: new HoneyHive({ bearerAuth: config.hh_api_key }),
@@ -247,12 +259,24 @@ async function evaluate(
 
     await windupEvaluation(state);
 
-    return {
+    const result: EvaluationResult = {
         run_id: state.eval_run?.runId || '',
         dataset_id: config.dataset_id || state.external_dataset_id,
         session_ids: state.evaluation_session_ids,
-        status: state.state
+        status: state.state,
+        suite: suite,  // Changed from _suite to suite
+        toJson(): void {
+            const fs = require('fs');
+            const data: EvaluationData = {
+                run_id: this.run_id,
+                dataset_id: this.dataset_id,
+                session_ids: this.session_ids,
+                status: this.status
+            };
+            fs.writeFileSync(`${this.suite}.json`, JSON.stringify(data, null, 4));
+        }
     };
+    return result;
 }
 
 export { evaluate };

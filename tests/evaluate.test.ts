@@ -3,7 +3,7 @@ import { evaluate } from "honeyhive";
 
 const HH_API_KEY = process.env.HH_API_KEY || "";
 const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
-
+const SERVER_URL = "https://api.honeyhive.ai";
 describe('evaluate function', () => {
     // Mock data
     const testDataset = [
@@ -35,12 +35,31 @@ describe('evaluate function', () => {
             hh_project: HH_PROJECT_NAME,
             name: 'eval-test',
             dataset: testDataset,
-            evaluators: [sampleEvaluator]
+            evaluators: [sampleEvaluator],
+            suite: 'test-suite',
+            server_url: SERVER_URL
         });
 
         expect(result).toBeDefined();
+        expect(result.suite).toBe('test-suite');
         // Add more specific assertions based on what evaluate should return
     });
+
+    it('should use default suite when not provided', async () => {
+        const result = await evaluate({
+            evaluationFunction: FunctionToEvaluate,
+            hh_api_key: HH_API_KEY,
+            hh_project: HH_PROJECT_NAME,
+            name: 'eval-test',
+            dataset: testDataset,
+            evaluators: [sampleEvaluator],
+        });
+
+        expect(result).toBeDefined();
+        expect(result.suite).toBe('default');
+        // Add more specific assertions based on what evaluate should return
+    });
+
 
     it('should throw error with invalid inputs', async () => {
         await expect(evaluate({
