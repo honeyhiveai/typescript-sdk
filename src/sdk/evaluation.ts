@@ -1,6 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, Status } from '../models/components';
-import { HoneyHiveTracer } from './tracer';
+import { HoneyHiveTracer} from './tracer';
 import * as crypto from 'crypto';
 
 type Dict<T> = { [key: string]: T };
@@ -11,10 +11,23 @@ interface EvaluationConfig {
     hh_api_key: string;
     hh_project: string;
     name: string;
+    suite?: string;
     dataset_id?: string;
-    query_list?: Dict<Any>[];
-    runs?: number;
+    dataset?: Dict<Any>[];
     evaluators?: Function[];
+    server_url?: string;
+}
+
+interface EvaluationData {
+    run_id: string;
+    dataset_id: string | undefined;
+    session_ids: string[];
+    status: Status;
+}
+
+interface EvaluationResult extends EvaluationData {
+    toJson(): void;
+    suite: string;
 }
 
 interface EvaluationState {
@@ -36,8 +49,8 @@ function validateRequirements(config: EvaluationConfig): void {
     if (!config.name) {
         throw new Error("Evaluation name not found. Please set 'name' to initiate Honeyhive Evaluation.");
     }
-    if (!config.dataset_id && !config.query_list) {
-        throw new Error("No valid 'dataset_id' or 'query_list' found. Please provide one to iterate the evaluation over.");
+    if (!config.dataset_id && !config.dataset) {
+        throw new Error("No valid 'dataset_id' or 'dataset' found. Please provide one to iterate the evaluation over.");
     }
 }
 
@@ -77,8 +90,8 @@ async function getInputs(state: EvaluationState, config: EvaluationConfig, run_i
         } catch (error) {
             console.error(`Error getting datapoint: ${error}`);
         }
-    } else if (config.query_list) {
-        return config.query_list[run_id];
+    } else if (config.dataset) {
+        return config.dataset[run_id];
     }
     return null;
 }
@@ -91,7 +104,8 @@ async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<
             source: 'evaluation',
             sessionName: config.name,
             inputs: inputs ? inputs : {},
-            isEvaluation: true
+            isEvaluation: true,
+            ...(config.server_url && { serverUrl: config.server_url })
         });
     } catch (error) {
         throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
@@ -161,8 +175,8 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
                 tracing_metadata['datapoint_id'] = state.hh_dataset.datapoints[run_id];
                 tracing_metadata['dataset_id'] = config.dataset_id;
             }
-            if (state.external_dataset_id && config.query_list) {
-                tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.query_list[run_id]));
+            if (state.external_dataset_id && config.dataset) {
+                tracing_metadata['datapoint_id'] = _generateHash(JSON.stringify(config.dataset[run_id]));
                 tracing_metadata['dataset_id'] = state.external_dataset_id;
             }
             if (typeof evaluation_output !== 'object') {
@@ -210,25 +224,22 @@ async function windupEvaluation(state: EvaluationState): Promise<void> {
 
 async function evaluate(
     config: EvaluationConfig
-): Promise<{
-    run_id: string;
-    dataset_id: string | undefined;
-    session_ids: string[];
-    status: Status;
-}> {
+): Promise<EvaluationResult> {
     validateRequirements(config);
+
+    const suite = config.suite || "default";
 
     const state: EvaluationState = {
         hhai: new HoneyHive({ bearerAuth: config.hh_api_key }),
         hh_dataset: null,
-        external_dataset_id: config.query_list ? _generateHash(JSON.stringify(config.query_list)) : undefined,
+        external_dataset_id: config.dataset ? _generateHash(JSON.stringify(config.dataset)) : undefined,
         evaluation_session_ids: [],
         eval_run: null,
         state: Status.Pending
     };
 
     state.hh_dataset = await loadDataset(state.hhai, config);
-    const runs = config.runs || (state.hh_dataset ? state.hh_dataset.datapoints.length : (config.query_list ? config.query_list.length : 0));
+    const runs = state.hh_dataset ? state.hh_dataset.datapoints.length : (config.dataset ? config.dataset.length : 0);
 
     await setupEvaluation(state, config);
 
@@ -248,12 +259,24 @@ async function evaluate(
 
     await windupEvaluation(state);
 
-    return {
+    const result: EvaluationResult = {
         run_id: state.eval_run?.runId || '',
         dataset_id: config.dataset_id || state.external_dataset_id,
         session_ids: state.evaluation_session_ids,
-        status: state.state
+        status: state.state,
+        suite: suite,  // Changed from _suite to suite
+        toJson(): void {
+            const fs = require('fs');
+            const data: EvaluationData = {
+                run_id: this.run_id,
+                dataset_id: this.dataset_id,
+                session_ids: this.session_ids,
+                status: this.status
+            };
+            fs.writeFileSync(`${this.suite}.json`, JSON.stringify(data, null, 4));
+        }
     };
+    return result;
 }
 
 export { evaluate };
