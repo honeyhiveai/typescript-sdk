@@ -78,7 +78,6 @@ describe('evaluate function', () => {
             ground_truths
         });
         
-        // Just return metrics without throwing
         return {
             sample_metric: 0.5,
             sample_metric_2: true
@@ -86,7 +85,6 @@ describe('evaluate function', () => {
     };
 
     it('should evaluate successfully with valid inputs', async () => {
-        // Clear captured outputs before test
         capturedOutputs = [];
         
         const result = await evaluate({
@@ -102,12 +100,11 @@ describe('evaluate function', () => {
         expect(result).toBeDefined();
         expect(result.suite).toBe('test-suite');
         
-        // Now assert on the captured outputs
         expect(capturedOutputs.length).toBeGreaterThan(0);
         
         // Check each captured output
         capturedOutputs.forEach(output => {
-            expect(output.actual).toBe(output.expected); // This should fail
+            expect(output.actual).toBe(output.expected);
         });
     });
 
