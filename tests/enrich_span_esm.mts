@@ -7,10 +7,7 @@ const HH_API_URL = process.env.HH_API_URL || "https://api.honeyhive.ai";
 const HH_PROJECT_NAME = process.env.HH_PROJECT_NAME || "";
 
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-
-async function initializeTracer(sessionName: string): Promise<typeof HoneyHiveTracer> {
+async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
     const tracer = await HoneyHiveTracer.init({
         apiKey: HH_API_KEY,
         project: HH_PROJECT_NAME,
@@ -30,7 +27,7 @@ async function initializeTracer(sessionName: string): Promise<typeof HoneyHiveTr
     console.log(`HH_API_URL: ${HH_API_URL}`);
     console.log(`HH_PROJECT_NAME: ${HH_PROJECT_NAME}`);
 
-        /*
+    /*
     Expected Trace:
     - enrich session
     - chain

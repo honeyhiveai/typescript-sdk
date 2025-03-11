@@ -32,6 +32,8 @@ async function run() {
         "7f22137a-6911-4ed3-bc36-110f1dde6b66",
       ],
       inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
@@ -44,12 +46,10 @@ async function run() {
             "content": "What is in the context?",
           },
         ],
-        "context": "Hello world",
-        "question": "What is in the context?",
       },
       outputs: {
-        "content": "Hello world",
         "role": "assistant",
+        "content": "Hello world",
       },
       error: "<value>",
       duration: 824.8056,
@@ -102,6 +102,8 @@ async function run() {
         "7f22137a-6911-4ed3-bc36-110f1dde6b66",
       ],
       inputs: {
+        "context": "Hello world",
+        "question": "What is in the context?",
         "chat_history": [
           {
             "role": "system",
@@ -114,12 +116,10 @@ async function run() {
             "content": "What is in the context?",
           },
         ],
-        "context": "Hello world",
-        "question": "What is in the context?",
       },
       outputs: {
-        "content": "Hello world",
         "role": "assistant",
+        "content": "Hello world",
       },
       error: "<value>",
       duration: 824.8056,
@@ -186,7 +186,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  const result = await honeyHive.session.getSession("<value>");
+  const result = await honeyHive.session.getSession("<id>");
 
   // Handle the result
   console.log(result);
@@ -210,7 +210,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await sessionGetSession(honeyHive, "<value>");
+  const res = await sessionGetSession(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

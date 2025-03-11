@@ -22,7 +22,7 @@ module.exports = {
     "@typescript-eslint/no-namespace": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "import/no-named-as-default-member": "off",
-
+    "@typescript-eslint/no-empty-object-type": "off",
     "import/no-default-export": "error",
   },
 };

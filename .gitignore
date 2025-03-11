@@ -1,3 +1,8 @@
+/react-query
+/mcp-server
+/bin
+/.eslintcache
+/.speakeasy/reports
 /__tests__
 /models
 /models/errors
@@ -21,3 +26,6 @@ node_modules/
 **/node_modules/
 .aider*
 **/.DS_Store
+.cursor
+.env
+.venv

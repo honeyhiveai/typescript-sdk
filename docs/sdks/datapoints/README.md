@@ -115,17 +115,17 @@ async function run() {
       },
     ],
     groundTruth: {
-      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
       "role": "assistant",
+      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
     },
     linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
     linkedDatasets: [
       "<value>",
     ],
     metadata: {
+      "question_type": "weather",
       "completion_tokens": 47,
       "prompt_tokens": 696,
-      "question_type": "weather",
       "total_tokens": 743,
     },
   });
@@ -168,17 +168,17 @@ async function run() {
       },
     ],
     groundTruth: {
-      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
       "role": "assistant",
+      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
     },
     linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
     linkedDatasets: [
       "<value>",
     ],
     metadata: {
+      "question_type": "weather",
       "completion_tokens": 47,
       "prompt_tokens": 696,
-      "question_type": "weather",
       "total_tokens": 743,
     },
   });
@@ -316,8 +316,8 @@ async function run() {
       },
     ],
     groundTruth: {
-      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
       "role": "assistant",
+      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
     },
     linkedEvals: [
       "<value>",
@@ -367,8 +367,8 @@ async function run() {
       },
     ],
     groundTruth: {
-      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
       "role": "assistant",
+      "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
     },
     linkedEvals: [
       "<value>",

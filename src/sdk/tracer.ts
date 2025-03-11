@@ -6,21 +6,6 @@ import { Telemetry } from "./telemetry";
 import { Span, trace, Exception } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
 
-// eslint-disable-next-line import/no-named-as-default
-import OpenAI from "openai";
-import * as anthropic from "@anthropic-ai/sdk";
-import * as cohere from "cohere-ai";
-import * as bedrock from "@aws-sdk/client-bedrock-runtime";
-import * as pinecone from "@pinecone-database/pinecone";
-import * as ChainsModule from "langchain/chains";
-import * as AgentsModule from "langchain/agents";
-import * as ToolsModule from "langchain/tools";
-import * as chromadb from "chromadb";
-
-// @ts-expect-error Azure SDK does not provide valid declarations for their CommonJS build
-// https://github.com/Azure/azure-sdk-for-js/issues/28877
-import * as azureOpenAI from "@azure/openai";
-
 interface InitParams {
   apiKey?: string;
   project?: string;
@@ -29,6 +14,9 @@ interface InitParams {
   serverUrl?: string;
   inputs?: Record<string, any>;
   isEvaluation?: boolean;
+  runId?: string;
+  datasetId?: string;
+  datapointId?: string;
 }
 
 interface InitSessionIdParams {
@@ -92,6 +80,9 @@ export class HoneyHiveTracer {
   public sessionId: string | undefined;
   private spanProxy: any = {};
   private static isEvaluationModeActive: boolean = false;
+  private project: string = '';
+  private source: string = '';
+  private static instrumentModules: Record<string, any> = {};
 
   private constructor(sdk: HoneyHive) {
     this.sdk = sdk;
@@ -104,6 +95,9 @@ export class HoneyHiveTracer {
     apiKey: string,
     serverUrl: string,
     inputs?: Record<string, any>,
+    _runId?: string,
+    _datasetId?: string,
+    _datapointId?: string
   ): Promise<void> {
     try {
       const requestBody = {
@@ -116,26 +110,15 @@ export class HoneyHiveTracer {
       };
       const res = await this.sdk.session.startSession(requestBody);
       this.sessionId = res.sessionId;
+      this.project = project;
+      this.source = source;
 
       if (this.sessionId) {
         traceloop.initialize({
           baseUrl: `${serverUrl}/opentelemetry`,
           apiKey: apiKey,
           disableBatch: true,
-          instrumentModules: {
-            openAI: OpenAI,
-            anthropic: anthropic,
-            azureOpenAI: azureOpenAI,
-            cohere: cohere,
-            bedrock: bedrock,
-            pinecone: pinecone,
-            langchain: {
-              chainsModule: ChainsModule,
-              agentsModule: AgentsModule,
-              toolsModule: ToolsModule,
-            },
-            chromadb: chromadb,
-          },
+          instrumentModules: HoneyHiveTracer.instrumentModules,
         });
       }
     } catch (error) {
@@ -153,20 +136,7 @@ export class HoneyHiveTracer {
       baseUrl: `${serverUrl}/opentelemetry`,
       apiKey: apiKey,
       disableBatch: true,
-      instrumentModules: {
-        openAI: OpenAI,
-        anthropic: anthropic,
-        azureOpenAI: azureOpenAI,
-        cohere: cohere,
-        bedrock: bedrock,
-        pinecone: pinecone,
-        langchain: {
-          chainsModule: ChainsModule,
-          agentsModule: AgentsModule,
-          toolsModule: ToolsModule,
-        },
-        chromadb: chromadb,
-      },
+      instrumentModules: HoneyHiveTracer.instrumentModules,
     });
   }
 
@@ -182,7 +152,7 @@ export class HoneyHiveTracer {
             return (...args: any[]) => {
               const sessionId = this.sessionId || "";
               return traceloop.withAssociationProperties(
-                { session_id: sessionId },
+                { session_id: sessionId, project: this.project, source: this.source },
                 originalMethod.bind(target, ...args), // Bind 'target' and spread 'args'
                 target
               );
@@ -204,6 +174,9 @@ export class HoneyHiveTracer {
     source = "dev",
     serverUrl = "https://api.honeyhive.ai",
     inputs,
+    runId,
+    datasetId,
+    datapointId,
     isEvaluation = false
   }: InitParams = {}): Promise<HoneyHiveTracer> {
     if (!apiKey) {
@@ -245,7 +218,7 @@ export class HoneyHiveTracer {
         sessionName = 'unknown';
       }
     }
-    await tracer.initSession(project, sessionName, source, apiKey, serverUrl, inputs);
+    await tracer.initSession(project, sessionName, source, apiKey, serverUrl, inputs, runId, datasetId, datapointId);
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     return tracer;
   }
@@ -308,7 +281,7 @@ export class HoneyHiveTracer {
 
   public traceFunction({ eventType, config, metadata }: { eventType?: string; config?: any; metadata?: any } = {}) {
     // Helper function to extract argument names from the function
-    function getArgs(func: Function): string[] | null {
+    function getArgs(func: (...args: any[]) => any): string[] | null {
       try {
         const funcStr = func.toString()
           .replace(/\/\/.*$/mg, '') // Remove single-line comments
@@ -438,6 +411,8 @@ export class HoneyHiveTracer {
       traceloop.withAssociationProperties(
         {
           session_id: this.sessionId,
+          project: this.project,
+          source: this.source,
         },
         fn,
       );
