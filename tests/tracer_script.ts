@@ -29,7 +29,7 @@ async function initializeTracerFromSessionId(sessionId: string | undefined): Pro
     throw new Error("Session ID is not defined");
   }
   
-  const tracer = await HoneyHiveTracer.initFromSessionId({
+  const tracer = await HoneyHiveTracer.init({
     apiKey: HH_API_KEY,
     sessionId: sessionId,
     serverUrl: HH_API_URL,

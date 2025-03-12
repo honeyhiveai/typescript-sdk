@@ -1,23 +1,16 @@
-.PHONY: all cjs-test esm-test update-versions use-local-sdk update-dockerfile
+.PHONY: all test cjs-test esm-test use-local-sdk update-dockerfile
 
-all:
-	@echo "Running all tests in parallel..."
-	@make cjs-test & make esm-test & wait
-
-# Update HoneyHive version in all environments
-update-versions:
-	@echo "Updating HoneyHive versions..."
-	@python3 ./scripts/update_versions.py
+all: use-local-sdk
 
 # Use local SDK build for testing
 use-local-sdk:
 	@echo "Setting up environments to use local SDK build..."
 	@python3 ./scripts/use_local_sdk.py
 
-# Update Dockerfiles to use local SDK
-update-dockerfile:
-	@echo "Updating Dockerfiles to use local SDK..."
-	@python3 ./scripts/update_dockerfile.py
+# Run all tests
+test:
+	@echo "Running all tests in parallel..."
+	@make cjs-test & make esm-test & wait
 
 # Test CommonJS environment
 cjs-test:

@@ -1,7 +1,7 @@
 // CommonJS test for HoneyHive SDK
 import { HoneyHive, HoneyHiveTracer } from 'honeyhive';
 
-import { OpenAI } from 'openai';
+import OpenAI from 'openai';
 
 async function getOpenAICompletion(model: string, prompt: string): Promise<string> {
   const openai = new OpenAI({

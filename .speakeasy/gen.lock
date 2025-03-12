@@ -5,11 +5,12 @@ management:
   docVersion: 1.0.21
   speakeasyVersion: 1.405.10
   generationVersion: 2.429.0
-  releaseVersion: 1.27.0
-  configChecksum: 1d0cd279d0b5967c1835ce7d05524ab4
+  releaseVersion: 1.29.0
+  configChecksum: 25abbeb717e182dfbd566af37f5d8d71
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
+  published: true
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -244,7 +245,6 @@ generatedFiles:
   - src/hooks/hooks.ts
   - src/hooks/index.ts
   - src/hooks/types.ts
-  - src/index.ts
   - src/lib/base64.ts
   - src/lib/config.ts
   - src/lib/dlv.ts
@@ -339,6 +339,7 @@ generatedFiles:
   - src/sdk/datasets.ts
   - src/sdk/events.ts
   - src/sdk/experiments.ts
+  - src/sdk/index.ts
   - src/sdk/metrics.ts
   - src/sdk/projects.ts
   - src/sdk/sdk.ts

@@ -2,14 +2,12 @@ FROM node:18-slim
 
 WORKDIR /app
 
-
-
 # Copy package files
 COPY package.json ./
 COPY honeyhive-1.0.20.tgz ./
 
 # Install dependencies
-RUN npm install ./honeyhive-*.tgz --no-save
+RUN npm install
 
 # Copy TypeScript files
 COPY tsconfig.json ./

@@ -5,6 +5,8 @@ to use this local build instead of the published npm package. It creates a tarba
 SDK and updates each environment's package.json to reference this local file.
 """
 
+import re
+from dotenv import dotenv_values
 import yaml
 import json
 import os
@@ -35,7 +37,7 @@ def run_command(cmd, cwd=None, env=None):
     print(f"✅ Command '{' '.join(cmd)}' completed in {duration:.2f}s")
     return True, result
 
-def process_environment(env, script_dir, tarball_name):
+def process_environment(env, script_dir, tarball_name, env_vars):
     """Process a single environment in parallel."""
     env_dir = script_dir.parent / env
     print(f"🔄 Processing environment: {env}")
@@ -118,7 +120,103 @@ def process_environment(env, script_dir, tarball_name):
         print(f"🗑️ Removed {zip_path} from {env}")
     else:
         print(f"⚠️ Could not find zip file at {zip_path}")
+
+    # Update the environment variables in the Dockerfile
+    update_env_variables(script_dir, env, env_vars)
+
     return True
+
+def clean_artifacts(sdk_root, script_dir, patterns=['node_modules', 'package-lock.json', '*.tgz', 'dist']):
+    # Clean up existing build artifacts and dependencies
+    # Remove node_modules, package-lock.json, and tgz files
+    os.chdir(sdk_root)
+    cleanup_tasks = []
+    patterns_to_delete = []
+    if 'node_modules' in patterns:
+        patterns_to_delete.append((sdk_root.glob('**/node_modules'), True))
+    if 'package-lock.json' in patterns:
+        patterns_to_delete.append((sdk_root.glob('**/package-lock.json'), False))
+    if '*.tgz' in patterns:
+        patterns_to_delete.append((script_dir.parent.glob('**/*.tgz'), False))
+    if 'dist' in patterns:
+        patterns_to_delete.append((sdk_root.glob('**/dist'), True))
+    for pattern, is_dir in patterns_to_delete:
+        for path in pattern:
+            # Skip deeper traversal if we already found a match
+            parent_has_match = False
+            for existing_path, _ in cleanup_tasks:
+                if path != existing_path and path.is_relative_to(existing_path):
+                    parent_has_match = True
+                    break
+            
+            if parent_has_match:
+                continue
+                
+            if path.exists():
+                cleanup_tasks.append((path, is_dir))
+    
+    # Run cleanup tasks concurrently
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        def cleanup_item(item):
+            path, is_dir = item
+            if not path.exists():
+                print(f"⚠️ Path does not exist, skipping: {path}")
+                return
+            
+            if is_dir:
+                shutil.rmtree(path)
+                print(f"🗑️ Removed node_modules from {path.parent}")
+            else:
+                os.remove(path)
+                print(f"🗑️ Removed {path.name} from {path.parent}")
+        
+        list(executor.map(cleanup_item, cleanup_tasks))
+
+def update_env_variables(script_dir, env, env_vars):
+    dockerfile_path = script_dir.parent / env / 'Dockerfile'
+        
+    if dockerfile_path.exists():
+        try:
+            # Read the current Dockerfile
+            with open(dockerfile_path, 'r') as f:
+                dockerfile_content = f.read()
+            
+            # Remove existing environment variables sections
+            pattern = r"\n# Environment variables from \.env file\n(ENV [^\n]+\n)+"
+            cleaned_content = re.sub(pattern, "", dockerfile_content)
+            
+            # Find the position to insert ENV statements (after WORKDIR /app)
+            lines = cleaned_content.splitlines()
+            insert_position = None
+            for i, line in enumerate(lines):
+                if line.strip().startswith('WORKDIR /app'):
+                    insert_position = i + 1
+                    break
+            
+            if insert_position is None:
+                print(f"⚠️ Could not find WORKDIR /app in {env}/Dockerfile")
+                return
+            
+            # Create ENV statements
+            env_statements = ["\n# Environment variables from .env file"]
+            for key, value in env_vars.items():
+                env_statements.append(f'ENV {key}="{value}"')
+            env_statements.append("")
+            
+            # Insert ENV statements into the Dockerfile
+            updated_lines = lines[:insert_position] + env_statements + lines[insert_position:]
+            updated_content = "\n".join(updated_lines)
+            
+            # Write the updated Dockerfile
+            with open(dockerfile_path, 'w') as f:
+                f.write(updated_content)
+            
+            print(f"✅ Updated {env}/Dockerfile with environment variables")
+        except Exception as e:
+            print(f"❌ Error updating {env}/Dockerfile: {e}")
+    else:
+        print(f"❌ Could not find Dockerfile for {env}")
+    
 
 def use_local_sdk():
     """Update all environment package.json files to use a local build of the SDK."""
@@ -145,89 +243,68 @@ def use_local_sdk():
         print(f"❌ Missing required key in config file: {e}")
         sys.exit(1)
 
-    # delete node_modules in the sdk root directory
-    node_modules_path = sdk_root / 'node_modules'
-    if node_modules_path.exists():
-        shutil.rmtree(node_modules_path)
-        print(f"🗑️ Removed node_modules from {sdk_root}")
-    
-    # delete package-lock.json in the sdk root directory
-    package_lock_path = sdk_root / 'package-lock.json'
-    if package_lock_path.exists():
-        os.remove(package_lock_path)
-        print(f"🗑️ Removed package-lock.json from {sdk_root}")
+    # Delete all node_modules, package-lock.json, and tgz files
+    clean_artifacts(sdk_root, script_dir, ['node_modules', 'package-lock.json', '*.tgz', 'dist'])
 
-    # delete tgz file in environments directory
-    tgz_files = list(script_dir.parent.glob('*.tgz'))
-    if tgz_files:
-        os.remove(tgz_files[0])
-        print(f"🗑️ Removed {tgz_files[0]} from {script_dir.parent}")
-    
-
-    # Check for existing tarball
-    tgz_files = list(script_dir.parent.glob('*.tgz'))
-    if tgz_files:
-        tarball_name = tgz_files[0].name
-        print(f"✅ Using existing tarball at {script_dir.parent / tarball_name}")
-    else:
-        # Build the SDK locally and create a tarball
-        print("No tarball found, building local SDK package...")
-        
     # Change to SDK root directory
     os.chdir(sdk_root)
 
-    # Clean up SDK directory in a single operation
-    for path in [sdk_root / 'package-lock.json', sdk_root / 'node_modules']:
-        if path.exists():
-            if path.is_file():
-                os.remove(path)
-            else:
-                shutil.rmtree(path)
-            print(f"🗑️ Removed {path.name} from {sdk_root}")
-
-        # Create tarball with optimized settings
-        # Set environment variables to optimize npm pack performance
-        npm_env = os.environ.copy()
-        # Increase Node.js memory limit (default is 2GB)
-        npm_env["NODE_OPTIONS"] = NODE_OPTIONS
-        # Use maximum compression level for faster processing
-        npm_env["NPM_CONFIG_COMPRESSION"] = NPM_CONFIG_COMPRESSION
-        # Disable progress bar for slightly better performance
-        npm_env["NPM_CONFIG_PROGRESS"] = NPM_CONFIG_PROGRESS                
-        
-        # Install dependencies
-        success, result = run_command(["npm", "install"], cwd=sdk_root, env=npm_env)
-        if not success:
-            sys.exit(1)
-        
-        # Create tarball with optimized settings
-        print("Running optimized npm pack...")
-        success, result = run_command(["npm", "pack"], cwd=sdk_root, env=npm_env)
-        if not success:
-            sys.exit(1)
-        
-        # Get the tarball filename from the output
-        tarball_name = result.stdout.strip()
-        
-        # Move the tarball to the environments directory
-        source_path = sdk_root / tarball_name
-        target_path = script_dir.parent / tarball_name
-        
-        if source_path.exists():
-            shutil.move(source_path, target_path)
-            print(f"✅ Moved {tarball_name} to environments directory")
-        else:
-            print(f"❌ Could not find tarball at {source_path}")
-            sys.exit(1)
+    # Set environment variables to optimize npm pack performance
+    npm_env = os.environ.copy()
+    # Increase Node.js memory limit (default is 2GB)
+    npm_env["NODE_OPTIONS"] = NODE_OPTIONS
+    # Use maximum compression level for faster processing
+    npm_env["NPM_CONFIG_COMPRESSION"] = NPM_CONFIG_COMPRESSION
+    # Disable progress bar for slightly better performance
+    npm_env["NPM_CONFIG_PROGRESS"] = NPM_CONFIG_PROGRESS                
+    
+    # Install dependencies
+    print(f"🔄 Running npm install on HoneyHive SDK...")
+    success, result = run_command(["npm", "install"], cwd=sdk_root, env=npm_env)
+    if not success:
+        print(f"❌ Error running npm install: {result.stderr}")
+        sys.exit(1)
+    
+    # Create tarball with optimized settings
+    print(f"🔄 Running optimized npm pack...")
+    success, result = run_command(["npm", "pack"], cwd=sdk_root, env=npm_env)
+    if not success:
+        print(f"❌ Error running npm pack: {result.stderr}")
+        sys.exit(1)
+    
+    # Get the tarball filename from the output
+    tarball_name = result.stdout.strip()
+    
+    # Move the tarball to the environments directory
+    source_path = sdk_root / tarball_name
+    target_path = script_dir.parent / tarball_name
+    
+    if source_path.exists():
+        shutil.move(source_path, target_path)
+        print(f"✅ Moved {tarball_name} to environments directory")
+    else:
+        print(f"❌ Could not find tarball at {source_path}")
+        sys.exit(1)
     
     # Get the file size of the tarball
     tarball_size = os.path.getsize(script_dir.parent / tarball_name)
     print(f"📊 Tarball size: {tarball_size / (1024 * 1024):.2f} MB")
 
+    # Read the .env file
+    env_file_path = script_dir.parent / '.env'
+    try:
+        env_vars = dotenv_values(env_file_path)
+        if not env_vars:
+            print(f"⚠️ No environment variables found in {env_file_path}")
+            sys.exit(1)
+    except Exception as e:
+        print(f"❌ Error reading .env file: {e}")
+        sys.exit(1)
+
     # Process environments in parallel
     print(f"🔄 Processing {len(environments)} environments in parallel...")
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(environments)) as executor:
-        futures = {executor.submit(process_environment, env, script_dir, tarball_name): env for env in environments}
+        futures = {executor.submit(process_environment, env, script_dir, tarball_name, env_vars): env for env in environments}
         
         for future in concurrent.futures.as_completed(futures):
             env = futures[future]
@@ -240,6 +317,9 @@ def use_local_sdk():
             except Exception as e:
                 print(f"❌ Exception while processing {env}: {e}")
     
+    # Delete all node_modules, package-lock.json, and tgz files
+    # clean_artifacts(sdk_root, script_dir, ['*.tgz'])
+
     total_time = time.time() - start_time
     print(f"✨ Done! Local SDK tarball used for all test environments in {total_time:.2f} seconds.")
 

@@ -2,19 +2,13 @@ FROM node:18-slim
 
 WORKDIR /app
 
+
 # Copy package files
-COPY package.json ./
-COPY honeyhive-1.0.20.tgz ./
+COPY ./ ./
 
 # Install dependencies
 RUN npm install
-
-# Copy TypeScript files
-COPY tsconfig.json ./
-COPY *.ts ./
-
-# Compile TypeScript
-RUN npx tsc
+RUN npm run build
 
 # Run the test
-CMD ["node", "dist/index.js"] 
+CMD ["npm", "run", "test"] 

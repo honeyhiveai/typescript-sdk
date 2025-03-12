@@ -1,4 +1,4 @@
-src/sdk/index.ts
+src/index.ts
 src/sdk/tracer.ts
 src/sdk/lc_tracer.ts
 src/sdk/evaluation.ts

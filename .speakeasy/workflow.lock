@@ -2,7 +2,7 @@ speakeasyVersion: 1.405.10
 sources:
     my-source:
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:8ecd2f30f593d913ed547a60b271257588f22879268811ea3a9c6b12e2d3154c
+        sourceRevisionDigest: sha256:6e0452e05260985525f94f742ef7801e1319995e606dc17f3e1cc5abb2c2e965
         sourceBlobDigest: sha256:f88a11842bc53cf6461a1782be93e4680e262fdb19fb33821453b29d3a0a1aae
         tags:
             - latest
@@ -10,10 +10,10 @@ targets:
     typescript:
         source: my-source
         sourceNamespace: my-source
-        sourceRevisionDigest: sha256:8ecd2f30f593d913ed547a60b271257588f22879268811ea3a9c6b12e2d3154c
+        sourceRevisionDigest: sha256:6e0452e05260985525f94f742ef7801e1319995e606dc17f3e1cc5abb2c2e965
         sourceBlobDigest: sha256:f88a11842bc53cf6461a1782be93e4680e262fdb19fb33821453b29d3a0a1aae
         codeSamplesNamespace: my-source-typescript-code-samples
-        codeSamplesRevisionDigest: sha256:701044ad99d159f6f3b52702bba4a722036ef416ccbac6c47bd1c3031113c529
+        codeSamplesRevisionDigest: sha256:fc388164c5064f8e7a730cf6a17fcda3af39c29c1a6b33d83762c74d567b2287
 workflow:
     workflowVersion: 1.0.0
     speakeasyVersion: latest
@@ -27,6 +27,9 @@ workflow:
         typescript:
             target: typescript
             source: my-source
+            publish:
+                npm:
+                    token: $npm_token
             codeSamples:
                 output: codeSamples.yaml
                 registry:

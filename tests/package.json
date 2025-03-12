@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
     "@traceloop/node-server-sdk": "^0.8.4",
     "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
@@ -12,7 +13,8 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
-    "test": "jest",
+    "test": "cd .. && rm -rf node_modules && npm run build && cd tests && rm -rf node_modules && npm run build && npx ts-node $1",
+    "build": "npm install && tsc",
     "ts-node": "ts-node"
   },
   "devDependencies": {

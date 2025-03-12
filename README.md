@@ -30,25 +30,25 @@ The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https
 ### NPM
 
 ```bash
-npm add https://github.com/honeyhiveai/typescript-sdk
+npm add honeyhive
 ```
 
 ### PNPM
 
 ```bash
-pnpm add https://github.com/honeyhiveai/typescript-sdk
+pnpm add honeyhive
 ```
 
 ### Bun
 
 ```bash
-bun add https://github.com/honeyhiveai/typescript-sdk
+bun add honeyhive
 ```
 
 ### Yarn
 
 ```bash
-yarn add https://github.com/honeyhiveai/typescript-sdk zod
+yarn add honeyhive zod
 
 # Note that Yarn does not install peer dependencies automatically. You will need
 # to install zod as shown above.
