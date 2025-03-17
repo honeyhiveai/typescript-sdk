@@ -39,6 +39,7 @@ export interface HoneyHiveTracerProperties {
   isEvaluation: boolean;
   disableBatch: boolean;
   evalContext: EvaluationSessionProps;
+  disableHttpTracing: boolean;
 }
 
 /**
@@ -174,6 +175,7 @@ const DEFAULT_PROPERTIES: HoneyHiveTracerProperties = {
   isEvaluation: false,
   evalContext: {},
   verbose: false,
+  disableHttpTracing: false,
 }
 
 export class HoneyHiveTracer {
@@ -210,6 +212,7 @@ export class HoneyHiveTracer {
   public get isEvaluation(): boolean { return this.properties.isEvaluation || DEFAULT_PROPERTIES.isEvaluation; }
   public get evalContext(): EvaluationSessionProps { return this.properties.evalContext || DEFAULT_PROPERTIES.evalContext; }
   public get verbose(): boolean { return this.properties.verbose || DEFAULT_PROPERTIES.verbose; }
+  public get disableHttpTracing(): boolean { return this.properties.disableHttpTracing || DEFAULT_PROPERTIES.disableHttpTracing; }
 
   // Setters
   public set sessionId(sessionId: string | undefined) { 
@@ -244,11 +247,8 @@ export class HoneyHiveTracer {
    */
   private async startSession(): Promise<void> {
     try {
-      // Check if sessionId is already initialized
+      // If sessionId is already initialized, continue an existing session
       if (this.sessionId) {
-        console.error(
-          new SDKValidationError("Session already initialized.", null, this.sessionId)
-        );
         return;
       }
       
@@ -297,6 +297,20 @@ export class HoneyHiveTracer {
         serverURL: params.serverUrl || DEFAULT_PROPERTIES.serverUrl,
       });
     }
+
+    // Validate sessionId if provided
+    if (params.sessionId) {
+      if (typeof params.sessionId !== 'string') {
+        throw new Error("sessionId must be a string");
+      }
+      params.sessionId = params.sessionId.toLowerCase();
+
+      // Validate that sessionId is a valid UUID
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(params.sessionId)) {
+        throw new Error("sessionId must be a valid UUID");
+      }
+    }
     
     // Update properties
     if (params?.modules) {
@@ -314,6 +328,7 @@ export class HoneyHiveTracer {
       isEvaluation: params?.isEvaluation || this.isEvaluation,
       evalContext: params?.evalContext || this.evalContext,
       verbose: params?.verbose || this.verbose,
+      disableHttpTracing: params?.disableHttpTracing || this.disableHttpTracing,
     }
   }
 
@@ -332,8 +347,6 @@ export class HoneyHiveTracer {
       "project is required to initialize HoneyHiveTracer. Please set HH_PROJECT environment variable or pass project to tracer initialization props."
     );
     await tracer.startSession();
-
-    console.log("properties", tracer.properties);
 
     // Initialize traceloop
     traceloop.initialize({
@@ -444,10 +457,11 @@ export class HoneyHiveTracer {
     associationProps['session_id'] = this.sessionId!;
     associationProps['project'] = this.project!;
     associationProps['source'] = this.source!;
+    associationProps['disable_http_tracing'] = this.disableHttpTracing.toString().toLowerCase();
 
     // Add evaluation properties
     for (const [key, value] of Object.entries(this.evalContext)) {
-      if (value) associationProps[key] = value;
+      associationProps[key] = value;
     }
 
     return associationProps;

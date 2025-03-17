@@ -29,3 +29,4 @@ node_modules/
 .cursor
 .env
 .venv
+*.tgz
