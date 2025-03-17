@@ -8,7 +8,7 @@ import { Telemetry } from "./telemetry";
 import { Span, trace, Exception } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
 import { StartSessionRequestBody } from "../models/operations/startsession";
-import { SDKError, SDKValidationError } from "../models/errors";
+import { SDKError } from "../models/errors";
 import assert from "assert";
 
 export interface EnrichSpanParams {
