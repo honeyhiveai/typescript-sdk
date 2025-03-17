@@ -1,6 +1,6 @@
 {
   "name": "honeyhive",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "author": "HoneyHive",
   "main": "./index.js",
   "sideEffects": false,
