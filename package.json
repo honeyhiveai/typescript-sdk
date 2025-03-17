@@ -16,7 +16,6 @@
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
     "build": "npm install && tsc",
-    "publish": "npm version patch && npm publish",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {

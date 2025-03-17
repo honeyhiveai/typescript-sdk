@@ -13,6 +13,10 @@ build:
 clean:
 	docker rmi honeyhive-tests || true
 
+# Publish the package
+publish:
+	npm version patch && npm publish
+
 # Run the tests locally (without Docker)
 test-local:
 	cd tests/openai-test && npm test
