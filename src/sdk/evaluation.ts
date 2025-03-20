@@ -1,21 +1,26 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, Status } from '../models/components';
-import { HoneyHiveTracer} from './tracer';
+import { HoneyHiveTracer, getGitInfo } from './tracer';
 import * as crypto from 'crypto';
+import * as fs from 'fs';
 
 type Dict<T> = { [key: string]: T };
 type Any = any;
 
 interface EvaluationConfig {
-    evaluationFunction: Function,
+    evaluationFunction: (...args: any[]) => any,
     hh_api_key: string;
     hh_project: string;
     name: string;
     suite?: string;
     dataset_id?: string;
     dataset?: Dict<Any>[];
-    evaluators?: Function[];
+    evaluators?: ((...args: any[]) => any)[];
     server_url?: string;
+    runId?: string;
+    datasetId?: string;
+    datapointId?: string;
+    metadata?: Dict<Any>;
 }
 
 interface EvaluationData {
@@ -114,6 +119,9 @@ async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<
             sessionName: config.name,
             inputs: inputs ? inputs : {},
             isEvaluation: true,
+            // runId: config.runId,
+            // datasetId: config.datasetId,
+            // datapointId: config.datapointId,
             ...(config.server_url && { serverUrl: config.server_url })
         });
     } catch (error) {
@@ -151,7 +159,7 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
     }
 }
 
-async function runEvaluators(inputs: any, evaluation_output: any, evaluators?: Function[], ground_truths?: any): Promise<Dict<Any>> {
+async function runEvaluators(inputs: any, evaluation_output: any, evaluators?: ((...args: any[]) => any)[], ground_truths?: any): Promise<Dict<Any>> {
     const metrics: Dict<Any> = {};
     if (evaluators) {
         for (let index = 0; index < evaluators.length; index++) {
@@ -204,12 +212,21 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
 }
 
 async function setupEvaluation(state: EvaluationState, config: EvaluationConfig): Promise<void> {
+    const metadata: { [key: string]: any } = config.metadata || {};
+    
+    // Add git context if available
+    const gitInfo = getGitInfo();
+    if (gitInfo && !gitInfo.error) {
+        metadata['git'] = gitInfo;
+    }
+    
     const eval_run = await state.hhai.experiments.createRun({
         project: config.hh_project,
         name: config.name,
         datasetId: config.dataset_id || state.external_dataset_id,
         eventIds: [],
         status: state.state,
+        metadata: Object.keys(metadata).length > 0 ? metadata : undefined
     });
     state.eval_run = eval_run;
 }
@@ -274,7 +291,6 @@ async function evaluate(
         status: state.state,
         suite: suite,  // Changed from _suite to suite
         toJson(): void {
-            const fs = require('fs');
             const data: EvaluationData = {
                 run_id: this.run_id,
                 dataset_id: this.dataset_id,

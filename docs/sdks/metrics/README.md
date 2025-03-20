@@ -100,7 +100,7 @@ async function run() {
     name: "<value>",
     task: "<value>",
     type: "model",
-    description: "Quality-focused next generation focus group",
+    description: "ack oh faithfully annually bloom ha because instead",
     returnType: "boolean",
   });
 
@@ -129,7 +129,7 @@ async function run() {
     name: "<value>",
     task: "<value>",
     type: "model",
-    description: "Quality-focused next generation focus group",
+    description: "ack oh faithfully annually bloom ha because instead",
     returnType: "boolean",
   });
 
@@ -179,7 +179,7 @@ const honeyHive = new HoneyHive({
 
 async function run() {
   await honeyHive.metrics.updateMetric({
-    metricId: "<value>",
+    metricId: "<id>",
   });
 
 
@@ -204,7 +204,7 @@ const honeyHive = new HoneyHiveCore({
 
 async function run() {
   const res = await metricsUpdateMetric(honeyHive, {
-    metricId: "<value>",
+    metricId: "<id>",
   });
 
   if (!res.ok) {
@@ -252,7 +252,7 @@ const honeyHive = new HoneyHive({
 });
 
 async function run() {
-  await honeyHive.metrics.deleteMetric("<value>");
+  await honeyHive.metrics.deleteMetric("<id>");
 
 
 }
@@ -275,7 +275,7 @@ const honeyHive = new HoneyHiveCore({
 });
 
 async function run() {
-  const res = await metricsDeleteMetric(honeyHive, "<value>");
+  const res = await metricsDeleteMetric(honeyHive, "<id>");
 
   if (!res.ok) {
     throw res.error;

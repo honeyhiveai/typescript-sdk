@@ -43,14 +43,14 @@ export class Telemetry {
         fs.mkdirSync(path.dirname(Telemetry.ANON_ID_PATH), { recursive: true });
         const anonIdFile = fs.openSync(Telemetry.ANON_ID_PATH, "w");
         this.anonId = uuid();
-        fs.writeSync(anonIdFile, this.anonId);
+        fs.writeSync(anonIdFile, this.anonId as string);
         fs.closeSync(anonIdFile);
       } else {
         const anonIdFile = fs.openSync(Telemetry.ANON_ID_PATH, "r");
         this.anonId = fs.readFileSync(anonIdFile, "utf8");
         fs.closeSync(anonIdFile);
       }
-      return this.anonId;
+      return this.anonId || Telemetry.UNKNOWN_ANON_ID;
     } catch (e) {
       return Telemetry.UNKNOWN_ANON_ID;
     }
@@ -160,7 +160,6 @@ export class Telemetry {
         },
       };
       this.posthog.capture(posthogPayload);
-      this.posthog.flush();
       await this.posthog.shutdown();
     }
   }

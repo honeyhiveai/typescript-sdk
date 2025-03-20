@@ -1,0 +1,4 @@
+honeyhiveVersion: "^1.0.0"
+environments:
+  - cjs-env
+  - esm-env

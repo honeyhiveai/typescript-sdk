@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 import { HoneyHiveTracer } from 'honeyhive';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,24 +23,26 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
     project: HH_PROJECT_NAME,
     sessionName: sessionName,
     source: "OpenAI Test",
-    serverUrl: HH_API_URL,
+    serverUrl: "http://localhost:3000",
+    verbose: true,
+    disableBatch: true,
   });
 
   return tracer;
 }
 
-async function makeOpenAICall(prompt: string, tracer: HoneyHiveTracer) {
+async function makeOpenAICall(prompt: string) {
 
-const completion = await openai.chat.completions.create({
+  const completion = await openai.chat.completions.create({
     messages: [{ role: "user", content: prompt }],
     model: "gpt-4o",
-    });
+  });
 
-    if (!completion.choices[0]?.message?.content) {
+  if (!completion.choices[0]?.message?.content) {
     throw new Error('No response content from OpenAI');
-    }
+  }
 
-    return completion.choices[0].message.content;
+  return completion.choices[0].message.content;
 }
 
 (async () => {
@@ -53,14 +55,20 @@ const completion = await openai.chat.completions.create({
     const prompt = "Write a haiku about programming";
     console.log(`Sending prompt: ${prompt}`);
     
-    const tracedMakeOpenAICall = tracer.traceFunction()(makeOpenAICall);
-    const response = await tracedMakeOpenAICall(prompt, tracer);
+    const tracedMakeOpenAICall = tracer.traceModel(makeOpenAICall);
+    const response = await tracedMakeOpenAICall(prompt);
 
     if (!response) {
       console.error("No response received from OpenAI");
     } else {
       console.log("Response:", response);
     }
+
+    // Set a timeout to ensure all traces are sent before the process exits
+    await Promise.race([
+      // tracer.flush(),
+      new Promise(resolve => setTimeout(resolve, 5000))
+    ]);
 
   } catch (error) {
     console.error("Error in main execution:", error);

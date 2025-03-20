@@ -1,12 +1,33 @@
 import { HoneyHive } from "./sdk";
-import { DocumentInterface } from '@langchain/core/documents';
-import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
-import { AgentAction, AgentFinish } from '@langchain/core/agents';
-import { ChainValues } from '@langchain/core/utils/types';
-import { LLMResult } from '@langchain/core/outputs';
-import { Serialized } from '@langchain/core/load/serializable';
 import { v4 as uuidv4 } from 'uuid';
 
+// Type declarations for TypeScript
+type Serialized = any;
+type LLMResult = any;
+type ChainValues = any;
+type AgentAction = any;
+type AgentFinish = any;
+type DocumentInterface = any;
+
+// Define a base class that will be used if LangChain is not available
+class DefaultBaseCallbackHandler {
+  constructor() {}
+}
+
+// Use the imported BaseCallbackHandler if available, otherwise use the default
+let BaseCallbackHandler: any = DefaultBaseCallbackHandler;
+
+// We'll try to import LangChain in a safer way
+try {
+  // Try to import LangChain's BaseCallbackHandler
+  // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+  const { BaseCallbackHandler: LangChainBaseCallbackHandler } = require('@langchain/core/callbacks/base');
+  BaseCallbackHandler = LangChainBaseCallbackHandler;
+} catch (error) {
+  // If the import fails, we'll use the default handler
+  console.warn('LangChain not found, please install @langchain/core/callbacks/base');
+  // BaseCallbackHandler remains as DefaultBaseCallbackHandler
+}
 interface HoneyHiveTracerInput {
   project: string;
   sessionName: string;
@@ -137,7 +158,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.logMap[log.event_id] = log; // Store in the logMap by event_id
   }
 
-  override async handleLLMStart(
+  async handleLLMStart(
     llm: Serialized,
     prompts: string[],
     runId: string,
@@ -164,43 +185,42 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.addLogToParent(log);
   }
 
-  override async handleLLMEnd(
+  async handleLLMEnd(
     output: LLMResult,
     runId: string,
     // @ts-expect-error: Not used
     parentstring?: string
   ): Promise<void> {
-    const endTime = 1000 * Date.now();
     const log = this.logMap[runId];
-    if (log) {
-      log.end_time = endTime;
-      log.duration = (endTime - log.start_time) / 1000;
-      // Extract text and generationInfo from the output
-      const generations = output.generations;
+    if (!log) return;
 
-      const texts = generations.flat().map((gen) => gen.text);
-      const metadataArray = generations.flat().map((gen) => {
-        const { text, ...rest } = gen;
-        return rest;
-      });
+    const generations = output.generations;
+    const texts = generations.flat().map((gen: any) => gen.text);
+    const metadataArray = generations.flat().map((gen: any) => {
+      return {
+        finish_reason: gen.generationInfo?.finish_reason,
+        logprobs: gen.generationInfo?.logprobs,
+      };
+    });
 
-      // Convert the metadata array to an object with index keys
-      const metadata = metadataArray.reduce((acc, curr, index) => {
-        acc[index] = curr;
-        return acc;
-      }, {} as Record<string, unknown>);
-      log.outputs = { generations: texts };
-      if (log.metadata) {
-        log.metadata['generationInfo'] = metadata;
-      }
-      // If this is the top-level chain, post the entire log structure
-      if (log.parent_id === undefined) {
-        await this.postTrace(this.rootLogs);
-      }
+    const metadata = metadataArray.reduce((acc: any, curr: any, index: number) => {
+      acc[`generation_${index}`] = curr;
+      return acc;
+    }, {});
+
+    log.end_time = 1000 * Date.now();
+    log.duration = (log.end_time - log.start_time) / 1000;
+    log.outputs = { generations: texts };
+    if (log.metadata) {
+      log.metadata['generationInfo'] = metadata;
+    }
+    // If this is the top-level chain, post the entire log structure
+    if (log.parent_id === undefined) {
+      await this.postTrace(this.rootLogs);
     }
   }
 
-  override async handleChainStart(
+  async handleChainStart(
     chain: Serialized,
     inputs: ChainValues,
     runId: string,
@@ -226,7 +246,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.addLogToParent(log);
   }
 
-  override async handleChainEnd(
+  async handleChainEnd(
     outputs: ChainValues,
     runId: string,
     // @ts-expect-error: Not used
@@ -246,7 +266,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleToolStart(
+  async handleToolStart(
     tool: Serialized,
     input: string,
     runId: string,
@@ -272,7 +292,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.addLogToParent(log);
   }
 
-  override async handleToolEnd(
+  async handleToolEnd(
     output: string,
     runId: string,
     // @ts-expect-error: Not used
@@ -291,7 +311,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleAgentAction(
+  async handleAgentAction(
     action: AgentAction,
     runId: string,
     parentstring?: string
@@ -317,7 +337,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleAgentEnd(
+  async handleAgentEnd(
     finish: AgentFinish,
     runId: string,
     parentstring?: string
@@ -388,7 +408,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleChainError(
+  async handleChainError(
     error: Error,
     runId: string,
     // @ts-expect-error: Not used
@@ -407,7 +427,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleLLMError(
+  async handleLLMError(
     error: Error,
     runId: string,
     // @ts-expect-error: Not used
@@ -426,7 +446,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleToolError(
+  async handleToolError(
     error: Error,
     runId: string,
     // @ts-expect-error: Not used
@@ -445,7 +465,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
 
-  override async handleRetrieverStart(
+  async handleRetrieverStart(
     retriever: Serialized,
     query: string,
     runId: string,
@@ -471,7 +491,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     this.addLogToParent(log);
   }
   
-  override async handleRetrieverEnd(
+  async handleRetrieverEnd(
     documents: DocumentInterface[],
     runId: string,
     // @ts-expect-error: Not used
@@ -491,7 +511,7 @@ class HoneyHiveLangChainTracer extends BaseCallbackHandler {
     }
   }
   
-  override async handleRetrieverError(
+  async handleRetrieverError(
     error: Error,
     runId: string,
     // @ts-expect-error: Not used

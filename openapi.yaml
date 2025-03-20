@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: HoneyHive API
-  version: 1.0.4
+  version: 1.0.21
 servers:
 - url: https://api.honeyhive.ai
 paths:
@@ -1844,6 +1844,12 @@ components:
         event_type:
           type: string
           description: Type of event that the metric is set to be computed on
+        model_provider:
+          type: string
+          description: Provider of the model, formatted as a LiteLLM provider prefix
+        model_name:
+          type: string
+          description: Name of the model, formatted as a LiteLLM model name
         child_metrics:
           type: array
           items:
@@ -1923,6 +1929,12 @@ components:
           - chain
           - session
           description: Type of event that the metric is set to be computed on
+        model_provider:
+          type: string
+          description: Provider of the model, formatted as a LiteLLM provider prefix
+        model_name:
+          type: string
+          description: Name of the model, formatted as a LiteLLM model name
         child_metrics:
           type: array
           items:

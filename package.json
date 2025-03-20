@@ -1,9 +1,13 @@
 {
   "name": "honeyhive",
-  "version": "1.0.20",
+  "version": "1.0.23",
   "author": "HoneyHive",
   "main": "./index.js",
   "sideEffects": false,
+  "files": [
+    "**/*",
+    "!tests"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/honeyhiveai/typescript-sdk.git",
@@ -11,34 +15,32 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
-    "build": "tsc",
+    "build": "npm install && tsc",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
     "zod": ">= 3"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.7.1",
-    "@typescript-eslint/parser": "^7.7.1",
+    "@eslint/js": "^9.22.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.10",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "typescript": "^5.4.5",
+    "eslint-plugin-import": "^2.31.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1",
     "zod": "^3.23.4"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.21.0",
-    "@aws-sdk/client-bedrock-runtime": "^3.577.0",
-    "@azure/openai": "^1.0.0-beta.12",
-    "@pinecone-database/pinecone": "^2.2.1",
-    "@traceloop/node-server-sdk": "^0.11.5",
-    "chromadb": "1.8.1",
-    "cohere-ai": "^7.10.0",
-    "js-tiktoken": "^1.0.15",
-    "langchain": "^0.2.0",
-    "llamaindex": "^0.3.12",
-    "openai": "^4.47.1",
+    "@opentelemetry/api": "^1.9.0",
+    "@traceloop/node-server-sdk": "^0.12.1",
     "posthog-node": "^4.2.0",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "uuid": "^9.0.1"
   }
 }

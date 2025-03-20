@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["es2021"],
-    "baseUrl": "src",
-    "rootDir": "src",
+    "baseUrl": ".",
+    "rootDir": ".",
     "outDir": "dist",
     "allowJs": true,
     "downlevelIteration": true,

@@ -1,0 +1,40 @@
+# Testing Framework for HoneyHive SDK
+
+## Overview
+This document outlines the approach for creating a testing framework for the HoneyHive TypeScript SDK, which traces LLM calls and function calls. We'll test various environments and configurations to ensure compatibility.
+
+## Testing Strategy
+We'll create Docker-based test environments with different configurations to verify SDK functionality across various setups. 
+
+## Directory Structure
+
+typescript-sdk (root)
+    src
+    package.json
+    # ... other files
+    tests/environments
+        cjs-env # a typescript commonjs environment
+        esm-env # a typescript esmodule environment
+        scripts
+            update_dockerfile.py
+            update_envs.py # updates env variables in Dockerfiles inside environments based on .env
+            update_versions.py # updates versions of package.jsons inside environments based on config.yaml
+        Makefile
+        requirements.txt
+        .venv
+        .env
+        config.yaml
+
+
+
+1. **Environment Types**:
+   - ESM (ECMAScript Modules)
+   - CommonJS
+
+## Implementation Plan
+
+### Directory Structure
+In `tests/environments/`, we'll create the following:
+- `esm-env/` - ES Modules environment
+- `cjs-env/` - CommonJS environment
+- `Makefile` - For running tests with simple commands

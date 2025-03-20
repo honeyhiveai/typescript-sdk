@@ -26,44 +26,23 @@ export type RetryConfig =
       retryConnectionErrors?: boolean;
     };
 
-/**
- * PermanentError is an error that is not recoverable. Throwing this error will
- * cause a retry loop to terminate.
- */
-export class PermanentError extends Error {
-  /** The underlying cause of the error. */
-  override readonly cause: unknown;
+class PermanentError extends Error {
+  inner: unknown;
 
-  constructor(message: string, options?: { cause?: unknown }) {
-    let msg = message;
-    if (options?.cause) {
-      msg += `: ${options.cause}`;
-    }
-
-    super(msg, options);
-    this.name = "PermanentError";
-    // In older runtimes, the cause field would not have been assigned through
-    // the super() call.
-    if (typeof this.cause === "undefined") {
-      this.cause = options?.cause;
-    }
+  constructor(inner: unknown) {
+    super("Permanent error");
+    this.inner = inner;
 
     Object.setPrototypeOf(this, PermanentError.prototype);
   }
 }
 
-/**
- * TemporaryError is an error is used to signal that an HTTP request can be
- * retried as part of a retry loop. If retry attempts are exhausted and this
- * error is thrown, the response will be returned to the caller.
- */
-export class TemporaryError extends Error {
-  response: Response;
+class TemporaryError extends Error {
+  res: Response;
 
-  constructor(message: string, response: Response) {
-    super(message);
-    this.response = response;
-    this.name = "TemporaryError";
+  constructor(res: Response) {
+    super("Temporary error");
+    this.res = res;
 
     Object.setPrototypeOf(this, TemporaryError.prototype);
   }
@@ -101,14 +80,11 @@ function wrapFetcher(
     try {
       const res = await fn();
       if (isRetryableResponse(res, options.statusCodes)) {
-        throw new TemporaryError(
-          "Response failed with retryable status code",
-          res,
-        );
+        throw new TemporaryError(res);
       }
 
       return res;
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof TemporaryError) {
         throw err;
       }
@@ -120,7 +96,7 @@ function wrapFetcher(
         throw err;
       }
 
-      throw new PermanentError("Permanent error", { cause: err });
+      throw new PermanentError(err);
     }
   };
 }
@@ -163,25 +139,37 @@ async function retryBackoff(
     try {
       const res = await fn();
       return res;
-    } catch (err: unknown) {
+    } catch (err) {
       if (err instanceof PermanentError) {
-        throw err.cause;
+        throw err.inner;
       }
       const elapsed = Date.now() - start;
       if (elapsed > maxElapsedTime) {
         if (err instanceof TemporaryError) {
-          return err.response;
+          return err.res;
         }
 
         throw err;
       }
 
       let retryInterval = 0;
-      if (err instanceof TemporaryError) {
-        retryInterval = retryIntervalFromResponse(err.response);
+      if (err instanceof TemporaryError && err.res && err.res.headers) {
+        const retryVal = err.res.headers.get("retry-after") || "";
+        if (retryVal != "") {
+          const parsedNumber = Number(retryVal);
+          if (!isNaN(parsedNumber) && Number.isInteger(parsedNumber)) {
+            retryInterval = parsedNumber * 1000;
+          } else {
+            const parsedDate = Date.parse(retryVal);
+            if (!isNaN(parsedDate)) {
+              const deltaMS = parsedDate - Date.now();
+              retryInterval = deltaMS > 0 ? Math.ceil(deltaMS) : 0;
+            }
+          }
+        }
       }
 
-      if (retryInterval <= 0) {
+      if (retryInterval == 0) {
         retryInterval =
           initialInterval * Math.pow(x, exponent) + Math.random() * 1000;
       }
@@ -192,26 +180,6 @@ async function retryBackoff(
       x++;
     }
   }
-}
-
-function retryIntervalFromResponse(res: Response): number {
-  const retryVal = res.headers.get("retry-after") || "";
-  if (!retryVal) {
-    return 0;
-  }
-
-  const parsedNumber = Number(retryVal);
-  if (Number.isInteger(parsedNumber)) {
-    return parsedNumber * 1000;
-  }
-
-  const parsedDate = Date.parse(retryVal);
-  if (Number.isInteger(parsedDate)) {
-    const deltaMS = parsedDate - Date.now();
-    return deltaMS > 0 ? Math.ceil(deltaMS) : 0;
-  }
-
-  return 0;
 }
 
 async function delay(delay: number): Promise<void> {

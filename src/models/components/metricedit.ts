@@ -113,6 +113,14 @@ export type MetricEdit = {
    */
   eventType?: MetricEditEventType | undefined;
   /**
+   * Provider of the model, formatted as a LiteLLM provider prefix
+   */
+  modelProvider?: string | undefined;
+  /**
+   * Name of the model, formatted as a LiteLLM model name
+   */
+  modelName?: string | undefined;
+  /**
    * Child metrics added under composite events
    */
   childMetrics?: Array<{ [k: string]: any }> | undefined;
@@ -240,6 +248,8 @@ export const MetricEdit$inboundSchema: z.ZodType<
   pass_when: z.boolean().optional(),
   event_name: z.string().optional(),
   event_type: MetricEditEventType$inboundSchema.optional(),
+  model_provider: z.string().optional(),
+  model_name: z.string().optional(),
   child_metrics: z.array(z.record(z.any())).optional(),
 }).transform((v) => {
   return remap$(v, {
@@ -251,6 +261,8 @@ export const MetricEdit$inboundSchema: z.ZodType<
     "pass_when": "passWhen",
     "event_name": "eventName",
     "event_type": "eventType",
+    "model_provider": "modelProvider",
+    "model_name": "modelName",
     "child_metrics": "childMetrics",
   });
 });
@@ -271,6 +283,8 @@ export type MetricEdit$Outbound = {
   pass_when?: boolean | undefined;
   event_name?: string | undefined;
   event_type?: string | undefined;
+  model_provider?: string | undefined;
+  model_name?: string | undefined;
   child_metrics?: Array<{ [k: string]: any }> | undefined;
 };
 
@@ -294,6 +308,8 @@ export const MetricEdit$outboundSchema: z.ZodType<
   passWhen: z.boolean().optional(),
   eventName: z.string().optional(),
   eventType: MetricEditEventType$outboundSchema.optional(),
+  modelProvider: z.string().optional(),
+  modelName: z.string().optional(),
   childMetrics: z.array(z.record(z.any())).optional(),
 }).transform((v) => {
   return remap$(v, {
@@ -305,6 +321,8 @@ export const MetricEdit$outboundSchema: z.ZodType<
     passWhen: "pass_when",
     eventName: "event_name",
     eventType: "event_type",
+    modelProvider: "model_provider",
+    modelName: "model_name",
     childMetrics: "child_metrics",
   });
 });

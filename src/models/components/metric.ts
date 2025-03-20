@@ -103,6 +103,14 @@ export type Metric = {
    */
   eventType?: string | undefined;
   /**
+   * Provider of the model, formatted as a LiteLLM provider prefix
+   */
+  modelProvider?: string | undefined;
+  /**
+   * Name of the model, formatted as a LiteLLM model name
+   */
+  modelName?: string | undefined;
+  /**
    * Child metrics added under composite events
    */
   childMetrics?: Array<{ [k: string]: any }> | undefined;
@@ -203,6 +211,8 @@ export const Metric$inboundSchema: z.ZodType<Metric, z.ZodTypeDef, unknown> = z
     _id: z.string().optional(),
     event_name: z.string().optional(),
     event_type: z.string().optional(),
+    model_provider: z.string().optional(),
+    model_name: z.string().optional(),
     child_metrics: z.array(z.record(z.any())).optional(),
   }).transform((v) => {
     return remap$(v, {
@@ -214,6 +224,8 @@ export const Metric$inboundSchema: z.ZodType<Metric, z.ZodTypeDef, unknown> = z
       "_id": "id",
       "event_name": "eventName",
       "event_type": "eventType",
+      "model_provider": "modelProvider",
+      "model_name": "modelName",
       "child_metrics": "childMetrics",
     });
   });
@@ -235,6 +247,8 @@ export type Metric$Outbound = {
   _id?: string | undefined;
   event_name?: string | undefined;
   event_type?: string | undefined;
+  model_provider?: string | undefined;
+  model_name?: string | undefined;
   child_metrics?: Array<{ [k: string]: any }> | undefined;
 };
 
@@ -259,6 +273,8 @@ export const Metric$outboundSchema: z.ZodType<
   id: z.string().optional(),
   eventName: z.string().optional(),
   eventType: z.string().optional(),
+  modelProvider: z.string().optional(),
+  modelName: z.string().optional(),
   childMetrics: z.array(z.record(z.any())).optional(),
 }).transform((v) => {
   return remap$(v, {
@@ -270,6 +286,8 @@ export const Metric$outboundSchema: z.ZodType<
     id: "_id",
     eventName: "event_name",
     eventType: "event_type",
+    modelProvider: "model_provider",
+    modelName: "model_name",
     childMetrics: "child_metrics",
   });
 });
