@@ -458,7 +458,8 @@ export class HoneyHiveTracer {
       apiKey: tracer.apiKey!,
       disableBatch: tracer.disableBatch,
       instrumentModules: HoneyHiveTracer.instrumentModules,
-      logLevel: tracer.verbose ? "debug" : "error"
+      logLevel: tracer.verbose ? "debug" : "error",
+      silenceInitializationMessage: true,
     });
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
 
