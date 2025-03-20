@@ -1,6 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, Status } from '../models/components';
-import { HoneyHiveTracer} from './tracer';
+import { HoneyHiveTracer, getGitInfo } from './tracer';
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 
@@ -20,6 +20,7 @@ interface EvaluationConfig {
     runId?: string;
     datasetId?: string;
     datapointId?: string;
+    metadata?: Dict<Any>;
 }
 
 interface EvaluationData {
@@ -202,12 +203,21 @@ async function addTraceMetadata(tracer: HoneyHiveTracer, state: EvaluationState,
 }
 
 async function setupEvaluation(state: EvaluationState, config: EvaluationConfig): Promise<void> {
+    const metadata: { [key: string]: any } = config.metadata || {};
+    
+    // Add git context if available
+    const gitInfo = getGitInfo();
+    if (gitInfo && !gitInfo.error) {
+        metadata['git'] = gitInfo;
+    }
+    
     const eval_run = await state.hhai.experiments.createRun({
         project: config.hh_project,
         name: config.name,
         datasetId: config.dataset_id || state.external_dataset_id,
         eventIds: [],
         status: state.state,
+        metadata: Object.keys(metadata).length > 0 ? metadata : undefined
     });
     state.eval_run = eval_run;
 }

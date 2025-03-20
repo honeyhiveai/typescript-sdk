@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import { execSync } from "child_process";
 
 import { HoneyHive } from "./sdk";
 import { UpdateEventRequestBody } from "../models/operations/updateevent";
@@ -77,7 +78,99 @@ export interface SessionStartParams {
   inputs: Record<string, any>;
 }
 
+/**
+ * Git information structure
+ */
+export interface GitInfo {
+  commitHash?: string;
+  branch?: string;
+  repoUrl?: string;
+  commitLink?: string;
+  uncommittedChanges: boolean;
+  relativePath?: string | undefined;
+  error?: string;
+}
 
+/**
+ * Check if the directory is a git repository
+ * @param directory Directory to check
+ * @returns Boolean indicating whether the directory is a git repository
+ */
+function isGitRepo(directory: string = process.cwd()): boolean {
+  try {
+    // Check if .git directory exists or if git rev-parse succeeds
+    execSync('git rev-parse --is-inside-work-tree', { cwd: directory, encoding: 'utf-8', stdio: 'ignore' });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Get git information from the current directory
+ * @param directory Directory to get git info from
+ * @returns GitInfo object
+ */
+export function getGitInfo(directory: string = process.cwd()): GitInfo {
+  // Check if telemetry is disabled
+  const telemetryEnabled = process.env['HONEYHIVE_TELEMETRY'] !== 'false';
+  if (!telemetryEnabled) {
+    return { 
+      uncommittedChanges: false,
+      error: "Telemetry disabled"
+    };
+  }
+
+  // First check if this is a git repository
+  if (!isGitRepo(directory)) {
+    return { 
+      uncommittedChanges: false,
+      error: "Not a git repository"
+    };
+  }
+  
+  try {
+    const commitHash = execSync('git rev-parse HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
+    const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
+    const repoUrl = execSync('git config --get remote.origin.url', { cwd: directory, encoding: 'utf-8' }).trim().replace(/\.git$/, '');
+
+    const commitLink = repoUrl.includes('github.com')
+      ? `${repoUrl}/commit/${commitHash}`
+      : repoUrl;
+
+    const status = execSync('git status --porcelain', { cwd: directory, encoding: 'utf-8' }).trim();
+    const hasUncommittedChanges = Boolean(status);
+
+    // Try to get relative path of the executing file
+    let relativePath;
+    try {
+      const repoRoot = execSync('git rev-parse --show-toplevel', { cwd: directory, encoding: 'utf-8' }).trim();
+      if (typeof require !== 'undefined' && require.main) {
+        const absolutePath = require.main.filename;
+        relativePath = path.relative(repoRoot, absolutePath);
+      } else if (typeof process !== 'undefined' && process.argv && process.argv[1]) {
+        const absolutePath = process.argv[1];
+        relativePath = path.relative(repoRoot, absolutePath);
+      }
+    } catch (e) {
+      // Silently handle errors
+    }
+
+    return {
+      commitHash,
+      branch,
+      repoUrl,
+      commitLink,
+      uncommittedChanges: hasUncommittedChanges,
+      relativePath
+    };
+  } catch (error) {
+    return { 
+      uncommittedChanges: false,
+      error: "Failed to retrieve Git info"
+    };
+  }
+}
 
 function isPromise(obj: any): obj is Promise<any> {
   return (
@@ -261,6 +354,17 @@ export class HoneyHiveTracer {
           sessionId: this.sessionId
         }
       };
+
+      // Gather git information
+      const gitInfo = getGitInfo();
+      
+      // Only add git info to metadata if there's no error
+      if (!gitInfo.error && requestBody.session) {
+        requestBody.session.metadata = {
+          git: gitInfo
+        };
+      }
+      
       if (!HoneyHiveTracer.sdkInstance) {
         throw new Error("SDK instance is not initialized");
       }
@@ -354,8 +458,7 @@ export class HoneyHiveTracer {
       apiKey: tracer.apiKey!,
       disableBatch: tracer.disableBatch,
       instrumentModules: HoneyHiveTracer.instrumentModules,
-      logLevel: tracer.verbose ? "debug" : "error",
-      silenceInitializationMessage: true,
+      logLevel: tracer.verbose ? "debug" : "error"
     });
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
 
