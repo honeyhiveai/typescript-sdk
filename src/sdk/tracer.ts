@@ -662,6 +662,8 @@ export class HoneyHiveTracer {
               },
               (err: any) => {
                 span.recordException(err);
+                // Also capture the error message/details as a span attribute
+                setSpanAttributes(span, 'honeyhive_error', String(err));
                 span.end();
                 this.spanProxy = oldSpanProxy;
                 throw err;
@@ -676,6 +678,12 @@ export class HoneyHiveTracer {
           }
         } catch (err: unknown) {
           span.recordException(err as Exception);
+          
+          // Also capture the error message/details as a span attribute
+          if (err instanceof Error) {
+            setSpanAttributes(span, 'honeyhive_error', String(err));
+          }
+
           span.end();
           this.spanProxy = oldSpanProxy;
           throw err;
