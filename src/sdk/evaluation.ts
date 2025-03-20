@@ -84,19 +84,28 @@ async function loadDataset(hhai: HoneyHive, config: EvaluationConfig): Promise<a
     return null;
 }
 
-async function getInputs(state: EvaluationState, config: EvaluationConfig, run_id: number): Promise<any> {
+async function getDatapoint(state: EvaluationState, config: EvaluationConfig, run_id: number): Promise<{inputs: any, groundTruth: any} | null> {
     if (state.hh_dataset && state.hh_dataset.datapoints && state.hh_dataset.datapoints.length > 0) {
         try {
             const datapoint_id = state.hh_dataset.datapoints[run_id];
             const datapoint_response = await state.hhai.datapoints.getDatapoint(datapoint_id);
             const datapointList = datapoint_response.datapoint;
-            if (datapointList && datapointList[0])
-                return datapointList[0].inputs;
+            if (datapointList && datapointList[0]) {
+                return {
+                    inputs: datapointList[0].inputs || {},
+                    groundTruth: datapointList[0].groundTruth || {}
+                };
+            }
         } catch (error) {
             console.error(`Error getting datapoint: ${error}`);
         }
-    } else if (config.dataset) {
-        return config.dataset[run_id];
+    } else if (config.dataset && config.dataset[run_id]) {
+        const datapoint = config.dataset[run_id];
+        const result = {
+            inputs: datapoint['inputs'] || {},
+            groundTruth: datapoint['ground_truths'] || {}
+        };
+        return result;
     }
     return null;
 }
@@ -120,7 +129,7 @@ async function initializeTracer(config: EvaluationConfig, inputs: any): Promise<
     }
 }
 
-async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConfig, inputs: any): Promise<Any> {
+async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConfig, inputs: any, ground_truths?: any): Promise<Any> {
     try {
         let output = {};
         let promiseResolve: () => void;
@@ -131,7 +140,7 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
         tracer.trace(() => {
             (async () => {
                 try {
-                    const agentResponse = await evalconfig.evaluationFunction(inputs);
+                    const agentResponse = await evalconfig.evaluationFunction(inputs, ground_truths);
                     output = agentResponse;
                     console.log(agentResponse);
                 } finally {
@@ -150,14 +159,14 @@ async function runEvaluation(tracer: HoneyHiveTracer, evalconfig: EvaluationConf
     }
 }
 
-async function runEvaluators(inputs: any, evaluation_output: any, evaluators?: ((...args: any[]) => any)[]): Promise<Dict<Any>> {
+async function runEvaluators(inputs: any, evaluation_output: any, evaluators?: ((...args: any[]) => any)[], ground_truths?: any): Promise<Dict<Any>> {
     const metrics: Dict<Any> = {};
     if (evaluators) {
         for (let index = 0; index < evaluators.length; index++) {
             try {
                 const evaluator = evaluators[index];
                 if (evaluator) {
-                    const evaluator_result = await evaluator(inputs, evaluation_output);
+                    const evaluator_result = await evaluator(evaluation_output, inputs, ground_truths);
                     if (evaluator_result && typeof evaluator_result === 'object') {
                         Object.assign(metrics, evaluator_result);
                         continue;
@@ -261,12 +270,11 @@ async function evaluate(
     await setupEvaluation(state, config);
 
     for (let run_id = 0; run_id < runs; run_id++) {
-        console.log(`---------- RUN ${run_id + 1} ----------`)
-        const inputs = await getInputs(state, config, run_id);
-        const tracer = await initializeTracer(config, inputs);
+        const datapoint = await getDatapoint(state, config, run_id);
+        const tracer = await initializeTracer(config, datapoint?.inputs);
 
-        const output = await runEvaluation(tracer, config, inputs);
-        const metrics = await runEvaluators(inputs, output, config.evaluators);
+        const output = await runEvaluation(tracer, config, datapoint?.inputs, datapoint?.groundTruth);
+        const metrics = await runEvaluators(datapoint?.inputs, output, config.evaluators, datapoint?.groundTruth);
 
         await addTraceMetadata(tracer, state, config, output, metrics, run_id);
 
