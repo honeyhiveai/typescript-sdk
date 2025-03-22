@@ -24,12 +24,16 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "honeyhive": ["../dist"]
+      "honeyhive": ["../src"]
     },
     "sourceMap": true,
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "resolveJsonModule": true
   },
   "include": ["tracing/openai_test.ts"],
   "exclude": ["node_modules"],
+  "references": [
+    { "path": ".." }
+  ]
 } 

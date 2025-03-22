@@ -14,8 +14,9 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
+    "clean": "rm -rf node_modules",
     "test": "cd .. && npm run clean && npm run build && cd tests && npm run build && npx ts-node $1",
-    "build": "npm install && tsc",
+    "build": "rm -rf node_modules && npm install && tsc",
     "dev": "cd .. && npm run clean && npm run build && cd tests && npx ts-node-dev --respawn --transpile-only $1",
     "ts-node": "ts-node"
   },

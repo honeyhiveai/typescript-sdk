@@ -2,11 +2,11 @@
   "name": "honeyhive",
   "version": "1.0.33",
   "author": "HoneyHive",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
   "sideEffects": false,
   "files": [
-    "dist/**/*",
+    "src/**/*",
     "!tests"
   ],
   "repository": {
@@ -16,8 +16,8 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
-    "clean": "rm -rf dist",
-    "build": "npm run clean && tsc",
+    "clean": "rm -rf node_modules && find src -type f \\( -name '*.js' -o -name '*.js.map' -o -name '*.d.ts' -o -name '*.d.ts.map' -o -name '.tsbuildinfo' \\) -delete",
+    "build": "npm run clean && npm install && tsc",
     "prepublishOnly": "npm run build",
     "test": "jest"
   },
@@ -26,11 +26,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@types/express": "^4.17.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.11",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
+    "bun-types": "^1.0.0",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.31.0",
@@ -40,7 +42,9 @@
     "zod": "^3.23.4"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
     "@opentelemetry/api": "^1.9.0",
+    "@stricli/core": "^1.1.1",
     "@traceloop/node-server-sdk": "^0.12.1",
     "posthog-node": "^4.2.0",
     "reflect-metadata": "^0.1.13",

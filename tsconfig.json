@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "tsBuildInfoFile": "src/.tsbuildinfo",
     "target": "ES2018",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
 
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
 
     "allowJs": true,
 
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "dist",
+    "outDir": "src",
     "rootDir": "src",
+    "composite": true,
 
     // https://github.com/tsconfig/bases/blob/a1bf7c0fa2e094b068ca3e1448ca2ece4157977e/bases/strictest.json
     "strict": true,
@@ -33,11 +34,7 @@
     "checkJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    
-    // Additional options for testing
-    "types": ["node", "jest"],
-    "resolveJsonModule": true
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/**/*"],
   "exclude": [
@@ -45,6 +42,8 @@
     "jest.config.js",
     "tests",
     "dist",
+    "**/*.js",
+    "**/*.js.map",
     "**/*.d.ts",
     "**/*.d.ts.map"
   ]
