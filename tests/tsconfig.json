@@ -1,37 +1,35 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["es2021"],
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "dist",
-    "allowJs": true,
-    "downlevelIteration": true,
-    "skipLibCheck": true,
+    "target": "ES2018",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "noEmit": true,
+    "types": ["node", "jest"],
+    "rootDir": ".",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "exactOptionalPropertyTypes": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
     "strictPropertyInitialization": false,
+    "noImplicitThis": false,
+    "alwaysStrict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "allowUnusedLabels": true,
+    "allowUnreachableCode": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "honeyhive": ["../dist"]
+    },
+    "sourceMap": true,
     "declaration": true,
-    "types": ["reflect-metadata", "jest", "node"],
-    "noImplicitAny": true
+    "declarationMap": true
   },
-  "include": [
-    "*.ts",
-    "**/*.ts",
-    "**/*.mts",
-    "**/*.cts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
-}
+  "include": ["tracing/openai_test.ts"],
+  "exclude": ["node_modules"],
+} 

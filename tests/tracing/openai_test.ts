@@ -24,7 +24,7 @@ async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
     sessionName: sessionName,
     source: "OpenAI Test",
     serverUrl: "http://localhost:3000",
-    verbose: true,
+    verbose: false,
     disableBatch: true,
   });
 
@@ -65,10 +65,10 @@ async function makeOpenAICall(prompt: string) {
     }
 
     // Set a timeout to ensure all traces are sent before the process exits
-    await Promise.race([
-      // tracer.flush(),
-      new Promise(resolve => setTimeout(resolve, 5000))
-    ]);
+    // await Promise.race([
+    //   // tracer.flush(),
+    //   new Promise(resolve => setTimeout(resolve, 5000))
+    // ]);
 
   } catch (error) {
     console.error("Error in main execution:", error);

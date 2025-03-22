@@ -4,6 +4,7 @@
     "@traceloop/node-server-sdk": "^0.8.4",
     "@types/uuid": "^9.0.8",
     "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
     "honeyhive": "file:..",
     "jest": "^29.7.0",
     "openai": "^4.28.4",
@@ -13,13 +14,16 @@
     "uuid": "^9.0.1"
   },
   "scripts": {
-    "test": "cd .. && rm -rf node_modules && npm run build && cd tests && rm -rf node_modules && npm run build && npx ts-node $1",
+    "test": "cd .. && npm run clean && npm run build && cd tests && npm run build && npx ts-node $1",
     "build": "npm install && tsc",
+    "dev": "cd .. && npm run clean && npm run build && cd tests && npx ts-node-dev --respawn --transpile-only $1",
     "ts-node": "ts-node"
   },
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.27"
+    "@types/node": "^20.11.27",
+    "ts-node-dev": "^2.0.0"
   }
 }
