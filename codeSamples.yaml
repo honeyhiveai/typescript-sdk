@@ -51,7 +51,7 @@ actions:
                     "frequency_penalty": 0,
                     "presence_penalty": 0,
                     "stop_sequences": [
-                      "<value>",
+
                     ],
                   },
                   selectedFunctions: [
@@ -74,9 +74,6 @@ actions:
                     },
                   ],
                   functionCallParams: "auto",
-                  forceFunction: {
-
-                  },
                   additionalProperties: {
                     "template": [
                       {
@@ -152,7 +149,7 @@ actions:
                     "frequency_penalty": 0,
                     "presence_penalty": 0,
                     "stop_sequences": [
-                      "<value>",
+
                     ],
                   },
                   selectedFunctions: [
@@ -175,9 +172,6 @@ actions:
                     },
                   ],
                   functionCallParams: "auto",
-                  forceFunction: {
-
-                  },
                   additionalProperties: {
                     "template": [
                       {
@@ -261,7 +255,7 @@ actions:
                 },
                 linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
                 linkedDatasets: [
-                  "<value>",
+
                 ],
                 metadata: {
                   "question_type": "weather",
@@ -348,10 +342,10 @@ actions:
                   "content": "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
                 },
                 linkedEvals: [
-                  "<value>",
+
                 ],
                 linkedDatasets: [
-                  "<value>",
+
                 ],
                 metadata: {
                   "question_type": "capital-weather",
@@ -424,7 +418,7 @@ actions:
                   "66369748b5773befbdc661e2",
                 ],
                 linkedEvals: [
-                  "<value>",
+
                 ],
                 saved: false,
                 pipelineType: "event",
@@ -495,14 +489,14 @@ actions:
                 ],
                 mapping: {
                   inputs: [
-                    "<value>",
+
                   ],
                   groundTruth: [
                     "<value>",
                     "<value>",
                   ],
                   history: [
-                    "<value>",
+
                   ],
                 },
               }, "<id>");
@@ -535,7 +529,7 @@ actions:
                   sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                   parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                   childrenIds: [
-                    "<value>",
+
                   ],
                   config: {
                     "model": "gpt-3.5-turbo",
@@ -548,7 +542,7 @@ actions:
                       "presence_penalty": 0,
                       "frequency_penalty": 0,
                       "stop": [
-                        "<value>",
+
                       ],
                       "n": 1,
                     },
@@ -595,9 +589,6 @@ actions:
                     "completion_tokens": 23,
                     "prompt_tokens": 35,
                     "total_tokens": 58,
-                  },
-                  feedback: {
-
                   },
                   metrics: {
                     "Answer Faithfulness": 5,
@@ -688,7 +679,7 @@ actions:
                     sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                     parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
                     childrenIds: [
-                      "<value>",
+
                     ],
                     config: {
                       "model": "gpt-3.5-turbo",
@@ -701,7 +692,7 @@ actions:
                         "presence_penalty": 0,
                         "frequency_penalty": 0,
                         "stop": [
-                          "<value>",
+
                         ],
                         "n": 1,
                       },
@@ -749,9 +740,6 @@ actions:
                       "prompt_tokens": 35,
                       "total_tokens": 58,
                     },
-                    feedback: {
-
-                    },
                     metrics: {
                       "Answer Faithfulness": 5,
                       "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
@@ -789,15 +777,6 @@ actions:
                   error: "<value>",
                   userProperties: {
                     "user": "google-oauth2|111840237613341303366",
-                  },
-                  metrics: {
-
-                  },
-                  feedback: {
-
-                  },
-                  metadata: {
-
                   },
                 },
               });
@@ -882,7 +861,7 @@ actions:
                     "presence_penalty": 0,
                     "frequency_penalty": 0,
                     "stop": [
-                      "<value>",
+
                     ],
                     "n": 1,
                   },
@@ -983,7 +962,7 @@ actions:
                       "presence_penalty": 0,
                       "frequency_penalty": 0,
                       "stop": [
-                        "<value>",
+
                       ],
                       "n": 1,
                     },
@@ -1059,15 +1038,6 @@ actions:
                   error: "<value>",
                   userProperties: {
                     "user": "google-oauth2|111840237613341303366",
-                  },
-                  metrics: {
-
-                  },
-                  feedback: {
-
-                  },
-                  metadata: {
-
                   },
                 },
               });
@@ -1281,7 +1251,7 @@ actions:
                 project: "<value>",
                 name: "<value>",
                 eventIds: [
-                  "1504f40b-8865-40f9-b343-513d7da481bd",
+
                 ],
               });
 
@@ -1436,15 +1406,6 @@ actions:
                   duration: 824.8056,
                   userProperties: {
                     "user": "google-oauth2|111840237613341303366",
-                  },
-                  metrics: {
-
-                  },
-                  feedback: {
-
-                  },
-                  metadata: {
-
                   },
                   startTime: 1712025501605,
                   endTime: 1712025499832,

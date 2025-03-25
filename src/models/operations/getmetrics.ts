@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type GetMetricsRequest = {
   /**
@@ -54,4 +57,22 @@ export namespace GetMetricsRequest$ {
   export const outboundSchema = GetMetricsRequest$outboundSchema;
   /** @deprecated use `GetMetricsRequest$Outbound` instead. */
   export type Outbound = GetMetricsRequest$Outbound;
+}
+
+export function getMetricsRequestToJSON(
+  getMetricsRequest: GetMetricsRequest,
+): string {
+  return JSON.stringify(
+    GetMetricsRequest$outboundSchema.parse(getMetricsRequest),
+  );
+}
+
+export function getMetricsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetMetricsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetMetricsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetMetricsRequest' from JSON`,
+  );
 }

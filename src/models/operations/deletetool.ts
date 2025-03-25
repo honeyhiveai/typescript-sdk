@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteToolRequest = {
   functionId: string;
@@ -51,4 +54,22 @@ export namespace DeleteToolRequest$ {
   export const outboundSchema = DeleteToolRequest$outboundSchema;
   /** @deprecated use `DeleteToolRequest$Outbound` instead. */
   export type Outbound = DeleteToolRequest$Outbound;
+}
+
+export function deleteToolRequestToJSON(
+  deleteToolRequest: DeleteToolRequest,
+): string {
+  return JSON.stringify(
+    DeleteToolRequest$outboundSchema.parse(deleteToolRequest),
+  );
+}
+
+export function deleteToolRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteToolRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteToolRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteToolRequest' from JSON`,
+  );
 }

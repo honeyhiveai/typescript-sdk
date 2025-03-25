@@ -2,12 +2,28 @@
   "name": "honeyhive",
   "version": "1.0.33",
   "author": "HoneyHive",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "type": "commonjs",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "sideEffects": false,
   "files": [
-    "src/**/*",
-    "!tests"
+    "funcs/**/*",
+    "hooks/**/*",
+    "lib/**/*",
+    "mcp-server/**/*",
+    "models/**/*",
+    "sdk/**/*",
+    "types/**/*",
+    "package.json",
+    "tsconfig.json",
+    "README.md",
+    "LICENSE",
+    "*.js",
+    "*.js.map",
+    "*.d.ts",
+    "*.d.ts.map",
+    "*.json",
+    "!tests/**/*"
   ],
   "repository": {
     "type": "git",
@@ -16,7 +32,7 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
-    "clean": "rm -rf node_modules && find src -type f \\( -name '*.js' -o -name '*.js.map' -o -name '*.d.ts' -o -name '*.d.ts.map' -o -name '.tsbuildinfo' \\) -delete",
+    "clean": "rm -rf node_modules && rm -f tests/honeyhive.tgz",
     "build": "npm run clean && npm install && tsc",
     "prepublishOnly": "npm run build",
     "test": "jest"
@@ -37,6 +53,8 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.31.0",
     "prettier": "^3.5.3",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1",
     "zod": "^3.23.4"

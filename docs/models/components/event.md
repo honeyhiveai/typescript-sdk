@@ -14,7 +14,7 @@ let value: Event = {
   sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
   parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
   childrenIds: [
-    "<value>",
+
   ],
   config: {
     "model": "gpt-3.5-turbo",
@@ -27,7 +27,7 @@ let value: Event = {
       "presence_penalty": 0,
       "frequency_penalty": 0,
       "stop": [
-        "<value>",
+
       ],
       "n": 1,
     },

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type UpdateEventRequestBody = {
   eventId: string;
@@ -81,4 +84,22 @@ export namespace UpdateEventRequestBody$ {
   export const outboundSchema = UpdateEventRequestBody$outboundSchema;
   /** @deprecated use `UpdateEventRequestBody$Outbound` instead. */
   export type Outbound = UpdateEventRequestBody$Outbound;
+}
+
+export function updateEventRequestBodyToJSON(
+  updateEventRequestBody: UpdateEventRequestBody,
+): string {
+  return JSON.stringify(
+    UpdateEventRequestBody$outboundSchema.parse(updateEventRequestBody),
+  );
+}
+
+export function updateEventRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<UpdateEventRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => UpdateEventRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'UpdateEventRequestBody' from JSON`,
+  );
 }

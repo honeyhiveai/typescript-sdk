@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteDatapointRequest = {
   /**
@@ -54,6 +57,24 @@ export namespace DeleteDatapointRequest$ {
   export type Outbound = DeleteDatapointRequest$Outbound;
 }
 
+export function deleteDatapointRequestToJSON(
+  deleteDatapointRequest: DeleteDatapointRequest,
+): string {
+  return JSON.stringify(
+    DeleteDatapointRequest$outboundSchema.parse(deleteDatapointRequest),
+  );
+}
+
+export function deleteDatapointRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteDatapointRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteDatapointRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteDatapointRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const DeleteDatapointResponseBody$inboundSchema: z.ZodType<
   DeleteDatapointResponseBody,
@@ -88,4 +109,24 @@ export namespace DeleteDatapointResponseBody$ {
   export const outboundSchema = DeleteDatapointResponseBody$outboundSchema;
   /** @deprecated use `DeleteDatapointResponseBody$Outbound` instead. */
   export type Outbound = DeleteDatapointResponseBody$Outbound;
+}
+
+export function deleteDatapointResponseBodyToJSON(
+  deleteDatapointResponseBody: DeleteDatapointResponseBody,
+): string {
+  return JSON.stringify(
+    DeleteDatapointResponseBody$outboundSchema.parse(
+      deleteDatapointResponseBody,
+    ),
+  );
+}
+
+export function deleteDatapointResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteDatapointResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteDatapointResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteDatapointResponseBody' from JSON`,
+  );
 }

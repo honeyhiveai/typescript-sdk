@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type Datapoint = {
   /**
@@ -141,4 +144,18 @@ export namespace Datapoint$ {
   export const outboundSchema = Datapoint$outboundSchema;
   /** @deprecated use `Datapoint$Outbound` instead. */
   export type Outbound = Datapoint$Outbound;
+}
+
+export function datapointToJSON(datapoint: Datapoint): string {
+  return JSON.stringify(Datapoint$outboundSchema.parse(datapoint));
+}
+
+export function datapointFromJSON(
+  jsonString: string,
+): SafeParseResult<Datapoint, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Datapoint$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Datapoint' from JSON`,
+  );
 }

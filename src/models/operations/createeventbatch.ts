@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateEventBatchRequestBody = {
   events: Array<components.CreateEventRequest>;
@@ -78,6 +81,26 @@ export namespace CreateEventBatchRequestBody$ {
   export type Outbound = CreateEventBatchRequestBody$Outbound;
 }
 
+export function createEventBatchRequestBodyToJSON(
+  createEventBatchRequestBody: CreateEventBatchRequestBody,
+): string {
+  return JSON.stringify(
+    CreateEventBatchRequestBody$outboundSchema.parse(
+      createEventBatchRequestBody,
+    ),
+  );
+}
+
+export function createEventBatchRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateEventBatchRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateEventBatchRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateEventBatchRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateEventBatchResponseBody$inboundSchema: z.ZodType<
   CreateEventBatchResponseBody,
@@ -128,4 +151,24 @@ export namespace CreateEventBatchResponseBody$ {
   export const outboundSchema = CreateEventBatchResponseBody$outboundSchema;
   /** @deprecated use `CreateEventBatchResponseBody$Outbound` instead. */
   export type Outbound = CreateEventBatchResponseBody$Outbound;
+}
+
+export function createEventBatchResponseBodyToJSON(
+  createEventBatchResponseBody: CreateEventBatchResponseBody,
+): string {
+  return JSON.stringify(
+    CreateEventBatchResponseBody$outboundSchema.parse(
+      createEventBatchResponseBody,
+    ),
+  );
+}
+
+export function createEventBatchResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateEventBatchResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateEventBatchResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateEventBatchResponseBody' from JSON`,
+  );
 }

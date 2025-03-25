@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteDatasetRequest = {
   /**
@@ -54,4 +57,22 @@ export namespace DeleteDatasetRequest$ {
   export const outboundSchema = DeleteDatasetRequest$outboundSchema;
   /** @deprecated use `DeleteDatasetRequest$Outbound` instead. */
   export type Outbound = DeleteDatasetRequest$Outbound;
+}
+
+export function deleteDatasetRequestToJSON(
+  deleteDatasetRequest: DeleteDatasetRequest,
+): string {
+  return JSON.stringify(
+    DeleteDatasetRequest$outboundSchema.parse(deleteDatasetRequest),
+  );
+}
+
+export function deleteDatasetRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteDatasetRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteDatasetRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteDatasetRequest' from JSON`,
+  );
 }

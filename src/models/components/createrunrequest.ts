@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * The status of the run
@@ -139,4 +142,22 @@ export namespace CreateRunRequest$ {
   export const outboundSchema = CreateRunRequest$outboundSchema;
   /** @deprecated use `CreateRunRequest$Outbound` instead. */
   export type Outbound = CreateRunRequest$Outbound;
+}
+
+export function createRunRequestToJSON(
+  createRunRequest: CreateRunRequest,
+): string {
+  return JSON.stringify(
+    CreateRunRequest$outboundSchema.parse(createRunRequest),
+  );
+}
+
+export function createRunRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateRunRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateRunRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateRunRequest' from JSON`,
+  );
 }

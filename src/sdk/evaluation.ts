@@ -414,10 +414,9 @@ class Evaluation {
     }
 }
 
-async function evaluate(config: EvaluationConfig): Promise<EvaluationResult> {
+export async function evaluate(config: EvaluationConfig): Promise<EvaluationResult> {
     const evaluation = new Evaluation(config);
     return evaluation.evaluate();
 }
 
-export { evaluate };
 export type { EvaluationConfig, EvaluationResult };

@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type SessionPropertiesBatch = {
   /**
@@ -128,4 +131,22 @@ export namespace SessionPropertiesBatch$ {
   export const outboundSchema = SessionPropertiesBatch$outboundSchema;
   /** @deprecated use `SessionPropertiesBatch$Outbound` instead. */
   export type Outbound = SessionPropertiesBatch$Outbound;
+}
+
+export function sessionPropertiesBatchToJSON(
+  sessionPropertiesBatch: SessionPropertiesBatch,
+): string {
+  return JSON.stringify(
+    SessionPropertiesBatch$outboundSchema.parse(sessionPropertiesBatch),
+  );
+}
+
+export function sessionPropertiesBatchFromJSON(
+  jsonString: string,
+): SafeParseResult<SessionPropertiesBatch, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => SessionPropertiesBatch$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'SessionPropertiesBatch' from JSON`,
+  );
 }

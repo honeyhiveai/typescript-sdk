@@ -1,142 +1,115 @@
-# HoneyHive SDK Tests
+# Integration Testing
 
-This directory contains test scripts and configurations for the HoneyHive SDK. It's set up as a separate package that depends on the parent SDK package for development and testing purposes.
-
-## Directory Structure
-
-```
-typescript-sdk/
-├── src/           # Main SDK source code
-├── tests/         # Test directory (this)
-│   ├── package.json    # Test package configuration
-│   ├── tsconfig.json   # Test TypeScript configuration
-│   └── *.ts           # Test scripts
-├── tsconfig.json  # Main SDK TypeScript configuration
-└── package.json   # Main SDK package configuration
-```
-
-## Configuration
-
-### Main SDK Package (parent)
-The main SDK package is configured in the parent directory's `package.json`:
-- Outputs compiled code to `dist/` directory
-- Generates type definitions (`.d.ts` files)
-- Excludes the `tests` directory from the published package
-
-The main `tsconfig.json` in the parent directory:
-- Configures strict type checking for the SDK
-- Outputs to `dist/` directory
-- Excludes test files and build artifacts
-- Enables source maps and declaration files
-- Uses Node16 module resolution
-
-### Test Package (this directory)
-The test package is configured to:
-- Use the local SDK package via `"honeyhive": "file:.."` dependency
-- Resolve types from the parent package's `dist` directory
-- Support both development and test modes
-- Use a more relaxed TypeScript configuration for testing
-
-The test `tsconfig.json`:
-- Inherits module resolution settings from the parent
-- Uses a more permissive type checking configuration
-- Maps the `honeyhive` package to the parent's `dist` directory
-- Enables source maps for debugging
-
-## Available Scripts
-
-From the `tests` directory, you can run:
+Run `integration/openai_trace.ts` script in CommonJS environment (`/environment/commonjs-commonjs`) in an isolated Docker container using this command:
 
 ```bash
-# Development mode with hot reloading of the script (but not honeyhive)
-npm run dev <script.ts>
-
-# Test mode (clean honeyhive and script build)
-npm run test <script.ts>
-
-# Direct ts-node execution
-npm run ts-node <script.ts>
+make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
 ```
 
-Example:
+# Overview
+
+Integration testing in JavaScript/TypeScript requires testing across multiple environments with different configurations and dependency versions. Our approach:
+
+1. Pack current SDK state into a tarball
+2. Port environment configs (.env, Dockerfile) to test environment
+3. Use bootstrap code to patch integration test files (which export `main: async (): Promise<void>`)
+4. Run in Docker containers optimized for fast builds
+
+# Tests Structure
+
+```
+.
+├── src/
+│   └── ...
+└── tests/
+    ├── .env
+    ├── Dockerfile
+    ├── Makefile
+    ├── README.md
+    ├── environments/
+    │   ├── commonjs-commonjs/
+    │   ├── esm-commonjs/
+    │   └── ...
+    └── integration/
+        ├── openai_trace.ts
+        └── ...
+```
+
+# How to Test a Script in an Environment
+
+1. View available environments:
 ```bash
-# Run openai_test.ts in development mode
-npm run dev openai_test.ts
-
-# Run openai_test.ts in test mode
-npm run test openai_test.ts
+make help
+# or
+ls environments/
 ```
 
-## Development Workflow
+2. Run test:
+```bash
+make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
+```
 
-1. **Development Mode**
-   - Uses `ts-node-dev` for hot reloading
-   - Automatically rebuilds parent package
-   - Watches for changes in both test files and SDK source
-   - Best for active development
+This will patch the test file with bootstrap code and run it in the specified environment's Docker container. 
 
-2. **Test Mode**
-   - Performs a clean build of both packages
-   - Runs the script once
-   - Best for verifying changes or running tests
 
-## Troubleshooting
+# Development
 
-### Type Resolution Issues
-If you see type errors or changes not reflecting:
-1. Ensure the parent package is built:
-   ```bash
-   cd .. && npm run build
-   ```
-2. Check that the `dist` directory exists in the parent package
-3. Verify the path mapping in `tsconfig.json` points to `../dist`
-4. Make sure both tsconfig files are properly configured
+Make sure you are setup (see above)
 
-### Build Issues
-If you encounter build errors:
-1. Clean both packages:
-   ```bash
-   cd .. && npm run clean
-   cd tests && rm -rf node_modules
-   ```
-2. Reinstall dependencies:
-   ```bash
-   cd .. && npm install
-   cd tests && npm install
-   ```
-3. Rebuild:
-   ```bash
-   cd .. && npm run build
-   cd tests && npm run build
-   ```
+There are 3 parts to development:
 
-### Environment Variables
-Make sure required environment variables are set:
-- `HH_API_KEY`
-- `HH_API_URL`
-- `HH_PROJECT_NAME`
-- `OPENAI_API_KEY`
+1. Setup
+2. Running a script in an environment
+3. Changing the SDK, script, env variables, package.json, tsconfig, dependencies, etc
 
-### Hot Reloading Not Working
-If changes aren't being reflected in development mode:
-1. Check that `ts-node-dev` is running (you should see the watcher output)
-2. Ensure you're using the `dev` script, not `test`
-3. Try stopping and restarting the development server
 
-## Best Practices
+## 1. Setup
 
-1. **Development**
-   - Use `npm run dev` during active development
-   - Changes to both SDK and test files will trigger rebuilds
-   - Console output will show build status
+First, let's set up:
 
-2. **Testing**
-   - Use `npm run test` for final verification
-   - This ensures a clean build and proper type checking
-   - Best for catching issues before committing
+Enable intellisense: (optional but useful for development)
+- run `npm link honeyhive && npm run build` in the root directory (symlinks honeyhive globally to current state of repo)
+- globally install any dependencies in your script (for ex: `npm install -g openai`)
 
-3. **Type Checking**
-   - The setup ensures type checking across both packages
-   - Changes to SDK types will be reflected in tests
-   - Use TypeScript's type checking to catch issues early
-   - Note that test files use a more permissive type checking configuration
+Set env variables in .env
+- Required are: HH_API_KEY, HH_PROJECT
+- add others OPENAI_API_KEY etc
+
+Set your dependendencies in the Dockerfile
+- add `npm install <package>` statements to the Dockerfile so that your script's dependencies are injected
+
+## 2. Running
+Set FILE to the path of the script
+Set ENV to the name of the environment (folder name in environments)
+
+Then run
+```bash
+make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
+```
+
+## 3. Changing
+### Change to SDK
+- first build the current version from root to ensure no errors `npm run build` (optional)
+- delete the honeyhive.tgz file in tests if it exists (this will trigger re-packing)
+- intellisense/typing should catch up if you've done the setup above
+
+### Changes to .env
+Make directly to .env
+
+### Changes to tsconfig / package
+Make directly to that environment's tsconfig or package.json
+
+### Add/remove dependencies
+Change in Dockerfile or package.json. Both will work
+
+### Make a new environment
+Simply copy paste a directory and follow same structure (package.json + tsconfig.json). Those are the only 2 files needed. The naming convention used is `<package module type>-<tsconfig module>`
+
+
+Then run the `make test` command with the new environment.
+
+### Make a new script / edit existing script
+- write your Typescript script in the /integration folder
+- make sure you export a main method which follows the signature: async (): Promise<void>
+- make sure to flush (else the program will end before OTEL can export everything)
+

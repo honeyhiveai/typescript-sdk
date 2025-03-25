@@ -42,9 +42,6 @@ async function run() {
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
       },
-      metrics: {},
-      feedback: {},
-      metadata: {},
       startTime: 1712025501605,
       endTime: 1712025499832,
     },

@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@opentelemetry/api": "^1.8.0",
+    "@traceloop/node-server-sdk": "^0.8.4",
+    "@types/uuid": "^9.0.8",
+    "axios": "^1.6.7",
+    "dotenv": "^16.4.5",
+    "honeyhive": "file:..",
+    "jest": "^29.7.0",
+    "openai": "^4.28.4",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "uuid": "^9.0.1"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules",
+    "test": "cd .. && npm run clean && npm run build && cd tests && npm install && ts-node -r tsconfig-paths/register $1",
+    "build": "rm -rf node_modules && npm install && tsc",
+    "dev": "cd .. && npm run clean && npm run build && cd tests && npx ts-node-dev --respawn --transpile-only -r tsconfig-paths/register $1",
+    "ts-node": "ts-node"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.27",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0"
+  }
+}

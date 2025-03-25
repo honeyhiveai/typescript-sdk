@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateDatapointRequest = {
   /**
@@ -100,4 +103,22 @@ export namespace CreateDatapointRequest$ {
   export const outboundSchema = CreateDatapointRequest$outboundSchema;
   /** @deprecated use `CreateDatapointRequest$Outbound` instead. */
   export type Outbound = CreateDatapointRequest$Outbound;
+}
+
+export function createDatapointRequestToJSON(
+  createDatapointRequest: CreateDatapointRequest,
+): string {
+  return JSON.stringify(
+    CreateDatapointRequest$outboundSchema.parse(createDatapointRequest),
+  );
+}
+
+export function createDatapointRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateDatapointRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateDatapointRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateDatapointRequest' from JSON`,
+  );
 }

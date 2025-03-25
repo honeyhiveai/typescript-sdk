@@ -113,7 +113,7 @@ async function run() {
         "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
-          "<value>",
+
         ],
       },
       selectedFunctions: [
@@ -136,9 +136,6 @@ async function run() {
         },
       ],
       functionCallParams: "auto",
-      forceFunction: {
-
-      },
       additionalProperties: {
         "template": [
           {
@@ -199,7 +196,7 @@ async function run() {
         "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
-          "<value>",
+  
         ],
       },
       selectedFunctions: [
@@ -222,9 +219,6 @@ async function run() {
         },
       ],
       functionCallParams: "auto",
-      forceFunction: {
-  
-      },
       additionalProperties: {
         "template": [
           {
@@ -309,7 +303,7 @@ async function run() {
         "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
-          "<value>",
+
         ],
       },
       selectedFunctions: [
@@ -332,9 +326,6 @@ async function run() {
         },
       ],
       functionCallParams: "auto",
-      forceFunction: {
-
-      },
       additionalProperties: {
         "template": [
           {
@@ -396,7 +387,7 @@ async function run() {
         "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
-          "<value>",
+  
         ],
       },
       selectedFunctions: [
@@ -419,9 +410,6 @@ async function run() {
         },
       ],
       functionCallParams: "auto",
-      forceFunction: {
-  
-      },
       additionalProperties: {
         "template": [
           {

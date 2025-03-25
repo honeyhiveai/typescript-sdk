@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Mapping of keys in the data object to be used as inputs, ground truth, and history, everything else goes into metadata
@@ -104,6 +107,20 @@ export namespace Mapping$ {
   export type Outbound = Mapping$Outbound;
 }
 
+export function mappingToJSON(mapping: Mapping): string {
+  return JSON.stringify(Mapping$outboundSchema.parse(mapping));
+}
+
+export function mappingFromJSON(
+  jsonString: string,
+): SafeParseResult<Mapping, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Mapping$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Mapping' from JSON`,
+  );
+}
+
 /** @internal */
 export const AddDatapointsRequestBody$inboundSchema: z.ZodType<
   AddDatapointsRequestBody,
@@ -144,6 +161,24 @@ export namespace AddDatapointsRequestBody$ {
   export const outboundSchema = AddDatapointsRequestBody$outboundSchema;
   /** @deprecated use `AddDatapointsRequestBody$Outbound` instead. */
   export type Outbound = AddDatapointsRequestBody$Outbound;
+}
+
+export function addDatapointsRequestBodyToJSON(
+  addDatapointsRequestBody: AddDatapointsRequestBody,
+): string {
+  return JSON.stringify(
+    AddDatapointsRequestBody$outboundSchema.parse(addDatapointsRequestBody),
+  );
+}
+
+export function addDatapointsRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<AddDatapointsRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => AddDatapointsRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'AddDatapointsRequestBody' from JSON`,
+  );
 }
 
 /** @internal */
@@ -195,6 +230,24 @@ export namespace AddDatapointsRequest$ {
   export type Outbound = AddDatapointsRequest$Outbound;
 }
 
+export function addDatapointsRequestToJSON(
+  addDatapointsRequest: AddDatapointsRequest,
+): string {
+  return JSON.stringify(
+    AddDatapointsRequest$outboundSchema.parse(addDatapointsRequest),
+  );
+}
+
+export function addDatapointsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<AddDatapointsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => AddDatapointsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'AddDatapointsRequest' from JSON`,
+  );
+}
+
 /** @internal */
 export const AddDatapointsResponseBody$inboundSchema: z.ZodType<
   AddDatapointsResponseBody,
@@ -240,4 +293,22 @@ export namespace AddDatapointsResponseBody$ {
   export const outboundSchema = AddDatapointsResponseBody$outboundSchema;
   /** @deprecated use `AddDatapointsResponseBody$Outbound` instead. */
   export type Outbound = AddDatapointsResponseBody$Outbound;
+}
+
+export function addDatapointsResponseBodyToJSON(
+  addDatapointsResponseBody: AddDatapointsResponseBody,
+): string {
+  return JSON.stringify(
+    AddDatapointsResponseBody$outboundSchema.parse(addDatapointsResponseBody),
+  );
+}
+
+export function addDatapointsResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<AddDatapointsResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => AddDatapointsResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'AddDatapointsResponseBody' from JSON`,
+  );
 }
