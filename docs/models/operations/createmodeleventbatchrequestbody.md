@@ -38,7 +38,7 @@ let value: CreateModelEventBatchRequestBody = {
         "presence_penalty": 0,
         "frequency_penalty": 0,
         "stop": [
-          "<value>",
+
         ],
         "n": 1,
       },

@@ -1,0 +1,17 @@
+{
+  "name": "honeyhive-sdk-test-esm",
+  "version": "1.0.0",
+  "description": "Test environment for HoneyHive SDK in ESM",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "tsc && node dist/index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.4.5"
+  }
+}

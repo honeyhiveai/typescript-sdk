@@ -22,7 +22,7 @@ let value: UpdateConfigurationRequest = {
         "frequency_penalty": 0,
         "presence_penalty": 0,
         "stop_sequences": [
-          "<value>",
+
         ],
       },
       responseFormat: {},

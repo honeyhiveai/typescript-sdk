@@ -31,7 +31,7 @@ async function run() {
     project: "<value>",
     name: "<value>",
     eventIds: [
-      "1504f40b-8865-40f9-b343-513d7da481bd",
+
     ],
   });
 
@@ -61,7 +61,7 @@ async function run() {
     project: "<value>",
     name: "<value>",
     eventIds: [
-      "17dc946d-70c4-49ea-9dca-892d27659a3c",
+  
     ],
   });
 

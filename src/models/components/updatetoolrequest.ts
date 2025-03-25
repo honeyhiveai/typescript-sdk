@@ -3,6 +3,9 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type UpdateToolRequest = {
   id: string;
@@ -54,4 +57,22 @@ export namespace UpdateToolRequest$ {
   export const outboundSchema = UpdateToolRequest$outboundSchema;
   /** @deprecated use `UpdateToolRequest$Outbound` instead. */
   export type Outbound = UpdateToolRequest$Outbound;
+}
+
+export function updateToolRequestToJSON(
+  updateToolRequest: UpdateToolRequest,
+): string {
+  return JSON.stringify(
+    UpdateToolRequest$outboundSchema.parse(updateToolRequest),
+  );
+}
+
+export function updateToolRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<UpdateToolRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => UpdateToolRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'UpdateToolRequest' from JSON`,
+  );
 }

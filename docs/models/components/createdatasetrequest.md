@@ -13,9 +13,7 @@ let value: CreateDatasetRequest = {
   datapoints: [
     "66369748b5773befbdc661e2",
   ],
-  linkedEvals: [
-    "<value>",
-  ],
+  linkedEvals: [],
   saved: false,
   pipelineType: "event",
   metadata: {

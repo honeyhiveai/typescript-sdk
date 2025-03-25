@@ -24,6 +24,13 @@ dist/
 node_modules/
 **/dist/
 **/node_modules/
+
+# Ignore all build files in src (only keep TypeScript files)
+src/**/*.js
+src/**/*.map
+src/**/*.d.ts
+src/**/*.tsbuildinfo
+
 .aider*
 **/.DS_Store
 .cursor

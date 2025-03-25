@@ -3,10 +3,10 @@ id: c8547e23-1f13-448b-999d-edc093cc295f
 management:
   docChecksum: 4aa558bba92e9fa88de4fb557c906f6a
   docVersion: 1.0.21
-  speakeasyVersion: 1.405.10
-  generationVersion: 2.429.0
-  releaseVersion: 1.29.0
-  configChecksum: 25abbeb717e182dfbd566af37f5d8d71
+  speakeasyVersion: 1.523.0
+  generationVersion: 2.559.0
+  releaseVersion: 1.34.1
+  configChecksum: 6a2a9e09419794acad45f5825b012549
   repoURL: https://github.com/honeyhiveai/typescript-sdk.git
   repoSubDirectory: .
   installationURL: https://github.com/honeyhiveai/typescript-sdk
@@ -15,20 +15,21 @@ features:
   typescript:
     additionalDependencies: 0.1.0
     additionalProperties: 0.1.1
-    core: 3.18.2
+    core: 3.21.4
     defaultEnabledRetries: 0.1.0
     enumUnions: 0.1.0
-    envVarSecurityUsage: 0.1.1
-    flattening: 2.82.0
-    globalSecurity: 2.82.11
+    envVarSecurityUsage: 0.1.2
+    flattening: 2.82.1
+    globalSecurity: 2.82.13
     globalSecurityCallbacks: 0.1.0
     globalSecurityFlattening: 0.1.0
     globalServerURLs: 2.82.4
-    nullables: 0.1.0
+    mcpServer: 0.9.0
+    nullables: 0.1.1
     responseFormat: 0.2.3
     retries: 2.83.0
-    sdkHooks: 0.1.0
-    unions: 2.85.7
+    sdkHooks: 0.2.0
+    unions: 2.85.8
 generatedFiles:
   - .gitattributes
   - .npmignore
@@ -199,6 +200,7 @@ generatedFiles:
   - docs/sdks/projects/README.md
   - docs/sdks/session/README.md
   - docs/sdks/tools/README.md
+  - eslint.config.mjs
   - jsr.json
   - src/core.ts
   - src/funcs/configurationsCreateConfiguration.ts
@@ -260,6 +262,60 @@ generatedFiles:
   - src/lib/sdks.ts
   - src/lib/security.ts
   - src/lib/url.ts
+  - src/mcp-server/build.mts
+  - src/mcp-server/cli.ts
+  - src/mcp-server/cli/start/command.ts
+  - src/mcp-server/cli/start/impl.ts
+  - src/mcp-server/console-logger.ts
+  - src/mcp-server/extensions.ts
+  - src/mcp-server/mcp-server.ts
+  - src/mcp-server/prompts.ts
+  - src/mcp-server/resources.ts
+  - src/mcp-server/scopes.ts
+  - src/mcp-server/server.ts
+  - src/mcp-server/shared.ts
+  - src/mcp-server/tools.ts
+  - src/mcp-server/tools/configurationsCreateConfiguration.ts
+  - src/mcp-server/tools/configurationsDeleteConfiguration.ts
+  - src/mcp-server/tools/configurationsGetConfigurations.ts
+  - src/mcp-server/tools/configurationsUpdateConfiguration.ts
+  - src/mcp-server/tools/datapointsCreateDatapoint.ts
+  - src/mcp-server/tools/datapointsDeleteDatapoint.ts
+  - src/mcp-server/tools/datapointsGetDatapoint.ts
+  - src/mcp-server/tools/datapointsGetDatapoints.ts
+  - src/mcp-server/tools/datapointsUpdateDatapoint.ts
+  - src/mcp-server/tools/datasetsAddDatapoints.ts
+  - src/mcp-server/tools/datasetsCreateDataset.ts
+  - src/mcp-server/tools/datasetsDeleteDataset.ts
+  - src/mcp-server/tools/datasetsGetDatasets.ts
+  - src/mcp-server/tools/datasetsUpdateDataset.ts
+  - src/mcp-server/tools/eventsCreateEvent.ts
+  - src/mcp-server/tools/eventsCreateEventBatch.ts
+  - src/mcp-server/tools/eventsCreateModelEvent.ts
+  - src/mcp-server/tools/eventsCreateModelEventBatch.ts
+  - src/mcp-server/tools/eventsGetEvents.ts
+  - src/mcp-server/tools/eventsUpdateEvent.ts
+  - src/mcp-server/tools/experimentsCreateRun.ts
+  - src/mcp-server/tools/experimentsDeleteRun.ts
+  - src/mcp-server/tools/experimentsGetExperimentComparison.ts
+  - src/mcp-server/tools/experimentsGetExperimentResult.ts
+  - src/mcp-server/tools/experimentsGetRun.ts
+  - src/mcp-server/tools/experimentsGetRuns.ts
+  - src/mcp-server/tools/experimentsUpdateRun.ts
+  - src/mcp-server/tools/metricsCreateMetric.ts
+  - src/mcp-server/tools/metricsDeleteMetric.ts
+  - src/mcp-server/tools/metricsGetMetrics.ts
+  - src/mcp-server/tools/metricsUpdateMetric.ts
+  - src/mcp-server/tools/projectsCreateProject.ts
+  - src/mcp-server/tools/projectsDeleteProject.ts
+  - src/mcp-server/tools/projectsGetProjects.ts
+  - src/mcp-server/tools/projectsUpdateProject.ts
+  - src/mcp-server/tools/sessionGetSession.ts
+  - src/mcp-server/tools/sessionStartSession.ts
+  - src/mcp-server/tools/toolsCreateTool.ts
+  - src/mcp-server/tools/toolsDeleteTool.ts
+  - src/mcp-server/tools/toolsGetTools.ts
+  - src/mcp-server/tools/toolsUpdateTool.ts
   - src/models/components/configuration.ts
   - src/models/components/createdatapointrequest.ts
   - src/models/components/createdatasetrequest.ts
@@ -345,6 +401,7 @@ generatedFiles:
   - src/sdk/sdk.ts
   - src/sdk/session.ts
   - src/sdk/tools.ts
+  - src/types/async.ts
   - src/types/blobs.ts
   - src/types/constdatetime.ts
   - src/types/enums.ts
@@ -353,12 +410,11 @@ generatedFiles:
   - src/types/operations.ts
   - src/types/rfcdate.ts
   - src/types/streams.ts
-  - tsconfig.json
 examples:
   startSession:
     speakeasy-default-start-session:
       requestBody:
-        application/json: {"session": {"project": "Simple RAG Project", "session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66"], "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "duration": 824.8056, "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}, "start_time": 1712025501605, "end_time": 1712025499832}}
+        application/json: {"session": {"project": "Simple RAG Project", "session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66"], "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "duration": 824.8056, "user_properties": {"user": "google-oauth2|111840237613341303366"}, "start_time": 1712025501605, "end_time": 1712025499832}}
       responses:
         "200":
           application/json: {}
@@ -369,11 +425,11 @@ examples:
           session_id: "<id>"
       responses:
         "200":
-          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
+          application/json: {"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}
   createEvent:
     speakeasy-default-create-event:
       requestBody:
-        application/json: {"event": {"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
+        application/json: {"event": {"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
       responses:
         "200":
           application/json: {"event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "success": true}
@@ -387,7 +443,7 @@ examples:
         application/json: {"project": "<value>", "filters": [{"field": "event_type", "value": "model", "operator": "is", "type": "string"}]}
       responses:
         "200":
-          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
+          application/json: {"events": [{"project_id": "New Project", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1 - Fork", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": null, "start_time": "2024-04-01 22:38:19", "end_time": "2024-04-01 22:38:19", "duration": 824.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}]}
   createModelEvent:
     speakeasy-default-create-model-event:
       requestBody:
@@ -398,7 +454,7 @@ examples:
   createEventBatch:
     speakeasy-default-create-event-batch:
       requestBody:
-        application/json: {"events": [{"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "feedback": {}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}], "session_properties": {"session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}}}
+        application/json: {"events": [{"project": "Simple RAG", "source": "playground", "event_name": "Model Completion", "event_type": "model", "event_id": "7f22137a-6911-4ed3-bc36-110f1dde6b66", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "parent_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "children_ids": [], "config": {"model": "gpt-3.5-turbo", "version": "v0.1", "provider": "openai", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: {{ context }}"}, {"role": "user", "content": "{{question}}"}], "type": "chat"}, "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "start_time": 1714978764301, "end_time": 1714978765301, "duration": 999.8056, "metadata": {"cost": 0.00008, "completion_tokens": 23, "prompt_tokens": 35, "total_tokens": 58}, "metrics": {"Answer Faithfulness": 5, "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.", "Number of words": 18}, "user_properties": {"user": "google-oauth2|111840237613341303366"}}], "session_properties": {"session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
       responses:
         "200":
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "success": true}
@@ -407,7 +463,7 @@ examples:
   createModelEventBatch:
     speakeasy-default-create-model-event-batch:
       requestBody:
-        application/json: {"model_events": [{"project": "New Project", "model": "gpt-4o", "provider": "openai", "messages": [{"role": "system", "content": "Hello, world!"}], "response": {"role": "assistant", "content": "Hello, world!"}, "duration": 42, "usage": {"prompt_tokens": 10, "completion_tokens": 10, "total_tokens": 20}, "cost": 0.00008, "error": "<value>", "source": "playground", "event_name": "Model Completion", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Hello, {{ name }}!"}], "template_inputs": {"name": "world"}, "tools": [{"type": "function", "function": {"name": "get_current_weather", "description": "Get the current weather", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"}, "format": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The temperature unit to use. Infer this from the users location."}}, "required": ["location", "format"]}}}], "tool_choice": "none", "response_format": {"type": "text"}}], "session_properties": {"session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "user_properties": {"user": "google-oauth2|111840237613341303366"}, "metrics": {}, "feedback": {}, "metadata": {}}}
+        application/json: {"model_events": [{"project": "New Project", "model": "gpt-4o", "provider": "openai", "messages": [{"role": "system", "content": "Hello, world!"}], "response": {"role": "assistant", "content": "Hello, world!"}, "duration": 42, "usage": {"prompt_tokens": 10, "completion_tokens": 10, "total_tokens": 20}, "cost": 0.00008, "error": "<value>", "source": "playground", "event_name": "Model Completion", "hyperparameters": {"temperature": 0, "top_p": 1, "max_tokens": 1000, "presence_penalty": 0, "frequency_penalty": 0, "stop": [], "n": 1}, "template": [{"role": "system", "content": "Hello, {{ name }}!"}], "template_inputs": {"name": "world"}, "tools": [{"type": "function", "function": {"name": "get_current_weather", "description": "Get the current weather", "parameters": {"type": "object", "properties": {"location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"}, "format": {"type": "string", "enum": ["celsius", "fahrenheit"], "description": "The temperature unit to use. Infer this from the users location."}}, "required": ["location", "format"]}}}], "tool_choice": "none", "response_format": {"type": "text"}}], "session_properties": {"session_name": "Playground Session", "source": "playground", "session_id": "caf77ace-3417-4da4-944d-f4a0688f3c23", "inputs": {"context": "Hello world", "question": "What is in the context?", "chat_history": [{"role": "system", "content": "Answer the user's question only using provided context.\n\nContext: Hello world"}, {"role": "user", "content": "What is in the context?"}]}, "outputs": {"role": "assistant", "content": "Hello world"}, "error": "<value>", "user_properties": {"user": "google-oauth2|111840237613341303366"}}}
       responses:
         "200":
           application/json: {"event_ids": ["7f22137a-6911-4ed3-bc36-110f1dde6b66", "7f22137a-6911-4ed3-bc36-110f1dde6b67"], "success": true}
@@ -614,18 +670,18 @@ examples:
           project: "<value>"
       responses:
         "200":
-          application/json: [{"_id": "6638187d505c6812e4044f24", "project": "New Project", "name": "function-v0", "env": ["staging"], "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}]
+          application/json: [{"_id": "6638187d505c6812e4044f24", "project": "New Project", "name": "function-v0", "env": ["staging"], "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}]
   createConfiguration:
     speakeasy-default-create-configuration:
       requestBody:
-        application/json: {"project": "660d7ba7995cacccce4d299e", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
+        application/json: {"project": "660d7ba7995cacccce4d299e", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
   updateConfiguration:
     speakeasy-default-update-configuration:
       parameters:
         path:
           id: "<id>"
       requestBody:
-        application/json: {"project": "New Project", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "forceFunction": {}, "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
+        application/json: {"project": "New Project", "name": "function-v0", "provider": "openai", "parameters": {"call_type": "chat", "model": "gpt-4-turbo-preview", "hyperparameters": {"temperature": 0, "max_tokens": 1000, "top_p": 1, "top_k": -1, "frequency_penalty": 0, "presence_penalty": 0, "stop_sequences": []}, "selectedFunctions": [{"id": "64e3ba90e81f9b3a3808c27f", "name": "get_google_information", "description": "Get information from Google when you do not have that information in your context", "parameters": {"type": "object", "properties": {"query": {"type": "string", "description": "The query asked by the user"}}, "required": ["query"]}}], "functionCallParams": "auto", "template": [{"role": "system", "content": "You are a web search assistant."}, {"role": "user", "content": "{{ query }}"}]}, "env": ["staging"], "type": "LLM", "user_properties": {"user_id": "google-oauth2|108897808434934946583", "user_name": "Dhruv Singh", "user_picture": "https://lh3.googleusercontent.com/a/ACg8ocLyQilNtK9RIv4M0p-0FBSbxljBP0p5JabnStku1AQKtFSK=s96-c", "user_email": "dhruv@honeyhive.ai"}}
   deleteConfiguration:
     speakeasy-default-delete-configuration:
       parameters:

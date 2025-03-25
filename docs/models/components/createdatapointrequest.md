@@ -28,9 +28,7 @@ let value: CreateDatapointRequest = {
       "The temperature in Reykjavik, Iceland is currently around 5F or -15C. Please note that weather conditions can change rapidly, so it's best to check a reliable source for the most up-to-date information.",
   },
   linkedEvent: "6bba5182-d4b1-4b29-a64a-f0a8bd964f76",
-  linkedDatasets: [
-    "<value>",
-  ],
+  linkedDatasets: [],
   metadata: {
     "question_type": "weather",
     "completion_tokens": 47,

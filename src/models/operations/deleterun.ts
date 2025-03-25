@@ -4,6 +4,9 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type DeleteRunRequest = {
   runId: string;
@@ -51,4 +54,22 @@ export namespace DeleteRunRequest$ {
   export const outboundSchema = DeleteRunRequest$outboundSchema;
   /** @deprecated use `DeleteRunRequest$Outbound` instead. */
   export type Outbound = DeleteRunRequest$Outbound;
+}
+
+export function deleteRunRequestToJSON(
+  deleteRunRequest: DeleteRunRequest,
+): string {
+  return JSON.stringify(
+    DeleteRunRequest$outboundSchema.parse(deleteRunRequest),
+  );
+}
+
+export function deleteRunRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<DeleteRunRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => DeleteRunRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'DeleteRunRequest' from JSON`,
+  );
 }

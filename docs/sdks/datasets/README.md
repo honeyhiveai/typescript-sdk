@@ -108,7 +108,7 @@ async function run() {
       "66369748b5773befbdc661e2",
     ],
     linkedEvals: [
-      "<value>",
+
     ],
     saved: false,
     pipelineType: "event",
@@ -148,7 +148,7 @@ async function run() {
       "66369748b5773befbdc661e2",
     ],
     linkedEvals: [
-      "<value>",
+  
     ],
     saved: false,
     pipelineType: "event",
@@ -382,14 +382,14 @@ async function run() {
     ],
     mapping: {
       inputs: [
-        "<value>",
+
       ],
       groundTruth: [
         "<value>",
         "<value>",
       ],
       history: [
-        "<value>",
+
       ],
     },
   }, "<id>");
@@ -427,14 +427,14 @@ async function run() {
     ],
     mapping: {
       inputs: [
-        "<value>",
+  
       ],
       groundTruth: [
         "<value>",
         "<value>",
       ],
       history: [
-        "<value>",
+  
       ],
     },
   }, "<id>");

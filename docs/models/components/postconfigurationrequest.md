@@ -20,7 +20,7 @@ let value: PostConfigurationRequest = {
       "frequency_penalty": 0,
       "presence_penalty": 0,
       "stop_sequences": [
-        "<value>",
+
       ],
     },
     selectedFunctions: [

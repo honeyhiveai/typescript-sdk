@@ -6,29 +6,17 @@ generation:
     optionalPropertyRendering: withExample
   useClassNamesForArrayFields: true
   fixes:
-    nameResolutionDec2023: false
+    nameResolutionFeb2025: false
     parameterOrderingFeb2024: false
     requestResponseComponentNamesFeb2024: false
-    nameResolutionFeb2025: false
     securityFeb2025: false
   auth:
     oAuth2ClientCredentialsEnabled: false
+    oAuth2PasswordEnabled: false
 typescript:
-  version: 1.29.0
+  version: 1.34.1
   additionalDependencies:
-    dependencies:
-      '@anthropic-ai/sdk': ^0.21.0
-      '@aws-sdk/client-bedrock-runtime': ^3.577.0
-      '@azure/openai': ^1.0.0-beta.12
-      '@pinecone-database/pinecone': ^2.2.1
-      '@traceloop/node-server-sdk': ^0.8.4
-      chromadb: ^1.8.1
-      cohere-ai: ^7.10.0
-      langchain: ^0.2.0
-      llamaindex: ^0.3.12
-      openai: ^4.47.1
-      posthog-node: ^4.2.0
-      reflect-metadata: ^0.1.13
+    dependencies: {}
     devDependencies: {}
     peerDependencies: {}
   additionalPackageJSON: {}

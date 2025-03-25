@@ -36,7 +36,7 @@ async function run() {
       sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
       parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
       childrenIds: [
-        "<value>",
+
       ],
       config: {
         "model": "gpt-3.5-turbo",
@@ -49,7 +49,7 @@ async function run() {
           "presence_penalty": 0,
           "frequency_penalty": 0,
           "stop": [
-            "<value>",
+
           ],
           "n": 1,
         },
@@ -96,9 +96,6 @@ async function run() {
         "completion_tokens": 23,
         "prompt_tokens": 35,
         "total_tokens": 58,
-      },
-      feedback: {
-
       },
       metrics: {
         "Answer Faithfulness": 5,
@@ -143,7 +140,7 @@ async function run() {
       sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
       parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
       childrenIds: [
-        "<value>",
+  
       ],
       config: {
         "model": "gpt-3.5-turbo",
@@ -156,7 +153,7 @@ async function run() {
           "presence_penalty": 0,
           "frequency_penalty": 0,
           "stop": [
-            "<value>",
+  
           ],
           "n": 1,
         },
@@ -203,9 +200,6 @@ async function run() {
         "completion_tokens": 23,
         "prompt_tokens": 35,
         "total_tokens": 58,
-      },
-      feedback: {
-  
       },
       metrics: {
         "Answer Faithfulness": 5,
@@ -518,7 +512,7 @@ async function run() {
         "presence_penalty": 0,
         "frequency_penalty": 0,
         "stop": [
-          "<value>",
+
         ],
         "n": 1,
       },
@@ -622,7 +616,7 @@ async function run() {
         "presence_penalty": 0,
         "frequency_penalty": 0,
         "stop": [
-          "<value>",
+  
         ],
         "n": 1,
       },
@@ -729,7 +723,7 @@ async function run() {
         sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
         parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
         childrenIds: [
-          "<value>",
+
         ],
         config: {
           "model": "gpt-3.5-turbo",
@@ -742,7 +736,7 @@ async function run() {
             "presence_penalty": 0,
             "frequency_penalty": 0,
             "stop": [
-              "<value>",
+
             ],
             "n": 1,
           },
@@ -790,9 +784,6 @@ async function run() {
           "prompt_tokens": 35,
           "total_tokens": 58,
         },
-        feedback: {
-
-        },
         metrics: {
           "Answer Faithfulness": 5,
           "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
@@ -830,15 +821,6 @@ async function run() {
       error: "<value>",
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
       },
     },
   });
@@ -876,7 +858,7 @@ async function run() {
         sessionId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
         parentId: "caf77ace-3417-4da4-944d-f4a0688f3c23",
         childrenIds: [
-          "<value>",
+  
         ],
         config: {
           "model": "gpt-3.5-turbo",
@@ -889,7 +871,7 @@ async function run() {
             "presence_penalty": 0,
             "frequency_penalty": 0,
             "stop": [
-              "<value>",
+  
             ],
             "n": 1,
           },
@@ -937,9 +919,6 @@ async function run() {
           "prompt_tokens": 35,
           "total_tokens": 58,
         },
-        feedback: {
-  
-        },
         metrics: {
           "Answer Faithfulness": 5,
           "Answer Faithfulness_explanation": "The AI assistant's answer is a concise and accurate description of Ramp's API. It provides a clear explanation of what the API does and how developers can use it to integrate Ramp's financial services into their own applications. The answer is faithful to the provided context.",
@@ -977,15 +956,6 @@ async function run() {
       error: "<value>",
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-  
-      },
-      feedback: {
-  
-      },
-      metadata: {
-  
       },
     },
   });
@@ -1070,7 +1040,7 @@ async function run() {
           "presence_penalty": 0,
           "frequency_penalty": 0,
           "stop": [
-            "<value>",
+
           ],
           "n": 1,
         },
@@ -1146,15 +1116,6 @@ async function run() {
       error: "<value>",
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-
-      },
-      feedback: {
-
-      },
-      metadata: {
-
       },
     },
   });
@@ -1214,7 +1175,7 @@ async function run() {
           "presence_penalty": 0,
           "frequency_penalty": 0,
           "stop": [
-            "<value>",
+  
           ],
           "n": 1,
         },
@@ -1290,15 +1251,6 @@ async function run() {
       error: "<value>",
       userProperties: {
         "user": "google-oauth2|111840237613341303366",
-      },
-      metrics: {
-  
-      },
-      feedback: {
-  
-      },
-      metadata: {
-  
       },
     },
   });

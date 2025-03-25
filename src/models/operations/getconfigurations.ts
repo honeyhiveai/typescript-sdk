@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Environment - "dev", "staging" or "prod"
@@ -91,4 +94,22 @@ export namespace GetConfigurationsRequest$ {
   export const outboundSchema = GetConfigurationsRequest$outboundSchema;
   /** @deprecated use `GetConfigurationsRequest$Outbound` instead. */
   export type Outbound = GetConfigurationsRequest$Outbound;
+}
+
+export function getConfigurationsRequestToJSON(
+  getConfigurationsRequest: GetConfigurationsRequest,
+): string {
+  return JSON.stringify(
+    GetConfigurationsRequest$outboundSchema.parse(getConfigurationsRequest),
+  );
+}
+
+export function getConfigurationsRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<GetConfigurationsRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetConfigurationsRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetConfigurationsRequest' from JSON`,
+  );
 }

@@ -5,6 +5,7 @@
 import { HoneyHiveCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
 import * as M from "../lib/matchers.js";
+import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
@@ -20,16 +21,17 @@ import {
 import { SDKError } from "../models/errors/sdkerror.js";
 import { SDKValidationError } from "../models/errors/sdkvalidationerror.js";
 import * as operations from "../models/operations/index.js";
+import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
  * Create a new tool
  */
-export async function toolsCreateTool(
+export function toolsCreateTool(
   client: HoneyHiveCore,
   request: components.CreateToolRequest,
   options?: RequestOptions,
-): Promise<
+): APIPromise<
   Result<
     operations.CreateToolResponseBody,
     | SDKError
@@ -41,55 +43,90 @@ export async function toolsCreateTool(
     | ConnectionError
   >
 > {
+  return new APIPromise($do(
+    client,
+    request,
+    options,
+  ));
+}
+
+async function $do(
+  client: HoneyHiveCore,
+  request: components.CreateToolRequest,
+  options?: RequestOptions,
+): Promise<
+  [
+    Result<
+      operations.CreateToolResponseBody,
+      | SDKError
+      | SDKValidationError
+      | UnexpectedClientError
+      | InvalidRequestError
+      | RequestAbortedError
+      | RequestTimeoutError
+      | ConnectionError
+    >,
+    APICall,
+  ]
+> {
   const parsed = safeParse(
     request,
     (value) => components.CreateToolRequest$outboundSchema.parse(value),
     "Input validation failed",
   );
   if (!parsed.ok) {
-    return parsed;
+    return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
   const body = encodeJSON("body", payload, { explode: true });
 
   const path = pathToFunc("/tools")();
 
-  const headers = new Headers({
+  const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-  });
+  }));
 
   const secConfig = await extractSecurity(client._options.bearerAuth);
   const securityInput = secConfig == null ? {} : { bearerAuth: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
+
   const context = {
+    baseURL: options?.serverURL ?? client._baseURL ?? "",
     operationID: "createTool",
     oAuth2Scopes: [],
+
+    resolvedSecurity: requestSecurity,
+
     securitySource: client._options.bearerAuth,
+    retryConfig: options?.retries
+      || client._options.retryConfig
+      || { strategy: "none" },
+    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
   };
-  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
     method: "POST",
+    baseURL: options?.serverURL,
     path: path,
     headers: headers,
     body: body,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
   }, options);
   if (!requestRes.ok) {
-    return requestRes;
+    return [requestRes, { status: "invalid" }];
   }
   const req = requestRes.value;
 
   const doResult = await client._do(req, {
     context,
     errorCodes: ["4XX", "5XX"],
-    retryConfig: options?.retries
-      || client._options.retryConfig,
-    retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
+    retryConfig: context.retryConfig,
+    retryCodes: context.retryCodes,
   });
   if (!doResult.ok) {
-    return doResult;
+    return [doResult, { status: "request-error", request: req }];
   }
   const response = doResult.value;
 
@@ -104,11 +141,12 @@ export async function toolsCreateTool(
     | ConnectionError
   >(
     M.json(200, operations.CreateToolResponseBody$inboundSchema),
-    M.fail(["4XX", "5XX"]),
+    M.fail("4XX"),
+    M.fail("5XX"),
   )(response);
   if (!result.ok) {
-    return result;
+    return [result, { status: "complete", request: req, response }];
   }
 
-  return result;
+  return [result, { status: "complete", request: req, response }];
 }

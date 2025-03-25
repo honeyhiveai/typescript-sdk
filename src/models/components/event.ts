@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Specify whether the event is of "session", "model", "tool" or "chain" type
@@ -229,4 +232,18 @@ export namespace Event$ {
   export const outboundSchema = Event$outboundSchema;
   /** @deprecated use `Event$Outbound` instead. */
   export type Outbound = Event$Outbound;
+}
+
+export function eventToJSON(event: Event): string {
+  return JSON.stringify(Event$outboundSchema.parse(event));
+}
+
+export function eventFromJSON(
+  jsonString: string,
+): SafeParseResult<Event, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Event$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Event' from JSON`,
+  );
 }

@@ -4,8 +4,13 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
-import { collectExtraKeys as collectExtraKeys$ } from "../../lib/schemas.js";
+import {
+  collectExtraKeys as collectExtraKeys$,
+  safeParse,
+} from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 /**
  * Type of API calling - "chat" or "completion"
@@ -91,7 +96,7 @@ export type PostConfigurationRequestParameters = {
    * Force function-specific parameters
    */
   forceFunction?: { [k: string]: any } | undefined;
-  additionalProperties: { [k: string]: any };
+  additionalProperties?: { [k: string]: any };
 };
 
 export const PostConfigurationRequestEnv = {
@@ -180,6 +185,28 @@ export namespace PostConfigurationRequestResponseFormat$ {
   export type Outbound = PostConfigurationRequestResponseFormat$Outbound;
 }
 
+export function postConfigurationRequestResponseFormatToJSON(
+  postConfigurationRequestResponseFormat:
+    PostConfigurationRequestResponseFormat,
+): string {
+  return JSON.stringify(
+    PostConfigurationRequestResponseFormat$outboundSchema.parse(
+      postConfigurationRequestResponseFormat,
+    ),
+  );
+}
+
+export function postConfigurationRequestResponseFormatFromJSON(
+  jsonString: string,
+): SafeParseResult<PostConfigurationRequestResponseFormat, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostConfigurationRequestResponseFormat$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostConfigurationRequestResponseFormat' from JSON`,
+  );
+}
+
 /** @internal */
 export const PostConfigurationRequestSelectedFunctions$inboundSchema: z.ZodType<
   PostConfigurationRequestSelectedFunctions,
@@ -228,6 +255,33 @@ export namespace PostConfigurationRequestSelectedFunctions$ {
   export type Outbound = PostConfigurationRequestSelectedFunctions$Outbound;
 }
 
+export function postConfigurationRequestSelectedFunctionsToJSON(
+  postConfigurationRequestSelectedFunctions:
+    PostConfigurationRequestSelectedFunctions,
+): string {
+  return JSON.stringify(
+    PostConfigurationRequestSelectedFunctions$outboundSchema.parse(
+      postConfigurationRequestSelectedFunctions,
+    ),
+  );
+}
+
+export function postConfigurationRequestSelectedFunctionsFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostConfigurationRequestSelectedFunctions,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostConfigurationRequestSelectedFunctions$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostConfigurationRequestSelectedFunctions' from JSON`,
+  );
+}
+
 /** @internal */
 export const PostConfigurationRequestFunctionCallParams$inboundSchema:
   z.ZodNativeEnum<typeof PostConfigurationRequestFunctionCallParams> = z
@@ -272,6 +326,7 @@ export const PostConfigurationRequestParameters$inboundSchema: z.ZodType<
     forceFunction: z.record(z.any()).optional(),
   }).catchall(z.any()),
   "additionalProperties",
+  true,
 ).transform((v) => {
   return remap$(v, {
     "call_type": "callType",
@@ -333,6 +388,27 @@ export namespace PostConfigurationRequestParameters$ {
     PostConfigurationRequestParameters$outboundSchema;
   /** @deprecated use `PostConfigurationRequestParameters$Outbound` instead. */
   export type Outbound = PostConfigurationRequestParameters$Outbound;
+}
+
+export function postConfigurationRequestParametersToJSON(
+  postConfigurationRequestParameters: PostConfigurationRequestParameters,
+): string {
+  return JSON.stringify(
+    PostConfigurationRequestParameters$outboundSchema.parse(
+      postConfigurationRequestParameters,
+    ),
+  );
+}
+
+export function postConfigurationRequestParametersFromJSON(
+  jsonString: string,
+): SafeParseResult<PostConfigurationRequestParameters, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostConfigurationRequestParameters$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostConfigurationRequestParameters' from JSON`,
+  );
 }
 
 /** @internal */
@@ -413,4 +489,22 @@ export namespace PostConfigurationRequest$ {
   export const outboundSchema = PostConfigurationRequest$outboundSchema;
   /** @deprecated use `PostConfigurationRequest$Outbound` instead. */
   export type Outbound = PostConfigurationRequest$Outbound;
+}
+
+export function postConfigurationRequestToJSON(
+  postConfigurationRequest: PostConfigurationRequest,
+): string {
+  return JSON.stringify(
+    PostConfigurationRequest$outboundSchema.parse(postConfigurationRequest),
+  );
+}
+
+export function postConfigurationRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<PostConfigurationRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PostConfigurationRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostConfigurationRequest' from JSON`,
+  );
 }

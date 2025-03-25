@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateModelEventRequestBody = {
   modelEvent?: components.CreateModelEvent | undefined;
@@ -62,6 +65,26 @@ export namespace CreateModelEventRequestBody$ {
   export type Outbound = CreateModelEventRequestBody$Outbound;
 }
 
+export function createModelEventRequestBodyToJSON(
+  createModelEventRequestBody: CreateModelEventRequestBody,
+): string {
+  return JSON.stringify(
+    CreateModelEventRequestBody$outboundSchema.parse(
+      createModelEventRequestBody,
+    ),
+  );
+}
+
+export function createModelEventRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateModelEventRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateModelEventRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateModelEventRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateModelEventResponseBody$inboundSchema: z.ZodType<
   CreateModelEventResponseBody,
@@ -107,4 +130,24 @@ export namespace CreateModelEventResponseBody$ {
   export const outboundSchema = CreateModelEventResponseBody$outboundSchema;
   /** @deprecated use `CreateModelEventResponseBody$Outbound` instead. */
   export type Outbound = CreateModelEventResponseBody$Outbound;
+}
+
+export function createModelEventResponseBodyToJSON(
+  createModelEventResponseBody: CreateModelEventResponseBody,
+): string {
+  return JSON.stringify(
+    CreateModelEventResponseBody$outboundSchema.parse(
+      createModelEventResponseBody,
+    ),
+  );
+}
+
+export function createModelEventResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateModelEventResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateModelEventResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateModelEventResponseBody' from JSON`,
+  );
 }

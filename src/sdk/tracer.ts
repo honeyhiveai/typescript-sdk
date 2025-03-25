@@ -386,7 +386,7 @@ export class HoneyHiveTracer {
    * @param properties Optional configuration properties for the tracer
    */
   private constructor(
-    params: Partial<HoneyHiveTracerProperties>
+    params: Partial<HoneyHiveTracerProperties> | undefined = {}
   ) {
     // Check for apiKey
     const apiKey = params.apiKey || process.env['HH_API_KEY'];
@@ -441,7 +441,7 @@ export class HoneyHiveTracer {
    * @param params Tracer properties
    * @returns Initialized tracer instance
    */
-  public static async init(params: Partial<HoneyHiveTracerProperties>): Promise<HoneyHiveTracer> {
+  public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer> {
 
     // Create a new tracer instance
     const tracer = new HoneyHiveTracer(params);

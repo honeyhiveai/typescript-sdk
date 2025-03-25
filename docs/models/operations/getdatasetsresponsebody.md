@@ -18,9 +18,7 @@ let value: GetDatasetsResponseBody = {
         "66369748b5773befbdc661e2",
       ],
       numPoints: 1,
-      linkedEvals: [
-        "<value>",
-      ],
+      linkedEvals: [],
       saved: false,
       pipelineType: "event",
       createdAt: "2024-05-04T20:15:04.124Z",

@@ -4,7 +4,10 @@
 
 import * as z from "zod";
 import { remap as remap$ } from "../../lib/primitives.js";
+import { safeParse } from "../../lib/schemas.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
 import * as components from "../components/index.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export type CreateEventRequestBody = {
   event?: components.CreateEventRequest | undefined;
@@ -54,6 +57,24 @@ export namespace CreateEventRequestBody$ {
   export type Outbound = CreateEventRequestBody$Outbound;
 }
 
+export function createEventRequestBodyToJSON(
+  createEventRequestBody: CreateEventRequestBody,
+): string {
+  return JSON.stringify(
+    CreateEventRequestBody$outboundSchema.parse(createEventRequestBody),
+  );
+}
+
+export function createEventRequestBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateEventRequestBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateEventRequestBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateEventRequestBody' from JSON`,
+  );
+}
+
 /** @internal */
 export const CreateEventResponseBody$inboundSchema: z.ZodType<
   CreateEventResponseBody,
@@ -99,4 +120,22 @@ export namespace CreateEventResponseBody$ {
   export const outboundSchema = CreateEventResponseBody$outboundSchema;
   /** @deprecated use `CreateEventResponseBody$Outbound` instead. */
   export type Outbound = CreateEventResponseBody$Outbound;
+}
+
+export function createEventResponseBodyToJSON(
+  createEventResponseBody: CreateEventResponseBody,
+): string {
+  return JSON.stringify(
+    CreateEventResponseBody$outboundSchema.parse(createEventResponseBody),
+  );
+}
+
+export function createEventResponseBodyFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateEventResponseBody, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateEventResponseBody$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateEventResponseBody' from JSON`,
+  );
 }

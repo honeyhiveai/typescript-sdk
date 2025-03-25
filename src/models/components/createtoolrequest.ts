@@ -3,7 +3,10 @@
  */
 
 import * as z from "zod";
+import { safeParse } from "../../lib/schemas.js";
 import { ClosedEnum } from "../../types/enums.js";
+import { Result as SafeParseResult } from "../../types/fp.js";
+import { SDKValidationError } from "../errors/sdkvalidationerror.js";
 
 export const CreateToolRequestType = {
   Function: "function",
@@ -92,4 +95,22 @@ export namespace CreateToolRequest$ {
   export const outboundSchema = CreateToolRequest$outboundSchema;
   /** @deprecated use `CreateToolRequest$Outbound` instead. */
   export type Outbound = CreateToolRequest$Outbound;
+}
+
+export function createToolRequestToJSON(
+  createToolRequest: CreateToolRequest,
+): string {
+  return JSON.stringify(
+    CreateToolRequest$outboundSchema.parse(createToolRequest),
+  );
+}
+
+export function createToolRequestFromJSON(
+  jsonString: string,
+): SafeParseResult<CreateToolRequest, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => CreateToolRequest$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'CreateToolRequest' from JSON`,
+  );
 }
