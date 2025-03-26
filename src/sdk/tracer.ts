@@ -352,11 +352,11 @@ export class HoneyHiveTracer {
   /**
    * Initialize a new session
    */
-  public async startSession(): Promise<void> {
+  public async startSession(): Promise<string> {
     try {
       // If sessionId is already initialized, continue an existing session
       if (this.sessionId) {
-        return;
+        return this.sessionId;
       }
       
       const requestBody: StartSessionRequestBody = {
@@ -391,9 +391,12 @@ export class HoneyHiveTracer {
 
       // Set tracer sessionId
       this.sessionId = res.sessionId;
+      assert(this.sessionId, "Could not get sessionId from server");
+      return this.sessionId;
     } catch (error) {
       console.error("Failed to create session:", error);
       console.error(error instanceof SDKError ? error.message : error);
+      throw error;
     }
   }
 

@@ -316,7 +316,7 @@ class Evaluation {
         return metadata;
     }
 
-    private async runEvaluation(tracer: HoneyHiveTracer, inputs: any, ground_truths?: any): Promise<any> {
+    private async runFunction(tracer: HoneyHiveTracer, inputs: any, ground_truths?: any): Promise<any> {
         try {
             let output = {};
             let promiseResolve: () => void;
@@ -438,7 +438,7 @@ class Evaluation {
 
         // Run the function
         try {
-            outputs = await this.runEvaluation(tracer, inputs, groundTruth);
+            outputs = await this.runFunction(tracer, inputs, groundTruth);
         } catch (error) {
             console.error(`Error in evaluation function: ${error}`);
         }

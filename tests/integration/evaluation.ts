@@ -18,6 +18,11 @@ interface DatasetItem {
     ground_truths: GroundTruth;
 }
 
+interface Output {
+    model_response: string;
+    ground_truth: string;
+}
+
 async function callOpenAI(prompt: string) {
     const response = await openai.chat.completions.create({
         model: 'gpt-4',
@@ -30,10 +35,7 @@ async function tool(foo: any) {
     return foo;
 }
 
-async function pipeline(inputs: Input, groundTruth: GroundTruth): Promise<{
-    model_response: string;
-    ground_truth: string;
-}> {
+async function pipeline(inputs: Input, groundTruth: GroundTruth): Promise<Output> {
     const tracer = await HoneyHiveTracer.init({verbose: true});
 
     // Test tool tracing
@@ -135,7 +137,7 @@ const dataset: DatasetItem[] = [
     }
 ];
 
-function simpleEvaluator(outputs: any, inputs: any, groundTruth: any) {
+function simpleEvaluator(outputs: Output, inputs: Input, groundTruth: GroundTruth) {
     return {
         accuracy: outputs.model_response === groundTruth.response ? 1 : 0
     }
