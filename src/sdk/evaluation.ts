@@ -1,9 +1,9 @@
 import { HoneyHive } from "./sdk";
-import { CreateRunResponse, Status } from '../models/components';
+import { CreateRunResponse, Dataset, Status } from '../models/components';
 import { HoneyHiveTracer, getGitInfo } from './tracer';
 import * as crypto from 'crypto';
-import * as fs from 'fs';
 import * as path from 'path';
+import assert from "assert";
 
 type Dict<T> = { [key: string]: T };
 
@@ -13,62 +13,70 @@ interface EvaluationConfig {
     name?: string | undefined;
     suite?: string | undefined;
     function?: (...args: any[]) => any | undefined;
-    dataset?: Dict<any>[] | undefined;
     evaluators?: ((...args: any[]) => any)[] | undefined;
+    dataset?: Dict<any>[] | undefined;
     datasetId?: string | undefined;
     maxWorkers?: number | undefined;
     runConcurrently?: boolean | undefined;
     serverUrl?: string | undefined;
     verbose?: boolean | undefined;
+    disableHttpTracing?: boolean | undefined;
     metadata?: Dict<any> | undefined;
+    instrumentModules?: Record<string, any> | undefined;
 }
 
 const DEFAULT_CONFIG: EvaluationConfig = {
     apiKey: process.env['HH_API_KEY'],
     project: process.env['HH_PROJECT'],
     verbose: false,
-    runConcurrently: false,
+    runConcurrently: true,
     maxWorkers: 10,
     evaluators: [],
+    disableHttpTracing: false,
+    instrumentModules: {}
 }
 
-interface EvaluationData {
+interface EvaluatorResult {
+    metrics: Dict<any>;
+    metadata: Dict<any>;
+}
+
+interface EvaluationResult {
     runId: string;
     datasetId: string | undefined;
     sessionIds: string[];
     status: Status;
-}
-
-interface EvaluationResult extends EvaluationData {
-    toJson(): void;
     suite: string;
+    stats: Dict<any>;
+    data: Dict<any>;
 }
 
 class Evaluation {
     private hhai: HoneyHive;
-    private hhDataset: any | null;
-    private externalDatasetId: string | undefined;
     private evaluationSessionIds: string[];
     private evalRun: CreateRunResponse | null;
-    private state: Status;
+    private status: Status;
     private config: EvaluationConfig;
     private function: (...args: any[]) => any;
     private name: string;
     private suite: string;
     private evaluators: ((...args: any[]) => any)[];
-    private apiKey: string;
-    private project: string;
-    // private maxWorkers: number;
-    // private runConcurrently: boolean;
+    private apiKey: string | undefined;
+    private project: string | undefined;
+    private maxWorkers: number;
+    private runConcurrently: boolean;
     private serverUrl: string | undefined;
-    // private verbose: boolean;
+    private verbose: boolean;
     private metadata: Dict<any>;
-    // private disableAutoTracing: boolean;
+    private disableHttpTracing: boolean;
     private datasetId: string | undefined;
-    private dataset: Dict<any>[] | undefined;
+    private dataset: Dict<any>[] | Dataset | undefined;
+    private useHhDataset: boolean;
+    public evalResult: EvaluationResult | undefined;
+    private instrumentModules: Record<string, any>;
 
-    constructor(config: EvaluationConfig) {
-        // Merge with defaults
+    private constructor(config: EvaluationConfig) {
+        // Merge with t
         this.config = { ...DEFAULT_CONFIG, ...config };
 
         // Validate function first
@@ -118,37 +126,33 @@ class Evaluation {
         this.suite = this.config.suite || "default";
 
         // Set core properties
-        this.apiKey = this.config.apiKey || process.env['HH_API_KEY'] || '';
-        this.project = this.config.project || process.env['HH_PROJECT'] || '';
+        this.apiKey = this.config.apiKey || process.env['HH_API_KEY'] || undefined;
+        this.project = this.config.project || process.env['HH_PROJECT'] || undefined;
         this.evaluators = this.config.evaluators || [];
-        this.state = Status.Pending;
-        // this.maxWorkers = this.config.maxWorkers || 10;
-        // this.runConcurrently = this.config.runConcurrently || false;
-        this.serverUrl = this.config.serverUrl;
-        // this.verbose = this.config.verbose || false;
+        this.status = Status.Pending;
+        this.maxWorkers = this.config.maxWorkers || parseInt(process.env['HH_MAX_WORKERS'] || '10');
+        this.runConcurrently = this.config.runConcurrently || false;
+        this.serverUrl = this.config.serverUrl || process.env['HH_API_URL'] || undefined;
+        this.verbose = this.config.verbose || false;
         this.metadata = this.config.metadata || {};
-        // this.disableAutoTracing = true;
+        this.disableHttpTracing = this.config.disableHttpTracing || false;
         this.evalRun = null;
         this.evaluationSessionIds = [];
-
-        // Validate requirements before proceeding
-        this.validateRequirements();
-
-        // Initialize HoneyHive client
-        this.hhai = new HoneyHive({ 
-            bearerAuth: this.apiKey,
-            ...(this.serverUrl && { serverUrl: this.serverUrl })
-        });
+        this.instrumentModules = this.config.instrumentModules || {};
 
         // Setup dataset related properties
         this.datasetId = this.config.datasetId;
         this.dataset = this.config.dataset;
-        this.hhDataset = null; // Will be loaded later via loadDataset()
         
-        // Generate external dataset ID if dataset is provided
-        this.externalDatasetId = this.config.dataset ? 
-            this.generateHash(JSON.stringify(this.config.dataset)) : 
-            undefined;
+        // Validate that only one of datasetId or dataset is provided
+        if (!this.datasetId && !this.dataset) {
+            throw new Error("No valid 'datasetId' or 'dataset' found. Please provide one to iterate the evaluation over.");
+        } else if (this.datasetId && this.dataset) {
+            throw new Error("Both 'datasetId' and 'dataset' were provided. Please provide only one of them for evaluation.");
+        }
+        
+        // Flag to indicate whether we're using a HoneyHive dataset
+        this.useHhDataset = this.datasetId !== undefined;
 
         // Add git information to metadata if available
         const gitInfo = getGitInfo();
@@ -156,7 +160,71 @@ class Evaluation {
             this.metadata['git'] = gitInfo;
         }
 
-        // The isEvaluation property is set during tracer initialization
+        // Validate requirements and initialize HoneyHive client
+        this.validateRequirements();
+        this.hhai = new HoneyHive({ 
+            bearerAuth: this.apiKey,
+            ...(this.serverUrl && { serverUrl: this.serverUrl })
+        });
+
+        // mark the tracer for evaluation tracing
+        HoneyHiveTracer.isEvaluation = true;
+        
+    }
+
+    public static async init(config: EvaluationConfig): Promise<Evaluation> {
+        const evaluation = new Evaluation(config);
+        await evaluation.setupDataset();
+        console.log('\x1b[38;5;208mHoneyHive evaluation started\x1b[0m');
+        return evaluation;
+    }
+
+    /**
+     * Set up the dataset for evaluation:
+     * - Loads dataset from HoneyHive using datasetId if provided
+     * - Uses provided dataset list if passed directly
+     * - Generates an external dataset ID for custom datasets
+     * - Validates dataset format (must be a list of dictionaries)
+     * - Raises exceptions if no dataset is provided or format is invalid
+     */
+    private async setupDataset(): Promise<void> {
+        // load the dataset from HoneyHive
+        if (this.useHhDataset) {
+            try {
+                const dataset = await this.hhai.datasets.getDatasets(
+                    this.project as string,
+                    undefined,
+                    this.datasetId
+                );
+                if (dataset && dataset.testcases && dataset.testcases.length > 0) {
+                    this.dataset = dataset.testcases[0];
+                }
+            } catch (error) {
+                throw new Error(`No dataset found with id - ${this.datasetId} for project - ${this.project}`);
+            }
+        }
+        // use provided dataset
+        else {
+            // validate dataset format
+            if (!Array.isArray(this.dataset)) {
+                throw new Error("Dataset must be a list");
+            }
+            if (!this.dataset.every(item => typeof item === 'object' && item !== null)) {
+                throw new Error("All items in dataset must be dictionaries");
+            }
+
+            // generated id for external datasets
+            // TODO: large dataset optimization
+            // TODO: dataset might not be json serializable
+            this.datasetId = this.dataset ? 
+                this.generateHash(JSON.stringify(this.dataset)) : 
+                undefined;
+        }
+        
+        // Ensure we have valid dataset information
+        if (!this.datasetId && !this.dataset) {
+            throw new Error("No valid 'datasetId' or 'dataset' found. Please provide one to iterate the evaluation over.");
+        }
     }
 
     private generateHash(inputString: string): string {
@@ -166,51 +234,21 @@ class Evaluation {
     }
 
     private validateRequirements(): void {
-        if (!this.config.apiKey) {
+        if (!this.apiKey) {
             throw new Error("Honeyhive API key not found. Please set 'apiKey' to initiate Honeyhive Tracer. Cannot run Evaluation");
         }
-        if (!this.config.project) {
+        if (!this.project) {
             throw new Error("Honeyhive Project not found. Please set 'project' to initiate Honeyhive Tracer. Cannot run Evaluation");
         }
-        if (!this.config.name) {
-            throw new Error("Evaluation name not found. Please set 'name' to initiate Honeyhive Evaluation.");
-        }
-        if (!this.config.datasetId && !this.config.dataset) {
-            throw new Error("No valid 'datasetId' or 'dataset' found. Please provide one to iterate the evaluation over.");
-        }
-        if (this.config.dataset !== undefined) {
-            if (!Array.isArray(this.config.dataset)) {
-                throw new Error("Dataset must be a list");
-            }
-            if (!this.config.dataset.every(item => typeof item === 'object' && item !== null)) {
-                throw new Error("All items in dataset must be dictionaries");
-            }
-        }
     }
 
-    private async loadDataset(): Promise<any> {
-        if (!this.datasetId) {
-            return null;
-        }
-        try {
-            const dataset = await this.hhai.datasets.getDatasets(
-                this.project,
-                undefined,
-                this.datasetId
-            );
-            if (dataset && dataset.testcases && dataset.testcases.length > 0) {
-                return dataset.testcases[0];
-            }
-        } catch (error) {
-            throw new Error(`No dataset found with id - ${this.datasetId} for project - ${this.project}`);
-        }
-        return null;
-    }
-
-    private async getDatapoint(run_id: number): Promise<{inputs: any, groundTruth: any} | null> {
-        if (this.hhDataset && this.hhDataset.datapoints && this.hhDataset.datapoints.length > 0) {
+    private async getInputsAndGroundTruth(run_id: number): Promise<{inputs: any, groundTruth: any} | null> {
+        if (this.useHhDataset && this.dataset && (this.dataset! as Dataset).datapoints && (this.dataset as Dataset).datapoints!.length > 0) {
             try {
-                const datapoint_id = this.hhDataset.datapoints[run_id];
+                const datapoint_id = (this.dataset as Dataset).datapoints![run_id];
+                if (!datapoint_id) {
+                    throw new Error("No datapoint id found for run_id: " + run_id);
+                }
                 const datapoint_response = await this.hhai.datapoints.getDatapoint(datapoint_id);
                 const datapointList = datapoint_response.datapoint;
                 if (datapointList && datapointList[0]) {
@@ -222,31 +260,59 @@ class Evaluation {
             } catch (error) {
                 console.error(`Error getting datapoint: ${error}`);
             }
-        } else if (this.dataset && this.dataset[run_id]) {
-            const datapoint = this.dataset[run_id];
+        } else if (this.dataset && (this.dataset as Dict<any>[])[run_id]) {
+            const datapoint = (this.dataset as Dict<any>[])[run_id];
             const result = {
-                inputs: datapoint['inputs'] || {},
-                groundTruth: datapoint['ground_truths'] || {}
+                inputs: datapoint!['inputs'] || {},
+                groundTruth: datapoint!['ground_truths'] || {}
             };
             return result;
         }
         return null;
     }
 
-    private async initializeTracer(inputs: any): Promise<HoneyHiveTracer> {
+    private async initializeTracer(inputs: any, datapointIdx: number): Promise<HoneyHiveTracer> {
+        const evalContext = this.getTracingMetadata(datapointIdx);
         try {
             return await HoneyHiveTracer.init({
                 apiKey: this.apiKey,
                 project: this.project,
                 source: 'evaluation',
                 sessionName: this.name,
-                inputs: inputs ? inputs : {},
+                inputs: { inputs: inputs || {} },
                 isEvaluation: true,
-                ...(this.serverUrl && { serverUrl: this.serverUrl })
+                verbose: this.verbose,
+                ...(this.serverUrl && { serverUrl: this.serverUrl }),
+                disableHttpTracing: this.disableHttpTracing,
+                metadata: this.metadata,
+                runId: evalContext['run_id'],
+                datasetId: evalContext['dataset_id'],
+                datapointId: evalContext['datapoint_id'],
+                instrumentModules: this.instrumentModules
             });
         } catch (error) {
             throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
         }
+    }
+
+    private getTracingMetadata(datapointIdx: number): Dict<any> {
+        assert(this.evalRun && this.evalRun.runId, "Evaluation run or runId not found");
+        const metadata: Dict<any> = {
+            "run_id": this.evalRun.runId
+        };
+        
+        if (this.useHhDataset && this.dataset) {
+            metadata["datapoint_id"] = (this.dataset as Dataset).datapoints?.[datapointIdx];
+        } else if (this.dataset) {
+            metadata["datapoint_id"] = this.generateHash(
+                JSON.stringify((this.dataset as Dict<any>[])[datapointIdx])
+            );
+        } else {
+            throw new Error("No dataset or datasetId found. Cannot initialize tracer");
+        }
+        
+        metadata["dataset_id"] = this.datasetId;
+        return metadata;
     }
 
     private async runEvaluation(tracer: HoneyHiveTracer, inputs: any, ground_truths?: any): Promise<any> {
@@ -263,9 +329,8 @@ class Evaluation {
                         if (!this.function) {
                             throw new Error("No evaluation function provided");
                         }
-                        const agentResponse = await this.function(inputs, ground_truths);
-                        output = agentResponse;
-                        console.log(agentResponse);
+                        output = await this.function(inputs, ground_truths);
+                        console.log(output);
                     } finally {
                         promiseResolve();
                     }
@@ -282,141 +347,235 @@ class Evaluation {
         }
     }
 
-    private async runEvaluators(inputs: any, evaluation_output: any, ground_truths?: any): Promise<Dict<any>> {
+    private async runEvaluators(outputs?: any, inputs?: any, ground_truths?: any): Promise<EvaluatorResult> {
         const metrics: Dict<any> = {};
-        if (this.evaluators) {
-            for (let index = 0; index < this.evaluators.length; index++) {
-                try {
-                    const evaluator: ((...args: any[]) => Promise<any>) | undefined = this.evaluators[index];
-                    if (!evaluator) continue;
-                    
-                    const evaluator_result = await evaluator(evaluation_output, inputs, ground_truths);
-                    if (evaluator_result && typeof evaluator_result === 'object') {
-                        Object.assign(metrics, evaluator_result);
-                        continue;
-                    }
-                    const evaluator_name = evaluator.name || `evaluator_${index}`;
-                    metrics[evaluator_name] = evaluator_result;
-                } catch (error) {
-                    console.error(`Error in evaluator: ${error}`);
-                }
+        const metadata: Dict<any> = {};
+
+        if (!this.evaluators || this.evaluators.length === 0) {
+            return { metrics, metadata };
+        }
+
+        for (let index = 0; index < this.evaluators.length; index++) {
+            const evaluatorFn: ((...args: any[]) => Promise<any> | any) | undefined = this.evaluators[index];
+            if (!evaluatorFn) continue;
+            const evaluatorName = evaluatorFn.name || `evaluator_${index}`;
+            
+            try {   
+                // Run the evaluator - handle both sync and async functions
+                const evaluatorResult = await Promise.resolve(
+                    evaluatorFn(outputs, inputs, ground_truths)
+                );
+                metrics[evaluatorName] = evaluatorResult;
+            } catch (error) {
+                console.error(`Error in evaluator: ${error}`);
+                metrics[evaluatorName] = null;
             }
         }
-        return metrics;
+        
+        return { metrics, metadata };
     }
 
-    private async addTraceMetadata(tracer: HoneyHiveTracer, output: any, metrics: Dict<any>, run_id: number): Promise<void> {
+    private async enrichEvaluationSession(
+        tracer: HoneyHiveTracer,
+        output: any,
+        metrics: Dict<any>,
+        metadata: Dict<any>,
+        datapointIdx: number
+    ): Promise<void> {
         try {
             if (this.evalRun && this.evalRun?.runId) {
-                const tracing_metadata: Dict<any> = {
-                    runId: this.evalRun.runId,
+                const tracing_metadata = this.getTracingMetadata(datapointIdx);
+                const session_metadata = {
+                    ...tracing_metadata,
+                    ...metadata
                 };
-                if (this.hhDataset) {
-                    tracing_metadata['datapointId'] = this.hhDataset.datapoints[run_id];
-                    tracing_metadata['datasetId'] = this.datasetId;
-                }
-                if (this.externalDatasetId && this.dataset) {
-                    tracing_metadata['datapointId'] = this.generateHash(JSON.stringify(this.dataset[run_id]));
-                    tracing_metadata['datasetId'] = this.externalDatasetId;
-                }
+                
                 if (typeof output !== 'object') {
                     output = { output };
                 }
                 await tracer.enrichSession({
-                    metadata: tracing_metadata,
+                    metadata: session_metadata,
                     outputs: output,
                     metrics: metrics
                 });
             }
         } catch (error) {
-            console.error(`Error adding trace metadata: ${error}`);
+            console.error(`Error enriching evaluation session: ${error}`);
         }
     }
 
-    private async setupEvaluation(): Promise<void> {
-        const metadata: { [key: string]: any } = this.metadata;
-        
-        const gitInfo = getGitInfo();
-        if (gitInfo && !gitInfo.error) {
-            metadata['git'] = gitInfo;
-        }
-        
-        const eval_run = await this.hhai.experiments.createRun({
-            project: this.project,
-            name: this.name,
-            datasetId: this.datasetId || this.externalDatasetId,
-            eventIds: [],
-            status: this.state,
-            metadata: Object.keys(metadata).length > 0 ? metadata : undefined
-        });
-        this.evalRun = eval_run;
-    }
+    private async runEach(datapointIdx: number): Promise<Dict<any>> {
+        let inputs = {};
+        let groundTruth = {};
+        let outputs = null;
+        let metrics: Dict<any> = {};
+        let metadata = {};
+        let sessionId: string | undefined;
+        let tracer: HoneyHiveTracer;
 
-    private async windupEvaluation(): Promise<void> {
+        // Get inputs
         try {
-            this.state = Status.Completed;
-            if (this.evalRun && this.evalRun.runId) {
-                await this.hhai.experiments.updateRun(
-                    {
-                        eventIds: this.evaluationSessionIds,
-                        status: this.state
-                    },
-                    this.evalRun.runId,
-                );
+            const datapoint = await this.getInputsAndGroundTruth(datapointIdx);
+            if (datapoint) {
+                inputs = datapoint.inputs;
+                groundTruth = datapoint.groundTruth;
             }
+        } catch (error) {
+            console.error(`Error getting inputs for index ${datapointIdx}: ${error}`);
+            return this.createResult(inputs, groundTruth, outputs, metrics, metadata);
+        }
+
+        // Initialize tracer
+        try {
+            tracer = await this.initializeTracer(inputs, datapointIdx);
+            sessionId = tracer.sessionId;
+            assert(sessionId);
+            this.evaluationSessionIds.push(sessionId);
+        } catch (error) {
+            console.error(`Unable to initiate Honeyhive Tracer. Cannot run Evaluation: ${error}`);
+            throw error;
+        }
+
+        // Run the function
+        try {
+            outputs = await this.runEvaluation(tracer, inputs, groundTruth);
+        } catch (error) {
+            console.error(`Error in evaluation function: ${error}`);
+        }
+
+        // Run evaluators
+        const evaluatorResult = await this.runEvaluators(outputs, inputs, groundTruth);
+        metrics = evaluatorResult.metrics;
+        metadata = evaluatorResult.metadata;
+
+        // Add trace metadata, outputs, and metrics to session
+        await this.enrichEvaluationSession(tracer, outputs, metrics, metadata, datapointIdx);
+
+        console.log(`Test case ${datapointIdx} complete`);
+
+        return this.createResult(inputs, groundTruth, outputs, metrics, metadata);
+    }
+
+    private createResult(inputs: any, groundTruth: any, outputs: any, metrics: Dict<any>, metadata: Dict<any>): Dict<any> {
+        return {
+            input: inputs,
+            ground_truth: groundTruth,
+            output: outputs,
+            metrics: metrics,
+            metadata: metadata,
+        };
+    }
+
+    public async run(): Promise<void> {
+        const evalRun = await this.hhai.experiments.createRun({
+            project: this.project!,
+            name: this.name,
+            datasetId: this.datasetId,
+            eventIds: [],
+            status: this.status,
+            metadata: this.metadata
+        });
+        this.evalRun = evalRun;
+        
+        assert(this.evalRun.runId, "Evaluation runId not found");
+
+        this.evalResult = {
+            runId: this.evalRun.runId,
+            datasetId: this.datasetId,
+            sessionIds: [],
+            status: this.status,
+            suite: this.suite,
+            stats: {},
+            data: {
+                input: [],
+                output: [],
+                metrics: [],
+                metadata: [],
+                ground_truth: []
+            }
+        };
+
+        //########################################################
+        // Run evaluations
+        //########################################################
+
+        const numPoints = this.useHhDataset ? (this.dataset as Dataset).datapoints!.length : (this.dataset as Dict<any>[]).length;
+        const startTime = Date.now();
+        
+        let results: Dict<any>[] = [];
+        try {
+            if (this.runConcurrently) {
+                // Process in batches of maxWorkers
+                for (let i = 0; i < numPoints; i += this.maxWorkers) {
+                    const batchSize = Math.min(this.maxWorkers, numPoints - i);
+                    const batchPromises = [];
+                    
+                    for (let j = 0; j < batchSize; j++) {
+                        const datapointIdx = i + j;
+                        batchPromises.push(this.runEach(datapointIdx));
+                    }
+                    
+                    const batchResults = await Promise.all(batchPromises);
+                    results = results.concat(batchResults);
+                }
+            } else {
+                // Sequential execution
+                for (let datapointIdx = 0; datapointIdx < numPoints; datapointIdx++) {
+                    const result = await this.runEach(datapointIdx);
+                    results.push(result);
+                }
+            }
+        } catch (error) {
+            console.error(`Error in evaluation: ${error}`);
+        } finally {
+            // Complete any pending flush
+            if (HoneyHiveTracer.flushPromise) {
+                await HoneyHiveTracer.flushPromise;
+            }
+            // Final flush for any remaining spans
+            await HoneyHiveTracer.flush();
+        }
+
+        const endTime = Date.now();
+        //########################################################
+
+        const duration = endTime - startTime;
+        this.evalResult.stats['duration_s'] = Number((duration / 1000).toFixed(3));
+
+        // Process results
+        for (const result of results) {
+            this.evalResult.data['input'].push(JSON.stringify(result['input']));
+            this.evalResult.data['output'].push(JSON.stringify(result['output']));
+            this.evalResult.data['metrics'].push(JSON.stringify(result['metrics']));
+            this.evalResult.data['metadata'].push(JSON.stringify(result['metadata']));
+            this.evalResult.data['ground_truth'].push(JSON.stringify(result['ground_truth']));
+        }
+
+        //########################################################
+        // Update Run
+        //########################################################
+
+        try {
+            this.status = Status.Completed;
+            assert(this.evalRun && this.evalRun.runId, "Evaluation run or runId not found");
+            await this.hhai.experiments.updateRun(
+                {
+                    eventIds: this.evaluationSessionIds,
+                    status: this.status
+                },
+                this.evalRun.runId,
+            );
         } catch (error) {
             console.warn("Warning: Unable to mark evaluation as `Completed`");
         }
-    }
-
-    public async evaluate(): Promise<EvaluationResult> {
-        this.validateRequirements();
-
-        const suite = this.suite;
-
-        this.hhDataset = await this.loadDataset();
-        const runs = this.hhDataset ? this.hhDataset.datapoints.length : (this.dataset ? this.dataset.length : 0);
-
-        await this.setupEvaluation();
-
-        for (let run_id = 0; run_id < runs; run_id++) {
-            const datapoint = await this.getDatapoint(run_id);
-            const tracer = await this.initializeTracer(datapoint?.inputs);
-
-            const output = await this.runEvaluation(tracer, datapoint?.inputs, datapoint?.groundTruth);
-            const metrics = await this.runEvaluators(datapoint?.inputs, output, datapoint?.groundTruth);
-
-            await this.addTraceMetadata(tracer, output, metrics, run_id);
-
-            if (tracer.sessionId)
-                this.evaluationSessionIds.push(tracer.sessionId);
-        }
-
-        await this.windupEvaluation();
-
-        const result: EvaluationResult = {
-            runId: this.evalRun?.runId || '',
-            datasetId: this.datasetId || this.externalDatasetId,
-            sessionIds: this.evaluationSessionIds,
-            status: this.state,
-            suite,
-            toJson(): void {
-                const data: EvaluationData = {
-                    runId: this.runId,
-                    datasetId: this.datasetId,
-                    sessionIds: this.sessionIds,
-                    status: this.status
-                };
-                fs.writeFileSync(`${this.suite}.json`, JSON.stringify(data, null, 4));
-            }
-        };
-        return result;
+        this.evalResult.status = this.status;
     }
 }
 
-export async function evaluate(config: EvaluationConfig): Promise<EvaluationResult> {
-    const evaluation = new Evaluation(config);
-    return evaluation.evaluate();
+export async function evaluate(config: EvaluationConfig): Promise<EvaluationResult | undefined> {
+    const evaluation = await Evaluation.init(config);
+    await evaluation.run();
+    return evaluation.evalResult;
 }
 
 export type { EvaluationConfig, EvaluationResult };

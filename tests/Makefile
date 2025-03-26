@@ -59,6 +59,17 @@ test:
 	$(call extract_and_patch,$(FILE),$(ENV))
 	$(call build_and_run,$(FILE),$(ENV))
 
+dev:
+	@if [ -z "$(FILE)" ] || [ -z "$(ENV)" ]; then \
+		echo "Error: Both FILE and ENV must be specified."; \
+		echo "Usage: make test FILE=<test-file> ENV=<environment>"; \
+		exit 1; \
+	fi
+	@echo "Building package in root directory..."
+	@cd .. && npm run build && cd tests
+	$(call extract_and_patch,$(FILE),$(ENV))
+	$(call build_and_run,$(FILE),$(ENV))
+
 # Clean target
 clean:
 	@echo "Cleaning up..."
