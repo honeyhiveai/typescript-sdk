@@ -1,11 +1,12 @@
 import path from "path";
 import fs from "fs";
 import { execSync } from "child_process";
+import { Mutex } from 'async-mutex';
 
 import { HoneyHive } from "./sdk";
 import { UpdateEventRequestBody } from "../models/operations/updateevent";
 import { Telemetry } from "./telemetry";
-import { Span, trace, Exception } from "@opentelemetry/api";
+import { Span, trace, Exception, context, createContextKey } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
 import { StartSessionRequestBody } from "../models/operations/startsession";
 import { SDKError } from "../models/errors";
@@ -35,21 +36,15 @@ export interface HoneyHiveTracerProperties {
   sessionName: string
   source: string;
   inputs: Record<string, any>;
-  modules?: Record<string, any>;
+  metadata: Record<string, any>;
+  instrumentModules?: Record<string, any>;
   verbose: boolean;
   isEvaluation: boolean;
   disableBatch: boolean;
-  evalContext: EvaluationSessionProps;
   disableHttpTracing: boolean;
-}
-
-/**
- * Properties specific to evaluation sessions
- */
-export interface EvaluationSessionProps {
-  runId?: string;
-  datasetId?: string;
-  datapointId?: string;
+  runId?: string | undefined;
+  datasetId?: string | undefined;
+  datapointId?: string | undefined;
 }
 
 /**
@@ -62,6 +57,7 @@ export interface TraceloopAssociationProperties {
   dataset_id?: string;
   project?: string;
   source?: string;
+  disable_http_tracing?: string;
 }
 
 export interface TraceloopParams {
@@ -256,6 +252,12 @@ function getDefaultSource(): string | null {
   return null;
 }
 
+function getAssociationPropsFromContext(): Record<string, string> | undefined {
+  const ctx = context.active();
+  const contextAssocProps = ctx.getValue(createContextKey("association_properties"));
+  return contextAssocProps as Record<string, string> | undefined;
+}
+
 const DEFAULT_PROPERTIES: HoneyHiveTracerProperties = {
   apiKey: undefined,
   project: undefined,
@@ -264,19 +266,25 @@ const DEFAULT_PROPERTIES: HoneyHiveTracerProperties = {
   sessionName: 'unknown session',
   source: 'unknown source',
   inputs: {},
+  metadata: {},
   disableBatch: false,
   isEvaluation: false,
-  evalContext: {},
   verbose: false,
   disableHttpTracing: false,
+  runId: undefined,
+  datasetId: undefined,
+  datapointId: undefined,
 }
 
 export class HoneyHiveTracer {
-  private spanProxy: any = {};
   private properties: HoneyHiveTracerProperties = DEFAULT_PROPERTIES;
-  // private static isEvaluationModeActive: boolean = false;
+  public static isEvaluation: boolean = false;
+  public static evalAssociationProps: Record<string, string> = {};
   private static instrumentModules: Record<string, any> = {};
   private static sdkInstance: HoneyHive | null = null;
+  private static isTraceloopInitialized: boolean = false;
+  public static flushPromise: Promise<void> | null = null;
+  private static flushMutex = new Mutex();
 
   /** Property getters */
   // required
@@ -286,7 +294,7 @@ export class HoneyHiveTracer {
 
   // defaults available
   public get serverUrl(): string { 
-    return this.properties.serverUrl || process.env['HH_SERVER_URL'] || DEFAULT_PROPERTIES.serverUrl; 
+    return this.properties.serverUrl || process.env['HH_API_URL'] || DEFAULT_PROPERTIES.serverUrl; 
   }
   public get sessionName(): string {
     return this.properties.sessionName || 
@@ -301,9 +309,12 @@ export class HoneyHiveTracer {
            DEFAULT_PROPERTIES.source;
   }
   public get inputs(): Record<string, any> { return this.properties.inputs || DEFAULT_PROPERTIES.inputs; }
+  public get metadata(): Record<string, any> { return this.properties.metadata || DEFAULT_PROPERTIES.metadata; }
   public get disableBatch(): boolean { return this.properties.disableBatch || DEFAULT_PROPERTIES.disableBatch; }
   public get isEvaluation(): boolean { return this.properties.isEvaluation || DEFAULT_PROPERTIES.isEvaluation; }
-  public get evalContext(): EvaluationSessionProps { return this.properties.evalContext || DEFAULT_PROPERTIES.evalContext; }
+  public get runId(): string | undefined { return this.properties.runId || DEFAULT_PROPERTIES.runId; }
+  public get datasetId(): string | undefined { return this.properties.datasetId || DEFAULT_PROPERTIES.datasetId; }
+  public get datapointId(): string | undefined { return this.properties.datapointId || DEFAULT_PROPERTIES.datapointId; }
   public get verbose(): boolean { return this.properties.verbose || DEFAULT_PROPERTIES.verbose; }
   public get disableHttpTracing(): boolean { return this.properties.disableHttpTracing || DEFAULT_PROPERTIES.disableHttpTracing; }
 
@@ -316,8 +327,11 @@ export class HoneyHiveTracer {
   }
 
   // Update instrument modules
-  private updateInstrumentModules(modules: Record<string, any>): Record<string, any> { 
-    HoneyHiveTracer.instrumentModules = { ...HoneyHiveTracer.instrumentModules, ...modules };
+  private updateInstrumentModules(instrumentModules: Record<string, any>): Record<string, any> { 
+    HoneyHiveTracer.instrumentModules = { 
+      ...HoneyHiveTracer.instrumentModules, 
+      ...instrumentModules 
+    };
     return HoneyHiveTracer.instrumentModules;
   }
   
@@ -338,7 +352,7 @@ export class HoneyHiveTracer {
   /**
    * Initialize a new session
    */
-  private async startSession(): Promise<void> {
+  public async startSession(): Promise<void> {
     try {
       // If sessionId is already initialized, continue an existing session
       if (this.sessionId) {
@@ -370,6 +384,10 @@ export class HoneyHiveTracer {
       }
       const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody);
       assert(res.sessionId, "Could not get sessionId from server");
+
+      if (this.verbose) {
+        console.log("Session started with id: ", res.sessionId);
+      }
 
       // Set tracer sessionId
       this.sessionId = res.sessionId;
@@ -417,8 +435,8 @@ export class HoneyHiveTracer {
     }
     
     // Update properties
-    if (params?.modules) {
-      this.updateInstrumentModules(params.modules);
+    if (params?.instrumentModules) {
+      this.updateInstrumentModules(params.instrumentModules);
     }
     this.properties = {
       apiKey: params?.apiKey || this.apiKey,
@@ -428,9 +446,12 @@ export class HoneyHiveTracer {
       sessionName: params?.sessionName || this.sessionName,
       source: params?.source || this.source,
       inputs: params?.inputs || this.inputs,
+      metadata: params?.metadata || this.metadata,
       disableBatch: params?.disableBatch || this.disableBatch,
       isEvaluation: params?.isEvaluation || this.isEvaluation,
-      evalContext: params?.evalContext || this.evalContext,
+      runId: params?.runId || this.runId,
+      datasetId: params?.datasetId || this.datasetId,
+      datapointId: params?.datapointId || this.datapointId,
       verbose: params?.verbose || this.verbose,
       disableHttpTracing: params?.disableHttpTracing || this.disableHttpTracing,
     }
@@ -443,6 +464,32 @@ export class HoneyHiveTracer {
    */
   public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer> {
 
+    // Get traceloop association properties from context
+    const contextAssocProps: TraceloopAssociationProperties | undefined = getAssociationPropsFromContext();
+    if (contextAssocProps) {
+      if (contextAssocProps['session_id']) {
+        params.sessionId = contextAssocProps['session_id'];
+      }
+      if (contextAssocProps['project']) {
+        params.project = contextAssocProps['project'];
+      }
+      if (contextAssocProps['source']) {
+        params.source = contextAssocProps['source'];
+      }
+      if (contextAssocProps['disable_http_tracing']) {
+        params.disableHttpTracing = contextAssocProps['disable_http_tracing'] === 'true';
+      }
+      if (contextAssocProps['run_id']) {
+        params.runId = contextAssocProps['run_id'];
+      }
+      if (contextAssocProps['dataset_id']) {
+        params.datasetId = contextAssocProps['dataset_id'];
+      }
+      if (contextAssocProps['datapoint_id']) {
+        params.datapointId = contextAssocProps['datapoint_id'];
+      }
+    }
+
     // Create a new tracer instance
     const tracer = new HoneyHiveTracer(params);
 
@@ -453,6 +500,33 @@ export class HoneyHiveTracer {
     await tracer.startSession();
 
     // Initialize traceloop
+    if (HoneyHiveTracer.isTraceloopInitialized) {
+      return tracer;
+    }
+
+    /*
+      instrumentModules?: {
+        openAI?: typeof openai.OpenAI;
+        anthropic?: typeof anthropic;
+        azureOpenAI?: typeof azure;
+        cohere?: typeof cohere;
+        bedrock?: typeof bedrock;
+        google_vertexai?: typeof vertexAI;
+        google_aiplatform?: typeof aiplatform;
+        pinecone?: typeof pinecone;
+        together?: typeof together.Together;
+        langchain?: {
+            chainsModule?: typeof ChainsModule;
+            agentsModule?: typeof AgentsModule;
+            toolsModule?: typeof ToolsModule;
+            runnablesModule?: typeof RunnableModule;
+            vectorStoreModule?: typeof VectorStoreModule;
+        };
+        llamaIndex?: typeof llamaindex;
+        chromadb?: typeof chromadb;
+        qdrant?: typeof qdrant;
+      };
+    */
     traceloop.initialize({
       baseUrl: `${tracer.serverUrl}/opentelemetry`,
       apiKey: tracer.apiKey!,
@@ -462,6 +536,12 @@ export class HoneyHiveTracer {
       silenceInitializationMessage: true,
     });
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
+    HoneyHiveTracer.isTraceloopInitialized = true;
+
+    // Log initialization success with orange color
+    if (tracer.verbose || !HoneyHiveTracer.isEvaluation) {
+      console.log('\x1b[38;5;208mHoneyHive is initialized\x1b[0m');
+    }
 
     return tracer;
   }
@@ -553,6 +633,12 @@ export class HoneyHiveTracer {
    * @returns Record of association properties
    */
   private getTraceloopAssociationProperties(): Record<string, string> {
+    // Try to get association properties from context
+    const contextAssocProps = getAssociationPropsFromContext();
+    if (contextAssocProps) {
+      return contextAssocProps;
+    }
+
     this.testRequiredProperties();
 
     const associationProps: Record<string, string> = {};
@@ -563,136 +649,31 @@ export class HoneyHiveTracer {
     associationProps['source'] = this.source!;
     associationProps['disable_http_tracing'] = this.disableHttpTracing.toString().toLowerCase();
 
-    // Add evaluation properties
-    for (const [key, value] of Object.entries(this.evalContext)) {
-      associationProps[key] = value;
+    if (this.runId) {
+      associationProps['run_id'] = this.runId;
+    }
+
+    if (this.datasetId) {
+      associationProps['dataset_id'] = this.datasetId;
+    }
+
+    if (this.datapointId) {
+      associationProps['datapoint_id'] = this.datapointId;
     }
 
     return associationProps;
   }
 
   /**
-   * Set Traceloop association properties on a span
+   * @deprecated Use exported method traceFunction
    */
-  private setTraceloopAssociationProperties(span: Span): void {
-    const associationProps = this.getTraceloopAssociationProperties();
-
-    // Set attributes on span
-    Object.entries(associationProps).forEach(([key, value]) => {
-      setSpanAttributes(span, `traceloop.association.properties.${key}`, value);
-    });
+  public traceFunction(...args: any[]) {
+    return traceFunction(...args, this.getTraceloopAssociationProperties());
   }
 
-  public traceFunction(
-    { eventType, config, metadata, eventName }: 
-    { eventType?: string | undefined; config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}) {
-    // Helper function to extract argument names from the function
-    function getArgs(func: (...args: any[]) => any): string[] | null {
-      try {
-        const funcStr = func.toString()
-          .replace(/\/\/.*$/mg, '') // Remove single-line comments
-          .replace(/\s+/g, '')      // Remove whitespace
-          .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
-          .replace(/=[^,]+/g, '');  // Remove default values
-  
-        const argsMatch = funcStr.match(/(?:function[\w\s]*\(|\()([^)]*)\)/);
-        if (argsMatch && argsMatch[1]) {
-          return argsMatch[1].split(',').filter(Boolean);
-        }
-      } catch (error) {
-        console.warn('Failed to parse function arguments:', error);
-      }
-      return null; // Return null if parsing fails
-    }
-    return <T extends (...args: any[]) => any>(func: T): T => {
-      const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
-        const tracer = trace.getTracer('traceloop.tracer');
-        const spanName = eventName || // try user provided eventName
-          func.name || ((func as any).hh_name) || // try function name
-          (eventType ? eventType + ' event' : 'event'); // try eventType
-        
-        const span = tracer.startSpan(spanName);
-
-        // Inject span into proxy to allow enrichment within traced function.
-        // Proxy is used to overcome self-referencing issue and is reset after span ends.
-        const oldSpanProxy = this.spanProxy || {};
-        this.spanProxy = new Proxy({
-          span: span
-        }, {
-          get: (_, prop) => {
-            return (span as any)[prop];
-          }
-        });
-
-        try {
-          // Get argument names
-          const argNames = getArgs(func);
-
-          // Set association properties
-          this.setTraceloopAssociationProperties(span);
-
-          args.forEach((arg, index) => {
-            const argName = (argNames && argNames[index]) ? argNames[index] : index.toString();
-            setSpanAttributes(span, `honeyhive_inputs._params_.${argName}`, arg);
-          });
-
-          if (eventType) {
-            if (typeof eventType === 'string' && ['tool', 'model', 'chain'].includes(eventType.toLowerCase())) {
-              setSpanAttributes(span, 'honeyhive_event_type', eventType.toLowerCase());
-            } else {
-              console.warn("event_type could not be set. Must be 'tool', 'model', or 'chain'.");
-            }
-          }
-          if (config) {
-            setSpanAttributes(span, 'honeyhive_config', config);
-          }
-          if (metadata) {
-            setSpanAttributes(span, 'honeyhive_metadata', metadata);
-          }
-
-          const result = func(...args);
-
-          if (isPromise(result)) {
-            const newResult = result.then(
-              (res: any) => {
-                setSpanAttributes(span, 'honeyhive_outputs.result', res);
-                span.end();
-                this.spanProxy = oldSpanProxy;
-                return res;
-              },
-              (err: any) => {
-                span.recordException(err);
-                // Also capture the error message/details as a span attribute
-                setSpanAttributes(span, 'honeyhive_error', String(err));
-                span.end();
-                this.spanProxy = oldSpanProxy;
-                throw err;
-              }
-            ) as ReturnType<T>;
-            return newResult;
-          } else {
-            setSpanAttributes(span, 'honeyhive_outputs.result', result);
-            span.end();
-            this.spanProxy = oldSpanProxy;
-            return result;
-          }
-        } catch (err: unknown) {
-          span.recordException(err as Exception);
-          
-          // Also capture the error message/details as a span attribute
-          if (err instanceof Error) {
-            setSpanAttributes(span, 'honeyhive_error', String(err));
-          }
-
-          span.end();
-          this.spanProxy = oldSpanProxy;
-          throw err;
-        }
-      };
-      return wrappedFunction as T;
-    };
-  }
-
+  /**
+   * @deprecated Use exported method traceModel
+   */
   public traceModel<F extends (...args: any[]) => any>(
     func: F,
     { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
@@ -736,7 +717,11 @@ export class HoneyHiveTracer {
     }
   }
 
-  public enrichSpan({
+  public enrichSpan(params: EnrichSpanParams = {}) {
+    this.enrichSpan(params);
+  }
+
+  public static enrichSpan({
     config,
     metadata,
     metrics,
@@ -755,38 +740,216 @@ export class HoneyHiveTracer {
     error?: any;
     eventName?: string;
   } = {}): void {
-    if (this.spanProxy) {
-      const span = this.spanProxy;
-      if (config) {
-        setSpanAttributes(span, "honeyhive_config", config);
-      }
-      if (metadata) {
-        setSpanAttributes(span, "honeyhive_metadata", metadata);
-      }
-      if (metrics) {
-        setSpanAttributes(span, "honeyhive_metrics", metrics);
-      }
-      if (feedback) {
-        setSpanAttributes(span, "honeyhive_feedback", feedback);
-      }
-      if (inputs) {
-        setSpanAttributes(span, "honeyhive_inputs", inputs);
-      }
-      if (outputs) {
-        setSpanAttributes(span, "honeyhive_outputs", outputs);
-      }
-      if (error) {
-        setSpanAttributes(span, "honeyhive_error", error);
-      }
-      if (eventName) {
-        setSpanAttributes(span, "honeyhive_event_name", eventName);
-      }
-    } else {
+    const span = trace.getActiveSpan();
+    if (!span) {
       console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
+      return;
+    }
+    if (config) {
+      setSpanAttributes(span, "honeyhive_config", config);
+    }
+    if (metadata) {
+      setSpanAttributes(span, "honeyhive_metadata", metadata);
+    }
+    if (metrics) {
+      setSpanAttributes(span, "honeyhive_metrics", metrics);
+    }
+    if (feedback) {
+      setSpanAttributes(span, "honeyhive_feedback", feedback);
+    }
+    if (inputs) {
+      setSpanAttributes(span, "honeyhive_inputs", inputs);
+    }
+    if (outputs) {
+      setSpanAttributes(span, "honeyhive_outputs", outputs);
+    }
+    if (error) {
+      setSpanAttributes(span, "honeyhive_error", error);
+    }
+    if (eventName) {
+      setSpanAttributes(span, "honeyhive_event_name", eventName);
     }
   }
 
-  public async flush(): Promise<void> {
-    return await traceloop.forceFlush();
+  /**
+   * Flushes all pending spans in OTEL exporter batch.
+   * 
+   * Implementation uses a double-checked locking pattern with a mutex to ensure:
+   * 1. Multiple concurrent flush calls reuse the same promise (fast path)
+   * 2. Only one actual flush operation happens at a time
+   * 3. The shared promise is properly cleaned up after completion
+   * 4. Thread-safety is maintained throughout the process
+   * 
+   * @returns Promise that resolves when the flush is complete
+   */
+  public static async flush(): Promise<void> {
+    // Fast path: If a flush is already in progress, return the existing promise
+    if (HoneyHiveTracer.flushPromise) {
+      return HoneyHiveTracer.flushPromise;
+    }
+
+    // Slow path: Need to acquire the mutex to safely create a new flush
+    return HoneyHiveTracer.flushMutex.runExclusive(async () => {
+      // Double-check if another thread created the promise while we were waiting
+      if (HoneyHiveTracer.flushPromise) {
+        return HoneyHiveTracer.flushPromise;
+      }
+      
+      // Create a new flush promise
+      try {
+        HoneyHiveTracer.flushPromise = traceloop.forceFlush();
+        return HoneyHiveTracer.flushPromise;
+      } finally {
+        // Clean up after the promise is resolved
+        HoneyHiveTracer.flushPromise!.then(
+          () => { HoneyHiveTracer.flushPromise = null; }, // promise fulfilled
+          () => { HoneyHiveTracer.flushPromise = null; } // promise rejected
+        );
+      }
+    });
   }
+
+  public async flush(): Promise<void> {
+    return await HoneyHiveTracer.flush();
+  }
+}
+
+export function traceModel<F extends (...args: any[]) => any>(
+  func: F,
+  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+): F {
+  return traceFunction({ eventType: "model", config, metadata, eventName })(func);
+}
+
+export function traceTool<F extends (...args: any[]) => any>(
+  func: F,
+  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+): F {
+  return traceFunction({ eventType: "tool", config, metadata, eventName })(func);
+} 
+
+export function traceChain<F extends (...args: any[]) => any>(
+  func: F,
+  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+): F {
+  return traceFunction({ eventType: "chain", config, metadata, eventName })(func);
+}
+
+export function traceFunction(
+  { eventType, config, metadata, eventName }: 
+  { eventType?: string | undefined; config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {},
+  associationProperties: Record<string, string> | undefined = undefined
+) {
+  // Helper function to extract argument names from the function
+  function getArgs(func: (...args: any[]) => any): string[] | null {
+    try {
+      const funcStr = func.toString()
+        .replace(/\/\/.*$/mg, '') // Remove single-line comments
+        .replace(/\s+/g, '')      // Remove whitespace
+        .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
+        .replace(/=[^,]+/g, '');  // Remove default values
+
+      const argsMatch = funcStr.match(/(?:function[\w\s]*\(|\()([^)]*)\)/);
+      if (argsMatch && argsMatch[1]) {
+        return argsMatch[1].split(',').filter(Boolean);
+      }
+    } catch (error) {
+      console.warn('Failed to parse function arguments:', error);
+    }
+    return null; // Return null if parsing fails
+  }
+  return <T extends (...args: any[]) => any>(func: T): T => {
+    const wrappedFunction = (...args: Parameters<T>): ReturnType<T> => {
+      const tracer = trace.getTracer('traceloop.tracer');
+      const spanName = eventName || // try user provided eventName
+        func.name || ((func as any).hh_name) || // try function name
+        (eventType ? eventType + ' event' : 'event'); // try eventType
+      
+      const span = tracer.startSpan(spanName);
+
+      try {
+        // Get argument names
+        const argNames = getArgs(func);
+
+        // Set association properties
+        if (!associationProperties) {
+            // Try to get association properties from context
+            const contextAssocProps = getAssociationPropsFromContext();
+            
+            if (!contextAssocProps) {
+              throw new Error(
+                "No association properties found. " +
+                "Please use tracer.trace<Model/Tool/Chain>(...) to trace a function, " +
+                "or use tracer.trace(fn) at the top level to automatically get trace context."
+              );
+            }
+            associationProperties = contextAssocProps as Record<string, string>;
+        }
+        
+        // // Set association properties on span
+        // Object.entries(associationProperties).forEach(([key, value]) => {
+        //   setSpanAttributes(span, `traceloop.association.properties.${key}`, value);
+        // });
+
+        args.forEach((arg, index) => {
+          const argName = (argNames && argNames[index]) ? argNames[index] : index.toString();
+          setSpanAttributes(span, `honeyhive_inputs._params_.${argName}`, arg);
+        });
+
+        if (eventType) {
+          if (typeof eventType === 'string' && ['tool', 'model', 'chain'].includes(eventType.toLowerCase())) {
+            setSpanAttributes(span, 'honeyhive_event_type', eventType.toLowerCase());
+          } else {
+            console.warn("event_type could not be set. Must be 'tool', 'model', or 'chain'.");
+          }
+        }
+        if (config) {
+          setSpanAttributes(span, 'honeyhive_config', config);
+        }
+        if (metadata) {
+          setSpanAttributes(span, 'honeyhive_metadata', metadata);
+        }
+
+        const result = traceloop.withAssociationProperties(
+          associationProperties, // association properties
+          func, // function to trace
+          undefined, // thisArg
+          ...args // args
+        );
+
+        if (isPromise(result)) {
+          const newResult = result.then(
+            (res: any) => {
+              setSpanAttributes(span, 'honeyhive_outputs.result', res);
+              span.end();
+              return res;
+            },
+            (err: any) => {
+              span.recordException(err);
+              // Also capture the error message/details as a span attribute
+              setSpanAttributes(span, 'honeyhive_error', String(err));
+              span.end();
+              throw err;
+            }
+          ) as ReturnType<T>;
+          return newResult;
+        } else {
+          setSpanAttributes(span, 'honeyhive_outputs.result', result);
+          span.end();
+          return result;
+        }
+      } catch (err: unknown) {
+        span.recordException(err as Exception);
+        
+        // Also capture the error message/details as a span attribute
+        if (err instanceof Error) {
+          setSpanAttributes(span, 'honeyhive_error', String(err));
+        }
+
+        span.end();
+        throw err;
+      }
+    };
+    return wrappedFunction as T;
+  };
 }

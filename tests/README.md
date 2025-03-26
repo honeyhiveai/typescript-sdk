@@ -6,6 +6,12 @@ Run `integration/openai_trace.ts` script in CommonJS environment (`/environment/
 make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
 ```
 
+For development, you can use the `dev` target which first builds the package in the root directory:
+
+```bash
+make dev FILE=integration/openai_trace.ts ENV=commonjs-commonjs
+```
+
 # Overview
 
 Integration testing in JavaScript/TypeScript requires testing across multiple environments with different configurations and dependency versions. Our approach:
@@ -82,9 +88,14 @@ Set your dependendencies in the Dockerfile
 Set FILE to the path of the script
 Set ENV to the name of the environment (folder name in environments)
 
-Then run
+Then run either:
 ```bash
 make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
+```
+
+Or for development (which ensures the package is built first):
+```bash
+make dev FILE=integration/openai_trace.ts ENV=commonjs-commonjs
 ```
 
 ## 3. Changing
@@ -92,6 +103,7 @@ make test FILE=integration/openai_trace.ts ENV=commonjs-commonjs
 - first build the current version from root to ensure no errors `npm run build` (optional)
 - delete the honeyhive.tgz file in tests if it exists (this will trigger re-packing)
 - intellisense/typing should catch up if you've done the setup above
+- alternatively, use `make dev` instead of `make test` which will automatically build the package first
 
 ### Changes to .env
 Make directly to .env

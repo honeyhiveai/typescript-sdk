@@ -4,12 +4,9 @@
     "tsBuildInfoFile": ".tsbuildinfo",
     "target": "es2020",
     "lib": ["es2020", "dom", "dom.iterable"],
-
     "module": "Node16",
     "moduleResolution": "Node16",
-
     "allowJs": true,
-
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -32,17 +29,9 @@
     "checkJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node", "express", "uuid"]
   },
-  "include": ["src/**/*", "tests/runtime-environment.ts"],
-  "exclude": [
-    "node_modules",
-    "jest.config.js",
-    "tests",
-    "dist",
-    "**/*.js",
-    "**/*.js.map",
-    "**/*.d.ts",
-    "**/*.d.ts.map"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

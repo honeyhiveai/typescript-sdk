@@ -7,8 +7,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 // ============================================================================
 
-// This is where we patch the user's code
+// This is where we patch the user's TS code as-is
 // TODO: there can be a bootstrap for each environment
+
 // </patch>
 
 
