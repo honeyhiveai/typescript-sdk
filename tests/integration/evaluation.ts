@@ -155,7 +155,7 @@ async function simpleEvaluator4(..._: any[]) {
 
 
 async function main(): Promise<void> {
-    const result = await evaluate({
+    await evaluate({
         function: pipeline,
         dataset: dataset,
         evaluators: [simpleEvaluator, simpleEvaluator2, simpleEvaluator3, simpleEvaluator4],
@@ -164,8 +164,6 @@ async function main(): Promise<void> {
             openAI: OpenAI
         }
     });
-    // const result = await pipeline(dataset[0].inputs, dataset[0].ground_truths);
-    console.log('Evaluation completed:', result);
 }
 
 export { main };

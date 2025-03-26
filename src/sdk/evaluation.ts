@@ -4,6 +4,7 @@ import { HoneyHiveTracer, getGitInfo } from './tracer';
 import * as crypto from 'crypto';
 import * as path from 'path';
 import assert from "assert";
+import Table from 'cli-table3';
 
 type Dict<T> = { [key: string]: T };
 
@@ -330,7 +331,6 @@ class Evaluation {
                             throw new Error("No evaluation function provided");
                         }
                         output = await this.function(inputs, ground_truths);
-                        console.log(output);
                     } finally {
                         promiseResolve();
                     }
@@ -570,11 +570,180 @@ class Evaluation {
         }
         this.evalResult.status = this.status;
     }
+
+    public printResults() {
+        if (!this.evalResult) {
+            console.log('\x1b[38;5;208mNo evaluation results available\x1b[0m');
+            return;
+        }
+
+        try {
+            // Print the suite as a title
+            console.log(`\n\x1b[38;5;208m===== ${this.evalResult.suite} Evaluation Results =====\x1b[0m`);
+            
+            // Print general statistics
+            console.log(`\nRun ID: ${this.evalResult.runId}`);
+            console.log(`Dataset ID: ${this.evalResult.datasetId}`);
+            console.log(`Duration: ${this.evalResult.stats['duration_s']} seconds`);
+            console.log(`Status: ${this.evalResult.status}`);
+            
+            // Extract column names from all rows to build the table structure
+            const columnNames: string[] = ['#'];
+            const columnMap: Map<string, boolean> = new Map();
+            columnMap.set('#', true);
+            
+            try {
+                const numRows = this.evalResult.data['input'].length;
+                if (numRows > 0) {
+                    // Iterate through all rows to collect all possible column names
+                    for (let i = 0; i < numRows; i++) {
+                        try {
+                            const input = JSON.parse(this.evalResult.data['input'][i]);
+                            const output = JSON.parse(this.evalResult.data['output'][i]);
+                            const metrics = JSON.parse(this.evalResult.data['metrics'][i]);
+                            const groundTruth = JSON.parse(this.evalResult.data['ground_truth'][i]);
+                            
+                            // Add all keys to the column map to ensure uniqueness with appropriate prefixes
+                            Object.keys(input).forEach(key => {
+                                const columnName = `input.${key}`;
+                                if (!columnMap.has(columnName)) {
+                                    columnMap.set(columnName, true);
+                                    columnNames.push(columnName);
+                                }
+                            });
+                            
+                            Object.keys(output).forEach(key => {
+                                const columnName = `output.${key}`;
+                                if (!columnMap.has(columnName)) {
+                                    columnMap.set(columnName, true);
+                                    columnNames.push(columnName);
+                                }
+                            });
+                            
+                            Object.keys(metrics).forEach(key => {
+                                const columnName = `metrics.${key}`;
+                                if (!columnMap.has(columnName)) {
+                                    columnMap.set(columnName, true);
+                                    columnNames.push(columnName);
+                                }
+                            });
+                            
+                            Object.keys(groundTruth).forEach(key => {
+                                const columnName = `ground_truth.${key}`;
+                                if (!columnMap.has(columnName)) {
+                                    columnMap.set(columnName, true);
+                                    columnNames.push(columnName);
+                                }
+                            });
+                        } catch (error) {
+                            console.error(`Error extracting column names from row ${i}: ${error}`);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error(`Error extracting column names: ${error}`);
+            }
+            
+            // Create a new cli-table3 instance with the columns
+            const table = new Table({
+                head: columnNames,
+                wordWrap: true,
+                wrapOnWordBoundary: true,
+                style: {
+                    head: ['cyan'],
+                    border: ['grey']
+                },
+                colWidths: columnNames.map(name => 
+                    name === '#' ? 5 : Math.min(40, name.length + 5)
+                )
+            });
+            
+            // Format the header row to allow wrapping
+            columnNames.forEach((name, index) => {
+                if (name !== '#' && name.length > 15) {
+                    // Find a good split point for the header (after the prefix)
+                    const parts = name.split('.');
+                    if (parts.length > 1) {
+                        const prefix = parts[0];
+                        const key = parts.slice(1).join('.');
+                        // Replace the long header with a wrapped version
+                        table.options.head[index] = `${prefix}.\n${key}`;
+                    }
+                }
+            });
+            
+            // Process the evaluation data
+            const numRows = this.evalResult.data['input'].length;
+            for (let i = 0; i < numRows; i++) {
+                try {
+                    const input = JSON.parse(this.evalResult.data['input'][i]);
+                    const output = JSON.parse(this.evalResult.data['output'][i]);
+                    const metrics = JSON.parse(this.evalResult.data['metrics'][i]);
+                    const groundTruth = JSON.parse(this.evalResult.data['ground_truth'][i]);
+                    
+                    // Create a row array aligned with columnNames
+                    const rowData = columnNames.map(colName => {
+                        if (colName === '#') return (i + 1).toString();
+                        
+                        // Parse column name to extract category and key
+                        const parts = colName.split('.');
+                        if (parts.length < 2) return '';
+                        
+                        const category = parts[0]?.replace(/\s+/g, '');
+                        const key = parts[1]?.replace(/\s+/g, '');
+                        
+                        // Look for the value in the appropriate object based on category
+                        if (category === 'input' && key && input[key] !== undefined) {
+                            return this.truncateValue(input[key]);
+                        } else if (category === 'output' && key && output[key] !== undefined) {
+                            return this.truncateValue(output[key]);
+                        } else if (category === 'metrics' && key && metrics[key] !== undefined) {
+                            return this.truncateValue(metrics[key]);
+                        } else if (category === 'ground_truth' && key && groundTruth[key] !== undefined) {
+                            return this.truncateValue(groundTruth[key]);
+                        }
+                        
+                        return '';
+                    });
+                    
+                    table.push(rowData);
+                } catch (error) {
+                    console.error(`Error processing row ${i}: ${error}`);
+                }
+            }
+            
+            // Print the table
+            console.log(table.toString());
+            
+            console.log(`\n\x1b[38;5;208mTotal rows: ${numRows}\x1b[0m`);
+            console.log(`\x1b[38;5;208mTo view detailed results, use the HoneyHive dashboard or access the raw evaluation result object.\x1b[0m`);
+        } catch (error) {
+            console.error(`Error printing table: ${error}`);
+            console.log('Falling back to default output:');
+            console.log(this.evalResult);
+        }
+    }
+    
+    /**
+     * Helper method to truncate values for table display
+     */
+    private truncateValue(value: any): string {
+        if (value === null || value === undefined) {
+            return '';
+        } else if (typeof value === 'string') {
+            return value.length > 30 ? value.substring(0, 30) + '...' : value;
+        } else if (typeof value === 'object') {
+            return this.truncateValue(JSON.stringify(value));
+        } else {
+            return String(value);
+        }
+    }
 }
 
 export async function evaluate(config: EvaluationConfig): Promise<EvaluationResult | undefined> {
     const evaluation = await Evaluation.init(config);
     await evaluation.run();
+    evaluation.printResults();
     return evaluation.evalResult;
 }
 

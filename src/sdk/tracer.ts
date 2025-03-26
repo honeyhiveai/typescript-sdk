@@ -412,11 +412,14 @@ export class HoneyHiveTracer {
       throw new Error("apiKey is required to initialize HoneyHiveTracer. Please set HH_API_KEY environment variable or pass apiKey to tracer initialization props.");
     }
 
+    // Set serverUrl
+    params.serverUrl = params.serverUrl || process.env['HH_API_URL'] || DEFAULT_PROPERTIES.serverUrl;
+    
     // Initialize SDK instance
     if (!HoneyHiveTracer.sdkInstance) {
       HoneyHiveTracer.sdkInstance = new HoneyHive({
         bearerAuth: apiKey,
-        serverURL: params.serverUrl || DEFAULT_PROPERTIES.serverUrl,
+        serverURL: params.serverUrl,
       });
     }
 
@@ -533,7 +536,7 @@ export class HoneyHiveTracer {
       disableBatch: tracer.disableBatch,
       instrumentModules: HoneyHiveTracer.instrumentModules,
       logLevel: tracer.verbose ? "debug" : "error",
-      silenceInitializationMessage: true,
+      silenceInitializationMessage: !tracer.verbose,
     });
     await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
     HoneyHiveTracer.isTraceloopInitialized = true;
@@ -664,16 +667,10 @@ export class HoneyHiveTracer {
     return associationProps;
   }
 
-  /**
-   * @deprecated Use exported method traceFunction
-   */
   public traceFunction(...args: any[]) {
     return traceFunction(...args, this.getTraceloopAssociationProperties());
   }
 
-  /**
-   * @deprecated Use exported method traceModel
-   */
   public traceModel<F extends (...args: any[]) => any>(
     func: F,
     { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
