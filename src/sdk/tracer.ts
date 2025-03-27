@@ -871,26 +871,6 @@ export function traceFunction(
         // Get argument names
         const argNames = getArgs(func);
 
-        // Set association properties
-        if (!associationProperties) {
-            // Try to get association properties from context
-            const contextAssocProps = getAssociationPropsFromContext();
-            
-            if (!contextAssocProps) {
-              throw new Error(
-                "No association properties found. " +
-                "Please use tracer.trace<Model/Tool/Chain>(...) to trace a function, " +
-                "or use tracer.trace(fn) at the top level to automatically get trace context."
-              );
-            }
-            associationProperties = contextAssocProps as Record<string, string>;
-        }
-        
-        // // Set association properties on span
-        // Object.entries(associationProperties).forEach(([key, value]) => {
-        //   setSpanAttributes(span, `traceloop.association.properties.${key}`, value);
-        // });
-
         args.forEach((arg, index) => {
           const argName = (argNames && argNames[index]) ? argNames[index] : index.toString();
           setSpanAttributes(span, `honeyhive_inputs._params_.${argName}`, arg);
@@ -909,6 +889,28 @@ export function traceFunction(
         if (metadata) {
           setSpanAttributes(span, 'honeyhive_metadata', metadata);
         }
+
+        // Set association properties
+        if (!associationProperties) {
+            // Try to get association properties from context
+            const contextAssocProps = getAssociationPropsFromContext();
+            
+            if (!contextAssocProps) {
+              throw new Error(
+                "No association properties found. " +
+                "Please use tracer.trace<Model/Tool/Chain>(...) to trace a function, " +
+                "or use tracer.trace(fn) at the top level to automatically get trace context."
+              );
+            }
+            associationProperties = contextAssocProps as Record<string, string>;
+        }
+        
+        // Set association properties on span
+        // TODO: This should not be needed since we're calling withAssociationProperties
+        // but chains dont work otherwise. Investigate.
+        Object.entries(associationProperties).forEach(([key, value]) => {
+          setSpanAttributes(span, `traceloop.association.properties.${key}`, value);
+        });
 
         const result = traceloop.withAssociationProperties(
           associationProperties, // association properties

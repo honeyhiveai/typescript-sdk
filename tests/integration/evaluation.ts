@@ -137,24 +137,31 @@ const dataset: DatasetItem[] = [
     }
 ];
 
-function simpleEvaluator(outputs: Output, inputs: Input, groundTruth: GroundTruth) {
+async function simpleEvaluator(outputs: Output, inputs: Input, groundTruth: GroundTruth) {
+    // wait for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return {
         accuracy: outputs.model_response === groundTruth.response ? 1 : 0
     }
 }
 
-function simpleEvaluator2(..._: any[]) {
+async function simpleEvaluator2(..._: any[]) {
+    // wait for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return 42;
 }
 
 async function simpleEvaluator3(..._: any[]) {
+    // wait for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return true;
 }
 
 async function simpleEvaluator4(..._: any[]) {
+    // wait for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
     return 'type';
 }
-
 
 async function main(): Promise<void> {
     await evaluate({

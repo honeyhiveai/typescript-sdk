@@ -1,6 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { CreateRunResponse, Dataset, Status } from '../models/components';
-import { HoneyHiveTracer, getGitInfo } from './tracer';
+import { HoneyHiveTracer, getGitInfo, traceChain } from './tracer';
 import * as crypto from 'crypto';
 import * as path from 'path';
 import assert from "assert";
@@ -355,16 +355,26 @@ class Evaluation {
             return { metrics, metadata };
         }
 
+        // TODO: make concurrent once context propagation is fixed
         for (let index = 0; index < this.evaluators.length; index++) {
-            const evaluatorFn: ((...args: any[]) => Promise<any> | any) | undefined = this.evaluators[index];
+            const evaluatorFn: (
+                (outputs: any, inputs: any, ground_truths: any) => Promise<any> | any
+            ) | undefined = this.evaluators[index];
             if (!evaluatorFn) continue;
+
             const evaluatorName = evaluatorFn.name || `evaluator_${index}`;
-            
-            try {   
-                // Run the evaluator - handle both sync and async functions
-                const evaluatorResult = await Promise.resolve(
+
+            const tracedEvaluatorFn = traceChain(
+                async () => await Promise.resolve(
                     evaluatorFn(outputs, inputs, ground_truths)
-                );
+                ), {
+                    eventName: evaluatorName
+                }
+            );
+            
+            try {
+                // Run the evaluator - handle both sync and async functions
+                const evaluatorResult = await tracedEvaluatorFn();
                 metrics[evaluatorName] = evaluatorResult;
             } catch (error) {
                 console.error(`Error in evaluator: ${error}`);
@@ -443,8 +453,16 @@ class Evaluation {
             console.error(`Error in evaluation function: ${error}`);
         }
 
+        const tracedRunEvaluators = tracer.traceChain(
+            async () => await Promise.resolve(
+                this.runEvaluators(outputs, inputs, groundTruth)
+            ), {
+                eventName: "Evaluators"
+            }
+        );
+
         // Run evaluators
-        const evaluatorResult = await this.runEvaluators(outputs, inputs, groundTruth);
+        const evaluatorResult = await tracedRunEvaluators();
         metrics = evaluatorResult.metrics;
         metadata = evaluatorResult.metadata;
 
