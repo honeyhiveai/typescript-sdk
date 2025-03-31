@@ -36,16 +36,14 @@ define build_and_run
 	fi
 	@echo "Copying files to $(2)..."
 	@cp honeyhive.tgz environments/$(2)/
-	@cp .env environments/$(2)/
 	@cp Dockerfile environments/$(2)/
 	@echo "Building and running Docker container..."
-	@cd environments/$(2) && docker build -t typescript-sdk-$(2) . && docker run --rm typescript-sdk-$(2)
+	@cd environments/$(2) && docker build -t typescript-sdk-$(2) . && docker run --rm --env-file ../../.env typescript-sdk-$(2)
 	@echo "Cleaning up Docker image..."
 	@docker rmi typescript-sdk-$(2)
 	@echo "Cleaning up environment..."
 	@rm -f \
 		environments/$(2)/honeyhive.tgz \
-		environments/$(2)/.env \
 		environments/$(2)/Dockerfile
 endef
 
@@ -78,5 +76,4 @@ clean:
 		rm -f $$dir/honeyhive.tgz; \
 		rm -f $$dir/index.ts; \
 		rm -f $$dir/Dockerfile; \
-		rm -f $$dir/.env; \
 	done 

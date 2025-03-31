@@ -13,13 +13,25 @@ import { SDKError } from "../models/errors";
 import assert from "assert";
 
 export interface EnrichSpanParams {
-  config?: any;
-  metadata?: any;
-  metrics?: any;
-  feedback?: any;
-  inputs?: any;
-  outputs?: any;
-  error?: any;
+  config?: Record<string, any>;
+  metadata?: Record<string, any>;
+  metrics?: Record<string, any>;
+  feedback?: Record<string, any>;
+  inputs?: Record<string, any>;
+  outputs?: Record<string, any>;
+  error?: Record<string, any>;
+  eventName?: string;
+}
+
+export interface EnrichSessionParams {
+  sessionId?: string | undefined;
+  metadata?: Record<string, any>;
+  feedback?: Record<string, any>;
+  metrics?: Record<string, any>;
+  config?: Record<string, any>;
+  inputs?: Record<string, any>;
+  outputs?: Record<string, any>;
+  userProperties?: Record<string, any>;
 }
 
 /**
@@ -281,7 +293,7 @@ export class HoneyHiveTracer {
   public static isEvaluation: boolean = false;
   public static evalAssociationProps: Record<string, string> = {};
   private static instrumentModules: Record<string, any> = {};
-  private static sdkInstance: HoneyHive | null = null;
+  public static sdkInstance: HoneyHive | null = null;
   private static isTraceloopInitialized: boolean = false;
   public static flushPromise: Promise<void> | null = null;
   private static flushMutex = new Mutex();
@@ -552,49 +564,8 @@ export class HoneyHiveTracer {
     return tracer;
   }
 
-  public async enrichSession({
-    metadata,
-    feedback,
-    metrics,
-    config,
-    inputs,
-    outputs,
-    userProperties
-  }: {
-    metadata?: Record<string, any>;
-    feedback?: Record<string, any>;
-    metrics?: Record<string, any>;
-    config?: Record<string, any>;
-    inputs?: Record<string, any>;
-    outputs?: Record<string, any>;
-    userProperties?: Record<string, any>;
-  } = {}): Promise<void> {
-    if (this.sessionId) {
-      const updateData: UpdateEventRequestBody = { eventId: this.sessionId };
-
-      if (metadata) updateData['metadata'] = metadata;
-      if (feedback) updateData['feedback'] = feedback;
-      if (metrics) updateData['metrics'] = metrics;
-      if (config) updateData['config'] = config;
-      if (outputs) updateData['outputs'] = outputs;
-      if (userProperties) updateData['userProperties'] = userProperties;
-
-      // TODO support by adding type to UpdateEventRequestBody
-      if (inputs) {
-        console.warn("inputs are not yet supported in enrichSession");
-      }
-
-      try {
-        if (!HoneyHiveTracer.sdkInstance) {
-          throw new Error("SDK instance is not initialized");
-        }
-        await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData);
-      } catch (error) {
-        console.error("Failed to update event:", error);
-      }
-    } else {
-      console.error("Session ID is not initialized");
-    }
+  public async enrichSession(params: EnrichSessionParams = {}): Promise<void> {
+    return enrichSession(params);
   }
 
   /**
@@ -717,58 +688,18 @@ export class HoneyHiveTracer {
     }
   }
 
+  /*
+  * @deprecated Use the exported enrichSpan function instead.
+  */
   public enrichSpan(params: EnrichSpanParams = {}) {
-    this.enrichSpan(params);
+    enrichSpan(params);
   }
 
-  public static enrichSpan({
-    config,
-    metadata,
-    metrics,
-    feedback,
-    inputs,
-    outputs,
-    error,
-    eventName
-  }: {
-    config?: any;
-    metadata?: any;
-    metrics?: any;
-    feedback?: any;
-    inputs?: any;
-    outputs?: any;
-    error?: any;
-    eventName?: string;
-  } = {}): void {
-    const span = trace.getActiveSpan();
-    if (!span) {
-      console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
-      return;
-    }
-    if (config) {
-      setSpanAttributes(span, "honeyhive_config", config);
-    }
-    if (metadata) {
-      setSpanAttributes(span, "honeyhive_metadata", metadata);
-    }
-    if (metrics) {
-      setSpanAttributes(span, "honeyhive_metrics", metrics);
-    }
-    if (feedback) {
-      setSpanAttributes(span, "honeyhive_feedback", feedback);
-    }
-    if (inputs) {
-      setSpanAttributes(span, "honeyhive_inputs", inputs);
-    }
-    if (outputs) {
-      setSpanAttributes(span, "honeyhive_outputs", outputs);
-    }
-    if (error) {
-      setSpanAttributes(span, "honeyhive_error", error);
-    }
-    if (eventName) {
-      setSpanAttributes(span, "honeyhive_event_name", eventName);
-    }
+  /**
+   * @deprecated Use the exported enrichSpan function instead.
+   */
+  public static enrichSpan(params: EnrichSpanParams = {}) {
+    enrichSpan(params);
   }
 
   /**
@@ -811,6 +742,110 @@ export class HoneyHiveTracer {
 
   public async flush(): Promise<void> {
     return await HoneyHiveTracer.flush();
+  }
+}
+
+export async function enrichSession(params: EnrichSessionParams = {}): Promise<void> {
+  let {
+    sessionId,
+  } = params;
+  
+  const {
+    metadata,
+    feedback,
+    metrics,
+    config,
+    inputs,
+    outputs,
+    userProperties
+  } = params;
+
+  // If sessionId is not provided, try to get from association properties
+  if (!sessionId) {
+    const contextAssocProps = getAssociationPropsFromContext();
+    if (contextAssocProps && contextAssocProps['session_id']) {
+      sessionId = contextAssocProps['session_id'];
+    }
+  }
+
+  // Proceed only if we have a sessionId
+  if (!sessionId) {
+    console.error("Session ID is not provided and could not be found in context. Please initialize HoneyHiveTracer before calling enrichSession");
+    return;
+  }
+
+  const updateData: UpdateEventRequestBody = { eventId: sessionId };
+
+  if (metadata) updateData['metadata'] = metadata;
+  if (feedback) updateData['feedback'] = feedback;
+  if (metrics) updateData['metrics'] = metrics;
+  if (config) updateData['config'] = config;
+  if (outputs) updateData['outputs'] = outputs;
+  if (userProperties) updateData['userProperties'] = userProperties;
+
+  // TODO support by adding type to UpdateEventRequestBody
+  if (inputs) {
+    console.warn("inputs are not yet supported in enrichSession");
+  }
+
+  try {
+    if (!HoneyHiveTracer.sdkInstance) {
+      console.error("SDK instance is not initialized. Please initialize HoneyHiveTracer before calling enrichSession");
+      return;
+    }
+    await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData);
+  } catch (error) {
+    console.error("Failed to update event:", error);
+  }
+}
+
+export function enrichSpan({
+  config,
+  metadata,
+  metrics,
+  feedback,
+  inputs,
+  outputs,
+  error,
+  eventName
+}: {
+  config?: any;
+  metadata?: any;
+  metrics?: any;
+  feedback?: any;
+  inputs?: any;
+  outputs?: any;
+  error?: any;
+  eventName?: string;
+} = {}): void {
+  const span = trace.getActiveSpan();
+  if (!span) {
+    console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
+    return;
+  }
+  if (config) {
+    setSpanAttributes(span, "honeyhive_config", config);
+  }
+  if (metadata) {
+    setSpanAttributes(span, "honeyhive_metadata", metadata);
+  }
+  if (metrics) {
+    setSpanAttributes(span, "honeyhive_metrics", metrics);
+  }
+  if (feedback) {
+    setSpanAttributes(span, "honeyhive_feedback", feedback);
+  }
+  if (inputs) {
+    setSpanAttributes(span, "honeyhive_inputs", inputs);
+  }
+  if (outputs) {
+    setSpanAttributes(span, "honeyhive_outputs", outputs);
+  }
+  if (error) {
+    setSpanAttributes(span, "honeyhive_error", error);
+  }
+  if (eventName) {
+    setSpanAttributes(span, "honeyhive_event_name", eventName);
   }
 }
 

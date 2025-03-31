@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { evaluate, HoneyHiveTracer } from 'honeyhive';
+import { evaluate, HoneyHiveTracer, traceTool } from 'honeyhive';
 
 const openai = new OpenAI({
     apiKey: process.env['OPENAI_API_KEY']
@@ -36,10 +36,10 @@ async function tool(foo: any) {
 }
 
 async function pipeline(inputs: Input, groundTruth: GroundTruth): Promise<Output> {
-    const tracer = await HoneyHiveTracer.init({verbose: true});
+    // const tracer = await HoneyHiveTracer.init({verbose: true});
 
     // Test tool tracing
-    const tracedTool = tracer.traceTool(tool);
+    const tracedTool = traceTool(tool);
     await tracedTool(42);
 
     // Test model tracing
@@ -47,7 +47,6 @@ async function pipeline(inputs: Input, groundTruth: GroundTruth): Promise<Output
     const response = await callOpenAI(prompt);
 
     // Return both the model response and ground truth for comparison
-    await tracer.flush();
     return {
         model_response: response ?? '',
         ground_truth: groundTruth.response

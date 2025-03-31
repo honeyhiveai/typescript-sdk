@@ -14,7 +14,7 @@ COPY honeyhive.tgz \
 # ENV NPM_CONFIG_LOGLEVEL=verbose
 
 # Install dependencies with verbose output
-RUN npm install dotenv ./honeyhive.tgz --verbose
+RUN npm install ./honeyhive.tgz --verbose
 
 # ----------------------------------------------------------------------------
 # Add additional testing dependencies here

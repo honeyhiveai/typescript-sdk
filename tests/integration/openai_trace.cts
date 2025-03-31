@@ -19,7 +19,6 @@ async function tracedMain() {
     const prompt = "What is the capital of France?";
     const tracedHello = traceModel(hello);
     tracedHello();
-
     const response = await callOpenAI(prompt);
     
     console.log(response);
