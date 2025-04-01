@@ -364,7 +364,7 @@ export class HoneyHiveTracer {
   /**
    * Initialize a new session
    */
-  public async startSession(): Promise<string> {
+  public async startSession(): Promise<string | null> {
     try {
       // If sessionId is already initialized, continue an existing session
       if (this.sessionId) {
@@ -408,7 +408,7 @@ export class HoneyHiveTracer {
     } catch (error) {
       console.error("Failed to create session:", error);
       console.error(error instanceof SDKError ? error.message : error);
-      throw error;
+      return null;
     }
   }
 
@@ -480,88 +480,95 @@ export class HoneyHiveTracer {
    * @param params Tracer properties
    * @returns Initialized tracer instance
    */
-  public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer> {
+  public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer | null> {
+    try {
+      // Get traceloop association properties from context
+      const contextAssocProps: TraceloopAssociationProperties | undefined = getAssociationPropsFromContext();
+      if (contextAssocProps) {
+        if (contextAssocProps['session_id']) {
+          params.sessionId = contextAssocProps['session_id'];
+        }
+        if (contextAssocProps['project']) {
+          params.project = contextAssocProps['project'];
+        }
+        if (contextAssocProps['source']) {
+          params.source = contextAssocProps['source'];
+        }
+        if (contextAssocProps['disable_http_tracing']) {
+          params.disableHttpTracing = contextAssocProps['disable_http_tracing'] === 'true';
+        }
+        if (contextAssocProps['run_id']) {
+          params.runId = contextAssocProps['run_id'];
+        }
+        if (contextAssocProps['dataset_id']) {
+          params.datasetId = contextAssocProps['dataset_id'];
+        }
+        if (contextAssocProps['datapoint_id']) {
+          params.datapointId = contextAssocProps['datapoint_id'];
+        }
+      }
 
-    // Get traceloop association properties from context
-    const contextAssocProps: TraceloopAssociationProperties | undefined = getAssociationPropsFromContext();
-    if (contextAssocProps) {
-      if (contextAssocProps['session_id']) {
-        params.sessionId = contextAssocProps['session_id'];
-      }
-      if (contextAssocProps['project']) {
-        params.project = contextAssocProps['project'];
-      }
-      if (contextAssocProps['source']) {
-        params.source = contextAssocProps['source'];
-      }
-      if (contextAssocProps['disable_http_tracing']) {
-        params.disableHttpTracing = contextAssocProps['disable_http_tracing'] === 'true';
-      }
-      if (contextAssocProps['run_id']) {
-        params.runId = contextAssocProps['run_id'];
-      }
-      if (contextAssocProps['dataset_id']) {
-        params.datasetId = contextAssocProps['dataset_id'];
-      }
-      if (contextAssocProps['datapoint_id']) {
-        params.datapointId = contextAssocProps['datapoint_id'];
-      }
-    }
+      // Create a new tracer instance
+      const tracer = new HoneyHiveTracer(params);
 
-    // Create a new tracer instance
-    const tracer = new HoneyHiveTracer(params);
+      // Start session
+      assert(tracer.project, // TODO: check for project validity
+        "project is required to initialize HoneyHiveTracer. Please set HH_PROJECT environment variable or pass project to tracer initialization props."
+      );
+      const sessionId = await tracer.startSession();
+      if (!sessionId) {
+        return null;
+      }
 
-    // Start session
-    assert(tracer.project, // TODO: check for project validity
-      "project is required to initialize HoneyHiveTracer. Please set HH_PROJECT environment variable or pass project to tracer initialization props."
-    );
-    await tracer.startSession();
+      // Initialize traceloop
+      if (HoneyHiveTracer.isTraceloopInitialized) {
+        return tracer;
+      }
 
-    // Initialize traceloop
-    if (HoneyHiveTracer.isTraceloopInitialized) {
-      return tracer;
-    }
-
-    /*
-      instrumentModules?: {
-        openAI?: typeof openai.OpenAI;
-        anthropic?: typeof anthropic;
-        azureOpenAI?: typeof azure;
-        cohere?: typeof cohere;
-        bedrock?: typeof bedrock;
-        google_vertexai?: typeof vertexAI;
-        google_aiplatform?: typeof aiplatform;
-        pinecone?: typeof pinecone;
-        together?: typeof together.Together;
-        langchain?: {
-            chainsModule?: typeof ChainsModule;
-            agentsModule?: typeof AgentsModule;
-            toolsModule?: typeof ToolsModule;
-            runnablesModule?: typeof RunnableModule;
-            vectorStoreModule?: typeof VectorStoreModule;
+      /*
+        instrumentModules?: {
+          openAI?: typeof openai.OpenAI;
+          anthropic?: typeof anthropic;
+          azureOpenAI?: typeof azure;
+          cohere?: typeof cohere;
+          bedrock?: typeof bedrock;
+          google_vertexai?: typeof vertexAI;
+          google_aiplatform?: typeof aiplatform;
+          pinecone?: typeof pinecone;
+          together?: typeof together.Together;
+          langchain?: {
+              chainsModule?: typeof ChainsModule;
+              agentsModule?: typeof AgentsModule;
+              toolsModule?: typeof ToolsModule;
+              runnablesModule?: typeof RunnableModule;
+              vectorStoreModule?: typeof VectorStoreModule;
+          };
+          llamaIndex?: typeof llamaindex;
+          chromadb?: typeof chromadb;
+          qdrant?: typeof qdrant;
         };
-        llamaIndex?: typeof llamaindex;
-        chromadb?: typeof chromadb;
-        qdrant?: typeof qdrant;
-      };
-    */
-    traceloop.initialize({
-      baseUrl: `${tracer.serverUrl}/opentelemetry`,
-      apiKey: tracer.apiKey!,
-      disableBatch: tracer.disableBatch,
-      instrumentModules: HoneyHiveTracer.instrumentModules,
-      logLevel: tracer.verbose ? "debug" : "error",
-      silenceInitializationMessage: !tracer.verbose,
-    });
-    await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
-    HoneyHiveTracer.isTraceloopInitialized = true;
+      */
+      traceloop.initialize({
+        baseUrl: `${tracer.serverUrl}/opentelemetry`,
+        apiKey: tracer.apiKey!,
+        disableBatch: tracer.disableBatch,
+        instrumentModules: HoneyHiveTracer.instrumentModules,
+        logLevel: tracer.verbose ? "debug" : "error",
+        silenceInitializationMessage: !tracer.verbose,
+      });
+      await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
+      HoneyHiveTracer.isTraceloopInitialized = true;
 
-    // Log initialization success with orange color
-    if (tracer.verbose || !HoneyHiveTracer.isEvaluation) {
-      console.log('\x1b[38;5;208mHoneyHive is initialized\x1b[0m');
+      // Log initialization success with orange color
+      if (tracer.verbose || !HoneyHiveTracer.isEvaluation) {
+        console.log('\x1b[38;5;208mHoneyHive is initialized\x1b[0m');
+      }
+
+      return tracer;
+    } catch (error) {
+      console.error("Failed to initialize HoneyHiveTracer:", error);
+      return null;
     }
-
-    return tracer;
   }
 
   public async enrichSession(params: EnrichSessionParams = {}): Promise<void> {
