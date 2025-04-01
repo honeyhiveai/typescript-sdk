@@ -34,6 +34,7 @@
     "lint": "eslint --max-warnings=0 src",
     "clean": "rm -rf node_modules && rm -rf dist && rm -f tests/honeyhive.tgz",
     "build": "npm run clean && npm install && tsc",
+    "publish": "npm version patch && npm publish",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
