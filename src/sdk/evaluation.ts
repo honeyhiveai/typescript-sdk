@@ -272,7 +272,7 @@ class Evaluation {
         return null;
     }
 
-    private async initializeTracer(inputs: any, datapointIdx: number): Promise<HoneyHiveTracer> {
+    private async initializeTracer(inputs: any, datapointIdx: number): Promise<HoneyHiveTracer | null> {
         const evalContext = this.getTracingMetadata(datapointIdx);
         try {
             return await HoneyHiveTracer.init({
@@ -292,7 +292,8 @@ class Evaluation {
                 instrumentModules: this.instrumentModules
             });
         } catch (error) {
-            throw new Error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
+            console.error("Unable to initiate Honeyhive Tracer. Cannot run Evaluation");
+            return null;
         }
     }
 
@@ -421,7 +422,7 @@ class Evaluation {
         let metrics: Dict<any> = {};
         let metadata = {};
         let sessionId: string | undefined;
-        let tracer: HoneyHiveTracer;
+        let tracer: HoneyHiveTracer | null;
 
         // Get inputs
         try {
@@ -438,12 +439,15 @@ class Evaluation {
         // Initialize tracer
         try {
             tracer = await this.initializeTracer(inputs, datapointIdx);
+            if (!tracer) {
+                return this.createResult(inputs, groundTruth, "error: unable to initiate Honeyhive Tracer", metrics, metadata);
+            }
             sessionId = tracer.sessionId;
             assert(sessionId);
             this.evaluationSessionIds.push(sessionId);
         } catch (error) {
             console.error(`Unable to initiate Honeyhive Tracer. Cannot run Evaluation: ${error}`);
-            throw error;
+            return this.createResult(inputs, groundTruth, "error: unable to initiate Honeyhive Tracer", metrics, metadata);
         }
 
         // Run the function
@@ -526,7 +530,7 @@ class Evaluation {
                 // Process in batches of maxWorkers
                 for (let i = 0; i < numPoints; i += this.maxWorkers) {
                     const batchSize = Math.min(this.maxWorkers, numPoints - i);
-                    const batchPromises = [];
+                    const batchPromises: Dict<any>[] = [];
                     
                     for (let j = 0; j < batchSize; j++) {
                         const datapointIdx = i + j;
