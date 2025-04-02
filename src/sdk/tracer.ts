@@ -9,7 +9,6 @@ import { Telemetry } from "./telemetry";
 import { Span, trace, Exception, context, createContextKey } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
 import { StartSessionRequestBody } from "../models/operations/startsession";
-import { SDKError } from "../models/errors";
 import assert from "assert";
 
 export interface EnrichSpanParams {
@@ -189,6 +188,9 @@ function isPromise(obj: any): obj is Promise<any> {
 }
 
 function setSpanAttributes(span: Span, prefix: string, value: any) {
+  if (!span) {
+    return;
+  }
   if (value === null || value === undefined) {
     span.setAttribute(prefix, 'null');
   } else if (typeof value === 'object') {
@@ -265,9 +267,16 @@ function getDefaultSource(): string | null {
 }
 
 function getAssociationPropsFromContext(): Record<string, string> | undefined {
-  const ctx = context.active();
-  const contextAssocProps = ctx.getValue(createContextKey("association_properties"));
-  return contextAssocProps as Record<string, string> | undefined;
+  try {
+    const ctx = context.active();
+    const contextAssocProps = ctx.getValue(createContextKey("association_properties"));
+    return contextAssocProps as Record<string, string> | undefined;
+  } catch (error) {
+    if (HoneyHiveTracer.verbose) {
+      console.warn("Failed to get association properties:", error);
+    }
+    return undefined;
+  }
 }
 
 const DEFAULT_PROPERTIES: HoneyHiveTracerProperties = {
@@ -297,6 +306,9 @@ export class HoneyHiveTracer {
   private static isTraceloopInitialized: boolean = false;
   public static flushPromise: Promise<void> | null = null;
   private static flushMutex = new Mutex();
+  public static verbose: boolean = false;
+  private static failedToInitialize: boolean = false;
+  private static notifiedInitializationFailure: boolean = false;
 
   /** Property getters */
   // required
@@ -327,7 +339,7 @@ export class HoneyHiveTracer {
   public get runId(): string | undefined { return this.properties.runId || DEFAULT_PROPERTIES.runId; }
   public get datasetId(): string | undefined { return this.properties.datasetId || DEFAULT_PROPERTIES.datasetId; }
   public get datapointId(): string | undefined { return this.properties.datapointId || DEFAULT_PROPERTIES.datapointId; }
-  public get verbose(): boolean { return this.properties.verbose || DEFAULT_PROPERTIES.verbose; }
+  public get verbose(): boolean { return this.properties.verbose || DEFAULT_PROPERTIES.verbose || HoneyHiveTracer.verbose; }
   public get disableHttpTracing(): boolean { return this.properties.disableHttpTracing || DEFAULT_PROPERTIES.disableHttpTracing; }
 
   // Setters
@@ -365,6 +377,9 @@ export class HoneyHiveTracer {
    * Initialize a new session
    */
   public async startSession(): Promise<string | null> {
+    if (HoneyHiveTracer.failedToInitialize) {
+      return null;
+    }
     try {
       // If sessionId is already initialized, continue an existing session
       if (this.sessionId) {
@@ -397,8 +412,8 @@ export class HoneyHiveTracer {
       const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody);
       assert(res.sessionId, "Could not get sessionId from server");
 
-      if (this.verbose) {
-        console.log("Session started with id: ", res.sessionId);
+      if (HoneyHiveTracer.verbose) {
+        console.info("HoneyHive session started with id: ", res.sessionId);
       }
 
       // Set tracer sessionId
@@ -406,8 +421,9 @@ export class HoneyHiveTracer {
       assert(this.sessionId, "Could not get sessionId from server");
       return this.sessionId;
     } catch (error) {
-      console.error("Failed to create session:", error);
-      console.error(error instanceof SDKError ? error.message : error);
+      if (HoneyHiveTracer.verbose) {
+        console.error("Failed to create HoneyHive session:", error);
+      }
       return null;
     }
   }
@@ -419,59 +435,77 @@ export class HoneyHiveTracer {
    * @param properties Optional configuration properties for the tracer
    */
   private constructor(
-    params: Partial<HoneyHiveTracerProperties> | undefined = {}
+    params: Partial<HoneyHiveTracerProperties> | undefined = undefined
   ) {
-    // Check for apiKey
-    const apiKey = params.apiKey || process.env['HH_API_KEY'];
-    if (!apiKey) {
-      throw new Error("apiKey is required to initialize HoneyHiveTracer. Please set HH_API_KEY environment variable or pass apiKey to tracer initialization props.");
-    }
-
-    // Set serverUrl
-    params.serverUrl = params.serverUrl || process.env['HH_API_URL'] || DEFAULT_PROPERTIES.serverUrl;
-    
-    // Initialize SDK instance
-    if (!HoneyHiveTracer.sdkInstance) {
-      HoneyHiveTracer.sdkInstance = new HoneyHive({
-        bearerAuth: apiKey,
-        serverURL: params.serverUrl,
-      });
-    }
-
-    // Validate sessionId if provided
-    if (params.sessionId) {
-      if (typeof params.sessionId !== 'string') {
-        throw new Error("sessionId must be a string");
+    // error safe initialization
+    if (params === undefined) {
+      if (!HoneyHiveTracer.notifiedInitializationFailure && (!HoneyHiveTracer.isEvaluation || HoneyHiveTracer.failedToInitialize)) {
+        console.error('\x1b[31mHoneyHiveTracer initialization failed.\nPlease initialize with HoneyHiveTracer.init({..., verbose: true}) to debug.\x1b[0m');
+        HoneyHiveTracer.failedToInitialize = true;
+        HoneyHiveTracer.notifiedInitializationFailure = true;
       }
-      params.sessionId = params.sessionId.toLowerCase();
+      return;
+    }
 
-      // Validate that sessionId is a valid UUID
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      if (!uuidRegex.test(params.sessionId)) {
-        throw new Error("sessionId must be a valid UUID");
+    try {
+      // Check for apiKey
+      const apiKey = params.apiKey || process.env['HH_API_KEY'];
+      if (!apiKey) {
+        throw new Error("apiKey is required to initialize HoneyHiveTracer. Please set HH_API_KEY environment variable or pass apiKey to tracer initialization props.");
       }
-    }
-    
-    // Update properties
-    if (params?.instrumentModules) {
-      this.updateInstrumentModules(params.instrumentModules);
-    }
-    this.properties = {
-      apiKey: params?.apiKey || this.apiKey,
-      project: params?.project || this.project,
-      sessionId: params?.sessionId || this.sessionId,
-      serverUrl: params?.serverUrl || this.serverUrl,
-      sessionName: params?.sessionName || this.sessionName,
-      source: params?.source || this.source,
-      inputs: params?.inputs || this.inputs,
-      metadata: params?.metadata || this.metadata,
-      disableBatch: params?.disableBatch || this.disableBatch,
-      isEvaluation: params?.isEvaluation || this.isEvaluation,
-      runId: params?.runId || this.runId,
-      datasetId: params?.datasetId || this.datasetId,
-      datapointId: params?.datapointId || this.datapointId,
-      verbose: params?.verbose || this.verbose,
-      disableHttpTracing: params?.disableHttpTracing || this.disableHttpTracing,
+
+      // Set serverUrl
+      params.serverUrl = params.serverUrl || process.env['HH_API_URL'] || DEFAULT_PROPERTIES.serverUrl;
+      
+      // Initialize SDK instance
+      if (!HoneyHiveTracer.sdkInstance) {
+        HoneyHiveTracer.sdkInstance = new HoneyHive({
+          bearerAuth: apiKey,
+          serverURL: params.serverUrl,
+        });
+      }
+
+      // Validate sessionId if provided
+      if (params.sessionId) {
+        if (typeof params.sessionId !== 'string') {
+          throw new Error("sessionId must be a string");
+        }
+        params.sessionId = params.sessionId.toLowerCase();
+
+        // Validate that sessionId is a valid UUID
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(params.sessionId)) {
+          throw new Error("sessionId must be a valid UUID");
+        }
+      }
+      
+      // Update properties
+      if (params?.instrumentModules) {
+        this.updateInstrumentModules(params.instrumentModules);
+      }
+      this.properties = {
+        apiKey: params?.apiKey || this.apiKey,
+        project: params?.project || this.project,
+        sessionId: params?.sessionId || this.sessionId,
+        serverUrl: params?.serverUrl || this.serverUrl,
+        sessionName: params?.sessionName || this.sessionName,
+        source: params?.source || this.source,
+        inputs: params?.inputs || this.inputs,
+        metadata: params?.metadata || this.metadata,
+        disableBatch: params?.disableBatch || this.disableBatch,
+        isEvaluation: params?.isEvaluation || this.isEvaluation,
+        runId: params?.runId || this.runId,
+        datasetId: params?.datasetId || this.datasetId,
+        datapointId: params?.datapointId || this.datapointId,
+        verbose: params?.verbose || this.verbose,
+        disableHttpTracing: params?.disableHttpTracing || this.disableHttpTracing,
+      }
+      
+    } catch (error) {
+      if (HoneyHiveTracer.verbose) {
+        console.error("Failed to initialize HoneyHiveTracer:", error);
+      }
+      return new HoneyHiveTracer();
     }
   }
 
@@ -480,8 +514,11 @@ export class HoneyHiveTracer {
    * @param params Tracer properties
    * @returns Initialized tracer instance
    */
-  public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer | null> {
+  public static async init(params: Partial<HoneyHiveTracerProperties> | undefined = {}): Promise<HoneyHiveTracer> {
     try {
+      // Track verbose setting statically across all instances
+      HoneyHiveTracer.verbose = HoneyHiveTracer.verbose || params?.verbose || DEFAULT_PROPERTIES.verbose;
+
       // Get traceloop association properties from context
       const contextAssocProps: TraceloopAssociationProperties | undefined = getAssociationPropsFromContext();
       if (contextAssocProps) {
@@ -517,7 +554,7 @@ export class HoneyHiveTracer {
       );
       const sessionId = await tracer.startSession();
       if (!sessionId) {
-        return null;
+        return new HoneyHiveTracer();
       }
 
       // Initialize traceloop
@@ -560,18 +597,23 @@ export class HoneyHiveTracer {
       HoneyHiveTracer.isTraceloopInitialized = true;
 
       // Log initialization success with orange color
-      if (tracer.verbose || !HoneyHiveTracer.isEvaluation) {
+      if (HoneyHiveTracer.verbose || !HoneyHiveTracer.isEvaluation) {
         console.log('\x1b[38;5;208mHoneyHive is initialized\x1b[0m');
+      }
+      if (HoneyHiveTracer.verbose) {
+        console.log('\x1b[38;5;208mVerbose logging enabled for HoneyHive. Please set verbose: false to disable.\x1b[0m');
       }
 
       return tracer;
     } catch (error) {
-      console.error("Failed to initialize HoneyHiveTracer:", error);
-      return null;
+      return new HoneyHiveTracer();
     }
   }
 
   public async enrichSession(params: EnrichSessionParams = {}): Promise<void> {
+    if (!params.sessionId) {
+      params.sessionId = this.sessionId;
+    }
     return enrichSession(params);
   }
 
@@ -617,35 +659,42 @@ export class HoneyHiveTracer {
    * @returns Record of association properties
    */
   private getTraceloopAssociationProperties(): Record<string, string> {
-    // Try to get association properties from context
-    const contextAssocProps = getAssociationPropsFromContext();
-    if (contextAssocProps) {
-      return contextAssocProps;
+    try {
+      // Try to get association properties from context
+      const contextAssocProps = getAssociationPropsFromContext();
+      if (contextAssocProps) {
+        return contextAssocProps;
+      }
+
+      this.testRequiredProperties();
+
+      const associationProps: Record<string, string> = {};
+      
+      // Add basic properties
+      associationProps['session_id'] = this.sessionId!;
+      associationProps['project'] = this.project!;
+      associationProps['source'] = this.source!;
+      associationProps['disable_http_tracing'] = this.disableHttpTracing.toString().toLowerCase();
+
+      if (this.runId) {
+        associationProps['run_id'] = this.runId;
+      }
+
+      if (this.datasetId) {
+        associationProps['dataset_id'] = this.datasetId;
+      }
+
+      if (this.datapointId) {
+        associationProps['datapoint_id'] = this.datapointId;
+      }
+
+      return associationProps;
+    } catch (error) {
+      if (HoneyHiveTracer.verbose) {
+        console.warn("Failed to get association properties:", error);
+      }
+      return {};
     }
-
-    this.testRequiredProperties();
-
-    const associationProps: Record<string, string> = {};
-    
-    // Add basic properties
-    associationProps['session_id'] = this.sessionId!;
-    associationProps['project'] = this.project!;
-    associationProps['source'] = this.source!;
-    associationProps['disable_http_tracing'] = this.disableHttpTracing.toString().toLowerCase();
-
-    if (this.runId) {
-      associationProps['run_id'] = this.runId;
-    }
-
-    if (this.datasetId) {
-      associationProps['dataset_id'] = this.datasetId;
-    }
-
-    if (this.datapointId) {
-      associationProps['datapoint_id'] = this.datapointId;
-    }
-
-    return associationProps;
   }
 
   public traceFunction(...args: any[]) {
@@ -683,15 +732,22 @@ export class HoneyHiveTracer {
   }
 
   public trace(fn: () => void): void {
-    if (this.sessionId) {
-      const associationProps = this.getTraceloopAssociationProperties();
-      
-      traceloop.withAssociationProperties(
-        associationProps,
-        fn,
-      );
-    } else {
-      console.error("Session ID is not initialized");
+    try {
+      if (this.sessionId) {
+        const associationProps = this.getTraceloopAssociationProperties();
+        
+        traceloop.withAssociationProperties(
+          associationProps,
+          fn,
+        );
+      } else {
+        throw new Error("Session ID is not initialized");
+      }
+    } catch (error) {
+      if (HoneyHiveTracer.verbose) {
+        console.warn("Unable to trace function. ", error);
+      }
+      return fn();
     }
   }
 
@@ -721,88 +777,115 @@ export class HoneyHiveTracer {
    * @returns Promise that resolves when the flush is complete
    */
   public static async flush(): Promise<void> {
-    // Fast path: If a flush is already in progress, return the existing promise
-    if (HoneyHiveTracer.flushPromise) {
-      return HoneyHiveTracer.flushPromise;
-    }
+    try {
+      if (!HoneyHiveTracer.isTraceloopInitialized) {
+        throw new Error();
+      }
 
-    // Slow path: Need to acquire the mutex to safely create a new flush
-    return HoneyHiveTracer.flushMutex.runExclusive(async () => {
-      // Double-check if another thread created the promise while we were waiting
+      // Fast path: If a flush is already in progress, return the existing promise
       if (HoneyHiveTracer.flushPromise) {
         return HoneyHiveTracer.flushPromise;
       }
-      
-      // Create a new flush promise
-      try {
-        HoneyHiveTracer.flushPromise = traceloop.forceFlush();
-        return HoneyHiveTracer.flushPromise;
-      } finally {
-        // Clean up after the promise is resolved
-        HoneyHiveTracer.flushPromise!.then(
-          () => { HoneyHiveTracer.flushPromise = null; }, // promise fulfilled
-          () => { HoneyHiveTracer.flushPromise = null; } // promise rejected
-        );
+
+      // Slow path: Need to acquire the mutex to safely create a new flush
+      return HoneyHiveTracer.flushMutex.runExclusive(async () => {
+        if (!HoneyHiveTracer.isTraceloopInitialized) {
+          return;
+        }
+
+        // Double-check if another thread created the promise while we were waiting
+        if (HoneyHiveTracer.flushPromise) {
+          return HoneyHiveTracer.flushPromise;
+        }
+        
+        // Create a new flush promise
+        try {
+          HoneyHiveTracer.flushPromise = traceloop!.forceFlush();
+          return HoneyHiveTracer.flushPromise;
+        } finally {
+          // Clean up after the promise is resolved
+          HoneyHiveTracer.flushPromise!.then(
+            () => { HoneyHiveTracer.flushPromise = null; }, // promise fulfilled
+            () => { HoneyHiveTracer.flushPromise = null; } // promise rejected
+          );
+        }
+      });
+    } catch (error) {
+      if (HoneyHiveTracer.verbose) {
+        console.warn("Failed to flush:", error);
       }
-    });
+    }
   }
 
   public async flush(): Promise<void> {
-    return await HoneyHiveTracer.flush();
+    try {
+      return await HoneyHiveTracer.flush();
+    } catch {
+      // do nothing
+    }
   }
 }
 
 export async function enrichSession(params: EnrichSessionParams = {}): Promise<void> {
-  let {
-    sessionId,
-  } = params;
-  
-  const {
-    metadata,
-    feedback,
-    metrics,
-    config,
-    inputs,
-    outputs,
-    userProperties
-  } = params;
-
-  // If sessionId is not provided, try to get from association properties
-  if (!sessionId) {
-    const contextAssocProps = getAssociationPropsFromContext();
-    if (contextAssocProps && contextAssocProps['session_id']) {
-      sessionId = contextAssocProps['session_id'];
-    }
-  }
-
-  // Proceed only if we have a sessionId
-  if (!sessionId) {
-    console.error("Session ID is not provided and could not be found in context. Please initialize HoneyHiveTracer before calling enrichSession");
-    return;
-  }
-
-  const updateData: UpdateEventRequestBody = { eventId: sessionId };
-
-  if (metadata) updateData['metadata'] = metadata;
-  if (feedback) updateData['feedback'] = feedback;
-  if (metrics) updateData['metrics'] = metrics;
-  if (config) updateData['config'] = config;
-  if (outputs) updateData['outputs'] = outputs;
-  if (userProperties) updateData['userProperties'] = userProperties;
-
-  // TODO support by adding type to UpdateEventRequestBody
-  if (inputs) {
-    console.warn("inputs are not yet supported in enrichSession");
-  }
-
   try {
+    let {
+      sessionId,
+    } = params;
+    
+    const {
+      metadata,
+      feedback,
+      metrics,
+      config,
+      inputs,
+      outputs,
+      userProperties
+    } = params;
+
+    // If sessionId is not provided, try to get from association properties
+    if (!sessionId) {
+      const contextAssocProps = getAssociationPropsFromContext();
+      console.log("contextAssocProps", contextAssocProps);
+      if (contextAssocProps && contextAssocProps['session_id']) {
+        sessionId = contextAssocProps['session_id'];
+      }
+    }
+
+    // Proceed only if we have a sessionId
+    if (!sessionId) {
+      if (HoneyHiveTracer.verbose) {
+        console.error("Session ID is not provided and could not be found in context. Please initialize HoneyHiveTracer before calling enrichSession");
+      }
+      return;
+    }
+
+    const updateData: UpdateEventRequestBody = { eventId: sessionId };
+
+    if (metadata) updateData['metadata'] = metadata;
+    if (feedback) updateData['feedback'] = feedback;
+    if (metrics) updateData['metrics'] = metrics;
+    if (config) updateData['config'] = config;
+    if (outputs) updateData['outputs'] = outputs;
+    if (userProperties) updateData['userProperties'] = userProperties;
+
+    // TODO support by adding type to UpdateEventRequestBody
+    if (inputs) {
+      if (HoneyHiveTracer.verbose) {
+        console.warn("inputs are not yet supported in enrichSession");
+      }
+    }
+  
     if (!HoneyHiveTracer.sdkInstance) {
-      console.error("SDK instance is not initialized. Please initialize HoneyHiveTracer before calling enrichSession");
+      if (HoneyHiveTracer.verbose) {
+        console.error("SDK instance is not initialized. Please initialize HoneyHiveTracer before calling enrichSession");
+      }
       return;
     }
     await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData);
   } catch (error) {
-    console.error("Failed to update event:", error);
+    if (HoneyHiveTracer.verbose) {
+      console.warn("Failed to update event:", error);
+    }
   }
 }
 
@@ -825,34 +908,44 @@ export function enrichSpan({
   error?: any;
   eventName?: string;
 } = {}): void {
-  const span = trace.getActiveSpan();
-  if (!span) {
-    console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
+  let span: Span | undefined;
+  try {
+    span = trace.getActiveSpan();
+    if (!span) {
+      if (HoneyHiveTracer.verbose) {
+        console.warn("No active span found. Make sure enrichSpan is called within a traced function.");
+      }
+      return;
+    }
+    if (config) {
+      setSpanAttributes(span, "honeyhive_config", config);
+    }
+    if (metadata) {
+      setSpanAttributes(span, "honeyhive_metadata", metadata);
+    }
+    if (metrics) {
+      setSpanAttributes(span, "honeyhive_metrics", metrics);
+    }
+    if (feedback) {
+      setSpanAttributes(span, "honeyhive_feedback", feedback);
+    }
+    if (inputs) {
+      setSpanAttributes(span, "honeyhive_inputs", inputs);
+    }
+    if (outputs) {
+      setSpanAttributes(span, "honeyhive_outputs", outputs);
+    }
+    if (error) {
+      setSpanAttributes(span, "honeyhive_error", error);
+    }
+    if (eventName) {
+      setSpanAttributes(span, "honeyhive_event_name", eventName);
+    }
+  } catch (error) {
+    if (HoneyHiveTracer.verbose) {
+      console.warn("Failed to get active span:", error);
+    }
     return;
-  }
-  if (config) {
-    setSpanAttributes(span, "honeyhive_config", config);
-  }
-  if (metadata) {
-    setSpanAttributes(span, "honeyhive_metadata", metadata);
-  }
-  if (metrics) {
-    setSpanAttributes(span, "honeyhive_metrics", metrics);
-  }
-  if (feedback) {
-    setSpanAttributes(span, "honeyhive_feedback", feedback);
-  }
-  if (inputs) {
-    setSpanAttributes(span, "honeyhive_inputs", inputs);
-  }
-  if (outputs) {
-    setSpanAttributes(span, "honeyhive_outputs", outputs);
-  }
-  if (error) {
-    setSpanAttributes(span, "honeyhive_error", error);
-  }
-  if (eventName) {
-    setSpanAttributes(span, "honeyhive_event_name", eventName);
   }
 }
 
@@ -896,7 +989,9 @@ export function traceFunction(
         return argsMatch[1].split(',').filter(Boolean);
       }
     } catch (error) {
-      console.warn('Failed to parse function arguments:', error);
+      if (HoneyHiveTracer.verbose) {
+        console.warn('Failed to parse function arguments:', error);
+      }
     }
     return null; // Return null if parsing fails
   }
@@ -922,7 +1017,9 @@ export function traceFunction(
           if (typeof eventType === 'string' && ['tool', 'model', 'chain'].includes(eventType.toLowerCase())) {
             setSpanAttributes(span, 'honeyhive_event_type', eventType.toLowerCase());
           } else {
-            console.warn("event_type could not be set. Must be 'tool', 'model', or 'chain'.");
+            if (HoneyHiveTracer.verbose) {
+              console.warn("event_type could not be set. Must be 'tool', 'model', or 'chain'.");
+            }
           }
         }
         if (config) {
@@ -938,13 +1035,17 @@ export function traceFunction(
             const contextAssocProps = getAssociationPropsFromContext();
             
             if (!contextAssocProps) {
-              throw new Error(
-                "No association properties found. " +
+              if (HoneyHiveTracer.verbose) {
+                console.error(
+                  "No association properties found. " +
                 "Please use tracer.trace<Model/Tool/Chain>(...) to trace a function, " +
-                "or use tracer.trace(fn) at the top level to automatically get trace context."
-              );
+                  "or use tracer.trace(fn) at the top level to automatically get trace context."
+                );
+              }
+              associationProperties = {};
+            } else {
+              associationProperties = contextAssocProps as Record<string, string>;
             }
-            associationProperties = contextAssocProps as Record<string, string>;
         }
         
         // Set association properties on span
@@ -994,6 +1095,12 @@ export function traceFunction(
         throw err;
       }
     };
-    return wrappedFunction as T;
+
+    // If Traceloop is not initialized, return the original function to avoid errors
+    if (traceloop && trace && trace.getTracer('traceloop.tracer')) {
+      return wrappedFunction as T;
+    } else {
+      return func as T;
+    }
   };
 }

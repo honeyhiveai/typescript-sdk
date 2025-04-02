@@ -83,6 +83,7 @@ try {
   
 // Self-executing function to detect the environment and handle execution
 (async () => {
+    console.log("----------------------------------------\n");
     await run(main);
 })();
 // ============================================================================

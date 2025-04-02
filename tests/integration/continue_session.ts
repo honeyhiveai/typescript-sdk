@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { HoneyHiveTracer, traceModel, enrichSession } from 'honeyhive';
+import { HoneyHiveTracer, traceModel } from 'honeyhive';
 
 const openai = new OpenAI();
 
@@ -22,22 +22,18 @@ async function tracedMain() {
     const response = await callOpenAI(prompt);
     
     console.log(response);
-    await enrichSession({
-        metadata: {
-            "test": "test"
-        }
-    });
     await HoneyHiveTracer.flush();
 }
 
 async function main() {
-    const tracer = await HoneyHiveTracer.init({
-        verbose: true,
+
+    const continuedTracer = await HoneyHiveTracer.init({
+        sessionId: "72d12bb6-6173-4440-a8a6-54999632e4ec",
         instrumentModules: {
             openAI: OpenAI
         }
     });
-    return await tracer.trace(tracedMain);
+    return await continuedTracer.trace(tracedMain);
 }
 
 export { main };

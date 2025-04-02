@@ -10,9 +10,8 @@
     "test": "tsc && node --no-deprecation dist/index.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
     "honeyhive": "file:honeyhive.tgz",
-    "openai": "^4.89.0"
+    "openai": "^4.91.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

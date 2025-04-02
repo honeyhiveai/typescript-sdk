@@ -1,5 +1,6 @@
 import { HoneyHive } from "./sdk";
 import { v4 as uuidv4 } from 'uuid';
+import { HoneyHiveTracer } from './tracer';
 
 // Type declarations for TypeScript
 type Serialized = any;
@@ -25,7 +26,9 @@ try {
   BaseCallbackHandler = LangChainBaseCallbackHandler;
 } catch (error) {
   // If the import fails, we'll use the default handler
-  console.warn('LangChain not found, please install @langchain/core/callbacks/base');
+  if (HoneyHiveTracer.verbose) {
+    console.warn('LangChain not found, please install @langchain/core/callbacks/base to use LangChain tracer.');
+  }
   // BaseCallbackHandler remains as DefaultBaseCallbackHandler
 }
 interface HoneyHiveTracerInput {
