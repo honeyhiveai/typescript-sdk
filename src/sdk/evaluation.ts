@@ -563,7 +563,7 @@ class Evaluation {
 
         const duration = endTime - startTime;
         this.evalResult.stats['duration_s'] = Number((duration / 1000).toFixed(3));
-
+        this.evalResult.sessionIds = this.evaluationSessionIds;
         // Process results
         for (const result of results) {
             this.evalResult.data['input'].push(JSON.stringify(result['input']));
