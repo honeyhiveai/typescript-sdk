@@ -4,6 +4,17 @@
 # Declare phony targets
 .PHONY: help clean test dev
 
+# Helper function to check required parameters
+define check_params
+	@if [ -z "$(FILE)" ] || [ -z "$(ENV)" ]; then \
+		echo "Error: Both FILE and ENV must be specified."; \
+		echo "Usage: make test FILE=<test-file> ENV=<environment>"; \
+		exit 1; \
+	fi
+	@echo "Building env: $(ENV)"
+	@echo "Entry script: $(FILE)"
+endef
+
 # Help target
 help:
 	@echo "Usage: make test FILE=<test-file> ENV=<environment>"
@@ -30,7 +41,7 @@ define build_and_run
 	@echo "Setting up test environment..."
 	@if [ ! -f honeyhive.tgz ]; then \
 		echo "Building package..." && \
-		cd .. && npm pack && \
+		cd .. && npm pack --quiet && \
 		mv honeyhive-*.tgz tests/honeyhive.tgz && \
 		cd tests; \
 	fi
@@ -71,31 +82,19 @@ endef
 
 # Test target
 test:
-	@if [ -z "$(FILE)" ] || [ -z "$(ENV)" ]; then \
-		echo "Error: Both FILE and ENV must be specified."; \
-		echo "Usage: make test FILE=<test-file> ENV=<environment>"; \
-		exit 1; \
-	fi
+	$(call check_params)
 	$(call extract_and_patch,$(FILE),$(ENV))
 	$(call build_and_run,$(FILE),$(ENV))
 
 dev:
-	@if [ -z "$(FILE)" ] || [ -z "$(ENV)" ]; then \
-		echo "Error: Both FILE and ENV must be specified."; \
-		echo "Usage: make test FILE=<test-file> ENV=<environment>"; \
-		exit 1; \
-	fi
+	$(call check_params)
 	@echo "Building package in root directory..."
 	@cd .. && npm run build && rm -f honeyhive*.tgz && cd tests && rm -f honeyhive.tgz
 	$(call extract_and_patch,$(FILE),$(ENV))
 	$(call build_and_run,$(FILE),$(ENV))
 
 local:
-	@if [ -z "$(FILE)" ] || [ -z "$(ENV)" ]; then \
-		echo "Error: Both FILE and ENV must be specified."; \
-		echo "Usage: make test FILE=<test-file> ENV=<environment>"; \
-		exit 1; \
-	fi
+	$(call check_params)
 	@echo "Building package in root directory..."
 	@cd .. && npm run build && rm -f honeyhive*.tgz && cd tests && rm -f honeyhive.tgz
 	$(call extract_and_patch,$(FILE),$(ENV))

@@ -18,7 +18,7 @@ export interface EnrichSpanParams {
   feedback?: Record<string, any>;
   inputs?: Record<string, any>;
   outputs?: Record<string, any>;
-  error?: Record<string, any>;
+  error?: string | null;
   eventName?: string;
 }
 
@@ -731,15 +731,34 @@ export class HoneyHiveTracer {
     tracedFunction();
   }
 
-  public trace(fn: () => void): void {
+  public trace<A extends unknown[], F extends (...args: A) => ReturnType<F>>(
+    fn: F,
+    ...args: A
+  ): ReturnType<F> {
     try {
       if (this.sessionId) {
         const associationProps = this.getTraceloopAssociationProperties();
         
-        traceloop.withAssociationProperties(
+        // If traceloop.withAssociationProperties throws before executing fn,
+        // we'll catch it in the outer try-catch and execute fn directly
+        const result = traceloop.withAssociationProperties(
           associationProps,
           fn,
+          undefined, // thisArg
+          ...args
         );
+
+        if (isPromise(result)) {
+          return result.catch((error) => {
+            if (HoneyHiveTracer.verbose) {
+              console.warn("Unable to trace function. ", error);
+            }
+            // If we get here, fn was already executed by traceloop.withAssociationProperties
+            // so we just return the original result
+            return result;
+          }) as ReturnType<F>;
+        }
+        return result as ReturnType<F>;
       } else {
         throw new Error("Session ID is not initialized");
       }
@@ -747,7 +766,9 @@ export class HoneyHiveTracer {
       if (HoneyHiveTracer.verbose) {
         console.warn("Unable to trace function. ", error);
       }
-      return fn();
+      // If we get here, traceloop.withAssociationProperties threw before executing fn
+      // so we need to execute fn directly
+      return fn(...args);
     }
   }
 
@@ -1039,7 +1060,7 @@ export function traceFunction(
                 console.error(
                   "No association properties found. " +
                 "Please use tracer.trace<Model/Tool/Chain>(...) to trace a function, " +
-                  "or use tracer.trace(fn) at the top level to automatically get trace context."
+                "or use tracer.trace(fn) at the top level to automatically get trace context."
                 );
               }
               associationProperties = {};
@@ -1055,12 +1076,17 @@ export function traceFunction(
           setSpanAttributes(span, `traceloop.association.properties.${key}`, value);
         });
 
-        const result = traceloop.withAssociationProperties(
-          associationProperties, // association properties
-          func, // function to trace
-          undefined, // thisArg
-          ...args // args
-        );
+        // Directly attach the span to the context
+        const spanContext = trace.setSpan(context.active(), span);
+        
+        const result = context.with(spanContext, () => {
+          return traceloop.withAssociationProperties(
+            associationProperties || {}, // association properties (ensure it's not undefined)
+            func, // function to trace
+            undefined, // thisArg
+            ...args // args
+          );
+        });
 
         if (isPromise(result)) {
           const newResult = result.then(
