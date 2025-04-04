@@ -22,13 +22,13 @@ async function initializeTracer() {
 }
 
 
-async function tracedMain(tracer: HoneyHiveTracer) {
+async function tracedMain() {
 
-  const currentSessionId = tracer.sessionId;
-  console.log(`Initialized tracer with session ID: ${currentSessionId}`);
+  // const currentSessionId = tracer.sessionId;
+  // console.log(`Initialized tracer with session ID: ${currentSessionId}`);
 
   // Define the get_relevant_docs function with tracing
-  const getRelevantDocs = tracer.traceTool(function getRelevantDocs(
+  const getRelevantDocs = traceTool(function getRelevantDocs(
     query: string,
   ): string[] {
     console.log("Executing getRelevantDocs");
@@ -44,29 +44,29 @@ async function tracedMain(tracer: HoneyHiveTracer) {
     return medicalDocs;
   });
 
-  const generateResponse = tracer.traceModel(function generateResponse(
+  const generateResponse = traceModel(async function generateResponse(
     docs: string[],
     query: string,
-  ): string {
+  ): Promise<string> {
     console.log("Executing generateResponse");
     const prompt = `Question: ${query}\nContext: ${docs}\nAnswer:`;
-    const response = "This is a test response.";
+    const response = await callOpenAI(prompt);
 
-    tracer.enrichSpan({
+    enrichSpan({
       metrics: { contains_citations: true },
     });
 
-    return response;
+    return response || "no response";
   });
 
-  const ragPipeline = tracer.traceChain(function ragPipeline(
+  const ragPipeline = traceChain(async function ragPipeline(
     query: string,
-  ): MedicalDocument {
+  ): Promise<MedicalDocument> {
     console.log("Executing ragPipeline");
     const docs = getRelevantDocs(query);
-    const response = generateResponse(docs, query);
+    const response = await generateResponse(docs, query);
 
-    tracer.enrichSession({
+    enrichSession({
       metrics: {
         rag_pipeline: {
           num_retrieved_docs: docs.length,
@@ -81,7 +81,7 @@ async function tracedMain(tracer: HoneyHiveTracer) {
   // Execute the pipeline
   const query = "How does exercise affect diabetes?";
   console.log("Executing pipeline...");
-  const result = ragPipeline(query);
+  const result = await ragPipeline(query);
   console.log("Pipeline executed, result:", result);
 
   console.log("Test finished successfully.");
@@ -95,28 +95,10 @@ async function callOpenAI(prompt: string) {
   return response.choices[0].message.content;
 }
 
-async function tracedMain2(tracer: HoneyHiveTracer) {
-  const prompt = "What is the capital of France?";
-  const tracedHello = tracer.traceModel(function hello() {
-    console.log("hello");
-    tracedMain(tracer);
-  });
-  tracedHello();
-  const response = await callOpenAI(prompt);
-  
-  console.log(response);
-  await tracer.enrichSession({
-      metadata: {
-          "test": "test"
-      }
-  });
-  await tracer.flush();
-}
-
 async function main() {
   const tracer = await initializeTracer();
   try {
-    await tracer.trace(() => tracedMain2(tracer));
+    await tracer.trace(() => tracedMain());
     return true;
   } catch (error) {
     console.error(error);
