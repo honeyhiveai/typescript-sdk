@@ -1,4 +1,4 @@
-import { HoneyHiveTracer } from "honeyhive";
+import { HoneyHiveTracer, enrichSession } from "honeyhive";
 import { OpenAI } from "openai";
 
 async function initializeTracer(sessionName: string): Promise<HoneyHiveTracer> {
@@ -22,7 +22,7 @@ async function main() {
 
     const tracer = await initializeTracer(sessionName);
 
-    await tracer.enrichSession({
+    await enrichSession({
         metadata: {
             session_metadata: "meta",
         },

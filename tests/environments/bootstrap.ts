@@ -45,7 +45,7 @@ try {
 }
 }
 
-async function run(mainFn: () => Promise<void>) {
+async function run(mainFn: (...args: any[]) => Promise<any> | any) {
 try {
     // Check if this file is being run directly
     let isRunningDirectly = false;
@@ -71,7 +71,7 @@ try {
 
     // Execute main if this file is being run directly
     if (isRunningDirectly) {
-        await mainFn().catch(err => {
+        await mainFn().catch((err: any)  => {
         console.error('Error in main function:', err);
         process.exit(1);
         });

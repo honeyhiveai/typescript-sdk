@@ -30,14 +30,24 @@ async function tracedMain() {
     await HoneyHiveTracer.flush();
 }
 
-async function main() {
+// Export the main function type for TypeScript
+async function main(): Promise<boolean> {
     const tracer = await HoneyHiveTracer.init({
         verbose: true,
         instrumentModules: {
             openAI: OpenAI
         }
     });
-    return await tracer.trace(tracedMain);
+
+    try {
+        await tracer.trace(tracedMain);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    } finally {
+        await tracer.flush();
+    }
 }
 
 export { main };

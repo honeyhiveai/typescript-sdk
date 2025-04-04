@@ -25,6 +25,8 @@ node_modules/
 **/dist/
 **/node_modules/
 tests/**/index.ts
+tests/**/package-lock.json
+tests/**/Dockerfile
 
 # Ignore all build files in src (only keep TypeScript files)
 src/**/*.js
