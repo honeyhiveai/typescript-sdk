@@ -105,10 +105,15 @@ export interface GitInfo {
  */
 function isGitRepo(directory: string = process.cwd()): boolean {
   try {
-    // Check if .git directory exists
-    const gitDir = path.join(directory, '.git');
-    return fs.existsSync(gitDir) && fs.lstatSync(gitDir).isDirectory();
+    // Use git rev-parse --is-inside-work-tree instead of file I/O
+    const result = execSync('git rev-parse --is-inside-work-tree', { 
+      cwd: directory, 
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'] // Suppress stderr
+    }).trim();
+    return result === 'true';
   } catch (error) {
+    // Return false if git command fails (not a git repo or git not installed)
     return false;
   }
 }
