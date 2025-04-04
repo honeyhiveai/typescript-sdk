@@ -105,9 +105,9 @@ export interface GitInfo {
  */
 function isGitRepo(directory: string = process.cwd()): boolean {
   try {
-    // Check if .git directory exists or if git rev-parse succeeds
-    execSync('git rev-parse --is-inside-work-tree', { cwd: directory, encoding: 'utf-8', stdio: 'ignore' });
-    return true;
+    // Check if .git directory exists
+    const gitDir = path.join(directory, '.git');
+    return fs.existsSync(gitDir) && fs.lstatSync(gitDir).isDirectory();
   } catch (error) {
     return false;
   }
@@ -127,16 +127,16 @@ export function getGitInfo(directory: string = process.cwd()): GitInfo {
       error: "Telemetry disabled"
     };
   }
-
-  // First check if this is a git repository
-  if (!isGitRepo(directory)) {
-    return { 
-      uncommittedChanges: false,
-      error: "Not a git repository"
-    };
-  }
   
   try {
+    // First check if this is a git repository
+    if (!isGitRepo(directory)) {
+      return { 
+        uncommittedChanges: false,
+        error: "Not a git repository"
+      };
+    }
+
     const commitHash = execSync('git rev-parse HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
     const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
     const repoUrl = execSync('git config --get remote.origin.url', { cwd: directory, encoding: 'utf-8' }).trim().replace(/\.git$/, '');
@@ -395,16 +395,6 @@ export class HoneyHiveTracer {
           sessionId: this.sessionId
         }
       };
-
-      // Gather git information
-      const gitInfo = getGitInfo();
-      
-      // Only add git info to metadata if there's no error
-      if (!gitInfo.error && requestBody.session) {
-        requestBody.session.metadata = {
-          git: gitInfo
-        };
-      }
       
       if (!HoneyHiveTracer.sdkInstance) {
         throw new Error("SDK instance is not initialized");
