@@ -12,6 +12,14 @@ For development, you can use the `dev` target which first builds the package in 
 ./test.sh dev integration/openai_trace.ts commonjs-commonjs
 ```
 
+For AWS Lambda deployment, you can use the `lambda` target to create a deployment package:
+
+```bash
+./test.sh lambda integration/lambda_handler.ts commonjs-nodejs
+```
+
+This will create a lambda.zip file in the environment directory which you can upload to AWS Lambda.
+
 # Overview
 
 Integration testing in JavaScript/TypeScript requires testing across multiple environments with different configurations and dependency versions. Our approach:
@@ -34,11 +42,14 @@ Integration testing in JavaScript/TypeScript requires testing across multiple en
     ├── test.sh
     ├── README.md
     ├── environments/
+    │   ├── bootstrap.ts            # Standard bootstrap for tests
+    │   ├── bootstrapLambda.ts      # Special bootstrap for Lambda
     │   ├── commonjs-commonjs/
     │   ├── esm-commonjs/
     │   └── ...
     └── integration/
         ├── openai_trace.ts
+        ├── lambda_handler.ts
         └── ...
 ```
 
@@ -57,6 +68,37 @@ Integration testing in JavaScript/TypeScript requires testing across multiple en
 This will patch the test file with bootstrap code and run it in the specified environment's Docker container. 
 
 Note: If you don't specify an environment, it will default to `module-esnext`.
+
+# AWS Lambda Deployment
+
+To prepare a deployment package for AWS Lambda:
+
+```bash
+./test.sh lambda integration/lambda_handler.ts commonjs-nodejs
+```
+
+This will:
+1. Build the SDK from the current state of the repository
+2. Install dependencies including aws-lambda types
+3. Use the special bootstrapLambda.ts to wrap your code
+4. Transpile TypeScript to JavaScript
+5. Create a deployment package (`lambda.zip`) in your chosen environment directory
+6. Structure the package with the handler at the root level
+
+After running the command, upload the generated `lambda.zip` file to AWS Lambda and set the handler to `index.handler`.
+
+## Lambda Integration Flow
+
+The Lambda deployment process follows these steps:
+
+1. Your script exports a `main()` function (just like regular tests)
+2. The bootstrapLambda.ts file wraps your script
+3. If your script already exports a `handler`, it will be preserved
+4. Otherwise, a new handler is created that invokes your `main()` function
+5. The final handler conforms to the AWS Lambda interface
+6. Local testing is supported via a mock execution environment
+
+This approach allows you to write standard HoneyHive instrumented code and easily deploy it to AWS Lambda without manual configuration.
 
 
 # Development
@@ -98,7 +140,13 @@ For development (which ensures the package is built first):
 ./test.sh dev integration/openai_trace.ts commonjs-commonjs
 ```
 
-The `dev` target ensures the package is built first before running the test.
+For Lambda deployment:
+
+```bash
+./test.sh lambda integration/lambda_handler.ts commonjs-nodejs
+```
+
+The `dev` and `lambda` targets ensure the package is built first before running the test or creating the deployment package.
 
 ## 3. Changing
 ### Change to SDK
@@ -129,4 +177,19 @@ Then run the test command with the new environment:
 - write your Typescript script in the /integration folder
 - make sure you export a main method which follows the signature: async (): Promise<void>
 - make sure to flush (else the program will end before OTEL can export everything)
+
+### Creating Lambda handlers
+For AWS Lambda handlers, there are two approaches:
+
+1. Simple approach (recommended):
+   - Export a `main()` function following the standard testing pattern
+   - The bootstrapLambda.ts file will automatically wrap it for Lambda
+   - The resulting handler will call your main function and provide proper responses
+
+2. Advanced approach:
+   - Export both a `main()` function and a `handler()` function
+   - The `handler()` should follow the Lambda signature
+   - When using the lambda target, your handler will be preserved and used directly
+
+Either way, the script will be properly wrapped for AWS Lambda, with the correct types and structure.
 

@@ -5,9 +5,10 @@ import { Mutex } from 'async-mutex';
 
 import { HoneyHive } from "./sdk";
 import { UpdateEventRequestBody } from "../models/operations/updateevent";
-import { Telemetry } from "./telemetry";
+// import { Telemetry } from "./telemetry";
 import { Span, trace, Exception, context, createContextKey } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
+import * as crypto from "crypto";
 import { StartSessionRequestBody } from "../models/operations/startsession";
 import assert from "assert";
 
@@ -401,19 +402,33 @@ export class HoneyHiveTracer {
         }
       };
       
-      if (!HoneyHiveTracer.sdkInstance) {
-        throw new Error("SDK instance is not initialized");
+      let sessionId: string;
+      try {
+        if (!HoneyHiveTracer.sdkInstance) {
+          throw new Error("SDK instance is not initialized");
+        }
+        const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody, {
+          timeoutMs: 5000 // 5 seconds
+        });
+        if (!res.sessionId || res.sessionId === undefined) {
+          throw new Error("No sessionId returned from server");
+        }
+        sessionId = res.sessionId as string;
+      } catch (apiError) {
+        // If API call fails, generate a random UUID as a fallback
+        sessionId = crypto.randomUUID();
+        if (HoneyHiveTracer.verbose) {
+          console.warn(`Could not start HoneyHive session via API: ${apiError}. Using generated sessionId: ${sessionId}`);
+        }
       }
-      const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody);
-      assert(res.sessionId, "Could not get sessionId from server");
 
       if (HoneyHiveTracer.verbose) {
-        console.info("HoneyHive session started with id: ", res.sessionId);
+        console.info("HoneyHive session started with id: ", sessionId);
       }
 
       // Set tracer sessionId
-      this.sessionId = res.sessionId;
-      assert(this.sessionId, "Could not get sessionId from server");
+      this.sessionId = sessionId;
+      assert(this.sessionId, "Could not get sessionId from server or generate random UUID");
       return this.sessionId;
     } catch (error) {
       if (HoneyHiveTracer.verbose) {
@@ -588,7 +603,7 @@ export class HoneyHiveTracer {
         logLevel: tracer.verbose ? "debug" : "error",
         silenceInitializationMessage: !tracer.verbose,
       });
-      await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
+      // await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
       HoneyHiveTracer.isTraceloopInitialized = true;
 
       // Log initialization success with orange color
@@ -817,6 +832,11 @@ export class HoneyHiveTracer {
         // Create a new flush promise
         try {
           HoneyHiveTracer.flushPromise = traceloop!.forceFlush();
+          
+          // TODO: for lambda, clear the otel context by setting an empty context as active
+          // const emptyContext = trace.deleteSpan(context.active());
+          // context.with(emptyContext, () => {});
+          
           return HoneyHiveTracer.flushPromise;
         } finally {
           // Clean up after the promise is resolved
@@ -897,7 +917,9 @@ export async function enrichSession(params: EnrichSessionParams = {}): Promise<v
       }
       return;
     }
-    await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData);
+    await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData, {
+      timeoutMs: 5000 // 5 seconds
+    });
   } catch (error) {
     if (HoneyHiveTracer.verbose) {
       console.warn("Failed to update event:", error);
