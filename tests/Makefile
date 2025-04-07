@@ -2,7 +2,7 @@
 .DEFAULT_GOAL := help
 
 # Declare phony targets
-.PHONY: help clean test dev
+.PHONY: help clean test dev local lambda
 
 # Helper function to check required parameters
 define check_params
@@ -19,6 +19,7 @@ endef
 help:
 	@echo "Usage: make test FILE=<test-file> ENV=<environment>"
 	@echo "Example: make test FILE=evaluation.ts ENV=commonjs-commonjs"
+	@echo "Example: make lambda FILE=lambda_handler.ts ENV=commonjs-nodejs"
 	@echo ""
 	@echo "Available environments:"
 	@ls -d environments/*/ | sed 's/environments\///g' | sed 's/\///g'
@@ -34,6 +35,19 @@ define extract_and_patch
 		FILENAME == ARGV[2] {print}           \
 		END {print after}                     \
 	' environments/bootstrap.ts $(1) > environments/$(2)/index.ts
+endef
+
+# Function to extract code and sandwich it for Lambda deployment
+define extract_and_patch_lambda
+	@echo "Creating Lambda-patched file..."
+	@awk '                                    \
+		BEGIN { p = 0; }                      \
+		FILENAME == ARGV[1] && !p {print}     \
+		FILENAME == ARGV[1] && /\/\/ <\/patch>/ {p = 1; next} \
+		FILENAME == ARGV[1] && p {after = after ORS $$0}      \
+		FILENAME == ARGV[2] {print}           \
+		END {print after}                     \
+	' environments/bootstrapLambda.ts $(1) > environments/$(2)/index.ts
 endef
 
 # Function to build and run tests
@@ -80,6 +94,38 @@ define build_and_run_local
 		npm run test -- --env-file=.env
 endef
 
+define build_lambda_package
+	@echo "Setting up lambda deployment environment..."
+	@if [ ! -f honeyhive.tgz ]; then \
+		echo "Building package..." && \
+		cd .. && npm pack && \
+		mv honeyhive-*.tgz tests/honeyhive.tgz && \
+		cd tests; \
+	fi
+	@echo "Copying files to $(2)..."
+	@cp honeyhive.tgz environments/$(2)/
+	@cp .env environments/$(2)/
+	@echo "Installing dependencies and building Lambda package..."
+	@cd environments/$(2) && \
+		npm install ./honeyhive.tgz --no-cache && \
+		npm install dotenv --no-save && \
+		npm run build && \
+		mkdir -p lambda-build && \
+		cp -r ./dist/* ./lambda-build/ && \
+		mkdir -p lambda-build/node_modules && \
+		cp -r ./node_modules/honeyhive lambda-build/node_modules/ && \
+		cp -r ./node_modules/dotenv lambda-build/node_modules/ && \
+		cp .env ./lambda-build/ && \
+		cd lambda-build && \
+		zip -rq ../lambda.zip . && \
+		cd .. && \
+		rm -rf lambda-build
+	@echo "\n----------------------------------------"
+	@echo "Lambda deployment package created at: environments/$(2)/lambda.zip"
+	@echo "Package size: $$(du -h environments/$(2)/lambda.zip | cut -f1)"
+	@echo "Upload this file to AWS Lambda and set the handler to 'index.handler'"
+endef
+
 # Test target
 test:
 	$(call check_params)
@@ -100,6 +146,12 @@ local:
 	$(call extract_and_patch,$(FILE),$(ENV))
 	$(call build_and_run_local,$(FILE),$(ENV))
 
+lambda:
+	$(call check_params)
+	@echo "Building package in root directory..."
+	@cd .. && npm run build && rm -f honeyhive*.tgz && cd tests && rm -f honeyhive.tgz
+	$(call extract_and_patch_lambda,$(FILE),$(ENV))
+	$(call build_lambda_package,$(FILE),$(ENV))
 
 # Clean target
 clean:
@@ -110,4 +162,5 @@ clean:
 		rm -f $$dir/index.ts; \
 		rm -f $$dir/Dockerfile; \
 		rm -f $$dir/.env; \
+		rm -f $$dir/lambda.zip; \
 	done 

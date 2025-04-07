@@ -27,7 +27,6 @@ async function tracedMain() {
             "test": "test"
         }
     });
-    await HoneyHiveTracer.flush();
 }
 
 // Export the main function type for TypeScript
