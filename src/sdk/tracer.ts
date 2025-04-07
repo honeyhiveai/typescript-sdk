@@ -35,6 +35,20 @@ export interface EnrichSessionParams {
 }
 
 /**
+ * Options for tracing a function
+ */
+export interface TraceFunctionOptions {
+  /** Type of event: 'model', 'tool', or 'chain' */
+  eventType?: string | undefined;
+  /** Configuration parameters to include in the trace */
+  config?: Record<string, any> | undefined;
+  /** Metadata to include in the trace */
+  metadata?: Record<string, any> | undefined;
+  /** Custom name for the event */
+  eventName?: string | undefined;
+}
+
+/**
  * Core properties of the HoneyHiveTracer
  */
 export interface HoneyHiveTracerProperties {
@@ -706,30 +720,33 @@ export class HoneyHiveTracer {
       return {};
     }
   }
-
-  public traceFunction(...args: any[]) {
-    return traceFunction(...args, this.getTraceloopAssociationProperties());
+  
+  public traceFunction(
+    options: TraceFunctionOptions = {}
+  ) {
+    const associationProps = this.getTraceloopAssociationProperties();
+    return traceFunction(options, associationProps);
   }
 
   public traceModel<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "model", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "model" })(func);
   }
 
   public traceTool<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "tool", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "tool" })(func);
   } 
 
   public traceChain<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "chain", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "chain" })(func);
   }
 
   public logModel(params: EnrichSpanParams = {}) {
@@ -989,30 +1006,31 @@ export function enrichSpan({
 
 export function traceModel<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "model", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "model" })(func);
 }
 
 export function traceTool<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "tool", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "tool" })(func);
 } 
 
 export function traceChain<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "chain", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "chain" })(func);
 }
 
 export function traceFunction(
-  { eventType, config, metadata, eventName }: 
-  { eventType?: string | undefined; config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {},
+  options: TraceFunctionOptions = {},
   associationProperties: Record<string, string> | undefined = undefined
 ) {
+  const { eventType, config, metadata, eventName } = options;
+
   // Helper function to extract argument names from the function
   function getArgs(func: (...args: any[]) => any): string[] | null {
     try {
