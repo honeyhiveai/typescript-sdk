@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { HoneyHiveTracer, traceModel } from 'honeyhive';
+import { HoneyHiveTracer } from 'honeyhive';
 
 const openai = new OpenAI();
 const tracer = await HoneyHiveTracer.init({
@@ -23,11 +23,11 @@ async function callOpenAI(prompt: string) {
 
 async function tracedMain() {
     const prompt = "What is the capital of France?";
-    const tracedHello = traceModel(hello);
+    const tracedHello = tracer.traceModel(hello);
     tracedHello();
     const response = await callOpenAI(prompt);
     console.log(response);
-    await HoneyHiveTracer.flush();
+    await tracer.flush();
 }
 
 async function main() {

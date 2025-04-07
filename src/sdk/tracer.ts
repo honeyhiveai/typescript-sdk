@@ -5,9 +5,10 @@ import { Mutex } from 'async-mutex';
 
 import { HoneyHive } from "./sdk";
 import { UpdateEventRequestBody } from "../models/operations/updateevent";
-import { Telemetry } from "./telemetry";
+// import { Telemetry } from "./telemetry";
 import { Span, trace, Exception, context, createContextKey } from "@opentelemetry/api";
 import * as traceloop from "@traceloop/node-server-sdk";
+import * as crypto from "crypto";
 import { StartSessionRequestBody } from "../models/operations/startsession";
 import assert from "assert";
 
@@ -31,6 +32,20 @@ export interface EnrichSessionParams {
   inputs?: Record<string, any>;
   outputs?: Record<string, any>;
   userProperties?: Record<string, any>;
+}
+
+/**
+ * Options for tracing a function
+ */
+export interface TraceFunctionOptions {
+  /** Type of event: 'model', 'tool', or 'chain' */
+  eventType?: string | undefined;
+  /** Configuration parameters to include in the trace */
+  config?: Record<string, any> | undefined;
+  /** Metadata to include in the trace */
+  metadata?: Record<string, any> | undefined;
+  /** Custom name for the event */
+  eventName?: string | undefined;
 }
 
 /**
@@ -105,10 +120,15 @@ export interface GitInfo {
  */
 function isGitRepo(directory: string = process.cwd()): boolean {
   try {
-    // Check if .git directory exists or if git rev-parse succeeds
-    execSync('git rev-parse --is-inside-work-tree', { cwd: directory, encoding: 'utf-8', stdio: 'ignore' });
-    return true;
+    // Use git rev-parse --is-inside-work-tree instead of file I/O
+    const result = execSync('git rev-parse --is-inside-work-tree', { 
+      cwd: directory, 
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'ignore'] // Suppress stderr
+    }).trim();
+    return result === 'true';
   } catch (error) {
+    // Return false if git command fails (not a git repo or git not installed)
     return false;
   }
 }
@@ -127,16 +147,16 @@ export function getGitInfo(directory: string = process.cwd()): GitInfo {
       error: "Telemetry disabled"
     };
   }
-
-  // First check if this is a git repository
-  if (!isGitRepo(directory)) {
-    return { 
-      uncommittedChanges: false,
-      error: "Not a git repository"
-    };
-  }
   
   try {
+    // First check if this is a git repository
+    if (!isGitRepo(directory)) {
+      return { 
+        uncommittedChanges: false,
+        error: "Not a git repository"
+      };
+    }
+
     const commitHash = execSync('git rev-parse HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
     const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: directory, encoding: 'utf-8' }).trim();
     const repoUrl = execSync('git config --get remote.origin.url', { cwd: directory, encoding: 'utf-8' }).trim().replace(/\.git$/, '');
@@ -395,30 +415,34 @@ export class HoneyHiveTracer {
           sessionId: this.sessionId
         }
       };
-
-      // Gather git information
-      const gitInfo = getGitInfo();
       
-      // Only add git info to metadata if there's no error
-      if (!gitInfo.error && requestBody.session) {
-        requestBody.session.metadata = {
-          git: gitInfo
-        };
+      let sessionId: string;
+      try {
+        if (!HoneyHiveTracer.sdkInstance) {
+          throw new Error("SDK instance is not initialized");
+        }
+        const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody, {
+          timeoutMs: 5000 // 5 seconds
+        });
+        if (!res.sessionId || res.sessionId === undefined) {
+          throw new Error("No sessionId returned from server");
+        }
+        sessionId = res.sessionId as string;
+      } catch (apiError) {
+        // If API call fails, generate a random UUID as a fallback
+        sessionId = crypto.randomUUID();
+        if (HoneyHiveTracer.verbose) {
+          console.warn(`Could not start HoneyHive session via API: ${apiError}. Using generated sessionId: ${sessionId}`);
+        }
       }
-      
-      if (!HoneyHiveTracer.sdkInstance) {
-        throw new Error("SDK instance is not initialized");
-      }
-      const res = await HoneyHiveTracer.sdkInstance.session.startSession(requestBody);
-      assert(res.sessionId, "Could not get sessionId from server");
 
       if (HoneyHiveTracer.verbose) {
-        console.info("HoneyHive session started with id: ", res.sessionId);
+        console.info("HoneyHive session started with id: ", sessionId);
       }
 
       // Set tracer sessionId
-      this.sessionId = res.sessionId;
-      assert(this.sessionId, "Could not get sessionId from server");
+      this.sessionId = sessionId;
+      assert(this.sessionId, "Could not get sessionId from server or generate random UUID");
       return this.sessionId;
     } catch (error) {
       if (HoneyHiveTracer.verbose) {
@@ -593,7 +617,7 @@ export class HoneyHiveTracer {
         logLevel: tracer.verbose ? "debug" : "error",
         silenceInitializationMessage: !tracer.verbose,
       });
-      await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
+      // await Telemetry.getInstance().capture("tracer_init", { "hhai_session_id": tracer.sessionId });
       HoneyHiveTracer.isTraceloopInitialized = true;
 
       // Log initialization success with orange color
@@ -696,30 +720,33 @@ export class HoneyHiveTracer {
       return {};
     }
   }
-
-  public traceFunction(...args: any[]) {
-    return traceFunction(...args, this.getTraceloopAssociationProperties());
+  
+  public traceFunction(
+    options: TraceFunctionOptions = {}
+  ) {
+    const associationProps = this.getTraceloopAssociationProperties();
+    return traceFunction(options, associationProps);
   }
 
   public traceModel<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "model", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "model" })(func);
   }
 
   public traceTool<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "tool", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "tool" })(func);
   } 
 
   public traceChain<F extends (...args: any[]) => any>(
     func: F,
-    { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+    options: Omit<TraceFunctionOptions, 'eventType'> = {}
   ): F {
-    return this.traceFunction({ eventType: "chain", config, metadata, eventName })(func);
+    return this.traceFunction({ ...options, eventType: "chain" })(func);
   }
 
   public logModel(params: EnrichSpanParams = {}) {
@@ -822,6 +849,11 @@ export class HoneyHiveTracer {
         // Create a new flush promise
         try {
           HoneyHiveTracer.flushPromise = traceloop!.forceFlush();
+          
+          // TODO: for lambda, clear the otel context by setting an empty context as active
+          // const emptyContext = trace.deleteSpan(context.active());
+          // context.with(emptyContext, () => {});
+          
           return HoneyHiveTracer.flushPromise;
         } finally {
           // Clean up after the promise is resolved
@@ -902,7 +934,9 @@ export async function enrichSession(params: EnrichSessionParams = {}): Promise<v
       }
       return;
     }
-    await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData);
+    await HoneyHiveTracer.sdkInstance.events.updateEvent(updateData, {
+      timeoutMs: 5000 // 5 seconds
+    });
   } catch (error) {
     if (HoneyHiveTracer.verbose) {
       console.warn("Failed to update event:", error);
@@ -972,30 +1006,31 @@ export function enrichSpan({
 
 export function traceModel<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "model", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "model" })(func);
 }
 
 export function traceTool<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "tool", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "tool" })(func);
 } 
 
 export function traceChain<F extends (...args: any[]) => any>(
   func: F,
-  { config, metadata, eventName }: { config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {}
+  options: Omit<TraceFunctionOptions, 'eventType'> = {}
 ): F {
-  return traceFunction({ eventType: "chain", config, metadata, eventName })(func);
+  return traceFunction({ ...options, eventType: "chain" })(func);
 }
 
 export function traceFunction(
-  { eventType, config, metadata, eventName }: 
-  { eventType?: string | undefined; config?: any | undefined; metadata?: any | undefined; eventName?: string | undefined } = {},
+  options: TraceFunctionOptions = {},
   associationProperties: Record<string, string> | undefined = undefined
 ) {
+  const { eventType, config, metadata, eventName } = options;
+
   // Helper function to extract argument names from the function
   function getArgs(func: (...args: any[]) => any): string[] | null {
     try {

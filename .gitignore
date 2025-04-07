@@ -40,3 +40,4 @@ src/**/*.tsbuildinfo
 .env
 .venv
 *.tgz
+*.zip
