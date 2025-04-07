@@ -91,7 +91,7 @@ async function main() {
 
     // Wait for data propagation
     console.log("Waiting for data propagation...");
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 15000));
 
     // Initialize SDK
     const sdk = new HoneyHive({

@@ -29,7 +29,7 @@ async function main() {
     console.log(`Initialized tracer with session ID: ${currentSessionId}`);
 
     // Wait for data propagation
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 10000));
 
     // Initialize SDK
     const sdk = new HoneyHive({

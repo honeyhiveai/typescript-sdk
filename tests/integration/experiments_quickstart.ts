@@ -98,7 +98,7 @@ async function main() {
         const sessionIds = result.sessionIds;
         assert(sessionIds && sessionIds.length > 0, "sessionIds should be populated");
         // Wait 5 seconds for data propagation
-        await new Promise(resolve => setTimeout(resolve, 5000));
+        await new Promise(resolve => setTimeout(resolve, 10000));
         const sdk = new HoneyHive({
             bearerAuth: process.env.HH_API_KEY,
         });

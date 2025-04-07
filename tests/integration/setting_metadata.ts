@@ -22,7 +22,7 @@ async function main() {
     const currentSessionId = tracer.sessionId;
     console.log(`Initialized tracer with session ID: ${currentSessionId}`);
 
-    const myTracedFunction = tracer.traceFunction("my_function")(
+    const myTracedFunction = tracer.traceFunction({eventName: "my_function"})(
         function (
           input: string,
           something: any
@@ -52,7 +52,7 @@ async function main() {
 
     // Wait for data propagation
     console.log("Waiting for data propagation...");
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 15000));
 
     // Initialize SDK
     const sdk = new HoneyHive({
