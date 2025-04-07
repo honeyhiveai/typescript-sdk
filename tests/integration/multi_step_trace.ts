@@ -1,8 +1,8 @@
-import { HoneyHiveTracer, HoneyHive } from 'honeyhive';
+import { HoneyHiveTracer, traceTool, traceModel, traceChain, enrichSpan, enrichSession, HoneyHive } from "honeyhive";
 import assert from "assert";
 import { Operator, Event } from "honeyhive/models/components/index.js"; // Import Event type
 
-// Keep interfaces used in the functions
+// Keep interfaces used in the functions (copied from new_multi_step_trace.ts)
 interface MedicalDocument {
     docs: string[];
     response: string;
@@ -13,8 +13,9 @@ interface RagPipelineMetrics {
     query_length: number;
 }
 
-async function main() {
-    // Environment variable checks
+// Initialize tracer function (adapted from new_multi_step_trace.ts)
+async function initializeTracer() {
+    // Environment variable checks (can be kept or rely on SDK defaults/env vars)
     if (!process.env.HH_API_KEY) {
         throw new Error("HH_API_KEY environment variable is not set.");
     }
@@ -23,87 +24,107 @@ async function main() {
     }
     const serverURL = process.env.HH_API_URL; // Optional
 
-    const tracer = await HoneyHiveTracer.init({
+    return await HoneyHiveTracer.init({
         apiKey: process.env.HH_API_KEY,
         project: process.env.HH_PROJECT,
-        sessionName: "multi-step-trace-test", // Use a distinct session name for the test
-        serverUrl: serverURL
+        sessionName: "docs-multi-step-trace-test", // Use a distinct session name for this test
+        serverUrl: serverURL,
+        verbose: true, // Enable verbose logging for debugging if needed
     });
+}
 
-    const currentSessionId = tracer.sessionId;
+// Main function to initialize tracer, run the traced logic, and verify
+async function main() {
+    const tracer = await initializeTracer();
+    const currentSessionId = tracer.sessionId; // Capture session ID
     console.log(`Initialized tracer with session ID: ${currentSessionId}`);
+    let executionSuccess = false;
 
-    // Define the get_relevant_docs function with tracing
-    const getRelevantDocs = tracer.traceFunction()(
-        function getRelevantDocs(query: string): string[] {
-            console.log("Executing getRelevantDocs");
-            const medicalDocs = [
-                "Regular exercise reduces diabetes risk by 30%. Daily walking is recommended.",
-                "Studies show morning exercises have better impact on blood sugar levels."
-            ];
-            
-            tracer.enrichSpan({
-                metrics: { retrieval_relevance: 0.5 }
-            });
-            
-            return medicalDocs;
-        }
-    );
+    // Define the functions based on the provided docs snippet
+    // Define the get_relevant_docs function with traceTool
+    const getRelevantDocs = traceTool(function getRelevantDocs(
+        query: string
+    ): string[] {
+        console.log("Executing getRelevantDocs (from docs snippet)");
+        const medicalDocs = [
+            "Regular exercise reduces diabetes risk by 30%. Daily walking is recommended.",
+            "Studies show morning exercises have better impact on blood sugar levels."
+        ];
 
-    const generateResponse = tracer.traceFunction()(
-        function generateResponse(docs: string[], query: string): string {
-            console.log("Executing generateResponse");
-            const prompt = `Question: ${query}\nContext: ${docs}\nAnswer:`;
-            const response = "This is a test response.";
-            
-            tracer.enrichSpan({
-                metrics: { contains_citations: true }
-            });
-            
-            return response;
-        }
-    );
+        enrichSpan({
+            metrics: { retrieval_relevance: 0.5 }
+        });
 
-    const ragPipeline = tracer.traceFunction()(
-        function ragPipeline(query: string): MedicalDocument {
-            console.log("Executing ragPipeline");
-            const docs = getRelevantDocs(query);
-            const response = generateResponse(docs, query);
-            
-            tracer.enrichSession({
-                metrics: {
-                    rag_pipeline: {
-                        num_retrieved_docs: docs.length,
-                        query_length: query.split(" ").length
-                    } // No need for 'as RagPipelineMetrics' if types match
-                }
-            });
-            
-            return { docs, response };
-        }
-    );
-
-    // Execute the pipeline
-    const query = "How does exercise affect diabetes?";
-    console.log("Executing pipeline...");
-    const result = ragPipeline(query);
-    console.log("Pipeline executed, result:", result);
-
-    // Wait for data propagation
-    console.log("Waiting for data propagation...");
-    await new Promise(resolve => setTimeout(resolve, 15000));
-
-    // Initialize SDK
-    const sdk = new HoneyHive({
-        bearerAuth: process.env.HH_API_KEY,
-        serverURL: serverURL
+        return medicalDocs;
     });
 
-    // Fetch events for the session
-    console.log(`Fetching events for session ID: ${currentSessionId}`);
+    // Define generateResponse with traceModel
+    const generateResponse = traceModel(function generateResponse(
+        docs: string[],
+        query: string
+    ): string {
+        console.log("Executing generateResponse (from docs snippet)");
+        const prompt = `Question: ${query}\nContext: ${docs}\nAnswer:`;
+        const response = "This is a test response.";
+
+        enrichSpan({
+            metrics: { contains_citations: true }
+        });
+
+        return response;
+    });
+
+    // Define ragPipeline with traceChain
+    const ragPipeline = traceChain(function ragPipeline(
+        query: string
+    ): MedicalDocument {
+        console.log("Executing ragPipeline (from docs snippet)");
+        const docs = getRelevantDocs(query);
+        const response = generateResponse(docs, query); // Synchronous call in this example
+
+        enrichSession({
+            metrics: {
+                rag_pipeline: {
+                    num_retrieved_docs: docs.length,
+                    query_length: query.split(" ").length
+                } as RagPipelineMetrics // Use type assertion for clarity if needed
+            }
+        });
+
+        return { docs, response };
+    });
+
+
     try {
+        // --- Main Execution Logic (Adapted from docs snippet) ---
+        // Wrap the execution in tracer.trace() to establish context
+        console.log("Executing pipeline within tracer.trace()...");
+        await tracer.trace(async () => {
+            const query = "How does exercise affect diabetes?";
+            // Note: ragPipeline is synchronous in this example, but await is harmless
+            // If ragPipeline truly becomes async, the await is necessary.
+            const result = ragPipeline(query);
+            console.log("Pipeline executed inside tracer.trace(), result:", result);
+        });
+        executionSuccess = true; // Mark execution as successful if no error
+        console.log("Traced execution finished.");
+
+        // Ensure data is sent before verification (copied from new_multi_step_trace.ts)
+        console.log("Waiting for data propagation after flush...");
+        await tracer.flush(); // Make sure flush is called
+        console.log("Tracer flushed.");
+        await new Promise(resolve => setTimeout(resolve, 15000)); // Wait like original script
+
+        // --- Verification Logic (Copied from new_multi_step_trace.ts) ---
+        console.log(`Starting verification for session ID: ${currentSessionId}`);
+        const sdk = new HoneyHive({
+            bearerAuth: process.env.HH_API_KEY!, // Assume non-null from earlier check
+            serverURL: process.env.HH_API_URL // Optional
+        });
+
+        console.log(`Fetching events for session ID: ${currentSessionId}`);
         const res = await sdk.events.getEvents({
-            project: process.env.HH_PROJECT,
+            project: process.env.HH_PROJECT!, // Assume non-null
             filters: [
                 {
                     field: "session_id",
@@ -115,8 +136,9 @@ async function main() {
 
         // Assertions
         assert(res.events, `Events response is undefined for session ${currentSessionId}`);
-        // Expecting >= 4 events: Session Start, rag_pipeline, get_relevant_docs, generate_response
-        assert(res.events.length >= 4, `Expected at least 4 events for session ${currentSessionId}, found ${res.events.length}`);
+        // Expecting >= 5 events: Session Start, Outer trace span, rag_pipeline, get_relevant_docs, generate_response
+        // The outer tracer.trace() adds an event compared to new_multi_step_trace.ts
+        assert(res.events.length >= 5, `Expected at least 5 events for session ${currentSessionId}, found ${res.events.length}`);
         console.log(`Found ${res.events.length} events.`);
 
         // Check for span-level metrics
@@ -124,21 +146,27 @@ async function main() {
             retrieval_relevance: false,
             contains_citations: false
         };
-        res.events.forEach((event: Event) => {
-            if (event.metrics) {
-                if ('retrieval_relevance' in event.metrics) {
-                    spanMetricsFound.retrieval_relevance = true;
-                    console.log(`Found retrieval_relevance metric in event: ${event.eventId}`);
-                }
-                if ('contains_citations' in event.metrics) {
-                     spanMetricsFound.contains_citations = true;
-                     console.log(`Found contains_citations metric in event: ${event.eventId}`);
-                }
-            }
-        });
+        // Find specific events for metrics, excluding the outer trace span and session start
+        const relevantEvents = res.events.filter(e => e.eventName === 'getRelevantDocs' || e.eventName === 'generateResponse');
 
-        assert(spanMetricsFound.retrieval_relevance, "'retrieval_relevance' metric not found in any event");
-        assert(spanMetricsFound.contains_citations, "'contains_citations' metric not found in any event");
+        relevantEvents.forEach((event: Event) => {
+             if (event.metrics) {
+                 if (event.eventName === 'getRelevantDocs' && 'retrieval_relevance' in event.metrics) {
+                     spanMetricsFound.retrieval_relevance = true;
+                     console.log(`Found retrieval_relevance metric in event: ${event.eventId} (${event.eventName})`);
+                     assert.strictEqual(event.metrics.retrieval_relevance, 0.5, "retrieval_relevance value mismatch");
+                 }
+                 if (event.eventName === 'generateResponse' && 'contains_citations' in event.metrics) {
+                      spanMetricsFound.contains_citations = true;
+                      console.log(`Found contains_citations metric in event: ${event.eventId} (${event.eventName})`);
+                      assert.strictEqual(event.metrics.contains_citations, true, "contains_citations value mismatch");
+                 }
+             }
+         });
+
+
+        assert(spanMetricsFound.retrieval_relevance, "'retrieval_relevance' metric not found in 'getRelevantDocs' event");
+        assert(spanMetricsFound.contains_citations, "'contains_citations' metric not found in 'generateResponse' event");
         console.log("Span-level metrics verified.");
 
         // Check for session-level metrics (should be in the session event)
@@ -147,19 +175,23 @@ async function main() {
         assert(sessionEvent.metrics, "Metrics not found in session start event");
         console.log("Session event metrics:", sessionEvent.metrics);
         assert(sessionEvent.metrics.rag_pipeline, "'rag_pipeline' metric not found in session start event metrics");
-        // Use type assertion or check existence before accessing nested properties
-        const ragPipelineMetrics = sessionEvent.metrics.rag_pipeline as RagPipelineMetrics;
+        const ragPipelineMetrics = sessionEvent.metrics.rag_pipeline as RagPipelineMetrics; // Use type assertion
         assert(ragPipelineMetrics, "'rag_pipeline' metric structure is invalid");
         assert.strictEqual(ragPipelineMetrics.num_retrieved_docs, 2, "num_retrieved_docs does not match");
         assert.strictEqual(ragPipelineMetrics.query_length, 5, "query_length does not match");
         console.log("Session-level metrics verified.");
+        console.log('Verification finished successfully.');
+        // --- End Verification Logic ---
+
+        return true; // Return true only if both execution and verification succeed
 
     } catch (error) {
-        console.error(`Error fetching or verifying events for session ${currentSessionId}:`, error);
-        throw error; // Re-throw the error to fail the test
+        console.error(`Error during traced execution or verification for session ${currentSessionId}:`, error);
+        // If execution failed, the error is already caught.
+        // If verification failed, we log the error here.
+        return false; // Indicate failure
     }
-
-    console.log('Test finished successfully.');
+    // No finally block needed here as flush is now inside the try block before verification
 }
 
-export { main };
+export { main }; 

@@ -1,8 +1,8 @@
-import { HoneyHiveTracer, HoneyHive } from "honeyhive";
+import { HoneyHiveTracer, enrichSession, HoneyHive } from "honeyhive";
 import assert from "assert";
 import { Operator, Event } from "honeyhive/models/components/index.js";
 
-// Define a type for the user properties structure if desired, or use any
+// Define types for user properties (from docs snippet)
 interface CustomUserProperties {
     is_premium: boolean;
     subscription_plan: string;
@@ -15,7 +15,8 @@ interface UserProperties {
     user_properties: CustomUserProperties;
 }
 
-async function main() {
+// Initialize tracer function (adapted from previous examples)
+async function initializeTracer() {
     // Environment variable checks
     if (!process.env.HH_API_KEY) {
         throw new Error("HH_API_KEY environment variable is not set.");
@@ -25,17 +26,22 @@ async function main() {
     }
     const serverURL = process.env.HH_API_URL; // Optional
 
-    const tracer = await HoneyHiveTracer.init({
-      apiKey: process.env.HH_API_KEY,
-      project: process.env.HH_PROJECT,
-      sessionName: "setting-user-props-test", // Distinct session name
-      serverUrl: serverURL 
+    return await HoneyHiveTracer.init({
+        apiKey: process.env.HH_API_KEY,
+        project: process.env.HH_PROJECT,
+        sessionName: "docs-setting-user-props-test", // Distinct session name
+        serverUrl: serverURL,
+        verbose: true,
     });
+}
 
-    const currentSessionId = tracer.sessionId;
+// Main function to initialize tracer, run the traced logic, and verify
+async function main() {
+    const tracer = await initializeTracer();
+    const currentSessionId = tracer.sessionId; // Capture session ID
     console.log(`Initialized tracer with session ID: ${currentSessionId}`);
 
-    // Define the user properties object
+    // Define the user properties object (from docs snippet)
     const userProps: UserProperties = {
         user_id: "12345",
         user_email: "user@example.com",
@@ -46,28 +52,37 @@ async function main() {
         }
     };
 
-    // Enrich the session with user properties
-    console.log("Enriching session with user properties...");
-    tracer.enrichSession({
-      userProperties: userProps // Correct property name
-    });
-    console.log("Session enriched.");
-
-    // Wait for data propagation
-    console.log("Waiting for data propagation...");
-    await new Promise(resolve => setTimeout(resolve, 15000));
-
-    // Initialize SDK
-    const sdk = new HoneyHive({
-        bearerAuth: process.env.HH_API_KEY,
-        serverURL: serverURL
-    });
-
-    // Fetch events for the session
-    console.log(`Fetching events for session ID: ${currentSessionId}`);
     try {
+        // --- Main Execution Logic (from docs snippet) ---
+        // Wrap the execution logic in tracer.trace()
+        // Note: Even if only enriching, trace() creates the session context and a span
+        console.log("Enriching session within tracer.trace()...");
+        await tracer.trace(async () => {
+            // Enrich the session with user properties using standalone function
+            enrichSession({
+                userProperties: userProps // Note: property name is userProperties
+            });
+            console.log("Trace session enriched with user properties.");
+        });
+        console.log("Traced execution (enrichment) finished.");
+
+
+        // Ensure data is sent before verification (copied from previous examples)
+        console.log("Waiting for data propagation after flush...");
+        await tracer.flush();
+        console.log("Tracer flushed.");
+        await new Promise(resolve => setTimeout(resolve, 15000)); // Wait
+
+        // --- Verification Logic (Adapted from new_setting_user_properties.ts) ---
+        console.log(`Starting verification for session ID: ${currentSessionId}`);
+        const sdk = new HoneyHive({
+            bearerAuth: process.env.HH_API_KEY!,
+            serverURL: process.env.HH_API_URL
+        });
+
+        console.log(`Fetching events for session ID: ${currentSessionId}`);
         const res = await sdk.events.getEvents({
-            project: process.env.HH_PROJECT,
+            project: process.env.HH_PROJECT!,
             filters: [
                 {
                     field: "session_id",
@@ -79,8 +94,8 @@ async function main() {
 
         // Assertions
         assert(res.events, `Events response is undefined for session ${currentSessionId}`);
-        // Expecting at least 1 event: Session Start
-        assert(res.events.length >= 1, `Expected at least 1 event for session ${currentSessionId}, found ${res.events.length}`);
+        // Expecting Session Start + the span created by tracer.trace
+        assert(res.events.length >= 2, `Expected at least 2 events for session ${currentSessionId}, found ${res.events.length}`);
         console.log(`Found ${res.events.length} events.`);
 
         // Find the session start event
@@ -90,16 +105,18 @@ async function main() {
         assert(sessionEvent.userProperties, "User properties not found in session start event");
         console.log("Session event user properties:", sessionEvent.userProperties);
 
-        // Verify the user properties using deepStrictEqual for object comparison
+        // Verify the user properties using deepStrictEqual against the defined userProps object
         assert.deepStrictEqual(sessionEvent.userProperties, userProps, "User properties do not match");
         console.log("User properties verified successfully.");
+        // --- End Verification Logic ---
+
+        console.log('Test finished successfully.');
+        return true; // Return true only if both execution and verification succeed
 
     } catch (error) {
-        console.error(`Error fetching or verifying events for session ${currentSessionId}:`, error);
-        throw error; // Re-throw the error to fail the test
+        console.error(`Error during traced execution or verification for session ${currentSessionId}:`, error);
+        return false; // Indicate failure
     }
-
-    console.log('Test finished successfully.');
 }
 
-export { main };
+export { main }; 

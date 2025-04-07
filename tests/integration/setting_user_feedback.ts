@@ -2,7 +2,7 @@ import { HoneyHiveTracer, traceTool, enrichSpan, HoneyHive } from "honeyhive";
 import assert from "assert";
 import { Operator, Event } from "honeyhive/models/components/index.js";
 
-// Initialize tracer function (adapted from new_setting_metadata.ts)
+// Initialize tracer function (adapted from previous examples)
 async function initializeTracer() {
     // Environment variable checks
     if (!process.env.HH_API_KEY) {
@@ -16,7 +16,7 @@ async function initializeTracer() {
     return await HoneyHiveTracer.init({
         apiKey: process.env.HH_API_KEY,
         project: process.env.HH_PROJECT,
-        sessionName: "docs-setting-metadata-test", // Distinct session name
+        sessionName: "docs-setting-user-feedback-test", // Distinct session name
         serverUrl: serverURL,
         verbose: true,
     });
@@ -29,30 +29,32 @@ async function main() {
     console.log(`Initialized tracer with session ID: ${currentSessionId}`);
 
     // Define the traced function using traceTool (from docs snippet)
-    const myTracedFunction = traceTool(
-        function my_function ( // Function name is used as span name
-            input: string,
-            something: any
-        ) {
-            console.log("Executing my_function (from docs snippet)");
-            // Add metadata specific to this span
-            enrichSpan({
-                metadata: {
-                    "experiment-id": 12345,
-                    "something": something,
-                    // any other custom fields and values as you need
-                }
-            });
+    const myTracedFunction = traceTool(function my_llm_call( // Function name is used as span name
+        param1: string,
+        param2: string,
+        user_id: string | number
+    ) {
+        console.log("Executing my_llm_call (from docs snippet)");
+        // Add feedback specific to this span
+        enrichSpan({
+          feedback: {
+            "liked": true,
+            "comment": "The model hallucinated the capital of New York",
+            "user_id": user_id,
+            // optionally adding reference ground truth
+            "ground_truth": "The capital of New York is Albany",
+            // any other custom fields and values as you need
+          }
+        });
 
-            // Your function code here (mock response)
-            const response = `Processed input: ${input}`;
-            console.log("my_function finished");
-            return response;
-        }
-    );
+        // Your function code here
+        const response = `Result with ${param1} and ${param2}`;
+        console.log("my_llm_call finished");
+        return response;
+    });
 
-    // Define the metadata value to be used (from docs snippet execution block)
-    const metadataValue = "some-metadata";
+    // Define the user ID to be used (from docs snippet execution block)
+    const userId = "user-abc-123";
 
     try {
         // --- Main Execution Logic (from docs snippet) ---
@@ -60,19 +62,18 @@ async function main() {
         console.log("Calling myTracedFunction within tracer.trace()...");
         await tracer.trace(async () => {
             // Execute the traced function within the trace context
-            const result = myTracedFunction("This is a mock input", metadataValue);
+            const result = myTracedFunction("input1", "input2", userId);
             console.log("myTracedFunction call returned:", result);
         });
         console.log("Traced execution finished.");
 
-
-        // Ensure data is sent before verification (copied from new_setting_metadata.ts)
+        // Ensure data is sent before verification (copied from previous examples)
         console.log("Waiting for data propagation after flush...");
         await tracer.flush();
         console.log("Tracer flushed.");
         await new Promise(resolve => setTimeout(resolve, 15000)); // Wait
 
-        // --- Verification Logic (Adapted from new_setting_metadata.ts) ---
+        // --- Verification Logic (Adapted from previous examples) ---
         console.log(`Starting verification for session ID: ${currentSessionId}`);
         const sdk = new HoneyHive({
             bearerAuth: process.env.HH_API_KEY!,
@@ -93,21 +94,22 @@ async function main() {
 
         // Assertions
         assert(res.events, `Events response is undefined for session ${currentSessionId}`);
-        // Expecting at least 3 events: Session Start, outer tracer.trace span, my_function span
+        // Expecting at least 3 events: Session Start, outer tracer.trace span, my_llm_call span
         assert(res.events.length >= 3, `Expected at least 3 events for session ${currentSessionId}, found ${res.events.length}`);
         console.log(`Found ${res.events.length} events.`);
 
-        const myFunctionEvent = res.events.find((e: Event) => e.eventName === 'my_function'); // Use function name
-        assert(myFunctionEvent, "'my_function' event not found");
-        console.log(`Found 'my_function' event: ${myFunctionEvent.eventId}`);
-        assert(myFunctionEvent.metadata, "Metadata not found in 'my_function' event");
-        console.log("'my_function' event metadata:", myFunctionEvent.metadata);
+        const myLlmCallEvent = res.events.find((e: Event) => e.eventName === 'my_llm_call'); // Use function name
+        assert(myLlmCallEvent, "'my_llm_call' event not found");
+        console.log(`Found 'my_llm_call' event: ${myLlmCallEvent.eventId}`);
+        assert(myLlmCallEvent.feedback, "Feedback not found in 'my_llm_call' event");
+        console.log("'my_llm_call' event feedback:", myLlmCallEvent.feedback);
 
-        // Verify the metadata contents
-        assert.strictEqual(myFunctionEvent.metadata["experiment-id"], 12345, "Metadata 'experiment-id' does not match");
-        // Use the value defined before the try block for verification
-        assert.strictEqual(myFunctionEvent.metadata["something"], metadataValue, "Metadata 'something' does not match");
-        console.log("Metadata content verified successfully.");
+        // Verify the feedback contents
+        assert.strictEqual(myLlmCallEvent.feedback["liked"], true, "Feedback 'liked' does not match");
+        assert.strictEqual(myLlmCallEvent.feedback["comment"], "The model hallucinated the capital of New York", "Feedback 'comment' does not match");
+        assert.strictEqual(myLlmCallEvent.feedback["user_id"], userId, "Feedback 'user_id' does not match");
+        assert.strictEqual(myLlmCallEvent.feedback["ground_truth"], "The capital of New York is Albany", "Feedback 'ground_truth' does not match");
+        console.log("Feedback content verified successfully.");
         // --- End Verification Logic ---
 
         console.log('Test finished successfully.');
