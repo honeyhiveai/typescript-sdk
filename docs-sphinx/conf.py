@@ -17,6 +17,9 @@ myst_enable_extensions = [
     'deflist',
 ]
 
+myst_all_links_external = True
+myst_heading_anchors = 3
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
