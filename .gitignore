@@ -41,3 +41,6 @@ src/**/*.tsbuildinfo
 .venv
 *.tgz
 *.zip
+
+# Sphinx documentation build
+docs-sphinx/_build/
