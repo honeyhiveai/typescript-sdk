@@ -8,8 +8,8 @@ Welcome to the HoneyHive TypeScript SDK documentation. This SDK provides a compr
    :caption: Contents:
 
    getting-started
-   sdk/index
-   models/index
+   sdk-reference
+   models-reference
 
 Installation
 ------------
