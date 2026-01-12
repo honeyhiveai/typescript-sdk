@@ -1,8 +1,9 @@
 import os
 import sys
+from datetime import datetime
 
 project = 'HoneyHive TypeScript SDK'
-copyright = '2024, HoneyHive'
+copyright = f'{datetime.now().year}, HoneyHive'
 author = 'HoneyHive'
 
 extensions = [
