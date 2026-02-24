@@ -4,11 +4,19 @@ on:
   push:
     branches: [main]
     paths:
-      - 'sdks/typescript/**'
+      - 'tests/**'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
   pull_request:
     branches: [main]
     paths:
-      - 'sdks/typescript/**'
+      - 'tests/**'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
 
 jobs:
   integration-tests:
@@ -22,14 +30,11 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: 'sdks/typescript/multi-tenant-prod/package-lock.json'
 
       - name: Install dependencies
-        working-directory: sdks/typescript/multi-tenant-prod
         run: npm ci
 
       - name: Run integration tests
-        working-directory: sdks/typescript/multi-tenant-prod
         env:
           HH_API_KEY: ${{ secrets.HH_API_KEY }}
           HH_PROJECT: ${{ secrets.HH_PROJECT }}
@@ -41,5 +46,5 @@ jobs:
         uses: codecov/codecov-action@v3
         if: always()
         with:
-          files: ./sdks/typescript/multi-tenant-prod/coverage/coverage-final.json
+          files: ./coverage/coverage-final.json
           flags: typescript-integration
