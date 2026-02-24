@@ -33,6 +33,7 @@
     "lint": "eslint --max-warnings=0 src",
     "clean": "rm -rf dist && rm -f tests/honeyhive.tgz",
     "build": "npm run clean && tsc",
+    "typecheck": "tsc --noEmit",
     "pub": "npm version patch && npm publish",
     "prepublishOnly": "npm run build",
     "test": "vitest",
