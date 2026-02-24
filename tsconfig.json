@@ -2,15 +2,15 @@
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": ".tsbuildinfo",
-    "target": "es2020",
-    "lib": ["es2020", "dom", "dom.iterable"],
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
     "module": "Node16",
     "moduleResolution": "Node16",
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": ".",
+    "outDir": "./dist",
 
     // https://github.com/tsconfig/bases/blob/a1bf7c0fa2e094b068ca3e1448ca2ece4157977e/bases/strictest.json
     "strict": true,
