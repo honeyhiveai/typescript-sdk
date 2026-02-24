@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "incremental": true,
-    "tsBuildInfoFile": ".tsbuildinfo",
     "target": "es2022",
     "lib": ["es2022", "dom", "dom.iterable"],
     "module": "Node16",

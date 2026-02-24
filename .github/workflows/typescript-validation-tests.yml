@@ -1,0 +1,53 @@
+name: TypeScript Validation Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tests/**'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tests/**'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
+
+jobs:
+  validation-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Run integration tests
+        env:
+          HH_API_KEY: ${{ secrets.HH_API_KEY }}
+          HH_PROJECT: ${{ secrets.HH_PROJECT }}
+          HH_API_URL: ${{ secrets.HH_API_URL }}
+          HH_SOURCE: github-actions-typescript
+        run: npm run test:integration
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        if: always()
+        with:
+          files: ./coverage/coverage-final.json
+          flags: typescript-integration

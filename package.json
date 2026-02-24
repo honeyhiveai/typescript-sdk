@@ -33,8 +33,13 @@
     "lint": "eslint --max-warnings=0 src",
     "clean": "rm -rf dist && rm -f tests/honeyhive.tgz",
     "build": "npm run clean && tsc",
+    "typecheck": "tsc --noEmit",
     "pub": "npm version patch && npm publish",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "vitest",
+    "test:integration": "vitest run tests/integration",
+    "test:integration:watch": "vitest watch tests/integration",
+    "test:ui": "vitest --ui"
   },
   "peerDependencies": {
     "zod": ">= 3"
@@ -46,7 +51,9 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
+    "@vitest/ui": "^4.0.18",
     "bun-types": "^1.0.0",
+    "dotenv": "^16.4.1",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.31.0",
@@ -55,6 +62,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1",
+    "vitest": "^4.0.18",
     "zod": "^3.23.4"
   },
   "dependencies": {
