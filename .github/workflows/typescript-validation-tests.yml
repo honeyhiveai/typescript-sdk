@@ -1,4 +1,4 @@
-name: TypeScript Integration Tests
+name: TypeScript Validation Tests
 
 on:
   push:
@@ -19,7 +19,7 @@ on:
       - 'vitest.config.ts'
 
 jobs:
-  integration-tests:
+  validation-tests:
     runs-on: ubuntu-latest
 
     steps:
