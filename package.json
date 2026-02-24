@@ -3,14 +3,13 @@
   "version": "1.0.41",
   "author": "HoneyHive",
   "type": "commonjs",
-  "main": "./index.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "funcs/**/*",
     "hooks/**/*",
     "lib/**/*",
-    "mcp-server/**/*",
     "models/**/*",
     "sdk/**/*",
     "types/**/*",
@@ -32,8 +31,8 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings=0 src",
-    "clean": "rm -rf node_modules && rm -rf dist && rm -f tests/honeyhive.tgz",
-    "build": "npm run clean && npm install && tsc",
+    "clean": "rm -rf dist && rm -f tests/honeyhive.tgz",
+    "build": "npm run clean && tsc",
     "pub": "npm version patch && npm publish",
     "prepublishOnly": "npm run build"
   },
@@ -59,9 +58,7 @@
     "zod": "^3.23.4"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
     "@opentelemetry/api": "^1.9.0",
-    "@stricli/core": "^1.1.1",
     "@traceloop/node-server-sdk": "^0.12.1",
     "async-mutex": "^0.5.0",
     "cli-table3": "^0.6.5",
