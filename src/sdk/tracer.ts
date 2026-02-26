@@ -11,6 +11,7 @@ import * as traceloop from "@traceloop/node-server-sdk";
 import * as crypto from "crypto";
 import { StartSessionRequestBody } from "../models/operations/startsession";
 import assert from "assert";
+import { SDK_HEADERS } from "../lib/config";
 
 export interface EnrichSpanParams {
   config?: Record<string, any>;
@@ -612,6 +613,7 @@ export class HoneyHiveTracer {
       traceloop.initialize({
         baseUrl: `${tracer.serverUrl}/opentelemetry`,
         apiKey: tracer.apiKey!,
+        headers: { ...SDK_HEADERS },
         disableBatch: tracer.disableBatch,
         instrumentModules: HoneyHiveTracer.instrumentModules,
         logLevel: tracer.verbose ? "debug" : "error",
