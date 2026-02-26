@@ -58,3 +58,24 @@ export const SDK_METADATA = {
   genVersion: "2.559.0",
   userAgent: "speakeasy-sdk/typescript 1.34.1 2.559.0 1.0.21 honeyhive",
 } as const;
+
+/**
+ * Get the SDK package version from package.json.
+ * Falls back to "unknown" if the version cannot be determined.
+ */
+function getSdkVersion(): string {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pkg = require("../../package.json") as { version: string };
+    return pkg.version;
+  } catch {
+    return "unknown";
+  }
+}
+
+/** SDK identification headers sent with every HTTP request. */
+export const SDK_HEADERS = {
+  "hh-sdk-version": getSdkVersion(),
+  "hh-sdk-language": "typescript",
+  "hh-sdk-package": "honeyhive",
+} as const;
