@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "daily"
+      time: "09:00"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(deps): "
+    labels:
+      - "dependencies"
+      - "github-actions"
+  - package-ecosystem: "npm"
+    directory: "/"
+    open-pull-requests-limit: 10
+    schedule:
+      interval: "daily"
+      time: "09:00"
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: "chore(deps): "
+    labels:
+      - "dependencies"
+      - "npm"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
