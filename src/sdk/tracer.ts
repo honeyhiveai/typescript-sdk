@@ -613,7 +613,7 @@ export class HoneyHiveTracer {
       traceloop.initialize({
         baseUrl: `${tracer.serverUrl}/opentelemetry`,
         apiKey: tracer.apiKey!,
-        headers: { ...SDK_HEADERS },
+        headers: { Authorization: `Bearer ${tracer.apiKey!}`, ...SDK_HEADERS },
         disableBatch: tracer.disableBatch,
         instrumentModules: HoneyHiveTracer.instrumentModules,
         logLevel: tracer.verbose ? "debug" : "error",
