@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "@opentelemetry/api": "^1.9.0",
-    "@traceloop/node-server-sdk": "^0.12.1",
+    "@traceloop/node-server-sdk": "^0.22.8",
     "async-mutex": "^0.5.0",
     "cli-table3": "^0.6.5",
     "posthog-node": "^4.2.0",
