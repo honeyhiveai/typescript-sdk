@@ -38,6 +38,8 @@ src/**/*.tsbuildinfo
 **/.DS_Store
 .cursor
 .env
+.env.*
+!.env.example
 .venv
 *.tgz
 *.zip
