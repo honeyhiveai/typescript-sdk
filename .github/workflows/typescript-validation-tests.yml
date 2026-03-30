@@ -18,6 +18,9 @@ on:
       - 'package-lock.json'
       - 'vitest.config.ts'
 
+permissions:
+  contents: read
+
 jobs:
   validation-tests:
     runs-on: ubuntu-latest
