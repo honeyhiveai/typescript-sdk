@@ -49,7 +49,7 @@ jobs:
         run: npm run test:integration
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v6.0.1
         if: always()
         with:
           files: ./coverage/coverage-final.json
